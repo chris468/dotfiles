@@ -27,4 +27,8 @@ augroup lsp_install
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
 
+if (has('win32'))
+    set encoding=utf-8
+endif
+
 let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
