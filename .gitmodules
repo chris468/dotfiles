@@ -19,3 +19,6 @@
 [submodule "vim/vim/pack/main/start/ctrlp.vim"]
 	path = vim/vim/pack/main/start/ctrlp.vim
 	url = https://github.com/ctrlpvim/ctrlp.vim
+[submodule "vim/vim/pack/main/start/vimspector"]
+	path = vim/vim/pack/main/start/vimspector
+	url = https://github.com/puremourning/vimspector

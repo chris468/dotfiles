@@ -26,3 +26,5 @@ augroup lsp_install
     au!
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
+
+let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
