@@ -16,3 +16,6 @@
 [submodule "vim/vim/pack/ide/start/vim-lsp-settings"]
 	path = vim/vim/pack/ide/start/vim-lsp-settings
 	url = https://github.com/mattn/vim-lsp-settings
+[submodule "vim/vim/pack/main/start/ctrlp.vim"]
+	path = vim/vim/pack/main/start/ctrlp.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim
