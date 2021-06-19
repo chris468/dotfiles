@@ -1,0 +1,2 @@
+[alias]
+	pushnew = push origin HEAD --set-upstream
