@@ -1,10 +1,10 @@
-Param([switch]$force=$false)
+Param([switch]$force=$false, [switch]$quiet=$false)
 
 if ( Test-Path ~/vimfiles ) {
     if ( $force ) {
         Remove-Item -Force -Recurse ~/vimfiles
     }
-    else  {
+    elseif ( ! $quiet ) {
         throw "~/vimfiles already exists"
     }
 }
@@ -13,7 +13,7 @@ if ( Test-Path ~/.vim ) {
     if ( $force ) {
         Remove-Item -Force -Recurse ~/.vim
     }
-    else  {
+    elseif ( ! $quiet ) {
         throw "~/.vim already exists"
     }
 }
@@ -22,16 +22,22 @@ if ( Test-Path ~/.vsvimrc ) {
     if ( $force ) {
         Remove-Item -Force -Recurse ~/.vsvimrc
     }
-    else  {
+    elseif ( ! $quiet ) {
         throw "~/.vsvimrc already exists"
     }
 }
 
-$script_dir = $PSScriptRoot
+if ( !(Test-Path ~/vimfiles) ) {
+    New-Item -ItemType SymbolicLink -Path ~\vimfiles -Target $PSScriptRoot\vim
+}
 
-New-Item -ItemType SymbolicLink -Path ~\vimfiles -Target $PSScriptRoot\vim
-New-Item -ItemType SymbolicLink -Path ~\.vim -Target $PSScriptRoot\vim
-New-Item -ItemType SymbolicLink -Path ~\.vsvimrc -Target $PSScriptRoot\vsvimrc
+if ( !(Test-Path ~/.vim) ) {
+    New-Item -ItemType SymbolicLink -Path ~\.vim -Target $PSScriptRoot\vim
+}
+
+if ( !(Test-Path ~/.vsvimrc) ) {
+    New-Item -ItemType SymbolicLink -Path ~\.vsvimrc -Target $PSScriptRoot\vsvimrc
+}
 
 $orig = $pwd
-cd $script_dir ; git submodule init ; git submodule update ; cd $orig
+cd $PSScriptRoot ; git submodule init ; git submodule update ; cd $orig
