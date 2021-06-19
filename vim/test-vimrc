@@ -1,0 +1,9 @@
+let s:path = expand('<sfile>:p:h')
+
+set runtimepath-=~/.vim
+set packpath-=~/.vim
+
+execute 'set runtimepath^=' . s:path . '/vim'
+execute 'set packpath^=' . s:path . '/vim'
+
+
