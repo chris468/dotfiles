@@ -133,11 +133,12 @@ function worktree_exists {
 
 if worktree_exists ; then
     echo "Already installed ($worktree already exists)"
-    exit 0
+    echo "Checking out branch $branch..."
+    (cd $worktree && git checkout --detach $branch)
+else
+    echo "Creating installation $worktree using branch $branch..."
+    git worktree add --detach $worktree $branch
 fi
-
-echo "Creating installation $worktree using branch $branch..."
-git worktree add --detach $worktree $branch
 
 echo
 echo "Configuring..."
