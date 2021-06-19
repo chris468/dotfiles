@@ -12,6 +12,7 @@ function! extensions#load()
 
         Plug 'tpope/vim-surround'
         Plug 'ctrlpvim/ctrlp.vim'
+        Plug 'preservim/nerdtree'
 
         Plug 'prabirshrestha/vim-lsp'
         Plug 'mattn/vim-lsp-settings'
