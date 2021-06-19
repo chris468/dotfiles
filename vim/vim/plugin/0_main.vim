@@ -6,6 +6,8 @@ source $VIMRUNTIME/defaults.vim
 
 set nobackup
 
+set nowrap
+
 set background=dark
 colors dracula
 
