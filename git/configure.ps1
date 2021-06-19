@@ -1,4 +1,4 @@
-$config_file=(join-path $PSScriptRoot gitconfig).Replace("\", "/")
+$config_file=(join-path $PSScriptRoot dotfiles-gitconfig).Replace("\", "/")
 
 function has-config {
     if ($(git config --global -l | Select-String -Pattern "^include.path=$config_file`$") -eq $null) {

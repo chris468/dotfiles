@@ -1,7 +1,7 @@
 #!/bin/bash
 
 script_dir="$(cd "$(dirname "$(readlink -e "$0")")" && pwd)"
-config_file=$script_dir/gitconfig
+config_file=$script_dir/dotfiles-gitconfig
 
 function has-include {
     git config --global -l | grep -q "include.path=$config_file"
