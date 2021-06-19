@@ -6,15 +6,14 @@ script_dir="$(cd "$(dirname "$(readlink -e "$0")")" && pwd)"
 git="git -C $script_dir"
 
 function has_updates {
-    branch=$($git branch --show-current)
-    $git fetch origin $branch
-    current_revision=$($git rev-parse HEAD)
-    remote_revision=$($git ls-remote origin $branch | awk '{ print $1 }')
-    [ "$current_revision" != "$remote_revision" ]
+    $git fetch origin
+    $git status --porcelain -b | grep -q "\[behind"
 }
 
 if has_updates ; then
     echo "dotfiles are out of date. Updating..."
+    $git pull
+    $script_dir/configure-all.sh -q
 else
     echo "dotfiles are up to date."
 fi
