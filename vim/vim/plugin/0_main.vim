@@ -11,3 +11,4 @@ colors dracula
 
 " netrw config
 let g:netrw_liststyle = 3 " tree style listing
+let g:netrw_winsize = 25
