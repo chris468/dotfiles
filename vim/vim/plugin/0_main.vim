@@ -4,5 +4,8 @@ endif
 
 source $VIMRUNTIME/defaults.vim
 
+set background=dark
+colors dracula
+
 " netrw config
 let g:netrw_liststyle = 3 " tree style listing
