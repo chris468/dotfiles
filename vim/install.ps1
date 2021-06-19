@@ -9,6 +9,15 @@ if ( Test-Path ~/vimfiles ) {
     }
 }
 
+if ( Test-Path ~/.vim ) {
+    if ( $force ) {
+        Remove-Item -Force -Recurse ~/.vim
+    }
+    else  {
+        throw "~/.vim already exists"
+    }
+}
+
 if ( Test-Path ~/.vsvimrc ) {
     if ( $force ) {
         Remove-Item -Force -Recurse ~/.vsvimrc
@@ -21,6 +30,7 @@ if ( Test-Path ~/.vsvimrc ) {
 $script_dir = $PSScriptRoot
 
 New-Item -ItemType SymbolicLink -Path ~\vimfiles -Target $PSScriptRoot\vim
+New-Item -ItemType SymbolicLink -Path ~\.vim -Target $PSScriptRoot\vim
 New-Item -ItemType SymbolicLink -Path ~\.vsvimrc -Target $PSScriptRoot\vsvimrc
 
 $orig = $pwd
