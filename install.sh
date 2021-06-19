@@ -138,7 +138,7 @@ assign_positional_args 1 "${_positionals[@]}"
 
 set -e
 
-destination=$_arg_destination
+destination="${_arg_destination/#\~/$HOME}"
 branch=$_arg_branch
 configure_options=$_arg_leftovers
 repo=$_arg_repo
