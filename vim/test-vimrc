@@ -6,4 +6,4 @@ set packpath-=~/.vim
 execute 'set runtimepath^=' . s:path . '/vim'
 execute 'set packpath^=' . s:path . '/vim'
 
-
+source vimrc
