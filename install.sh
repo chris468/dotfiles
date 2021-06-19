@@ -4,8 +4,7 @@
 # ARG_HELP([Installs and configures the dotfiles])
 # ARG_OPTIONAL_SINGLE([branch],[b],[Branch to install],[origin/main])
 # ARG_OPTIONAL_SINGLE([destination],[d],[Install location on filesystem],[~/.config/dotfiles])
-# ARG_OPTIONAL_BOOLEAN([worktree],[w],[Create a worktree based on the current repo rather than cloning])
-# ARG_OPTIONAL_SINGLE([repo],[r],[Repository to clone. Ignored if --worktree=on.],[https://github.com/chris468/dotfiles])
+# ARG_OPTIONAL_SINGLE([repo],[r],[Repository to clone.],[https://github.com/chris468/dotfiles])
 # ARG_LEFTOVERS([Parameters to pass to configure])
 # ARGBASH_GO()
 # needed because of Argbash --> m4_ignore([
@@ -25,7 +24,7 @@ die()
 
 begins_with_short_option()
 {
-	local first_option all_short_options='hbdwr'
+	local first_option all_short_options='hbdr'
 	first_option="${1:0:1}"
 	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -35,21 +34,19 @@ _positionals=()
 _arg_leftovers=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_branch="origin/main"
-_arg_destination=~/.config/dotfiles
-_arg_worktree="off"
+_arg_destination="~/.config/dotfiles"
 _arg_repo="https://github.com/chris468/dotfiles"
 
 
 print_help()
 {
 	printf '%s\n' "Installs and configures the dotfiles"
-	printf 'Usage: %s [-h|--help] [-b|--branch <arg>] [-d|--destination <arg>] [-w|--(no-)worktree] [-r|--repo <arg>] ... \n' "$0"
+	printf 'Usage: %s [-h|--help] [-b|--branch <arg>] [-d|--destination <arg>] [-r|--repo <arg>] ... \n' "$0"
 	printf '\t%s\n' "... : Parameters to pass to configure"
 	printf '\t%s\n' "-h, --help: Prints help"
 	printf '\t%s\n' "-b, --branch: Branch to install (default: 'origin/main')"
 	printf '\t%s\n' "-d, --destination: Install location on filesystem (default: '~/.config/dotfiles')"
-	printf '\t%s\n' "-w, --worktree, --no-worktree: Create a worktree based on the current repo rather than cloning (off by default)"
-	printf '\t%s\n' "-r, --repo: Repository to clone. Ignored if --worktree=on. (default: 'https://github.com/chris468/dotfiles')"
+	printf '\t%s\n' "-r, --repo: Repository to clone. (default: 'https://github.com/chris468/dotfiles')"
 }
 
 
@@ -89,18 +86,6 @@ parse_commandline()
 				;;
 			-d*)
 				_arg_destination="${_key##-d}"
-				;;
-			-w|--no-worktree|--worktree)
-				_arg_worktree="on"
-				test "${1:0:5}" = "--no-" && _arg_worktree="off"
-				;;
-			-w*)
-				_arg_worktree="on"
-				_next="${_key##-w}"
-				if test -n "$_next" -a "$_next" != "$_key"
-				then
-					{ begins_with_short_option "$_next" && shift && set -- "-w" "-${_next}" "$@"; } || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
-				fi
 				;;
 			-r|--repo)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
@@ -156,42 +141,18 @@ set -e
 destination=$_arg_destination
 branch=$_arg_branch
 configure_options=$_arg_leftovers
-use_worktree=$_arg_worktree
 repo=$_arg_repo
 
-function worktree_exists {
-    git worktree list | awk '{ print $1 }' | grep -q $destination
-}
-
-function create_worktree {
-    if worktree_exists ; then
-        echo "Already installed ($destination already exists)"
-        echo "Checking out branch $branch..."
-        (cd $destination && git fetch && git checkout --detach $branch)
-    else
-        echo "Creating installation $destination using branch $branch..."
-        git worktree add --detach $destination $branch
-    fi
-}
-
-function clone_repo {
-    if [ -e $destination ] ; then
-        [ -e $destination/.git ] || die "$destination exists but does not appear to be a git repo" 1
-        echo "Already installed ($destination already exists)"
-    else
-        echo "Cloning dotfiles $repo branch $branch to $destination..."
-        git clone $repo $destination
-    fi
-
-    echo "Checking out branch $branch..."
-    (cd $destination && git fetch && git checkout $branch)
-}
-
-if [ $use_worktree == "on" ]; then
-    create_worktree
+if [ -e $destination ] ; then
+    [ -e $destination/.git ] || die "$destination exists but does not appear to be a git repo" 1
+    echo "Already installed ($destination already exists)"
 else
-    clone_repo
+    echo "Cloning dotfiles $repo branch $branch to $destination..."
+    git clone $repo $destination
 fi
+
+echo "Checking out branch $branch..."
+(cd $destination && git checkout $branch && git pull)
 
 echo
 echo "Configuring..."
