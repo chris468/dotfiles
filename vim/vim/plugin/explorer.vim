@@ -27,5 +27,29 @@ function s:show_explorer_on_launch()
     endif
 endfunction
 
+let s:nerd_tree_pattern='NERD_tree_\d\+'
+
+function s:last_showed_explorer()
+    return bufname('#') =~ s:nerd_tree_pattern
+endfunction
+
+function s:showing_explorer()
+    return bufname('%') =~ s:nerd_tree_pattern
+endfunction
+
+function s:multiple_windows()
+    return winnr('$') > 1
+endfunction
+
+function s:prevent_replacing_explorer()
+    if s:last_showed_explorer() && !s:showing_explorer() && s:multiple_windows()
+        let l:buf=bufnr()
+        buffer#
+        execute "normal! \<C-W>w"
+        execute 'buffer'.buf
+    endif
+endfunction
+
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * call s:show_explorer_on_launch()
+autocmd BufEnter * call s:prevent_replacing_explorer()
