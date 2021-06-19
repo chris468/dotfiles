@@ -6,3 +6,5 @@
 	delete-remote-branch = push --delete origin
 [format]
 	pretty = %C(auto)%h %s%d%Creset
+[fetch]
+	prune = true
