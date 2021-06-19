@@ -1,27 +1,18 @@
 [submodule "vim/vim/pack/main/start/vim-surround"]
 	path = vim/vim/pack/main/start/vim-surround
 	url = https://github.com/tpope/vim-surround
-[submodule "vim/vim/pack/ide/opt/asyncomplete.vim"]
-	path = vim/vim/pack/ide/opt/asyncomplete.vim
+[submodule "vim/vim/pack/ide/start/vim-lsp"]
+	path = vim/vim/pack/ide/start/vim-lsp
+	url = https://github.com/prabirshrestha/vim-lsp
+[submodule "vim/vim/pack/ide/start/asyncomplete.vim"]
+	path = vim/vim/pack/ide/start/asyncomplete.vim
 	url = https://github.com/prabirshrestha/asyncomplete.vim
-[submodule "vim/vim/pack/ide/opt/ale"]
-	path = vim/vim/pack/ide/opt/ale
-	url = https://github.com/w0rp/ale
-[submodule "vim/vim/pack/ide/opt/ctrlp.vim"]
-	path = vim/vim/pack/ide/opt/ctrlp.vim
-	url = https://github.com/ctrlpvim/ctrlp.vim
-[submodule "vim/vim/pack/ide/opt/omnisharp-vim"]
-	path = vim/vim/pack/ide/opt/omnisharp-vim
-	url = https://github.com/OmniSharp/omnisharp-vim
-[submodule "vim/vim/pack/ide/opt/vim-elixir"]
-	path = vim/vim/pack/ide/opt/vim-elixir
-	url = https://github.com/elixir-editors/vim-elixir
-[submodule "vim/vim/pack/ide/opt/vim-sharpenup"]
-	path = vim/vim/pack/ide/opt/vim-sharpenup
-	url = https://github.com/nickspoons/vim-sharpenup
-[submodule "vim/vim/pack/ide/opt/vim-snippets"]
-	path = vim/vim/pack/ide/opt/vim-snippets
-	url = https://github.com/honza/vim-snippets
-[submodule "vim/vim/pack/ide/opt/ultisnips"]
-	path = vim/vim/pack/ide/opt/ultisnips
-	url = https://github.com/SirVer/ultisnips
+[submodule "vim/vim/pack/ide/start/asyncomplete-lsp.vim"]
+	path = vim/vim/pack/ide/start/asyncomplete-lsp.vim
+	url = https://github.com/prabirshrestha/asyncomplete-lsp.vim
+[submodule "vim/vim/pack/main/start/dracula"]
+	path = vim/vim/pack/main/start/dracula
+	url = https://github.com/dracula/vim
+[submodule "vim/vim/pack/ide/start/vim-lsp-settings"]
+	path = vim/vim/pack/ide/start/vim-lsp-settings
+	url = https://github.com/chris468/vim-lsp-settings
