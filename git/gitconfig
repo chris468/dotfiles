@@ -8,3 +8,6 @@
 	pretty = %C(auto)%h %s%d%Creset
 [fetch]
 	prune = true
+[pull]
+	rebase = false
+	ff = only
