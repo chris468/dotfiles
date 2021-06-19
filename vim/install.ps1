@@ -38,6 +38,3 @@ if ( !(Test-Path ~/.vim) ) {
 if ( !(Test-Path ~/.vsvimrc) ) {
     New-Item -ItemType SymbolicLink -Path ~\.vsvimrc -Target $PSScriptRoot\vsvimrc
 }
-
-$orig = $pwd
-cd $PSScriptRoot ; git submodule init ; git submodule update ; cd $orig

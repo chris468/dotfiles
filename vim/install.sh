@@ -99,7 +99,6 @@ parse_commandline "$@"
 config_dir=~/.vim
 
 script_dir="$(cd "$(dirname "$(readlink -e "$0")")" && pwd)"
-( cd $script_dir && git submodule init && git submodule update )
 
 if [ -e "$config_dir" ] ; then
     if [ "$_arg_quiet" == "on" ] ; then
