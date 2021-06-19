@@ -1,4 +1,6 @@
 [alias]
 	pushnew = push origin HEAD --set-upstream
+	logd = log --pretty=format:'%C(auto)%h%d %cd%n  %aN%n  %s%n'
+	logg = log --graph
 [format]
 	pretty = %C(auto)%h %s%d%Creset
