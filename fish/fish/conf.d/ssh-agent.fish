@@ -2,4 +2,6 @@
 
 set -x SSH_AUTH_SOCK ~/.ssh/.socket
 ssh-add -l >/dev/null 2>&1
-test $status -ge 2 ; and ssh-agent -t 3600 -a $SSH_AUTH_SOCK >/dev/null
+test $status -ge 2 ; \
+   and rm -f $SSH_AUTH_SOCK ; \
+   and ssh-agent -t 3600 -a $SSH_AUTH_SOCK >/dev/null
