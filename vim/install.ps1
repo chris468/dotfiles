@@ -1,40 +1,34 @@
 Param([switch]$force=$false, [switch]$quiet=$false)
 
-if ( Test-Path ~/vimfiles ) {
-    if ( $force ) {
-        Remove-Item -Force -Recurse ~/vimfiles
+$files = @{
+    "~/vimfiles" = "$PSScriptRoot/vim";
+    "~/.vim" = "$PSScriptRoot/vim";
+    "~/.vimrc" = "$PSScriptRoot/vimrc";
+    "~/_vimrc" = "$PSScriptRoot/vimrc";
+    "~/.vsvimrc" = "$PSScriptRoot/vsvimrc";
+}
+
+$fileExists = $false
+if ( ! $force -and ! $quiet ) {
+    foreach ( $destination in $files.keys ) {
+        if ( Test-Path $destination ) {
+            Write-Error "$destination already exists"
+            $fileExists = $true
+        }
     }
-    elseif ( ! $quiet ) {
-        throw "~/vimfiles already exists"
+
+    if ( $fileExists ) {
+        throw "use -Force or -Quiet"
     }
 }
 
-if ( Test-Path ~/.vim ) {
-    if ( $force ) {
-        Remove-Item -Force -Recurse ~/.vim
-    }
-    elseif ( ! $quiet ) {
-        throw "~/.vim already exists"
-    }
+if ( $force ) {
+    Remove-Item -Force -Recurse -Path @($files.keys)
 }
 
-if ( Test-Path ~/.vsvimrc ) {
-    if ( $force ) {
-        Remove-Item -Force -Recurse ~/.vsvimrc
-    }
-    elseif ( ! $quiet ) {
-        throw "~/.vsvimrc already exists"
+foreach ( $file in $files.keys ) {
+    if ( !(Test-Path $file) ) {
+        New-Item -ItemType SymbolicLink -Path $file -Target $files[$file]
     }
 }
 
-if ( !(Test-Path ~/vimfiles) ) {
-    New-Item -ItemType SymbolicLink -Path ~\vimfiles -Target $PSScriptRoot\vim
-}
-
-if ( !(Test-Path ~/.vim) ) {
-    New-Item -ItemType SymbolicLink -Path ~\.vim -Target $PSScriptRoot\vim
-}
-
-if ( !(Test-Path ~/.vsvimrc) ) {
-    New-Item -ItemType SymbolicLink -Path ~\.vsvimrc -Target $PSScriptRoot\vsvimrc
-}
