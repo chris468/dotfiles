@@ -20,3 +20,6 @@ let g:netrw_liststyle = 3 " tree style listing
 let g:netrw_winsize = 25
 
 let mapleader = " "
+
+nnoremap <leader>et :NERDTreeToggle<CR> " Explorer Toggle
+nnoremap <leader>ef :NERDTreeFocus<CR> " Explorer Focus
