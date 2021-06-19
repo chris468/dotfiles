@@ -50,6 +50,13 @@ function s:prevent_replacing_explorer()
     endif
 endfunction
 
+function s:exit_when_only_explorer_remains()
+    if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree()
+        quit
+    endif
+endfunction
+
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * call s:show_explorer_on_launch()
 autocmd BufEnter * call s:prevent_replacing_explorer()
+autocmd BufEnter * call s:exit_when_only_explorer_remains()
