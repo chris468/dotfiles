@@ -6,5 +6,8 @@ Import-Module posh-git
 $GitPromptSettings.UntrackedFilesMode="no"
 $GitPromptSettings.ShowStatusWhenZero=$false
 
-
+function Update-Dotfiles {
+    $dotfiles = Split-Path (Split-Path (Get-Item $PSCommandPath).Target)
+    & "$dotfiles\update.ps1" -quiet
+}
 
