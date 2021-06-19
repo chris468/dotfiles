@@ -10,8 +10,7 @@
         "defaults": {
             "fontSize": 10,
             "fontFace": "Cascadia Mono",
-            "colorScheme": "Dracula",
-            "startingDirectory": "~"
+            "colorScheme": "Dracula"
         },
         "list": [
             {
