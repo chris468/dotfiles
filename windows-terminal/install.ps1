@@ -16,7 +16,8 @@ if ($force) {
 
 foreach ($settingsFile in $settingsFiles) {
     if ( !(Test-Path "$settingsFile") ) {
-        New-Item -ItemType Directory -Path "settingsDir" -Force
+        $settingsDir = Split-Path "$settingsFile"
+        New-Item -ItemType Directory -Path "$settingsDir" -Force
         New-Item -ItemType SymbolicLink -Path "$settingsFile" -Target $PSScriptRoot\settings.json
     }
 }
