@@ -3,5 +3,6 @@
 	logd = log --pretty=format:'%C(auto)%h%d %cd%n  %aN%n  %s%n'
 	logg = log --graph
 	bmr = !git branch -vv | grep gone | sed -e 's/^*//' | awk '{ print $1 }'
+	delete-remote-branch = push --delete origin
 [format]
 	pretty = %C(auto)%h %s%d%Creset
