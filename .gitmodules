@@ -15,4 +15,4 @@
 	url = https://github.com/dracula/vim
 [submodule "vim/vim/pack/ide/start/vim-lsp-settings"]
 	path = vim/vim/pack/ide/start/vim-lsp-settings
-	url = https://github.com/chris468/vim-lsp-settings
+	url = https://github.com/mattn/vim-lsp-settings
