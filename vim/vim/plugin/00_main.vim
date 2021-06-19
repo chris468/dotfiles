@@ -9,7 +9,7 @@ set nobackup
 set nowrap
 
 set background=dark
-colors dracula
+silent! colors dracula
 
 " disiable bell completely (not audible or visual)
 set visualbell t_vb=
