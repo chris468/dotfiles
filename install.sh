@@ -35,7 +35,7 @@ _positionals=()
 _arg_leftovers=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_branch="origin/main"
-_arg_destination="~/.config/dotfiles"
+_arg_destination=~/.config/dotfiles
 _arg_worktree="off"
 _arg_repo="https://github.com/chris468/dotfiles"
 
