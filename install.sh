@@ -2,7 +2,7 @@
 
 # Created by argbash-init v2.10.0
 # ARG_HELP([Installs and configures the dotfiles])
-# ARG_OPTIONAL_SINGLE([branch],[b],[Branch to install],[origin/main])
+# ARG_OPTIONAL_SINGLE([branch],[b],[Branch to check out after cloning.])
 # ARG_OPTIONAL_SINGLE([destination],[d],[Install location on filesystem],[~/.config/dotfiles])
 # ARG_OPTIONAL_SINGLE([repo],[r],[Repository to clone.],[https://github.com/chris468/dotfiles])
 # ARG_LEFTOVERS([Parameters to pass to configure])
@@ -33,7 +33,7 @@ begins_with_short_option()
 _positionals=()
 _arg_leftovers=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
-_arg_branch="origin/main"
+_arg_branch=
 _arg_destination="~/.config/dotfiles"
 _arg_repo="https://github.com/chris468/dotfiles"
 
@@ -44,7 +44,7 @@ print_help()
 	printf 'Usage: %s [-h|--help] [-b|--branch <arg>] [-d|--destination <arg>] [-r|--repo <arg>] ... \n' "$0"
 	printf '\t%s\n' "... : Parameters to pass to configure"
 	printf '\t%s\n' "-h, --help: Prints help"
-	printf '\t%s\n' "-b, --branch: Branch to install (default: 'origin/main')"
+	printf '\t%s\n' "-b, --branch: Branch to check out after cloning. (no default)"
 	printf '\t%s\n' "-d, --destination: Install location on filesystem (default: '~/.config/dotfiles')"
 	printf '\t%s\n' "-r, --repo: Repository to clone. (default: 'https://github.com/chris468/dotfiles')"
 }
@@ -138,7 +138,7 @@ assign_positional_args 1 "${_positionals[@]}"
 
 set -e
 
-destination=$_arg_destination
+destination="${_arg_destination/#\~/$HOME}"
 branch=$_arg_branch
 configure_options=$_arg_leftovers
 repo=$_arg_repo
@@ -151,8 +151,10 @@ else
     git clone $repo $destination
 fi
 
-echo "Checking out branch $branch..."
-(cd $destination && git checkout $branch && git pull)
+if [ -n "$branch" ] ; then
+    echo "Checking out branch $branch..."
+    (cd $destination && git checkout $branch && git pull)
+fi
 
 echo
 echo "Configuring..."
