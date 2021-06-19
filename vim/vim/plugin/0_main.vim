@@ -4,6 +4,8 @@ endif
 
 source $VIMRUNTIME/defaults.vim
 
+set nobackup
+
 set background=dark
 colors dracula
 
