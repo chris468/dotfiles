@@ -5,6 +5,7 @@
 	logg = log --graph
 	bmr = !git branch -vv | grep gone | sed -e 's/^*//' | awk '{ print $1 }'
 	delete-remote-branch = push --delete origin
+	fixup = commit --amend --no-edit
 [format]
 	pretty = %C(auto)%h %s%d%Creset
 [fetch]
