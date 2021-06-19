@@ -123,26 +123,26 @@ assign_positional_args 1 "${_positionals[@]}"
 # [ <-- needed because of Argbash
 
 
-worktree=$_arg_destination
+destination=$_arg_destination
 branch=$_arg_branch
 configure_options=$_arg_leftovers
 
 function worktree_exists {
-    git worktree list | awk '{ print $1 }' | grep -q $worktree
+    git worktree list | awk '{ print $1 }' | grep -q $destination
 }
 
 if worktree_exists ; then
-    echo "Already installed ($worktree already exists)"
+    echo "Already installed ($destination already exists)"
     echo "Checking out branch $branch..."
-    (cd $worktree && git checkout --detach $branch)
+    (cd $destination && git checkout --detach $branch)
 else
-    echo "Creating installation $worktree using branch $branch..."
-    git worktree add --detach $worktree $branch
+    echo "Creating installation $destination using branch $branch..."
+    git worktree add --detach $destination $branch
 fi
 
 echo
 echo "Configuring..."
-$worktree/configure-all.sh $configure_options
+$destination/configure-all.sh $configure_options
 
 echo
 echo "Complete."
