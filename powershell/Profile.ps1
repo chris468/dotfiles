@@ -7,7 +7,13 @@ $GitPromptSettings.UntrackedFilesMode="no"
 $GitPromptSettings.ShowStatusWhenZero=$false
 
 function Update-Dotfiles {
+    Param([switch]$background=$false)
+
     $dotfiles = Split-Path (Split-Path (Get-Item $PSCommandPath).Target)
-    & "$dotfiles\update.ps1" $args 
+    $options = $args | Where-Object { $_ -ne "-background" }
+    $job = Start-Job -ScriptBlock { Param($dotfiles, [string[]]$options) & $dotfiles\update.ps1 $options } -ArgumentList $dotfiles,($options)
+    if ( ! $background) {
+        Receive-Job -Wait $job
+    }
 }
 
