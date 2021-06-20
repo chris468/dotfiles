@@ -2,6 +2,7 @@
 
 # Created by argbash-init v2.10.0
 # ARG_OPTIONAL_BOOLEAN([force],[f],[Force overwriting existing files])
+# ARG_OPTIONAL_SINGLE([status-file],[s],[File to print update status to])
 # ARG_HELP([Updates to the latest dotfiles])
 # ARGBASH_GO()
 # needed because of Argbash --> m4_ignore([
@@ -21,20 +22,22 @@ die()
 
 begins_with_short_option()
 {
-	local first_option all_short_options='fh'
+	local first_option all_short_options='fsh'
 	first_option="${1:0:1}"
 	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
 
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_force="off"
+_arg_status_file=
 
 
 print_help()
 {
 	printf '%s\n' "Updates to the latest dotfiles"
-	printf 'Usage: %s [-f|--(no-)force] [-h|--help]\n' "$0"
+	printf 'Usage: %s [-f|--(no-)force] [-s|--status-file <arg>] [-h|--help]\n' "$0"
 	printf '\t%s\n' "-f, --force, --no-force: Force overwriting existing files (off by default)"
+	printf '\t%s\n' "-s, --status-file: File to print update status to (no default)"
 	printf '\t%s\n' "-h, --help: Prints help"
 }
 
@@ -56,6 +59,17 @@ parse_commandline()
 				then
 					{ begins_with_short_option "$_next" && shift && set -- "-f" "-${_next}" "$@"; } || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
 				fi
+				;;
+			-s|--status-file)
+				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+				_arg_status_file="$2"
+				shift
+				;;
+			--status-file=*)
+				_arg_status_file="${_key##--status-file=}"
+				;;
+			-s*)
+				_arg_status_file="${_key##-s}"
 				;;
 			-h|--help)
 				print_help
@@ -96,8 +110,14 @@ if has_updates ; then
     $git pull
     [ $_arg_force == "on" ] && mode="-f" || mode="-q"
     $script_dir/configure-all.sh $mode
+    if [ -n "$_arg_status_file" ] ; then
+        echo "dotfiles updated on `date`." > $_arg_status_file
+    fi
 else
     echo "dotfiles are up to date."
+    if [ -n "$_arg_status_file" ] ; then
+        echo "dotfiles were up to date when checked on `date`." > $_arg_status_file
+    fi
 fi
 
 # ] <-- needed because of Argbash
