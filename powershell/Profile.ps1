@@ -54,3 +54,5 @@ function Auto-Update-Dotfiles {
         Get-Content $statusfile
     }
 }
+
+Auto-Update-Dotfiles
