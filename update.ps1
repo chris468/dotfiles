@@ -6,7 +6,7 @@ function has_updates {
 }
 
 if ( has_updates ) {
-    Write-Host "dotfiles are out of date. Updating..."
+    Write-Output "dotfiles are out of date. Updating..."
     $mode = $force ? "-force" : "-quiet"
     git -C $PSScriptRoot pull
     & $PSScriptRoot\configure-all.ps1 $mode
@@ -15,7 +15,7 @@ if ( has_updates ) {
     }
 }
 else {
-    Write-Host "dotfiles are up to date."
+    Write-Output "dotfiles are up to date."
     if ( $statusFile ) {
         Set-Content $statusFile "dotfiles were up to date when checked on $(Get-Date -Format f)"
     }
