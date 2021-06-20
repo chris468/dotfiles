@@ -21,7 +21,7 @@ function auto_update_dotfiles
         echo Starting update at (date) > $_dotfiles_autoupdate_logfile
 
         set -l dotfiles_dir (dirname (dirname (readlink ~/.config/fish)))
-        $dotfiles_dir/update.sh --status-file $_dotfiles_autoupdate_statusfile 2>&1 >> $_dotfiles_autoupdate_logfile
+        $dotfiles_dir/update.sh --status-file $_dotfiles_autoupdate_statusfile >> $_dotfiles_autoupdate_logfile 2>&1 &
     end
 
     if should_update
