@@ -37,13 +37,13 @@ function Auto-Update-Dotfiles {
     }
 
     function update {
-        New-Item -Type Directory $status_dir > $null
+        New-Item -Force -Type Directory $status_dir > $null
         Set-Content $logfile "Starting update at $(Get-Date)"
         $dotfiles = Split-Path (Split-Path (Get-Item $PSCommandPath).Target)
         Start-Job -ArgumentList $statusfile,$logfile,$dotfiles -ScriptBlock {
             Param($statusfile, $logfile, $dotfiles)
             & $dotfiles\update.ps1 -statusFile "$statusfile" 2>&1 >> "$logfile"
-        }
+        } >$null
     }
 
     if ( should_update ) {
