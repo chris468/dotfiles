@@ -26,12 +26,10 @@ if ( $branch ) {
     git -C "$destination" pull
 }
 
-Write-Output
-Write-Output "Configuring..."
+Write-Output "`nConfiguring..."
 & "$destination/configure-all.ps1" $configureOptions
 
-Write-Output
-Write-Output "Complete."
+Write-Output "`nComplete."
 
 
 
