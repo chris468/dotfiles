@@ -1,7 +1,3 @@
-if exists("g:vsvim")
-    finish
-endif
-
 if !exists("g:work")
     finish
 endif

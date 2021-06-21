@@ -1,6 +1,3 @@
-" These should be simple configuration applicable to every client, including
-" vsvim. vsvim has limited functionality and includes this file.
-
 set number
 set relativenumber
 set ts=4

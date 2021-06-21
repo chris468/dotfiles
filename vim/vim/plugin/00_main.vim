@@ -1,7 +1,3 @@
-if exists("g:vsvim")
-    finish
-endif
-
 source $VIMRUNTIME/defaults.vim
 
 set nobackup
