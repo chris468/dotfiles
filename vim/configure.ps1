@@ -32,3 +32,9 @@ foreach ( $file in $files.keys ) {
     }
 }
 
+if ( $force ) {
+    vim -c PlugClean -c qa
+}
+
+vim -c PlugInstall -c qa
+

@@ -127,4 +127,10 @@ rm -rf $vimrc
 ln -s $script_dir/vim $vim_dir
 ln -s $script_dir/vimrc $vimrc
 
+if [ "_arg_force" == "on" ] ; then
+    vim -c PlugClean -c qa
+fi
+
+vim -c PlugInstall -c qa
+
 # ] <-- needed because of Argbash
