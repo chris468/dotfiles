@@ -1,7 +1,3 @@
-if exists("g:vsvim")
-    finish
-endif
-
 set list
 set listchars=tab:>\ ,trail:-,nbsp:+
 
