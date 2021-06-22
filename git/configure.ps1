@@ -1,3 +1,5 @@
+Param([switch]$force=$false, [switch]$quiet=$false)
+
 $config_file=(join-path $PSScriptRoot dotfiles-gitconfig).Replace("\", "/")
 
 function remove-duplicates {
@@ -20,6 +22,23 @@ function has-config {
 
 function add-config {
     git config --global --add include.path "$config_file"
+}
+
+$excludes_destination="$HOME/.config/git/ignore"
+if ( ! ($force -or $quiet) ) {
+    if ( Test-Path "$excludes_destination" ) {
+        throw "$excludes_destination already exists"
+    }
+}
+
+if ($force) {
+    Remove-Item -Force $excludes_destination
+}
+
+New-Item -ItemType Directory -Path $(Split-Path "$excludes_destination") -Force
+
+if ( !( Test-Path "$excludes_destination" ) ) {
+    New-Item -ItemType SymbolicLink -Path "$excludes_destination" -Target $PSScriptRoot\ignore
 }
 
 try
