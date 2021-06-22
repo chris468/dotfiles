@@ -9,7 +9,7 @@ function auto_update_dotfiles
     end
 
     function log_updated_since_interval
-        test -z (find $_dotfiles_autoupdate_logfile -mmin $_dotfiles_autoupdate_interval_days)
+        test -z (find $_dotfiles_autoupdate_logfile -mmin $_dotfiles_autoupdate_interval_minutes)
     end
 
     function should_update
