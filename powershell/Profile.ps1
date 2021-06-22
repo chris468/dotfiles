@@ -21,7 +21,7 @@ function Auto-Update-Dotfiles {
     $status_dir = "$HOME\.cache\dotfiles"
     $logfile = "$status_dir\auto-update.log"
     $statusfile = "$status_dir\auto-update-status.txt"
-    $interval_days = 1
+    $interval_minutes = 120
 
     function log_exists {
         Test-Path $logfile
@@ -29,7 +29,7 @@ function Auto-Update-Dotfiles {
 
     function log_updated_since_interval {
         $age = $(Get-Date) - $(Get-Item $logfile).LastWriteTime
-        $age -lt $(New-TimeSpan -Days $interval_days)
+        $age -lt $(New-TimeSpan -Minutes $interval_minutes)
     }
 
     function should_update {

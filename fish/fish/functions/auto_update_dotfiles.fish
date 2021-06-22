@@ -2,14 +2,14 @@ function auto_update_dotfiles
     set -g _dotfiles_autoupdate_status_dir ~/.cache/dotfiles
     set -g _dotfiles_autoupdate_logfile $_dotfiles_autoupdate_status_dir/auto-update.log
     set -g _dotfiles_autoupdate_statusfile $_dotfiles_autoupdate_status_dir/auto-update-status.txt
-    set -g _dotfiles_autoupdate_interval_days 1
+    set -g _dotfiles_autoupdate_interval_minutes 120
 
     function log_exists
         test -e $_dotfiles_autoupdate_logfile
     end
 
     function log_updated_since_interval
-        test -z (find $_dotfiles_autoupdate_logfile -mtime +$_dotfiles_autoupdate_interval_days)
+        test -z (find $_dotfiles_autoupdate_logfile -mmin $_dotfiles_autoupdate_interval_days)
     end
 
     function should_update
