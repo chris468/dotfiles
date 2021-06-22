@@ -35,7 +35,7 @@ catch {
         Set-Content $statusFile "failed to update dotfiles on $(Get-Date -Format f). Error: $_"
     }
     else {
-        Write-Error $_
+        throw
     }
 }
 
