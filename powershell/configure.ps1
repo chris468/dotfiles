@@ -1,8 +1,8 @@
-Param([switch]$force=$false, [switch]$quiet=$false)
+Param([switch]$force=$false, [switch]$quiet=$false, $ProfileLocation=$PROFILE.CurrentUserAllHosts)
 
 function link-configuration {
     $files = @{
-        $PROFILE.CurrentUserAllHosts = "$PSScriptRoot/Profile.ps1";
+        $ProfileLocation = "$PSScriptRoot/Profile.ps1";
     }
 
     $fileExists = $false

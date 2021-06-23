@@ -7,11 +7,19 @@ $GitPromptSettings.UntrackedFilesMode="no"
 $GitPromptSettings.ShowStatusWhenZero=$false
 
 function Update-Dotfiles {
-    Param([switch]$background=$false)
+    Param([switch]$background=$false,$profileLocation)
 
     $dotfiles = Split-Path (Split-Path (Get-Item $PSCommandPath).Target)
     $options = $args | Where-Object { $_ -ne "-background" }
-    $job = Start-Job -ScriptBlock { Param($dotfiles, [string[]]$options) & $dotfiles\update.ps1 $options } -ArgumentList $dotfiles,($options)
+    $job = Start-Job -ArgumentList $dotfiles,$PROFILE,($options) -ScriptBlock {
+        Param($dotfiles, $PROFILE, [string[]]$options)
+
+        if (!$profileLocation) {
+            $profileLocation = $PROFILE.CurrentUserAllHosts
+        }
+        & $dotfiles\update.ps1 -ProfileLocation $profileLocation $options
+    }
+
     if ( ! $background) {
         Receive-Job -Wait $job
     }
@@ -40,9 +48,11 @@ function Auto-Update-Dotfiles {
         New-Item -Force -Type Directory $status_dir > $null
         Set-Content $logfile "Starting update at $(Get-Date)"
         $dotfiles = Split-Path (Split-Path (Get-Item $PSCommandPath).Target)
-        Start-Job -ArgumentList $statusfile,$logfile,$dotfiles -ScriptBlock {
-            Param($statusfile, $logfile, $dotfiles)
-            & $dotfiles\update.ps1 -statusFile "$statusfile" 2>&1 >> "$logfile"
+        $profileLocation = $PROFILE.CurrentUserAllHosts
+        Start-Job -ArgumentList $statusfile,$logfile,$dotfiles,$profileLocation -ScriptBlock {
+            Param($statusfile, $logfile, $dotfiles, $profileLocation)
+
+            & $dotfiles\update.ps1 -statusFile "$statusfile" -profileLocation $profileLocation 2>&1 >> "$logfile"
         } >$null
     }
 

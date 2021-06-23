@@ -1,4 +1,4 @@
-Param([switch]$force=$false, $statusFile)
+Param([switch]$force=$false, $statusFile,$profileLocation)
 
 function Run-Git {
     git -C $PSScriptRoot $args
@@ -18,7 +18,7 @@ try {
         Write-Output "dotfiles are out of date. Updating..."
         $mode = $force ? "-force" : "-quiet"
         Run-Git pull
-        & $PSScriptRoot\configure-all.ps1 $mode
+        & $PSScriptRoot\configure-all.ps1 $mode -ProfileLocation $profileLocation
         if ( $statusFile ) {
             Set-Content $statusFile "dotfiles updated on $(Get-Date -Format f)"
         }
