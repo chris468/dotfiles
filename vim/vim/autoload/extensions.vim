@@ -19,7 +19,10 @@ function! extensions#load()
         Plug 'prabirshrestha/asyncomplete.vim'
         Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
-        Plug 'puremourning/vimspector'
+        if has('python3')
+            Plug 'puremourning/vimspector'
+        endif
+
     call plug#end()
 
 endfunction
