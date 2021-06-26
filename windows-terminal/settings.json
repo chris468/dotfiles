@@ -11,8 +11,7 @@
             "fontSize": 10,
             "fontFace": "Cascadia Mono",
             "colorScheme": "Dracula",
-            "bellStyle": "visual",
-            "cursorShape": "filledBox"
+            "bellStyle": "visual"
         },
         "list": [
             {
