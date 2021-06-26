@@ -94,6 +94,7 @@
     "keybindings": [
         { "command": "closeWindow", "keys": ["alt+f4"] },
         { "command": "splitHorizontal", "keys": ["ctrl+-"]},
-        { "command": "splitVertical", "keys": ["ctrl+\\"]}
+        { "command": "splitVertical", "keys": ["ctrl+\\"]},
+        { "command": null, "keys": "f11" }
     ]
 }
