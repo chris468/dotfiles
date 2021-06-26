@@ -83,6 +83,38 @@ function Configure-PSReadline {
 $global:GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor=$global:GitPromptSettings.ErrorColor.ForegroundColor
 $global:GitPromptSettings.DefaultPromptBeforeSuffix.BackgroundColor=$global:GitPromptSettings.ErrorColor.BackgroundColor
 
+function Shorten-Component {
+    Param([string]$component)
+
+    if ( $component.StartsWith('.') ) {
+        $component.Substring(0, 2)
+    } else {
+        $component.Substring(0, 1)
+    }
+}
+
+function Get-ShortPromptPath {
+    $normalizedLocation=(Get-Location | Resolve-Path).Path.Replace("$HOME", "~")
+    $components = $normalizedLocation.Split([System.IO.Path]::DirectorySeparatorChar, [System.StringSplitOptions]::RemoveEmptyEntries)
+
+    $sb = [System.Text.StringBuilder]::new()
+    for ($i = 0; $i -lt $components.Length - 1; $i++) {
+        if ($i -eq 0 -and $components[$i].Contains(':')) {
+            $null = $sb.Append($components[$i])
+        } else {
+            $null = $sb.Append((Shorten-Component($components[$i])))
+        }
+
+        $null = $sb.Append('\')
+    }
+
+    $null = $sb.Append($components[-1])
+
+    $sb.ToString()
+}
+
+$global:GitPromptSettings.DefaultPromptPath.Text='$(Get-ShortPromptPath)'
+
 function prompt {
     $failure = $?
     $err = $LASTEXITCODE
