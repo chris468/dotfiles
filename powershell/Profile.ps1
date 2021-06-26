@@ -66,7 +66,6 @@ function Auto-Update-Dotfiles {
 }
 
 function On-VIModeChange {
-    echo Hi
     if ($args[0] -eq 'Command') {
         # Set the cursor to a blinking block.
         Write-Host -NoNewLine "`e[1 q"
@@ -79,6 +78,29 @@ function On-VIModeChange {
 function Configure-PSReadline {
     Set-PSReadLineOption -Editmode vi
     Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler ${Function:On-VIModeChange}
+}
+
+$global:GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor=$global:GitPromptSettings.ErrorColor.ForegroundColor
+$global:GitPromptSettings.DefaultPromptBeforeSuffix.BackgroundColor=$global:GitPromptSettings.ErrorColor.BackgroundColor
+
+function prompt {
+    $failure = $?
+    $err = $LASTEXITCODE
+    if ( ! $failure ) {
+        if ( $err -ne 0 ) {
+            $lastCommandResult = " [$err]"
+        }
+        else {
+            $lastCommandResult = " [F]"
+        }
+    }
+    else {
+        $lastCommandResult = ""
+    }
+
+    $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text=$lastCommandResult
+
+    & $GitPromptScriptBlock
 }
 
 Auto-Update-Dotfiles
