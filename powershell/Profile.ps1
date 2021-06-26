@@ -65,4 +65,10 @@ function Auto-Update-Dotfiles {
     }
 }
 
+
+function Configure-PSReadline {
+    Set-PSReadLineOption -Editmode vi
+}
+
 Auto-Update-Dotfiles
+Configure-PSReadline
