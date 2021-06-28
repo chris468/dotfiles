@@ -28,3 +28,5 @@ if (has('win32'))
 endif
 
 let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
+
+let g:ctrlp_root_markers = [ '*.sln' ]
