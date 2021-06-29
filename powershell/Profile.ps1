@@ -6,8 +6,32 @@ Import-Module posh-git
 $GitPromptSettings.UntrackedFilesMode="no"
 $GitPromptSettings.ShowStatusWhenZero=$false
 
+$status_dir = "$HOME\.cache\dotfiles"
+$statusfile = "$status_dir\auto-update-status.txt"
+$logfile = "$status_dir\auto-update.log"
+
+function Get-LastStatusUpdate {
+    if ( Test-Path $statusFile ) {
+        $(Get-Item $statusfile).LastWriteTime
+    }
+}
+
+$global:_dotfiles_lastStatusUpdate = Get-LastStatusUpdate
+$global:_status_updated = $false
+
+function Get-StatusUpdate {
+    if ( ! $global:_status_updated ) {
+        if ( (Get-LastStatusUpdate) -ne $_dotfiles_lastStatusUpdate) {
+            $global:_status_updated = $true
+            Get-Content $statusfile
+        }
+    }
+}
+
+
 function Update-Dotfiles {
     Param([switch]$background=$false,$profileLocation)
+
 
     $dotfiles = Split-Path (Split-Path (Get-Item $PSCommandPath).Target)
     $options = $args | Where-Object { $_ -ne "-background" }
@@ -26,9 +50,6 @@ function Update-Dotfiles {
 }
 
 function Auto-Update-Dotfiles {
-    $status_dir = "$HOME\.cache\dotfiles"
-    $logfile = "$status_dir\auto-update.log"
-    $statusfile = "$status_dir\auto-update-status.txt"
     $interval_minutes = 120
 
     function log_exists {
@@ -114,6 +135,11 @@ function Get-ShortPromptPath {
 }
 
 $global:GitPromptSettings.DefaultPromptPath.Text='$(Get-ShortPromptPath)'
+$previousPromptPrefix = $global:GitPromptSettings.DefaultPromptPrefix
+
+function gitPrompt {
+    & $GitPromptScriptBlock
+}
 
 function prompt {
     $failure = $?
@@ -130,9 +156,18 @@ function prompt {
         $lastCommandResult = ""
     }
 
+    $status = Get-StatusUpdate
+    if ( $status ) {
+        $promptPrefix = "`n$status`n`n"
+    }
+
+    #$promptPrefix = $promptPrefix + $previousPromptPrefix
+    #$global:GitPromptSettings.DefaultPromptPrefix = $promptPrefix
+
     $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text=$lastCommandResult
 
-    & $GitPromptScriptBlock
+    $git = gitPrompt
+    $promptPrefix + $git
 }
 
 Auto-Update-Dotfiles
