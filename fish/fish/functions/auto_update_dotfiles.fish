@@ -17,7 +17,12 @@ function auto_update_dotfiles
         not log_exists ; or not log_updated_since_interval
     end
 
+    function record_last_status_update_time
+        set -g _dotfiles_last_status_update_time (get_last_dotfiles_status_update_time)
+    end
+
     function update
+        record_last_status_update_time
         mkdir -p $_dotfiles_autoupdate_status_dir
         echo Starting update at (date) > $_dotfiles_autoupdate_logfile
 
@@ -31,10 +36,5 @@ function auto_update_dotfiles
     else
         cat $_dotfiles_autoupdate_statusfile
     end
-
-    set -e _dotfiles_autoupdate_status_dir
-    set -e _dotfiles_autoupdate_logfile
-    set -e _dotfiles_autoupdate_statusfile
-    set -e _dotfiles_autoupdate_interval_days
 end
 
