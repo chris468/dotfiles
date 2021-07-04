@@ -30,3 +30,8 @@ endif
 let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
 
 let g:ctrlp_root_markers = [ '*.sln' ]
+
+" Don't require explicit selection
+let g:asyncomplete_auto_completeopt = 0
+set completeopt=menuone,noinsert
+
