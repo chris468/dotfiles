@@ -11,6 +11,7 @@ function! extensions#load()
         Plug 'dracula/vim'
 
         Plug 'tpope/vim-surround'
+        Plug 'tommcdo/vim-exchange'
         Plug 'ctrlpvim/ctrlp.vim'
         Plug 'preservim/nerdtree'
 
