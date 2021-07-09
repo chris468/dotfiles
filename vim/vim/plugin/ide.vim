@@ -35,3 +35,22 @@ let g:ctrlp_root_markers = [ '*.sln' ]
 let g:asyncomplete_auto_completeopt = 0
 set completeopt=menuone,noinsert
 
+" Enable syntax folding
+set foldmethod=expr
+set foldexpr=lsp#ui#vim#folding#foldexpr()
+set foldtext=lsp#ui#vim#folding#foldtext()
+
+" Show fold indication
+set foldcolumn=2
+
+" Open files with all folds expanded
+set foldlevelstart=99
+
+" Preserve fold levels
+" https://stackoverflow.com/questions/37552913/vim-how-to-keep-folds-on-save
+set viewoptions=folds
+augroup remember_folds
+  autocmd!
+    autocmd BufWinLeave * mkview
+  autocmd BufWinEnter * silent! loadview
+augroup END
