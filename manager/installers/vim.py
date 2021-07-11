@@ -22,7 +22,7 @@ class Vim(Installer):
         if self.platform == 'win32':
             links = {
                     **links,
-                    "_vimfiles": "vim/vim",
+                    "vimfiles": "vim/vim",
                     "_vimrc": "vim/vimrc",
                     ".vsvimrc": "vim/vsvimrc"
                 }
