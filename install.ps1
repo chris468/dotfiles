@@ -1,35 +1,12 @@
-Param(
-    $branch,
-    $destination="~/.config/dotfiles",
-    $repo="https://github.com/chris468/dotfiles",
-    [Parameter(ValueFromRemainingArguments=$true)] $configureOptions
-)
+Param([Parameter(ValueFromRemainingArguments=$true)] $arguments)
 
-$destination = $destination -replace "~","$HOME"
+Push-Location $PSScriptRoot
 
-if ( Test-Path "$destination" ) {
-    if ( Test-Path "$destination/.git" ) {
-        Write-Output "Already installed ($destination already exists)"
-    }
-    else {
-        throw "$destination exists but does not appear to be a git repo"
-    }
-}
-else {
-    Write-Output "Cloning dotfiles $repo branch $branch to $destination..."
-    git clone "$repo" "$destination"
-}
+& py -3.9 -m manager install $arguments
+$result = $LASTEXITCODE
 
-if ( $branch ) {
-    Write-Output "Checking out branch $branch..."
-    git -C "$destination" checkout $branch
-    git -C "$destination" pull
-}
+Pop-Location
 
-Write-Output "`nConfiguring..."
-& "$destination/configure-all.ps1" $configureOptions
-
-Write-Output "`nComplete."
-
+exit $result
 
 
