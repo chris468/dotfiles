@@ -14,11 +14,14 @@ class PwshProcess(PwshProcessInterface):
         self._runner: ProcessRunnerInterface = runner
 
     def get_profile(self) -> str:
-        result = self._runner.run_get_output([
-                'pwsh',
-                '-NoProfile',
-                '-Command',
-                'Write-Output',
-                '$PROFILE.CurrentUserAllHosts'])
+        try:
+            result = self._runner.run_get_output([
+                    'pwsh',
+                    '-NoProfile',
+                    '-Command',
+                    'Write-Output',
+                    '$PROFILE.CurrentUserAllHosts'])
+            return result.strip()
+        except FileNotFoundError:
+            return None
 
-        return result.strip()
