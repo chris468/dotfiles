@@ -65,7 +65,7 @@ def test_vim_installer_installs_windows_files_on_windows(
     vim = create_vim(platform)
     links = vim.get_simple_links()
 
-    windows_files = {'_vimrc', '_vimfiles', '.vsvimrc'}
+    windows_files = {'_vimrc', 'vimfiles', '.vsvimrc'}
     installed_files = {t for t in links.keys()}
     installed_windows_files = windows_files.intersection(installed_files)
 
