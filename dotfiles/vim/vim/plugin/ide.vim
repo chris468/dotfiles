@@ -51,6 +51,6 @@ set foldlevelstart=99
 set viewoptions=folds
 augroup remember_folds
   autocmd!
-  autocmd BufWinLeave * if len(expand('%')) != 0 | mkview | endif
+  autocmd BufWinLeave * silent! mkview
   autocmd BufWinEnter * silent! loadview
 augroup END
