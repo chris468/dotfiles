@@ -53,6 +53,7 @@ class Updater:
         if self._status_file:
             with open(self._status_file, 'w') as f:
                 f.write(message)
+                f.flush()
 
     def _update(self) -> bool:
         print("dotfiles are out of date. Updating...")
