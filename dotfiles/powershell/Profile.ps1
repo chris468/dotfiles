@@ -1,17 +1,3 @@
-Import-Module posh-git
-
-# For performance, disable untracked files in the prompt.
-# Just disabling doesn't hide the +0 - need to set the
-# option to hide 0 statuses as well.
-$GitPromptSettings.UntrackedFilesMode="no"
-$GitPromptSettings.ShowStatusWhenZero=$false
-
-$dotfiles = Split-Path (Split-Path (Split-Path (Get-Item $PSCommandPath).Target))
-
-function Update-Dotfiles {
-    & $dotfiles\update.ps1
-}
-
 function Get-DotfilesStatusUpdate {
     if ( $global:_dotfiles_auto_updating `
         -And (Test-Path "$HOME/.cache/dotfiles/auto-update-complete") `
@@ -19,15 +5,6 @@ function Get-DotfilesStatusUpdate {
         $global:_dotfiles_auto_updating = $false
         Get-Content "$HOME/.cache/dotfiles/auto-update-status.txt"
     }
-}
-
-function Auto-Update-Dotfiles {
-    Push-Location $dotfiles
-    py -3.9 -m manager auto-update
-    if ($LASTEXITCODE -eq 0) {
-        $global:_dotfiles_auto_updating = $true
-    }
-    Pop-Location
 }
 
 function On-VIModeChange {
@@ -40,25 +17,17 @@ function On-VIModeChange {
     }
 }
 
-function Configure-PSReadline {
-    Set-PSReadLineOption -Editmode vi
-    Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler ${Function:On-VIModeChange}
-}
-
-$global:GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor=$global:GitPromptSettings.ErrorColor.ForegroundColor
-$global:GitPromptSettings.DefaultPromptBeforeSuffix.BackgroundColor=$global:GitPromptSettings.ErrorColor.BackgroundColor
-
-function Shorten-Component {
-    Param([string]$component)
-
-    if ( $component.StartsWith('.') ) {
-        $component.Substring(0, 2)
-    } else {
-        $component.Substring(0, 1)
-    }
-}
-
 function Get-ShortPromptPath {
+    function Shorten-Component {
+        Param([string]$component)
+
+        if ( $component.StartsWith('.') ) {
+            $component.Substring(0, 2)
+        } else {
+            $component.Substring(0, 1)
+        }
+    }
+
     $normalizedLocation=(Get-Location | Resolve-Path).Path.Replace("$HOME", "~")
     $components = $normalizedLocation.Split([System.IO.Path]::DirectorySeparatorChar, [System.StringSplitOptions]::RemoveEmptyEntries)
 
@@ -78,14 +47,64 @@ function Get-ShortPromptPath {
     $sb.ToString()
 }
 
-$global:GitPromptSettings.DefaultPromptPath.Text='$(Get-ShortPromptPath)'
-$previousPromptPrefix = $global:GitPromptSettings.DefaultPromptPrefix
+$dotfiles = Split-Path (Split-Path (Split-Path (Get-Item $PSCommandPath).Target))
 
-function gitPrompt {
-    & $GitPromptScriptBlock
+function Update-Dotfiles {
+    & $dotfiles\update.ps1
+}
+
+function Initialize-InteractiveSession {
+
+    function Auto-Update-Dotfiles {
+        Push-Location $dotfiles
+        py -3.9 -m manager auto-update
+        if ($LASTEXITCODE -eq 0) {
+            $global:_dotfiles_auto_updating = $true
+        }
+        Pop-Location
+    }
+
+    function Configure-PoshGit {
+        Import-Module posh-git
+
+        $global:GitPromptSettings.DefaultPromptPath.Text='$(Get-ShortPromptPath)'
+        $global:GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor=$global:GitPromptSettings.ErrorColor.ForegroundColor
+        $global:GitPromptSettings.DefaultPromptBeforeSuffix.BackgroundColor=$global:GitPromptSettings.ErrorColor.BackgroundColor
+
+        # For performance, disable untracked files in the prompt.
+        # Just disabling doesn't hide the +0 - need to set the
+        # option to hide 0 statuses as well.
+        $global:GitPromptSettings.UntrackedFilesMode="no"
+        $global:GitPromptSettings.ShowStatusWhenZero=$false
+
+    }
+
+    function Configure-PSReadline {
+        Set-PSReadLineOption -Editmode vi
+        Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler ${Function:On-VIModeChange}
+    }
+
+    if (! $global:InteractiveSession ) {
+        Import-Module posh-git
+
+        $global:InteractiveSession = $true
+        Auto-Update-Dotfiles
+        Configure-PoshGit
+        Configure-PSReadline
+    }
 }
 
 function prompt {
+    function gitPrompt {
+        & $GitPromptScriptBlock
+    }
+
+    $promptPrefix = Initialize-InteractiveSession
+
+    if ( $promptPrefix ) {
+        $promptPrefix += "`n"
+    }
+
     $failure = $?
     $err = $LASTEXITCODE
     if ( ! $failure ) {
@@ -102,17 +121,11 @@ function prompt {
 
     $status = Get-DotfilesStatusUpdate
     if ( $status ) {
-        $promptPrefix = "`n$status`n`n"
+        $promptPrefix += "`n$status`n`n"
     }
-
-    #$promptPrefix = $promptPrefix + $previousPromptPrefix
-    #$global:GitPromptSettings.DefaultPromptPrefix = $promptPrefix
 
     $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text=$lastCommandResult
 
     $git = gitPrompt
     $promptPrefix + $git
 }
-
-Auto-Update-Dotfiles
-Configure-PSReadline
