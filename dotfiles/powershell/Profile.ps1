@@ -102,7 +102,7 @@ function prompt {
     $promptPrefix = Initialize-InteractiveSession
 
     if ( $promptPrefix ) {
-        $promptPrefix += "`n"
+        $promptPrefix += "`n`n"
     }
 
     $failure = $?
@@ -127,5 +127,5 @@ function prompt {
     $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text=$lastCommandResult
 
     $git = gitPrompt
-    $promptPrefix + $git
+    "`n" + $promptPrefix + $git
 }
