@@ -1,3 +1,7 @@
+if not status is-interactive
+    exit
+end
+
 auto_update_dotfiles
 
 function _dotfiles_print_auto_update_status --on-event fish_prompt
