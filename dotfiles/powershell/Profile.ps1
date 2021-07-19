@@ -99,14 +99,15 @@ function prompt {
         & $GitPromptScriptBlock
     }
 
+    $failure = $?
+    $err = $LASTEXITCODE
+
     $promptPrefix = Initialize-InteractiveSession
 
     if ( $promptPrefix ) {
         $promptPrefix += "`n`n"
     }
 
-    $failure = $?
-    $err = $LASTEXITCODE
     if ( ! $failure ) {
         if ( $err -ne 0 ) {
             $lastCommandResult = " [$err]"
