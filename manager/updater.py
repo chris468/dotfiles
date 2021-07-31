@@ -21,7 +21,8 @@ class Updater:
             mode: Mode,
             home: Path,
             apps: List[str],
-            status_file: Path = None):
+            status_file: Path = None,
+            completion_file: Path = None):
 
         repo_path = Path(__file__).parent.parent
 
@@ -36,6 +37,7 @@ class Updater:
         self._apps = apps
 
         self._status_file = status_file
+        self._completion_file = completion_file
 
         if not manager:
             raise ValueError("manager is required")
@@ -72,6 +74,9 @@ class Updater:
                 + traceback.format_exc()
             self._write_status(message, True)
             raise
+        finally:
+            if self._completion_file:
+                self._completion_file.touch()
 
         return True
 
@@ -94,6 +99,10 @@ class Updater:
                 '-s', '--status-file',
                 type=Path,
                 help='file to write update status summary')
+        parser.add_argument(
+                '-c', '--completion-file',
+                type=Path,
+                help='file to touch when update is complete')
         manager.add_commandline_arguments(parser)
 
     def get_options_from_commandline(
@@ -103,6 +112,7 @@ class Updater:
                 arguments,
                 default_mode=Mode.QUIET)
         options['status_file'] = arguments.status_file
+        options['completion_file'] = arguments.completion_file
         return options
 
 
@@ -134,23 +144,21 @@ class AutoUpdater:
         return self._filesystem.file_age(self._logfile) > self._interval
 
     def _update(self) -> None:
-        try:
-            self._status_file.parent.mkdir(parents=True, exist_ok=True)
-            self._completion_file.unlink(missing_ok=True)
+        self._status_file.parent.mkdir(parents=True, exist_ok=True)
+        self._completion_file.unlink(missing_ok=True)
 
-            with self._logfile.open('w') as f:
-                print(f'Starting update at {_now()}', file=f)
-                self._runner.run_in_background(
-                        [
-                            sys.executable,
-                            '-m', 'manager',
-                            'update',
-                            '--quiet',
-                            '--status-file', self._status_file
-                        ],
-                        f)
-        finally:
-            self._completion_file.touch()
+        with self._logfile.open('w') as f:
+            print(f'Starting update at {_now()}', file=f)
+            self._runner.run_in_background(
+                    [
+                        sys.executable,
+                        '-m', 'manager',
+                        'update',
+                        '--quiet',
+                        '--status-file', self._status_file,
+                        '--completion-file', self._completion_file
+                    ],
+                    f)
 
     def _print_status(self) -> None:
         if self._status_file.exists():

@@ -61,6 +61,7 @@ def test_auto_updater_starts_process_in_background(
         runner: FakeProcessRunner,
         auto_updater: AutoUpdater,
         status_file: Path,
+        completion_file: Path,
         log_file: Path):
     filesystem.ages[log_file] = timedelta(minutes=6)
 
@@ -73,7 +74,8 @@ def test_auto_updater_starts_process_in_background(
                     '-m', 'manager',
                     'update',
                     '--quiet',
-                    '--status-file', status_file]
+                    '--status-file', status_file,
+                    '--completion-file', completion_file]
     assert expected_cmd == actual_cmd
 
     assert actual_file
@@ -121,18 +123,6 @@ def test_auto_updater_prints_status_file_when_up_to_date(
 
     actual_output, _ = capsys.readouterr()
     assert expected_output == actual_output.strip()
-
-
-def test_auto_updater_creates_completion_file_when_complete(
-        filesystem: FakeFileSystem,
-        auto_updater: AutoUpdater,
-        completion_file: Path):
-    assert not completion_file.exists()
-    filesystem.ages[log_file] = timedelta(minutes=6)
-
-    _ = auto_updater.autoupdate()
-
-    assert completion_file.exists()
 
 
 def test_auto_updater_deletes_completion_file_before_starting(
