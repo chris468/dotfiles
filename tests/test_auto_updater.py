@@ -150,6 +150,22 @@ def test_auto_updater_deletes_completion_file_before_starting(
     _ = auto_updater.autoupdate()
 
 
+def test_auto_updater_does_not_recreate_completion_file_after_forking(
+        filesystem: FakeFileSystem,
+        runner: FakeProcessRunner,
+        auto_updater: AutoUpdater,
+        completion_file: Path):
+    def assert_does_not_exist(path: Path):
+        assert not path.exists()
+
+    completion_file.touch()
+
+    _ = auto_updater.autoupdate()
+
+    unexpected_path = completion_file
+    assert_does_not_exist(unexpected_path)
+
+
 def test_auto_updater_parsers_arguments(
         status_file: Path,
         log_file: Path,
