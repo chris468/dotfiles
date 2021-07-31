@@ -61,6 +61,7 @@ def test_auto_updater_starts_process_in_background(
         runner: FakeProcessRunner,
         auto_updater: AutoUpdater,
         status_file: Path,
+        completion_file: Path,
         log_file: Path):
     filesystem.ages[log_file] = timedelta(minutes=6)
 
@@ -73,7 +74,8 @@ def test_auto_updater_starts_process_in_background(
                     '-m', 'manager',
                     'update',
                     '--quiet',
-                    '--status-file', status_file]
+                    '--status-file', status_file,
+                    '--completion-file', completion_file]
     assert expected_cmd == actual_cmd
 
     assert actual_file
@@ -123,18 +125,6 @@ def test_auto_updater_prints_status_file_when_up_to_date(
     assert expected_output == actual_output.strip()
 
 
-def test_auto_updater_creates_completion_file_when_complete(
-        filesystem: FakeFileSystem,
-        auto_updater: AutoUpdater,
-        completion_file: Path):
-    assert not completion_file.exists()
-    filesystem.ages[log_file] = timedelta(minutes=6)
-
-    _ = auto_updater.autoupdate()
-
-    assert completion_file.exists()
-
-
 def test_auto_updater_deletes_completion_file_before_starting(
         filesystem: FakeFileSystem,
         runner: FakeProcessRunner,
@@ -148,6 +138,22 @@ def test_auto_updater_deletes_completion_file_before_starting(
     runner.callback = lambda: assert_does_not_exist(unexpected_path)
 
     _ = auto_updater.autoupdate()
+
+
+def test_auto_updater_does_not_recreate_completion_file_after_forking(
+        filesystem: FakeFileSystem,
+        runner: FakeProcessRunner,
+        auto_updater: AutoUpdater,
+        completion_file: Path):
+    def assert_does_not_exist(path: Path):
+        assert not path.exists()
+
+    completion_file.touch()
+
+    _ = auto_updater.autoupdate()
+
+    unexpected_path = completion_file
+    assert_does_not_exist(unexpected_path)
 
 
 def test_auto_updater_parsers_arguments(
