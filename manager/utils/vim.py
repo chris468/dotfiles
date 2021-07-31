@@ -8,7 +8,7 @@ class VimProcessInterface:
 
 
 class VimProcess(VimProcessInterface):
-    _clean_command = ['-c', 'PlugClean']
+    _clean_command = ['-c', 'PlugClean!']
     _install_command = ['-c', 'PlugInstall']
     _quit_command = ['-c', 'qa']
 
