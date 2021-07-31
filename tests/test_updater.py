@@ -158,16 +158,18 @@ def test_updater_removes_completion_file_before_starting(
     _ = updater.update()
 
 
+@pytest.mark.parametrize('up_to_date', [(True), (False)])
 def test_updater_creates_completion_file_after_completing(
         updater_factory: UpdaterFactory,
         installer: FakeInstaller,
         git_process: FakeGitProcess,
         status_file: Path,
-        completion_file: Path):
+        completion_file: Path,
+        up_to_date: bool):
 
     completion_file.unlink(missing_ok=True)
     updater = updater_factory(status_file, completion_file)
-    git_process.dirty = True
+    git_process.dirty = not up_to_date
 
     _ = updater.update()
 

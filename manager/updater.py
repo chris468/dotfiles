@@ -74,9 +74,6 @@ class Updater:
                 + traceback.format_exc()
             self._write_status(message, True)
             raise
-        finally:
-            if self._completion_file:
-                self._completion_file.touch()
 
         return True
 
@@ -85,10 +82,14 @@ class Updater:
         self._write_status(message)
 
     def update(self) -> bool:
-        if self.git.has_updates():
-            return self._update()
-        else:
-            self._report_up_to_date()
+        try:
+            if self.git.has_updates():
+                return self._update()
+            else:
+                self._report_up_to_date()
+        finally:
+            if self._completion_file:
+                self._completion_file.touch()
 
         return True
 
