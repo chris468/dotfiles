@@ -20,6 +20,8 @@ function! extensions#load()
         Plug 'prabirshrestha/asyncomplete.vim'
         Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
+        Plug 'jacquesbh/vim-showmarks'
+
         if has('python3')
             Plug 'puremourning/vimspector'
         endif
