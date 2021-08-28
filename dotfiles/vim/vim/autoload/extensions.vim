@@ -23,7 +23,7 @@ function! extensions#load()
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
         Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
-        Plug 'vim-syntastic/syntastic'
+        Plug 'dense-analysis/ale'
 
         " specific language support
         Plug 'elixir-editors/vim-elixir'
