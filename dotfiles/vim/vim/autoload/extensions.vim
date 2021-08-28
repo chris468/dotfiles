@@ -8,17 +8,25 @@ function! extensions#load()
         " https://github.com/junegunn/vim-plug/wiki/tips#vim-help
         Plug 'junegunn/vim-plug'
 
+        " colors
         Plug 'dracula/vim'
 
+        " general utilities
         Plug 'tpope/vim-surround'
         Plug 'tommcdo/vim-exchange'
-        Plug 'ctrlpvim/ctrlp.vim'
+        Plug 'jacquesbh/vim-showmarks'
+
+        " file explorer
         Plug 'preservim/nerdtree'
 
+        " core ide utilities
+        Plug 'ctrlpvim/ctrlp.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
+        Plug 'vim-syntastic/syntastic'
+
+        " specific language support
         Plug 'elixir-editors/vim-elixir'
 
-        Plug 'jacquesbh/vim-showmarks'
 
         if has('python3')
             Plug 'puremourning/vimspector'
