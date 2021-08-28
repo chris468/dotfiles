@@ -15,10 +15,7 @@ function! extensions#load()
         Plug 'ctrlpvim/ctrlp.vim'
         Plug 'preservim/nerdtree'
 
-        Plug 'prabirshrestha/vim-lsp'
-        Plug 'mattn/vim-lsp-settings'
         Plug 'prabirshrestha/asyncomplete.vim'
-        Plug 'prabirshrestha/asyncomplete-lsp.vim'
         Plug 'elixir-editors/vim-elixir'
 
         Plug 'jacquesbh/vim-showmarks'
