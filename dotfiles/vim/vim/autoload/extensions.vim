@@ -20,7 +20,8 @@ function! extensions#load()
         Plug 'preservim/nerdtree'
 
         " core ide utilities
-        Plug 'ctrlpvim/ctrlp.vim'
+        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+        Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
         Plug 'vim-syntastic/syntastic'
 
