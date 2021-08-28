@@ -28,6 +28,9 @@ function! extensions#load()
         " specific language support
         Plug 'elixir-editors/vim-elixir'
 
+        " C#
+        Plug 'OmniSharp/omnisharp-vim'
+
 
         if has('python3')
             Plug 'puremourning/vimspector'
