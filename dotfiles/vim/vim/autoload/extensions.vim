@@ -23,6 +23,7 @@ function! extensions#load()
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
         Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
+        Plug 'neoclide/coc.nvim', { 'branch': 'release' }
         Plug 'dense-analysis/ale'
 
         " specific language support
