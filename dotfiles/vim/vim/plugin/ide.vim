@@ -37,7 +37,7 @@ let g:vimspector_sign_priority = {
   \ }
 
 
-let g:ctrlp_root_markers = [ '*.sln' ]
+let g:ctrlp_root_markers = [ '*.sln', '.git' ]
 
 " Don't require explicit selection
 let g:asyncomplete_auto_completeopt = 0
