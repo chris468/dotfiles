@@ -8,6 +8,22 @@ function! s:coc_show_documentation()
   endif
 endfunction
 
+function! s:configure_omnisharp()
+    let b:language_service = 'omnisharp'
+    nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
+    " nmap <silent> <buffer> gy " None
+    nmap <silent> <buffer> gi <Plug>(omnisharp_find_implementations)
+    nmap <silent> <buffer> gr <Plug>(omnisharp_find_usages)
+
+    nmap <silent> <buffer> K <Plug>(omnisharp_type_lookup)
+
+    nmap <silent> <buffer> <leader>rn <Plug>(omnisharp-rename)
+    nmap <silent> <buffer> <leader>ac <Plug>(omnisharp_code_actions)
+    nmap <silent> <buffer> <leader>s <Plug>(omnisharp_signature_help)
+    imap <silent> <buffer> <C-\>s <Plug>(omnisharp_signature_help)
+endfunction
+
+
 function! s:configure_coc()
     let b:language_service = 'coc'
     nmap <silent> <buffer> gd <Plug>(coc-definition)
@@ -37,7 +53,9 @@ function! s:configure_ale()
 endfunction
 
 function! s:configure_language_integration()
-    if index(keys(g:ale_linters), &filetype) == -1
+    if &filetype == 'cs'
+        call s:configure_omnisharp()
+    elseif index(keys(g:ale_linters), &filetype) == -1
         call s:configure_coc()
     else
         call s:configure_ale()
