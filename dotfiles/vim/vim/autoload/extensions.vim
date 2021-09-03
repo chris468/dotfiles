@@ -8,20 +8,30 @@ function! extensions#load()
         " https://github.com/junegunn/vim-plug/wiki/tips#vim-help
         Plug 'junegunn/vim-plug'
 
+        " colors
         Plug 'dracula/vim'
 
+        " general utilities
         Plug 'tpope/vim-surround'
         Plug 'tommcdo/vim-exchange'
-        Plug 'ctrlpvim/ctrlp.vim'
+        Plug 'jacquesbh/vim-showmarks'
+
+        " file explorer
         Plug 'preservim/nerdtree'
 
-        Plug 'prabirshrestha/vim-lsp'
-        Plug 'mattn/vim-lsp-settings'
+        " core ide utilities
+        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+        Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
-        Plug 'prabirshrestha/asyncomplete-lsp.vim'
+        Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+        Plug 'dense-analysis/ale'
+
+        " specific language support
         Plug 'elixir-editors/vim-elixir'
 
-        Plug 'jacquesbh/vim-showmarks'
+        " C#
+        Plug 'OmniSharp/omnisharp-vim'
+
 
         if has('python3')
             Plug 'puremourning/vimspector'
