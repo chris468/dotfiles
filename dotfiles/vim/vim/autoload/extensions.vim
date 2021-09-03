@@ -32,6 +32,8 @@ function! extensions#load()
         " C#
         Plug 'OmniSharp/omnisharp-vim'
 
+        " git
+        Plug 'tpope/vim-fugitive'
 
         if has('python3')
             Plug 'puremourning/vimspector'
