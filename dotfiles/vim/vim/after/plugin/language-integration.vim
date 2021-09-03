@@ -37,6 +37,11 @@ function! s:configure_coc()
     nmap <silent> <buffer> <leader>ac <Plug>(coc-codeaction)
     nmap <silent> <buffer> <leader>s :call CocActionAsync('showSignatureHelp')
     imap <silent> <buffer> <C-\>s <C-O>:call CocActionAsync('showSignatureHelp')
+
+    nnoremap <silent><nowait> <space>j :<C-u>CocNext<CR>
+    nnoremap <silent><nowait> <space>k :<C-u>CocPrev<CR>
+    nnoremap <silent><nowait> <space>p :<C-u>CocListResumr<CR>
+
 endfunction
 
 function! s:configure_ale()
