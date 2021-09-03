@@ -6,6 +6,8 @@
 	bmr = !git branch -vv | grep gone | sed -e 's/^*//' | awk '{ print $1 }'
 	delete-remote-branch = push --delete origin
 	fixup = commit --amend --no-edit
+	default-branch = "!git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'"
+	new-branch = "!fn() { git checkout -b $1 origin/$(git default-branch) --no-track ; }; fn"
 [format]
 	pretty = %C(auto)%h %s%d%Creset
 [fetch]
