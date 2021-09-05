@@ -59,6 +59,7 @@ endfunction
 
 nnoremap <leader>et :NERDTreeToggle<CR> " Explorer Toggle
 nnoremap <leader>ef :NERDTreeFocus<CR> " Explorer Focus
+nnoremap <leader>eF :NERDTreeFind<CR> " Explor Find current file
 
 autocmd StdinReadPre * let s:std_in=1
 augroup explorer
