@@ -35,3 +35,18 @@ augroup remember_folds
   autocmd BufWinLeave * silent! mkview
   autocmd BufWinEnter * silent! loadview
 augroup END
+
+let g:rooter_patterns = ['.git', 'package.json', '*.sln']
+let g:rooter_manual_only = 1
+
+function s:find_files()
+    let root = FindRootDirectory()
+    echom 'root' root
+    if !empty(glob('.git'))
+        execute 'GFiles' root
+    else
+       execute 'Files' root
+   endif
+endfunction
+
+nmap <silent> <leader>ff :call <SID>find_files()<CR>

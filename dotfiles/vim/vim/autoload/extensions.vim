@@ -25,6 +25,7 @@ function! extensions#load()
         Plug 'prabirshrestha/asyncomplete.vim'
         Plug 'neoclide/coc.nvim', { 'branch': 'release' }
         Plug 'dense-analysis/ale'
+        Plug 'airblade/vim-rooter'
 
         " specific language support
         Plug 'elixir-editors/vim-elixir'

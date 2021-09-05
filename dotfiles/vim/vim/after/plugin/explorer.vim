@@ -61,6 +61,9 @@ nnoremap <leader>et :NERDTreeToggle<CR> " Explorer Toggle
 nnoremap <leader>ef :NERDTreeFocus<CR> " Explorer Focus
 
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * call s:show_explorer_on_launch()
-autocmd BufEnter * call s:prevent_replacing_explorer()
-autocmd BufEnter * call s:exit_when_only_explorer_remains()
+augroup explorer
+    autocmd!
+    autocmd VimEnter * call s:show_explorer_on_launch()
+    autocmd BufEnter * call s:prevent_replacing_explorer()
+    autocmd BufEnter * call s:exit_when_only_explorer_remains()
+augroup END
