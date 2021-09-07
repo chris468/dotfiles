@@ -64,7 +64,7 @@ nnoremap <leader>eF :NERDTreeFind<CR> " Explor Find current file
 autocmd StdinReadPre * let s:std_in=1
 augroup explorer
     autocmd!
-    autocmd VimEnter * call s:show_explorer_on_launch()
+    " autocmd VimEnter * call s:show_explorer_on_launch()
     autocmd BufEnter * call s:prevent_replacing_explorer()
     autocmd BufEnter * call s:exit_when_only_explorer_remains()
 augroup END
