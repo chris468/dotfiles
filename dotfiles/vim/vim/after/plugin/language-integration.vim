@@ -40,7 +40,7 @@ function! s:configure_coc()
 
     nnoremap <silent><nowait> <space>j :<C-u>CocNext<CR>
     nnoremap <silent><nowait> <space>k :<C-u>CocPrev<CR>
-    nnoremap <silent><nowait> <space>p :<C-u>CocListResumr<CR>
+    nnoremap <silent><nowait> <space>p :<C-u>CocListResume<CR>
 
 endfunction
 
