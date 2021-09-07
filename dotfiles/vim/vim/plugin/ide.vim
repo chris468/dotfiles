@@ -49,4 +49,4 @@ function s:find_files()
    endif
 endfunction
 
-nmap <silent> <leader>ff :call <SID>find_files()<CR>
+nmap <silent> <leader>f :call <SID>find_files()<CR>

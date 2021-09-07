@@ -18,7 +18,7 @@ function! s:configure_omnisharp()
     nmap <silent> <buffer> K <Plug>(omnisharp_type_lookup)
 
     nmap <silent> <buffer> <leader>rn <Plug>(omnisharp-rename)
-    nmap <silent> <buffer> <leader>ac <Plug>(omnisharp_code_actions)
+    nmap <silent> <buffer> <leader><leader> <Plug>(omnisharp_code_actions)
     nmap <silent> <buffer> <leader>s <Plug>(omnisharp_signature_help)
     imap <silent> <buffer> <C-\>s <Plug>(omnisharp_signature_help)
 endfunction
@@ -34,7 +34,7 @@ function! s:configure_coc()
     nmap <silent> <buffer> K :call <SID>coc_show_documentation()<CR>
 
     nmap <silent> <buffer> <leader>rn <Plug>(coc-rename)
-    nmap <silent> <buffer> <leader>ac <Plug>(coc-codeaction)
+    nmap <silent> <buffer> <leader><leader> <Plug>(coc-codeaction)
     nmap <silent> <buffer> <leader>s :call CocActionAsync('showSignatureHelp')
     imap <silent> <buffer> <C-\>s <C-O>:call CocActionAsync('showSignatureHelp')
 
@@ -54,7 +54,7 @@ function! s:configure_ale()
     nmap <silent> <buffer> K <Plug>(ale-hover)
 
     nmap <silent> <buffer> <leader>rn :ALERename<CR>
-    nmap <silent> <buffer> <leader>ac :ALECodeAction<CR>
+    nmap <silent> <buffer> <leader><leader> :ALECodeAction<CR>
 endfunction
 
 function! s:configure_language_integration()
