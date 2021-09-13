@@ -39,14 +39,15 @@ augroup END
 let g:rooter_patterns = ['.git', 'package.json', '*.sln']
 let g:rooter_manual_only = 1
 
-function s:find_files()
+function s:find_files(check_for_git)
     let root = FindRootDirectory()
     echom 'root' root
-    if !empty(glob('.git'))
+    if a:check_for_git && !empty(glob('.git'))
         execute 'GFiles' root
     else
        execute 'Files' root
    endif
 endfunction
 
-nmap <silent> <leader>f :call <SID>find_files()<CR>
+nmap <silent> <leader>f :call <SID>find_files(1)<CR>
+nmap <silent> <leader>F :call <SID>find_files(0)<CR>
