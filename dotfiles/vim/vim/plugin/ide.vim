@@ -51,3 +51,10 @@ endfunction
 
 nmap <silent> <leader>f :call <SID>find_files(1)<CR>
 nmap <silent> <leader>F :call <SID>find_files(0)<CR>
+
+call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({}))
+
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<tab>'
+let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
+

@@ -26,6 +26,9 @@ function! extensions#load()
         Plug 'neoclide/coc.nvim', { 'branch': 'release' }
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
+        Plug 'SirVer/ultisnips'
+        Plug 'honza/vim-snippets'
+        Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
 
         " specific language support
         Plug 'elixir-editors/vim-elixir'
