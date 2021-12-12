@@ -1,7 +1,7 @@
 set nobackup
 set nowrap
 
-if &term == 'win32' && $WT_SESSION
+if &term == 'win32' && !empty($WT_SESSION)
     set termguicolors
 endif
 
