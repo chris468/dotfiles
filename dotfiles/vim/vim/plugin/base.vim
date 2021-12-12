@@ -2,7 +2,7 @@ set nobackup
 set nowrap
 
 if &term == 'win32' && !empty($WT_SESSION)
-    set termguicolors
+    silent! set termguicolors
 endif
 
 set background=dark
