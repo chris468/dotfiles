@@ -82,6 +82,7 @@ function Initialize-InteractiveSession {
     function Configure-PSReadline {
         Set-PSReadLineOption -Editmode vi
         Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler ${Function:On-VIModeChange}
+        Set-PSReadLineOption -HistorySavePath "$HOME/.cache/pwsh/history.txt"
     }
 
     if (! $global:InteractiveSession ) {
