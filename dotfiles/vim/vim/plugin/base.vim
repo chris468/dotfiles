@@ -1,6 +1,10 @@
 set nobackup
 set nowrap
 
+if &term == 'win32' && $WT_SESSION
+    set termguicolors
+endif
+
 set background=dark
 let g:dracula_italic = 0
 silent! colors dracula
