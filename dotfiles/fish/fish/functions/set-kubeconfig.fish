@@ -1,3 +1,8 @@
 function set-kubeconfig
-    set -x -g KUBECONFIG (string join ':' (find ~/.kube/ -maxdepth 1 -type f))
+    if test -d ~/.kube
+        set -l files (string join ':' (find ~/.kube/ -maxdepth 1 -type f))
+        if test -n "$files"
+            set -x -g KUBECONFIG "$files"
+        end
+    end
 end
