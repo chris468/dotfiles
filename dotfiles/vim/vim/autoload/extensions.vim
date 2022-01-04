@@ -29,7 +29,6 @@ function! extensions#load()
         Plug 'SirVer/ultisnips'
         Plug 'honza/vim-snippets'
         Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
-        Plug 'Yggdroot/indentLine'
 
         " specific language support
         Plug 'elixir-editors/vim-elixir'
