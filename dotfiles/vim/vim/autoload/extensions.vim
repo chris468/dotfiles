@@ -23,7 +23,11 @@ function! extensions#load()
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
         Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
-        Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
+        if executable('node')
+            Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+        endif
+
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
         Plug 'SirVer/ultisnips'
