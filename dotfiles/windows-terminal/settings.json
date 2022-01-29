@@ -53,7 +53,7 @@
             },
             {
                 "name": "thermaltake",
-                "commandline": "wsl ssh -t thermaltake.antlan"
+                "commandline": "wsl ssh -t thermaltake.synlan"
             },
             {
               "name": "Git bash",
