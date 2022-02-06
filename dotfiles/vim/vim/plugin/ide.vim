@@ -29,12 +29,12 @@ set foldlevelstart=99
 
 " Preserve fold levels
 " https://stackoverflow.com/questions/37552913/vim-how-to-keep-folds-on-save
-set viewoptions=folds
-augroup remember_folds
-  autocmd!
-  autocmd BufWinLeave * silent! mkview
-  autocmd BufWinEnter * silent! loadview
-augroup END
+" set viewoptions=folds
+" augroup remember_folds
+"   autocmd!
+"   autocmd BufWinLeave * silent! mkview
+"   autocmd BufWinEnter * silent! loadview
+" augroup END
 
 let g:rooter_patterns = ['.git', 'package.json', '*.sln']
 let g:rooter_manual_only = 1
