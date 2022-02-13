@@ -3,6 +3,7 @@
 	pushf = push --force-with-lease
 	logd = log --pretty=format:'%C(auto)%h%d %cd%n  %aN <%ae>%n  %s%n'
 	logg = log --graph
+	logm = log --reverse origin/HEAD..
 	bmr = !git branch -vv | grep gone | sed -e 's/^[*+]//' | awk '{ print $1 }'
 	delete-remote-branch = push --delete origin
 	fixup = commit --amend --no-edit
