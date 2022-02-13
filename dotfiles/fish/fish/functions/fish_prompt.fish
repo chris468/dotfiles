@@ -14,12 +14,14 @@ function fish_prompt --description 'Informative prompt'
             set -l workingdir (set_color $fish_color_cwd)"$PWD"
             set -l pipestatus_string (__fish_print_pipestatus "[" "] " "|" (set_color $fish_color_status) \
                                       (set_color --bold $fish_color_status) $last_pipestatus)
+            set -l vcs_prompt (fish_git_prompt)
 
-            printf '[%s] %s %s %s%s\f\r> ' \
+            printf '[%s] %s %s %s%s\f\r%s > ' \
                 "$time" \
                 "$user" \
                 "$workingdir" \
                 "$pipestatus_string" \
-                (set_color normal)
+                (set_color normal) \
+                "$vcs_prompt"
     end
 end
