@@ -95,6 +95,20 @@ function Initialize-InteractiveSession {
     }
 }
 
+function Get-AWSProfile {
+    $awsProfileInfo = @()
+    if ($env:AWS_PROFILE) {
+        $awsProfileInfo += $env:AWS_PROFILE
+    }
+    if ($env:AWS_ACCESS_KEY_ID) {
+        $awsProfileInfo += "Key"
+    }
+
+    if ($awsProfileInfo) {
+        "[AWS: $($awsProfileInfo -Join ', ')]`n"
+    }
+}
+
 function prompt {
     function gitPrompt {
         & $GitPromptScriptBlock
@@ -108,6 +122,8 @@ function prompt {
     if ( $promptPrefix ) {
         $promptPrefix += "`n`n"
     }
+
+    $promptPrefix += Get-AWSProfile
 
     if ( ! $failure ) {
         if ( $err -ne 0 ) {
