@@ -11,7 +11,7 @@ function fish_prompt --description 'Informative prompt'
         case '*'
             set -l time (date "+%H:%M:%S")
             set -l user (set_color brblue)"$USER@"(prompt_hostname)
-            set -l workingdir (set_color $fish_color_cwd)"$PWD"
+            set -l workingdir (set_color $fish_color_cwd)(prompt_pwd)
             set -l pipestatus_string (__fish_print_pipestatus "[" "] " "|" (set_color $fish_color_status) \
                                       (set_color --bold $fish_color_status) $last_pipestatus)
             set -l vcs_prompt (fish_git_prompt)
