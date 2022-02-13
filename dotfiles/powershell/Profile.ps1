@@ -73,7 +73,7 @@ function Configure-Completions {
     }
 
     foreach ($command in $completions.Keys) {
-        if (Get-Command $command) {
+        if (Get-Command $command -ErrorAction SilentlyContinue) {
             Invoke-Expression $completions[$command] | Out-String | Invoke-Expression
         }
     }
@@ -122,6 +122,9 @@ function Initialize-InteractiveSession {
         Configure-PoshGit
         Configure-PSReadline
 
+        $env:PATH = "$HOME/bin;$env:PATH"
+
+        . Configure-Completions
     }
 }
 
@@ -178,6 +181,3 @@ function prompt {
     "`n" + $promptPrefix + $git
 }
 
-$env:PATH = "$HOME/bin;$env:PATH"
-
-. Configure-Completions
