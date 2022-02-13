@@ -138,7 +138,16 @@ function Get-AWSProfile {
     }
 
     if ($awsProfileInfo) {
-        "[AWS: $($awsProfileInfo -Join ', ')]`n"
+        "[AWS:$($awsProfileInfo -Join ', ')]"
+    }
+}
+
+function Get-K8sContext {
+    if (Get-Command kubectl -ErrorAction SilentlyContinue) {
+        $k8sContext = $(kubectl config current-context)
+        if ($k8sContext) {
+            "[k8s:$k8sContext]"
+        }
     }
 }
 
@@ -156,7 +165,8 @@ function prompt {
         $promptPrefix += "`n`n"
     }
 
-    $promptPrefix += Get-AWSProfile
+    $profiles = $(Get-K8sContext),$(Get-AWSProfile)
+    $promptPrefix += "$($profiles -join ' ')`n"
 
     if ( ! $failure ) {
         if ( $err -ne 0 ) {
@@ -172,7 +182,7 @@ function prompt {
 
     $status = Get-DotfilesStatusUpdate
     if ( $status ) {
-        $promptPrefix += "`n$status`n`n"
+        $promptPrefix = "`n$status`n`n" + $promptPrefix
     }
 
     $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text=$lastCommandResult
