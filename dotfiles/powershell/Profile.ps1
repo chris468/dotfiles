@@ -92,6 +92,8 @@ function Initialize-InteractiveSession {
         Auto-Update-Dotfiles
         Configure-PoshGit
         Configure-PSReadline
+
+        $env:PATH = "$HOME/bin;$env:PATH"
     }
 }
 
