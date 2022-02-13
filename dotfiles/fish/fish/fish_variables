@@ -3,8 +3,8 @@
 SETUVAR --export LIBVIRT_DEFAULT_URI:qemu\x3a///system
 SETUVAR __fish_git_prompt_showupstream:auto
 SETUVAR __fish_initialized:3100
-SETUVAR _fisher_dracula_2F_fish_files:/home/chris/\x2econfig/dotfiles/dotfiles/fish/fish/fisher/conf\x2ed/dracula\x2efish
-SETUVAR _fisher_jorgebucaran_2F_fisher_files:/home/chris/\x2econfig/dotfiles/dotfiles/fish/fish/fisher/functions/fisher\x2efish\x1e/home/chris/\x2econfig/dotfiles/dotfiles/fish/fish/fisher/completions/fisher\x2efish
+SETUVAR _fisher_dracula_2F_fish_files:/home/chris/\x2econfig/fish/conf\x2ed/dracula\x2efish
+SETUVAR _fisher_jorgebucaran_2F_fisher_files:/home/chris/\x2econfig/fish/functions/fisher\x2efish\x1e/home/chris/\x2econfig/fish/completions/fisher\x2efish
 SETUVAR _fisher_plugins:jorgebucaran/fisher\x1edracula/fish
 SETUVAR fish_color_autosuggestion:555\x1ebrblack
 SETUVAR fish_color_cancel:\x2dr
