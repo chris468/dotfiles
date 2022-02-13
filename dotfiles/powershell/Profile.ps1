@@ -53,6 +53,34 @@ function Update-Dotfiles {
     & $dotfiles\update.ps1
 }
 
+function Register-AWSCompletion {
+    Register-ArgumentCompleter -Native -CommandName aws -ScriptBlock {
+    param($commandName, $wordToComplete, $cursorPosition)
+        $env:COMP_LINE=$wordToComplete
+        $env:COMP_POINT=$cursorPosition
+        aws_completer.exe | ForEach-Object {
+            [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+        }
+        Remove-Item Env:\COMP_LINE
+        Remove-Item Env:\COMP_POINT
+    }
+}
+
+function Configure-Completions {
+    $completions = @{
+        helm = "helm completion powershell"
+        kubectl = "kubectl completion powershell"
+    }
+
+    foreach ($command in $completions.Keys) {
+        if (Get-Command $command) {
+            Invoke-Expression $completions[$command] | Out-String | Invoke-Expression
+        }
+    }
+
+    Register-AWSCompletion
+}
+
 function Initialize-InteractiveSession {
 
     function Auto-Update-Dotfiles {
@@ -89,11 +117,11 @@ function Initialize-InteractiveSession {
         Import-Module posh-git
 
         $global:InteractiveSession = $true
+
         Auto-Update-Dotfiles
         Configure-PoshGit
         Configure-PSReadline
 
-        $env:PATH = "$HOME/bin;$env:PATH"
     }
 }
 
@@ -149,3 +177,7 @@ function prompt {
     $git = gitPrompt
     "`n" + $promptPrefix + $git
 }
+
+$env:PATH = "$HOME/bin;$env:PATH"
+
+. Configure-Completions
