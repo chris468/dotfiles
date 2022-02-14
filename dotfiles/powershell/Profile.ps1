@@ -72,6 +72,7 @@ function Initialize-InteractiveSession {
         $global:InteractiveSession = $true
 
         Auto-Update-Dotfiles
+        Configure-PSReadLine
     }
 }
 
@@ -97,8 +98,6 @@ function Get-K8sContext {
         }
     }
 }
-
-
 
 function Configure-Prompt {
     # oh my posh replaces the prompt function. To be able to make sure Initialize-InteractiveSession,
