@@ -122,9 +122,6 @@ function Initialize-InteractiveSession {
         Configure-PoshGit
         Configure-PSReadline
 
-        $env:PATH = "$HOME/bin;$env:PATH"
-
-        . Configure-Completions
     }
 }
 
@@ -191,3 +188,6 @@ function prompt {
     "`n" + $promptPrefix + $git
 }
 
+$env:PATH = "$HOME/bin;$env:PATH"
+
+. Configure-Completions
