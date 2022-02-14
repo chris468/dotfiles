@@ -8,8 +8,8 @@
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
     "profiles": {
         "defaults": {
-            "fontSize": 10,
-            "fontFace": "Cascadia Mono PL",
+            "fontSize": 9,
+            "fontFace": "MesloLGM NF",
             "colorScheme": "Dracula",
             "bellStyle": "visual"
         },
