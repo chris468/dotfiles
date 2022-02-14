@@ -17,36 +17,6 @@ function On-VIModeChange {
     }
 }
 
-function Get-ShortPromptPath {
-    function Shorten-Component {
-        Param([string]$component)
-
-        if ( $component.StartsWith('.') ) {
-            $component.Substring(0, 2)
-        } else {
-            $component.Substring(0, 1)
-        }
-    }
-
-    $normalizedLocation=(Get-Location | Resolve-Path).Path.Replace("$HOME", "~")
-    $components = $normalizedLocation.Split([System.IO.Path]::DirectorySeparatorChar, [System.StringSplitOptions]::RemoveEmptyEntries)
-
-    $sb = [System.Text.StringBuilder]::new()
-    for ($i = 0; $i -lt $components.Length - 1; $i++) {
-        if ($i -eq 0 -and $components[$i].Contains(':')) {
-            $null = $sb.Append($components[$i])
-        } else {
-            $null = $sb.Append((Shorten-Component($components[$i])))
-        }
-
-        $null = $sb.Append('\')
-    }
-
-    $null = $sb.Append($components[-1])
-
-    $sb.ToString()
-}
-
 $dotfiles = Split-Path (Split-Path (Split-Path (Get-Item $PSCommandPath).Target))
 
 function Update-Dotfiles {
@@ -92,21 +62,6 @@ function Initialize-InteractiveSession {
         Pop-Location
     }
 
-    function Configure-PoshGit {
-        Import-Module posh-git
-
-        $global:GitPromptSettings.DefaultPromptPath.Text='$(Get-ShortPromptPath)'
-        $global:GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor=$global:GitPromptSettings.ErrorColor.ForegroundColor
-        $global:GitPromptSettings.DefaultPromptBeforeSuffix.BackgroundColor=$global:GitPromptSettings.ErrorColor.BackgroundColor
-
-        # For performance, disable untracked files in the prompt.
-        # Just disabling doesn't hide the +0 - need to set the
-        # option to hide 0 statuses as well.
-        $global:GitPromptSettings.UntrackedFilesMode="no"
-        $global:GitPromptSettings.ShowStatusWhenZero=$false
-
-    }
-
     function Configure-PSReadline {
         Set-PSReadLineOption -Editmode vi
         Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler ${Function:On-VIModeChange}
@@ -114,14 +69,9 @@ function Initialize-InteractiveSession {
     }
 
     if (! $global:InteractiveSession ) {
-        Import-Module posh-git
-
         $global:InteractiveSession = $true
 
         Auto-Update-Dotfiles
-        Configure-PoshGit
-        Configure-PSReadline
-
     }
 }
 
@@ -148,46 +98,35 @@ function Get-K8sContext {
     }
 }
 
-function prompt {
-    function gitPrompt {
-        & $GitPromptScriptBlock
-    }
 
-    $failure = $?
-    $err = $LASTEXITCODE
 
-    $promptPrefix = Initialize-InteractiveSession
+function Configure-Prompt {
+    # oh my posh replaces the prompt function. To be able to make sure Initialize-InteractiveSession,
+    # configure the posh prompt inside the initial prompt function.
+    $env:POSH_THEMES_PATH="$(scoop prefix oh-my-posh)\themes"
+    $theme = "$env:POSH_THEMES_PATH\powerlevel10k_rainbow.omp.json"
+    oh-my-posh --init --shell pwsh --config $theme | Invoke-Expression
 
-    if ( $promptPrefix ) {
-        $promptPrefix += "`n`n"
-    }
+    Set-Item function:OhMyPoshPrompt (Get-Item function:Prompt).ScriptBlock -Force
 
-    $profiles = $(Get-K8sContext),$(Get-AWSProfile)
-    $promptPrefix += "$($profiles -join ' ')`n"
-
-    if ( ! $failure ) {
-        if ( $err -ne 0 ) {
-            $lastCommandResult = " [$err]"
+    [ScriptBlock]$PromptWrapper = {
+        $promptPrefix = Initialize-InteractiveSession
+        if ($promptPrefix) {
+            $promptPrefix += "`n`n"
         }
-        else {
-            $lastCommandResult = " [F]"
+
+        $status = Get-DotfilesStatusUpdate
+        if ( $status ) {
+            $promptPrefix += "$status`n`n"
         }
-    }
-    else {
-        $lastCommandResult = ""
-    }
 
-    $status = Get-DotfilesStatusUpdate
-    if ( $status ) {
-        $promptPrefix = "`n$status`n`n" + $promptPrefix
+        $status + $(OhMyPoshPrompt)
     }
 
-    $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text=$lastCommandResult
-
-    $git = gitPrompt
-    "`n" + $promptPrefix + $git
+    Set-Item function:Prompt $PromptWrapper -Force
 }
 
 $env:PATH = "$HOME/bin;$env:PATH"
 
+. Configure-Prompt
 . Configure-Completions
