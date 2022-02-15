@@ -1,6 +1,5 @@
 type -q oh-my-posh ; or exit
 
-set -l posh_theme_path ~/.config/poshthemes
-set posh_theme $posh_theme_path/powerlevel10k_rainbow.omp.json
+set posh_theme (realpath $__fish_config_dir)/../../oh-my-posh/current-theme.omp.json
 
 oh-my-posh --init --shell fish --config $posh_theme | source
