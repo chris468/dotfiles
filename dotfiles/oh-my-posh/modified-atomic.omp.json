@@ -6,6 +6,9 @@
       "segments": [
         {
           "background": "#0077c2",
+          "background_templates": [
+            "{{ if .Env.SSH_CLIENT }}#32A881{{ end }}"
+          ],
           "foreground": "#ffffff",
           "leading_diamond": "\u256d\u2500\ue0b6",
           "properties": {
@@ -19,6 +22,9 @@
         },
         {
           "background": "#0077c2",
+          "background_templates": [
+            "{{ if .Env.SSH_CLIENT }}#32A881{{ end }}"
+          ],
           "foreground": "#ffffff",
           "properties": {
             "template": "{{ .UserName }}@{{ .HostName | lower }} "
