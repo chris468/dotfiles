@@ -8,7 +8,8 @@
     "git-ahead-foreground": "#89d1dc",
     "git-behind-foreground": "#c5b6ad",
     "error-foreground": "ff8080",
-    "session-foreground": "#757575"
+    "session-foreground": "#757575",
+    "separator-foreground": "#5e81ac"
   },
   "blocks": [
     {
@@ -55,7 +56,7 @@
         {
           "foreground": "p:session-foreground",
           "properties": {
-            "template": "\u250c[{{ .UserName }}@{{ .HostName }}]"
+            "template": "<p:separator-foreground>\u250c[</>{{ .UserName }}@{{ .HostName }}<p:separator-foreground>]</>"
           },
           "style": "plain",
           "type": "session"
