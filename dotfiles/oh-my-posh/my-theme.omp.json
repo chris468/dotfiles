@@ -45,7 +45,7 @@
         {
           "foreground": "#757575",
           "properties": {
-            "template": "\u250c {{ .UserName }}@{{ .HostName }} "
+            "template": "\u250c[{{ .UserName }}@{{ .HostName }}]"
           },
           "style": "plain",
           "type": "session"
@@ -53,12 +53,11 @@
         {
           "background": "#91ddff",
           "foreground": "#100e23",
-          "powerline_symbol": "\ue0b0",
           "properties": {
             "style": "folder",
-            "template": " {{ .Path }} "
+            "template": "--[{{ .Path }}]"
           },
-          "style": "powerline",
+          "style": "plain",
           "type": "path"
         },
         {
@@ -70,7 +69,6 @@
             "{{ if gt .Behind 0 }}#c5b6ad{{ end }}"
           ],
           "foreground": "#100e23",
-          "powerline_symbol": "\ue0b0",
           "properties": {
             "branch_ahead_icon": "\u2191",
             "branch_behind_icon": "\u2193",
@@ -85,16 +83,16 @@
             "no_commits_icon": "[no commits]",
             "rebase_icon": "\u2c62 ",
             "tag_icon": "\u25b6 ",
-            "template": " {{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} \u2502{{ end }}{{ if .Staging.Changed }} {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} {{ .StashCount }}{{ end }} "
+            "template": "--[{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} \u2502{{ end }}{{ if .Staging.Changed }} {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} {{ .StashCount }}{{ end }}]"
           },
-          "style": "powerline",
+          "style": "plain",
           "type": "git"
         },
         {
           "style": "plain",
           "type": "text",
           "properties": {
-            "template": "todo command time"
+            "template": "--[todo command time]"
           }
         },
         {
@@ -102,9 +100,9 @@
           "foreground": "#ffffff",
           "powerline_symbol": "\ue0b0",
           "properties": {
-            "template": " error "
+            "template": "--[error]"
           },
-          "style": "powerline",
+          "style": "plain",
           "type": "exit"
         }
       ],
