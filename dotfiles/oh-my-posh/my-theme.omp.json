@@ -1,5 +1,15 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {
+    "shell-foreground": "#91ddff",
+    "git-foreground": "#95ffa4",
+    "git-changed-foreground": "#ff9248",
+    "git-local-and-remote-changes-foreground": "#f26d50",
+    "git-ahead-foreground": "#89d1dc",
+    "git-behind-foreground": "#c5b6ad",
+    "error-foreground": "ff8080",
+    "session-foreground": "#757575"
+  },
   "blocks": [
     {
       "alignment": "right",
@@ -43,7 +53,7 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "#757575",
+          "foreground": "p:session-foreground",
           "properties": {
             "template": "\u250c[{{ .UserName }}@{{ .HostName }}]"
           },
@@ -51,8 +61,7 @@
           "type": "session"
         },
         {
-          "background": "#91ddff",
-          "foreground": "#100e23",
+          "foreground": "p:shell-foreground",
           "properties": {
             "style": "folder",
             "template": "--[{{ .Path }}]"
@@ -61,14 +70,13 @@
           "type": "path"
         },
         {
-          "background": "#95ffa4",
-          "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#ff9248{{ end }}",
-            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#f26d50{{ end }}",
-            "{{ if gt .Ahead 0 }}#89d1dc{{ end }}",
-            "{{ if gt .Behind 0 }}#c5b6ad{{ end }}"
+          "foreground": "p:git-foreground",
+          "foreground_templates": [
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-changed-foreground{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:git-local-and-remote-changes-foreground{{ end }}",
+            "{{ if gt .Ahead 0 }}p:git-ahead-foreground{{ end }}",
+            "{{ if gt .Behind 0 }}p:git-behind-foreground{{ end }}"
           ],
-          "foreground": "#100e23",
           "properties": {
             "branch_ahead_icon": "\u2191",
             "branch_behind_icon": "\u2193",
@@ -96,9 +104,7 @@
           }
         },
         {
-          "background": "#ff8080",
-          "foreground": "#ffffff",
-          "powerline_symbol": "\ue0b0",
+          "foreground": "p:error-foreground",
           "properties": {
             "template": "--[error]"
           },
