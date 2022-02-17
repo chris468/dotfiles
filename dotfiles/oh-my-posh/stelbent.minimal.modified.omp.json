@@ -5,12 +5,18 @@
       "alignment": "right",
       "segments": [
         {
-          "foreground": "#007acc",
-          "properties": {
-            "template": "{{ .Name }}"
-          },
+          "type": "text",
           "style": "plain",
-          "type": "shell"
+          "properties": {
+            "template": "todo aws"
+          }
+        },
+        {
+          "type": "text",
+          "style": "plain",
+          "properties": {
+            "template": "todo docke"
+          }
         },
         {
           "foreground": "#ff8080",
@@ -85,14 +91,11 @@
           "type": "git"
         },
         {
-          "background": "#ffee58",
-          "foreground": "#100e23",
-          "powerline_symbol": "\ue0b0",
+          "style": "plain",
+          "type": "text",
           "properties": {
-            "template": " {{ .WorkspaceName }} "
-          },
-          "style": "powerline",
-          "type": "terraform"
+            "template": "todo command time"
+          }
         },
         {
           "background": "#ff8080",
@@ -120,12 +123,16 @@
           "type": "text"
         },
         {
-          "foreground": "#ffffff",
+          "foreground": "#007acc",
           "properties": {
-            "template": "$"
+            "template": "{{ .Name }}",
+            "mapped_shell_names": {
+              "fish": "$",
+              "pwsh": "PS >"
+            }
           },
           "style": "plain",
-          "type": "text"
+          "type": "shell"
         }
       ],
       "type": "prompt"
