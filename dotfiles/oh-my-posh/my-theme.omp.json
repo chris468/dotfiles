@@ -12,7 +12,9 @@
     "session-foreground": "#757575",
     "separator-foreground": "#5e81ac",
     "executiontime-foreground": "#757575",
-    "aws-foreground": "#faa029"
+    "aws-foreground": "#faa029",
+    "kubectl-foreground": "#316ce4",
+    "time-foreground": "#689f38"
   },
   "blocks": [
     {
@@ -27,25 +29,18 @@
           "type": "aws"
         },
         {
-          "type": "text",
-          "style": "plain",
+          "foreground": "p:kubectl-foreground",
           "properties": {
-            "template": "todo docke"
-          }
-        },
-        {
-          "foreground": "#ff8080",
-          "properties": {
-            "template": " <#757575,>as</> root"
+            "template": "<p:separator-foreground>\u2500[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]</>"
           },
           "style": "plain",
-          "type": "root"
+          "type": "kubectl"
         },
         {
-          "foreground": "#689f38",
+          "foreground": "p:time-foreground",
           "properties": {
-            "template": " <#757575,>|</> {{ .CurrentDate | date .Format }}",
-            "time_format": "15:04:05"
+            "template": "<p:separator-foreground>\u2500[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>",
+            "time_format": "Mon Jan _2 15:04:05"
           },
           "style": "plain",
           "type": "time"
