@@ -1,0 +1,11 @@
+
+current-theme
+my-theme.omp.json
+
+- modified-atomic.omp.json
+   - atomic.omp.json with some items removed
+
+- my-theme.omp.json
+   - starting point was stelbent.minimal.omp.json
+   - added / removed elements
+   - took some inspriation from nordtron
