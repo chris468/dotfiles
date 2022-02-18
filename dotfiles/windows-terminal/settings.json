@@ -9,7 +9,7 @@
     "profiles": {
         "defaults": {
             "fontSize": 10,
-            "fontFace": "Cascadia Mono",
+            "fontFace": "Cascadia Mono PL",
             "colorScheme": "Dracula",
             "bellStyle": "visual"
         },
