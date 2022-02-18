@@ -11,18 +11,20 @@
     "success-foreground": "#00897b",
     "session-foreground": "#757575",
     "separator-foreground": "#5e81ac",
-    "executiontime-foreground": "#757575"
+    "executiontime-foreground": "#757575",
+    "aws-foreground": "#faa029"
   },
   "blocks": [
     {
       "alignment": "right",
       "segments": [
         {
-          "type": "text",
-          "style": "plain",
+          "foreground": "p:aws-foreground",
           "properties": {
-            "template": "todo aws"
-          }
+            "template": "<p:separator-foreground>[</>{{.Profile}}{{if .Region}}@{{.Region}}{{end}}<p:separator-foreground>]</>"
+          },
+          "style": "plain",
+          "type": "aws"
         },
         {
           "type": "text",
