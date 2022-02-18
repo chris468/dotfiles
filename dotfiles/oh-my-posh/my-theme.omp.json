@@ -7,9 +7,11 @@
     "git-local-and-remote-changes-foreground": "#f26d50",
     "git-ahead-foreground": "#89d1dc",
     "git-behind-foreground": "#c5b6ad",
-    "error-foreground": "ff8080",
+    "error-foreground": "#ff8080",
+    "success-foreground": "#00897b",
     "session-foreground": "#757575",
-    "separator-foreground": "#5e81ac"
+    "separator-foreground": "#5e81ac",
+    "executiontime-foreground": "#757575"
   },
   "blocks": [
     {
@@ -95,21 +97,6 @@
           },
           "style": "plain",
           "type": "git"
-        },
-        {
-          "style": "plain",
-          "type": "text",
-          "properties": {
-            "template": "<p:separator-foreground>\u2500[</>todo command time<p:separator-foreground>]</>"
-          }
-        },
-        {
-          "foreground": "p:error-foreground",
-          "properties": {
-            "template": "<p:separator-foreground>\u2500[</>error<p:separator-foreground>]</>"
-          },
-          "style": "plain",
-          "type": "exit"
         }
       ],
       "type": "prompt"
@@ -119,12 +106,34 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "#757575",
+          "foreground": "p:executiontime-foreground",
           "properties": {
-            "template": "<p:separator-foreground>\u2514[ </>"
+            "template": "<p:separator-foreground>\u2514</>"
           },
           "style": "plain",
           "type": "text"
+        },
+        {
+          "foreground": "p:success-foreground",
+          "foreground_templates": [
+            "{{ if ne .Code 0 }}p:error-foreground{{ end }}"
+          ],
+          "properties": {
+            "always_enabled": true,
+            "template": "<p:separator-foreground>[</>{{ if ne .Code 0 }}\u2a2f {{ .Meaning }}{{ else }}\u2713{{ end }} "
+          },
+          "style": "plain",
+          "type": "exit"
+        },
+        {
+          "foreground": "#83769c",
+          "properties": {
+            "style": "austin",
+            "template": "{{ .FormattedMs }}<p:separator-foreground>]</> ",
+            "threshold": 0
+          },
+          "style": "plain",
+          "type": "executiontime"
         },
         {
           "foreground": "#007acc",
