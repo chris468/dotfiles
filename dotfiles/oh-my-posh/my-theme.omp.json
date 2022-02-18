@@ -59,13 +59,12 @@
             "template": "<p:separator-foreground>\u250c[</>{{ .UserName }}@{{ .HostName }}<p:separator-foreground>]</>"
           },
           "style": "plain",
-          "type": "session"
-        },
+          "type": "session" },
         {
           "foreground": "p:shell-foreground",
           "properties": {
             "style": "folder",
-            "template": "--[{{ .Path }}]"
+            "template": "<p:separator-foreground>\u2500[</>{{ .Path }}<p:separator-foreground>]</>"
           },
           "style": "plain",
           "type": "path"
@@ -92,7 +91,7 @@
             "no_commits_icon": "[no commits]",
             "rebase_icon": "\u2c62 ",
             "tag_icon": "\u25b6 ",
-            "template": "--[{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} \u2502{{ end }}{{ if .Staging.Changed }} {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} {{ .StashCount }}{{ end }}]"
+            "template": "<p:separator-foreground>\u2500[</>{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} \u2502{{ end }}{{ if .Staging.Changed }} {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} {{ .StashCount }}{{ end }}<p:separator-foreground>]</>"
           },
           "style": "plain",
           "type": "git"
@@ -101,13 +100,13 @@
           "style": "plain",
           "type": "text",
           "properties": {
-            "template": "--[todo command time]"
+            "template": "<p:separator-foreground>\u2500[</>todo command time<p:separator-foreground>]</>"
           }
         },
         {
           "foreground": "p:error-foreground",
           "properties": {
-            "template": "--[error]"
+            "template": "<p:separator-foreground>\u2500[</>error<p:separator-foreground>]</>"
           },
           "style": "plain",
           "type": "exit"
@@ -122,7 +121,7 @@
         {
           "foreground": "#757575",
           "properties": {
-            "template": "\u2514 "
+            "template": "<p:separator-foreground>\u2514[ </>"
           },
           "style": "plain",
           "type": "text"
