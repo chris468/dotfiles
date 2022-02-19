@@ -9,10 +9,12 @@
     "git-behind-foreground": "#c5b6ad",
     "error-foreground": "#ff8080",
     "success-foreground": "#00897b",
-    "session-foreground": "#757575",
+    "session-local-foreground": "#0077c2",
+    "session-remote-foreground": "#32a881",
     "separator-foreground": "#5e81ac",
     "executiontime-foreground": "#757575",
     "aws-foreground": "#faa029",
+    "aws-key-background": "#4f1e1e",
     "kubectl-foreground": "#316ce4",
     "time-foreground": "#689f38"
   },
@@ -23,7 +25,7 @@
         {
           "foreground": "p:aws-foreground",
           "properties": {
-            "template": "<p:separator-foreground>[</>{{.Profile}}{{if .Region}}@{{.Region}}{{end}}<p:separator-foreground>]</>"
+            "template": "<p:separator-foreground>[</>{{.Profile}}{{ if and .Region (ne .Region \"us-east-1\") }}@{{.Region}}{{end}}<p:separator-foreground>]\u2501</>"
           },
           "style": "plain",
           "type": "aws"
@@ -31,7 +33,7 @@
         {
           "foreground": "p:kubectl-foreground",
           "properties": {
-            "template": "<p:separator-foreground>\u2500[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]</>"
+            "template": "<p:separator-foreground>[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]\u2500</>"
           },
           "style": "plain",
           "type": "kubectl"
@@ -39,7 +41,7 @@
         {
           "foreground": "p:time-foreground",
           "properties": {
-            "template": "<p:separator-foreground>\u2500[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>",
+            "template": "<p:separator-foreground>[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>",
             "time_format": "Mon Jan _2 15:04:05"
           },
           "style": "plain",
@@ -53,9 +55,9 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "p:session-foreground",
+          "foreground": "p:session-local-foreground",
           "properties": {
-            "template": "<p:separator-foreground>\u250c[</>{{ .UserName }}@{{ .HostName }}<p:separator-foreground>]</>"
+            "template": "<p:separator-foreground>\u250c[</>{{ if .Env.SSH_CLIENT }}<p:session-remote-foreground>{{ end }}{{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}</>{{ end }}<p:separator-foreground>]</>"
           },
           "style": "plain",
           "type": "session" },
