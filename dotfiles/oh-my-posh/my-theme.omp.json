@@ -13,6 +13,7 @@
     "separator-foreground": "#5e81ac",
     "executiontime-foreground": "#757575",
     "aws-foreground": "#faa029",
+    "aws-key-background": "#4f1e1e",
     "kubectl-foreground": "#316ce4",
     "time-foreground": "#689f38"
   },
@@ -23,7 +24,7 @@
         {
           "foreground": "p:aws-foreground",
           "properties": {
-            "template": "<p:separator-foreground>[</>{{.Profile}}{{if .Region}}@{{.Region}}{{end}}<p:separator-foreground>]\u2500</>"
+            "template": "<p:separator-foreground>[</>{{.Profile}}{{ if and .Region (ne .Region \"us-east-1\") }}@{{.Region}}{{end}}<p:separator-foreground>]\u2501</>"
           },
           "style": "plain",
           "type": "aws"
