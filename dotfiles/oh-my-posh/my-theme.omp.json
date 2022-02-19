@@ -23,7 +23,7 @@
         {
           "foreground": "p:aws-foreground",
           "properties": {
-            "template": "<p:separator-foreground>[</>{{.Profile}}{{if .Region}}@{{.Region}}{{end}}<p:separator-foreground>]</>"
+            "template": "<p:separator-foreground>[</>{{.Profile}}{{if .Region}}@{{.Region}}{{end}}<p:separator-foreground>]\u2500</>"
           },
           "style": "plain",
           "type": "aws"
@@ -31,7 +31,7 @@
         {
           "foreground": "p:kubectl-foreground",
           "properties": {
-            "template": "<p:separator-foreground>\u2500[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]</>"
+            "template": "<p:separator-foreground>[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]\u2500</>"
           },
           "style": "plain",
           "type": "kubectl"
@@ -39,7 +39,7 @@
         {
           "foreground": "p:time-foreground",
           "properties": {
-            "template": "<p:separator-foreground>\u2500[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>",
+            "template": "<p:separator-foreground>[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>",
             "time_format": "Mon Jan _2 15:04:05"
           },
           "style": "plain",
