@@ -108,6 +108,8 @@ function Configure-Prompt {
     Set-Item function:OhMyPoshPrompt (Get-Item function:Prompt).ScriptBlock -Force
 
     [ScriptBlock]$PromptWrapper = {
+        $prompt = $(OhMyPoshPrompt)
+
         $promptPrefix = Initialize-InteractiveSession
         if ($promptPrefix) {
             $promptPrefix += "`n`n"
@@ -118,7 +120,7 @@ function Configure-Prompt {
             $promptPrefix += "$status`n`n"
         }
 
-        $status + $(OhMyPoshPrompt)
+        $promptPrefix + $prompt
     }
 
     Set-Item function:Prompt $PromptWrapper -Force
