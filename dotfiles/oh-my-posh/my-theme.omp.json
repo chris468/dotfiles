@@ -24,6 +24,9 @@
       "segments": [
         {
           "foreground": "p:aws-foreground",
+          "foreground_templates": [
+            "{{ if contains \"admin\" .Profile }}red{{ end }}"
+          ],
           "properties": {
             "template": "<p:separator-foreground>[</>{{.Profile}}{{ if and .Region (ne .Region \"us-east-1\") }}@{{.Region}}{{end}}<p:separator-foreground>]\u2501</>"
           },
@@ -32,6 +35,9 @@
         },
         {
           "foreground": "p:kubectl-foreground",
+          "foreground_templates": [
+            "{{ if contains \"admin\" .Context }}red{{ end }}"
+          ],
           "properties": {
             "template": "<p:separator-foreground>[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]\u2500</>"
           },
