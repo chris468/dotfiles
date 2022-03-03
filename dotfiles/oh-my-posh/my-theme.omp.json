@@ -68,15 +68,6 @@
           "style": "plain",
           "type": "session" },
         {
-          "foreground": "p:shell-foreground",
-          "properties": {
-            "style": "folder",
-            "template": "<p:separator-foreground>\u2500[</>{{ .Path }}<p:separator-foreground>]</>"
-          },
-          "style": "plain",
-          "type": "path"
-        },
-        {
           "foreground": "p:git-foreground",
           "foreground_templates": [
             "{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-changed-foreground{{ end }}",
@@ -102,6 +93,17 @@
           },
           "style": "plain",
           "type": "git"
+        },
+        {
+          "foreground": "p:shell-foreground",
+          "properties": {
+            "style": "agnoster_short",
+            "template": "<p:separator-foreground>\u2500[</>{{ .Path }}<p:separator-foreground>]</>",
+            "folder_icon": "\u2026",
+            "max_depth": 4
+          },
+          "style": "plain",
+          "type": "path"
         }
       ],
       "type": "prompt"
