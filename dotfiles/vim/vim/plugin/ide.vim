@@ -52,7 +52,9 @@ endfunction
 nmap <silent> <leader>f :call <SID>find_files(1)<CR>
 nmap <silent> <leader>F :call <SID>find_files(0)<CR>
 
-call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({}))
+if exists('g:asyncomplete_loaded')
+    call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({}))
+endif
 
 let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<tab>'
