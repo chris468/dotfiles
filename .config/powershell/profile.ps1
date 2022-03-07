@@ -18,6 +18,7 @@ function On-VIModeChange {
 }
 
 $dotfiles = Split-Path (Split-Path (Split-Path (Get-Item $PSCommandPath).Target))
+$config_dir = "$HOME/.config"
 
 function Update-Dotfiles {
     & $dotfiles\update.ps1
@@ -102,7 +103,7 @@ function Get-K8sContext {
 function Configure-Prompt {
     # oh my posh replaces the prompt function. To be able to make sure Initialize-InteractiveSession,
     # configure the posh prompt inside the initial prompt function.
-    $theme = "$dotfiles/dotfiles/oh-my-posh/$(Get-Content $dotfiles/dotfiles/oh-my-posh/current-theme)"
+    $theme = "$config_dir/oh-my-posh/$(Get-Content $config_dir/oh-my-posh/current-theme)"
     oh-my-posh --init --shell pwsh --config $theme | Invoke-Expression
 
     Set-Item function:OhMyPoshPrompt (Get-Item function:Prompt).ScriptBlock -Force
