@@ -1,0 +1,9 @@
+#!/bin/bash
+
+function print_error {
+    echo $@ >&2
+}
+
+command -v oh-my-posh >/dev/null \
+    || scoop install https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/oh-my-posh.json \
+    || print_error "Failed to install oh-my-posh"
