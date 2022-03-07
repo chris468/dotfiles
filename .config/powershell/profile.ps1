@@ -1,12 +1,3 @@
-function Get-DotfilesStatusUpdate {
-    if ( $global:_dotfiles_auto_updating `
-        -And (Test-Path "$HOME/.cache/dotfiles/auto-update-complete") `
-        -And (Test-Path "$HOME/.cache/dotfiles/auto-update-status.txt") ) {
-        $global:_dotfiles_auto_updating = $false
-        Get-Content "$HOME/.cache/dotfiles/auto-update-status.txt"
-    }
-}
-
 function On-VIModeChange {
     if ($args[0] -eq 'Command') {
         # Set the cursor to a blinking block.
@@ -17,11 +8,24 @@ function On-VIModeChange {
     }
 }
 
-$dotfiles = Split-Path (Split-Path (Split-Path (Get-Item $PSCommandPath).Target))
 $config_dir = "$HOME/.config"
 
+function yadm {
+    & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && yadm $args"
+}
+
 function Update-Dotfiles {
-    & $dotfiles\update.ps1
+    "Checking for dotfile updates..."
+    yadm fetch --no-prune
+
+    if (yadm status -sb | select-string 'behind') {
+        "Updating dotfiles..."
+        yadm pull -q --no-prune
+        yadm bootstrap
+    }
+    else {
+        "Dotfiles up to date."
+    }
 }
 
 function Register-AWSCompletion {
@@ -54,15 +58,6 @@ function Configure-Completions {
 
 function Initialize-InteractiveSession {
 
-    function Auto-Update-Dotfiles {
-        Push-Location $dotfiles
-        py -3.9 -m manager auto-update
-        if ($LASTEXITCODE -eq 0) {
-            $global:_dotfiles_auto_updating = $true
-        }
-        Pop-Location
-    }
-
     function Configure-PSReadline {
         Set-PSReadLineOption -Editmode vi
         Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler ${Function:On-VIModeChange}
@@ -72,7 +67,6 @@ function Initialize-InteractiveSession {
     if (! $global:InteractiveSession ) {
         $global:InteractiveSession = $true
 
-        Auto-Update-Dotfiles
         Configure-PSReadLine
     }
 }
@@ -116,7 +110,6 @@ function Configure-Prompt {
             $promptPrefix += "`n`n"
         }
 
-        $status = Get-DotfilesStatusUpdate
         if ( $status ) {
             $promptPrefix += "$status`n`n"
         }
