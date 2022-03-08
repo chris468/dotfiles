@@ -59,7 +59,6 @@
             {
               "name": "Git bash",
               "commandline": "\"%PROGRAMFILES%\\Git\\bin\\bash.exe\" -i -l ",
-              "startingDirectory": "$HOME",
               "icon": "%PROGRAMFILES%\\git\\mingw64\\share\\git\\git-for-windows.ico"
             }
         ]
