@@ -30,9 +30,12 @@ function! extensions#load()
 
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
-        Plug 'SirVer/ultisnips'
-        Plug 'honza/vim-snippets'
-        Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+
+        if has('python3')
+            Plug 'SirVer/ultisnips'
+            Plug 'honza/vim-snippets'
+            Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+        end
 
         " specific language support
         Plug 'elixir-editors/vim-elixir'
