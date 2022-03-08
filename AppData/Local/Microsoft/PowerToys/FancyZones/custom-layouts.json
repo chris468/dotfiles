@@ -1,0 +1,133 @@
+{
+  "custom-layouts": [
+    {
+      "uuid": "{96E21E96-D428-4B9D-A47F-269D25125983}",
+      "name": "Custom layout 1",
+      "type": "grid",
+      "info": {
+        "rows": 2,
+        "columns": 3,
+        "rows-percentage": [
+          3300,
+          6700
+        ],
+        "columns-percentage": [
+          3299,
+          3270,
+          3431
+        ],
+        "cell-child-map": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            3,
+            3,
+            4
+          ]
+        ],
+        "show-spacing": false,
+        "spacing": 16,
+        "sensitivity-radius": 20
+      }
+    },
+    {
+      "uuid": "{B7EACF9C-5E65-40EA-A33F-7EAFFE2A0649}",
+      "name": "Custom layout 2",
+      "type": "grid",
+      "info": {
+        "rows": 2,
+        "columns": 3,
+        "rows-percentage": [
+          2890,
+          7110
+        ],
+        "columns-percentage": [
+          3232,
+          3383,
+          3385
+        ],
+        "cell-child-map": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            3,
+            3
+          ]
+        ],
+        "show-spacing": true,
+        "spacing": 4,
+        "sensitivity-radius": 20
+      }
+    },
+    {
+      "uuid": "{554E031C-58DB-40C8-BCB9-8C650E4C2606}",
+      "name": "Custom layout 2 (1)",
+      "type": "grid",
+      "info": {
+        "rows": 2,
+        "columns": 3,
+        "rows-percentage": [
+          2890,
+          7110
+        ],
+        "columns-percentage": [
+          4331,
+          2828,
+          2841
+        ],
+        "cell-child-map": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            3,
+            3
+          ]
+        ],
+        "show-spacing": true,
+        "spacing": 4,
+        "sensitivity-radius": 20
+      }
+    },
+    {
+      "uuid": "{D5747BE1-23BA-4DE3-A379-6A9218CD5A9F}",
+      "name": "Custom layout 2 (2)",
+      "type": "grid",
+      "info": {
+        "rows": 2,
+        "columns": 2,
+        "rows-percentage": [
+          2890,
+          7110
+        ],
+        "columns-percentage": [
+          4464,
+          5536
+        ],
+        "cell-child-map": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "show-spacing": true,
+        "spacing": 4,
+        "sensitivity-radius": 20
+      }
+    }
+  ]
+}
