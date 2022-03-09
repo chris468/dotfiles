@@ -15,7 +15,6 @@ function yadm {
 }
 
 function Update-Dotfiles {
-    "Checking for dotfile updates..."
     yadm fetch --no-prune
 
     if (yadm status -sb | select-string 'behind') {
@@ -26,6 +25,10 @@ function Update-Dotfiles {
     else {
         "Dotfiles up to date."
     }
+}
+
+function AutoUpdate-Dotfiles {
+    & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh"
 }
 
 function Register-AWSCompletion {
@@ -68,6 +71,7 @@ function Initialize-InteractiveSession {
         $global:InteractiveSession = $true
 
         Configure-PSReadLine
+        AutoUpdate-Dotfiles
     }
 }
 
@@ -94,6 +98,14 @@ function Get-K8sContext {
     }
 }
 
+function Prompt {
+    $promptPrefix = Initialize-InteractiveSession
+    $theme = "$config_dir/oh-my-posh/$(Get-Content $config_dir/oh-my-posh/current-theme)"
+    oh-my-posh --init --shell pwsh --config $theme | Invoke-Expression
+    $prompt = $(Prompt)
+    $promptPrefix + $prompt
+}
+
 function Configure-Prompt {
     # oh my posh replaces the prompt function. To be able to make sure Initialize-InteractiveSession,
     # configure the posh prompt inside the initial prompt function.
@@ -103,18 +115,9 @@ function Configure-Prompt {
     Set-Item function:OhMyPoshPrompt (Get-Item function:Prompt).ScriptBlock -Force
 
     [ScriptBlock]$PromptWrapper = {
-        $prompt = $(OhMyPoshPrompt)
 
-        $promptPrefix = Initialize-InteractiveSession
-        if ($promptPrefix) {
-            $promptPrefix += "`n`n"
-        }
-
-        if ( $status ) {
-            $promptPrefix += "$status`n`n"
-        }
-
-        $promptPrefix + $prompt
+        Initialize-InteractiveSession
+        $(OhMyPoshPrompt)
     }
 
     Set-Item function:Prompt $PromptWrapper -Force
