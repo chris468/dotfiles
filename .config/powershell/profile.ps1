@@ -28,7 +28,8 @@ function Update-Dotfiles {
 }
 
 function AutoUpdate-Dotfiles {
-    & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh"
+    & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh -reset"
+    Start-Job -Name AutoUpdate-Dotfiles -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh" } > $null
 }
 
 function Register-AWSCompletion {
@@ -117,6 +118,14 @@ function Configure-Prompt {
     [ScriptBlock]$PromptWrapper = {
 
         Initialize-InteractiveSession
+        $auto_update_status="~/.cache/yadm/auto-update/status.log"
+        if (Test-Path "$auto_update_status") {
+            $env:YADM_AUTO_UPDATE_STATUS=$(Get-Content "$auto_update_status")
+        }
+        else {
+            Remove-Item env:YADM_AUTO_UPDATE_STATUS
+        }
+
         $(OhMyPoshPrompt)
     }
 
