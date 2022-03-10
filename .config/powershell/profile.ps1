@@ -71,6 +71,7 @@ function Initialize-InteractiveSession {
     if (! $global:InteractiveSession ) {
         $global:InteractiveSession = $true
 
+        Import-Module ~/scoop/apps/posh-git/current/posh-git
         Configure-PSReadLine
         AutoUpdate-Dotfiles
     }
@@ -97,14 +98,6 @@ function Get-K8sContext {
             "[k8s:$k8sContext]"
         }
     }
-}
-
-function Prompt {
-    $promptPrefix = Initialize-InteractiveSession
-    $theme = "$config_dir/oh-my-posh/$(Get-Content $config_dir/oh-my-posh/current-theme)"
-    oh-my-posh --init --shell pwsh --config $theme | Invoke-Expression
-    $prompt = $(Prompt)
-    $promptPrefix + $prompt
 }
 
 function Configure-Prompt {
