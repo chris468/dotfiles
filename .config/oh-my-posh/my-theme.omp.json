@@ -24,7 +24,7 @@
       "segments": [
         {
           "properties": {
-            "template": "<p:separator-foreground>[</>\u25CF{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"UPTODATE\" }}\u2713{{ end }}<p:separator-foreground>]\u2501</>"
+            "template": "<p:separator-foreground>[</>\u25CF{{ get (dict \"UPTODATE\" \"\u2713\") .Env.YADM_AUTO_UPDATE_STATUS }}<p:separator-foreground>]\u2501</>"
           },
           "style": "plain",
           "type": "text"
