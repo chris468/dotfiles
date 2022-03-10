@@ -9,6 +9,8 @@
     "git-behind-foreground": "#c5b6ad",
     "error-foreground": "#ff8080",
     "success-foreground": "#00897b",
+    "warning-foreground": "#9fa317",
+    "pending-foreground": "#1733a3",
     "session-local-foreground": "#0077c2",
     "session-remote-foreground": "#32a881",
     "separator-foreground": "#5e81ac",
@@ -23,8 +25,15 @@
       "alignment": "right",
       "segments": [
         {
+          "foreground": "p:success-foreground",
+          "foreground_templates": [
+            "{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"FAILED\" }}p:error-foreground{{ end }}",
+            "{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"UPDATING\" }}p:pending-foreground{{ end }}",
+            "{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"CHECKING\" }}p:pending-foreground{{ end }}",
+            "{{ if not .Env.YADM_AUTO_UPDATE_STATUS }}p:warning-foreground{{ end }}"
+          ],
           "properties": {
-            "template": "<p:separator-foreground>[</>{{ .Env.YADM_AUTO_UPDATE_STATUS }}<p:separator-foreground>]\u2501</>"
+            "template": "<p:separator-foreground>[</>\u25cf{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict \"UPTODATE\" \"\u2713\" \"UPDATING\" \"\u2193\u2026\" \"UPDATED\" \"\u2193\u2713\" \"CHECKING\" \"?\u2026\" \"FAILED\" \"\u2193\u2a2f\") .Env.YADM_AUTO_UPDATE_STATUS }}{{ else }}?{{ end }}<p:separator-foreground>]\u2501</>"
           },
           "style": "plain",
           "type": "text"
