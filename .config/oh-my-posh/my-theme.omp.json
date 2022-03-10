@@ -29,10 +29,11 @@
           "foreground_templates": [
             "{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"FAILED\" }}p:error-foreground{{ end }}",
             "{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"UPDATING\" }}p:pending-foreground{{ end }}",
+            "{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"CHECKING\" }}p:pending-foreground{{ end }}",
             "{{ if not .Env.YADM_AUTO_UPDATE_STATUS }}p:warning-foreground{{ end }}"
           ],
           "properties": {
-            "template": "<p:separator-foreground>[</>\u25cf{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict \"UPTODATE\" \"\u2713\" \"UPDATING\" \"\u2193\u2026\" \"UPDATED\" \"\u2193\u2713\" \"FAILED\" \"\u2193\u2a2f\") .Env.YADM_AUTO_UPDATE_STATUS }}{{ else }}?{{ end }}<p:separator-foreground>]\u2501</>"
+            "template": "<p:separator-foreground>[</>\u25cf{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict \"UPTODATE\" \"\u2713\" \"UPDATING\" \"\u2193\u2026\" \"UPDATED\" \"\u2193\u2713\" \"CHECKING\" \"?\u2026\" \"FAILED\" \"\u2193\u2a2f\") .Env.YADM_AUTO_UPDATE_STATUS }}{{ else }}?{{ end }}<p:separator-foreground>]\u2501</>"
           },
           "style": "plain",
           "type": "text"
