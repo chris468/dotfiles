@@ -2,6 +2,7 @@
 
 auto_update_log_dir=~/.cache/yadm/auto-update
 auto_update_status=$auto_update_log_dir/status.log
+auto_update_last_update=$auto_update_log_dir/last_update
 
 function set-status {
     echo "$@" > $auto_update_status
@@ -27,10 +28,13 @@ function update-dotfiles-in-background {
 mkdir -p $auto_update_log_dir
 
 if [ "$1" = "-reset" ] ; then
-    echo "CHECKING" > $auto_update_status
+    if [ -e "$auto_update_last_update" ] && [ -n "$(find $auto_update_last_update -mmin -30)" ]; then
+        set-status "RECENT"
+    else
+        touch $auto_update_last_update
+        set-status "CHECKING"
+    fi
     exit
 fi
-
-
 update-dotfiles-in-background 2>&1 > ~/.cache/update-dotfiles.log &
 
