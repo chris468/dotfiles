@@ -4,6 +4,7 @@ auto_update_log_dir=~/.cache/yadm/auto-update
 auto_update_status=$auto_update_log_dir/status.log
 auto_update_last_update=$auto_update_log_dir/last_update
 auto_update_in_progress=$auto_update_log_dir/in_progress
+auto_update_log=$auto_update_log_dir/auto-update.log
 
 function set-status {
     echo "$@" > $auto_update_status
@@ -49,5 +50,5 @@ fi
 
 touch $auto_update_in_progress
 touch $auto_update_last_update
-update-dotfiles-in-background 2>&1 > ~/.cache/update-dotfiles.log &
+update-dotfiles-in-background 2>&1 > $auto_update_log &
 
