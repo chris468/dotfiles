@@ -24,12 +24,13 @@ function update-dotfiles-in-background {
     update-dotfiles || set-status "FAILED"
 }
 
+mkdir -p $auto_update_log_dir
+
 if [ "$1" = "-reset" ] ; then
     echo "CHECKING" > $auto_update_status
     exit
 fi
 
 
-mkdir -p $auto_update_log_dir
 update-dotfiles-in-background 2>&1 > ~/.cache/update-dotfiles.log &
 
