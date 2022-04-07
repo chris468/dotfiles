@@ -54,7 +54,7 @@
             },
             {
                 "name": "thermaltake",
-                "commandline": "wsl ssh -t thermaltake.synlan"
+                "commandline": "wsl ssh -t thermaltake.lab.home.arpa"
             },
             {
               "name": "Git bash",
