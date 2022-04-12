@@ -30,3 +30,6 @@ autocmd Filetype xml setlocal ts=2 sw=2 et
 autocmd Filetype html setlocal ts=2 sw=2 et
 autocmd Filetype yaml setlocal ts=2 sw=2 et
 autocmd Filetype tf setlocal ts=2 sw=2 et
+
+nmap <silent> <leader>h :tabprev<CR>
+nmap <silent> <leader>l :tabnext<CR>
