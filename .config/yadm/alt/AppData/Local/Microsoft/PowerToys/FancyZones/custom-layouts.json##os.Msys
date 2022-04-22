@@ -39,26 +39,23 @@
       "type": "grid",
       "info": {
         "rows": 2,
-        "columns": 3,
+        "columns": 2,
         "rows-percentage": [
           2890,
           7110
         ],
         "columns-percentage": [
-          3232,
-          3383,
-          3385
+          4384,
+          5616
         ],
         "cell-child-map": [
           [
             0,
-            1,
-            2
+            1
           ],
           [
             0,
-            3,
-            3
+            2
           ]
         ],
         "show-spacing": true,
