@@ -14,6 +14,10 @@ function yadm {
     & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && yadm $args"
 }
 
+function Update-OhMyPosh {
+    scoop update oh-my-posh
+}
+
 function Update-Dotfiles {
     yadm fetch --no-prune
 
