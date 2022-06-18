@@ -14,6 +14,10 @@ function yadm {
     & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && yadm $args"
 }
 
+function Update-OhMyPosh {
+    scoop update oh-my-posh
+}
+
 function Update-Dotfiles {
     yadm fetch --no-prune
 
@@ -28,7 +32,7 @@ function Update-Dotfiles {
 }
 
 function AutoUpdate-Dotfiles {
-    & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh -reset"
+    Start-Job -Name AutoUpdate-Dotfiles -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh -reset" } > $null | Wait-Job
     Start-Job -Name AutoUpdate-Dotfiles -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh" } > $null
 }
 
