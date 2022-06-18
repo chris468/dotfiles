@@ -1,25 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "palette": {
-    "shell-foreground": "#91ddff",
-    "git-foreground": "#95ffa4",
-    "git-changed-foreground": "#ff9248",
-    "git-local-and-remote-changes-foreground": "#f26d50",
-    "git-ahead-foreground": "#89d1dc",
-    "git-behind-foreground": "#c5b6ad",
-    "error-foreground": "#ff8080",
-    "success-foreground": "#00897b",
-    "warning-foreground": "#9fa317",
-    "pending-foreground": "#1733a3",
-    "session-local-foreground": "#0077c2",
-    "session-remote-foreground": "#32a881",
-    "separator-foreground": "#5e81ac",
-    "executiontime-foreground": "#757575",
-    "aws-foreground": "#faa029",
-    "aws-key-background": "#4f1e1e",
-    "kubectl-foreground": "#316ce4",
-    "time-foreground": "#689f38"
-  },
   "blocks": [
     {
       "alignment": "right",
@@ -32,10 +12,8 @@
             "{{ if eq .Env.YADM_AUTO_UPDATE_STATUS \"CHECKING\" }}p:pending-foreground{{ end }}",
             "{{ if not .Env.YADM_AUTO_UPDATE_STATUS }}p:warning-foreground{{ end }}"
           ],
-          "properties": {
-            "template": "<p:separator-foreground>[</>\u25cf{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict \"UPTODATE\" \"\u2713\" \"RECENT\" \"\u23ce\" \"UPDATING\" \"\u2193\u2026\" \"UPDATED\" \"\u2193\u2713\" \"CHECKING\" \"?\u2026\" \"FAILED\" \"\u2193\u2a2f\") .Env.YADM_AUTO_UPDATE_STATUS }}{{ else }}?{{ end }}<p:separator-foreground>]\u2501</>"
-          },
           "style": "plain",
+          "template": "<p:separator-foreground>[</>\u25cf{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict \"UPTODATE\" \"\u2713\" \"RECENT\" \"\u23ce\" \"UPDATING\" \"\u2193\u2026\" \"UPDATED\" \"\u2193\u2713\" \"CHECKING\" \"?\u2026\" \"FAILED\" \"\u2193\u2a2f\") .Env.YADM_AUTO_UPDATE_STATUS }}{{ else }}?{{ end }}<p:separator-foreground>]\u2501</>",
           "type": "text"
         },
         {
@@ -43,10 +21,8 @@
           "foreground_templates": [
             "{{ if contains \"admin\" .Profile }}red{{ end }}"
           ],
-          "properties": {
-            "template": "<p:separator-foreground>[</>{{.Profile}}{{ if and .Region (ne .Region \"us-east-1\") }}@{{.Region}}{{end}}<p:separator-foreground>]\u2501</>"
-          },
           "style": "plain",
+          "template": "<p:separator-foreground>[</>{{.Profile}}{{ if and .Region (ne .Region \"us-east-1\") }}@{{.Region}}{{end}}<p:separator-foreground>]\u2501</>",
           "type": "aws"
         },
         {
@@ -54,19 +30,17 @@
           "foreground_templates": [
             "{{ if contains \"admin\" .Context }}red{{ end }}"
           ],
-          "properties": {
-            "template": "<p:separator-foreground>[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]\u2500</>"
-          },
           "style": "plain",
+          "template": "<p:separator-foreground>[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]\u2500</>",
           "type": "kubectl"
         },
         {
           "foreground": "p:time-foreground",
           "properties": {
-            "template": "<p:separator-foreground>[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>",
             "time_format": "Mon Jan _2 15:04:05"
           },
           "style": "plain",
+          "template": "<p:separator-foreground>[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>",
           "type": "time"
         }
       ],
@@ -78,11 +52,10 @@
       "segments": [
         {
           "foreground": "p:session-local-foreground",
-          "properties": {
-            "template": "<p:separator-foreground>\u250c[</>{{ if .Env.SSH_CLIENT }}<p:session-remote-foreground>{{ end }}{{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}</>{{ end }}<p:separator-foreground>]</>"
-          },
           "style": "plain",
-          "type": "session" },
+          "template": "<p:separator-foreground>\u250c[</>{{ if .Env.SSH_CLIENT }}<p:session-remote-foreground>{{ end }}{{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}</>{{ end }}<p:separator-foreground>]</>",
+          "type": "session"
+        },
         {
           "foreground": "p:git-foreground",
           "foreground_templates": [
@@ -104,21 +77,21 @@
             "merge_icon": "\u25f4 ",
             "no_commits_icon": "[no commits]",
             "rebase_icon": "\u2c62 ",
-            "tag_icon": "\u25b6 ",
-            "template": "<p:separator-foreground>\u2500[</>{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} \u2502{{ end }}{{ if .Staging.Changed }} {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} {{ .StashCount }}{{ end }}<p:separator-foreground>]</>"
+            "tag_icon": "\u25b6 "
           },
           "style": "plain",
+          "template": "<p:separator-foreground>\u2500[</>{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} \u2502{{ end }}{{ if .Staging.Changed }} {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} {{ .StashCount }}{{ end }}<p:separator-foreground>]</>",
           "type": "git"
         },
         {
           "foreground": "p:shell-foreground",
           "properties": {
-            "style": "agnoster_short",
-            "template": "<p:separator-foreground>\u2500[</>{{ .Path }}<p:separator-foreground>]</>",
             "folder_icon": "\u2026",
-            "max_depth": 4
+            "max_depth": 4,
+            "style": "agnoster_short"
           },
           "style": "plain",
+          "template": "<p:separator-foreground>\u2500[</>{{ .Path }}<p:separator-foreground>]</>",
           "type": "path"
         }
       ],
@@ -130,10 +103,8 @@
       "segments": [
         {
           "foreground": "p:executiontime-foreground",
-          "properties": {
-            "template": "<p:separator-foreground>\u2514</>"
-          },
           "style": "plain",
+          "template": "<p:separator-foreground>\u2514</>",
           "type": "text"
         },
         {
@@ -142,32 +113,32 @@
             "{{ if ne .Code 0 }}p:error-foreground{{ end }}"
           ],
           "properties": {
-            "always_enabled": true,
-            "template": "<p:separator-foreground>[</>{{ if ne .Code 0 }}\u2a2f {{ .Meaning }}{{ else }}\u2713{{ end }} "
+            "always_enabled": true
           },
           "style": "plain",
+          "template": "<p:separator-foreground>[</>{{ if ne .Code 0 }}\u2a2f {{ .Meaning }}{{ else }}\u2713{{ end }} ",
           "type": "exit"
         },
         {
           "foreground": "#83769c",
           "properties": {
             "style": "austin",
-            "template": "{{ .FormattedMs }}<p:separator-foreground>]</> ",
             "threshold": 0
           },
           "style": "plain",
+          "template": "{{ .FormattedMs }}<p:separator-foreground>]</> ",
           "type": "executiontime"
         },
         {
           "foreground": "#007acc",
           "properties": {
-            "template": "{{ .Name }}",
             "mapped_shell_names": {
               "fish": "$",
               "pwsh": "PS >"
             }
           },
           "style": "plain",
+          "template": "{{ .Name }}",
           "type": "shell"
         }
       ],
@@ -176,5 +147,25 @@
   ],
   "final_space": true,
   "osc99": true,
-  "version": 1
+  "palette": {
+    "aws-foreground": "#faa029",
+    "aws-key-background": "#4f1e1e",
+    "error-foreground": "#ff8080",
+    "executiontime-foreground": "#757575",
+    "git-ahead-foreground": "#89d1dc",
+    "git-behind-foreground": "#c5b6ad",
+    "git-changed-foreground": "#ff9248",
+    "git-foreground": "#95ffa4",
+    "git-local-and-remote-changes-foreground": "#f26d50",
+    "kubectl-foreground": "#316ce4",
+    "pending-foreground": "#1733a3",
+    "separator-foreground": "#5e81ac",
+    "session-local-foreground": "#0077c2",
+    "session-remote-foreground": "#32a881",
+    "shell-foreground": "#91ddff",
+    "success-foreground": "#00897b",
+    "time-foreground": "#689f38",
+    "warning-foreground": "#9fa317"
+  },
+  "version": 2
 }
