@@ -8,7 +8,6 @@
 	delete-remote-branch = push --delete origin
 	fixup = commit --amend --no-edit
 	default-branch = "!git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'"
-	new-branch = "!fn() { [ -n \"$1\" ] && git fetch && git checkout -b $1 origin/$(git default-branch) --no-track || echo branch name required ; }; fn"
 [format]
 	pretty = %C(auto)%h %s%d%Creset
 [fetch]

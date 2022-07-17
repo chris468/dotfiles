@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+die() {
+    echo $@ 1>&2
+    exit 1
+}
+
+
+branch_name="$1"
+[ -n "$branch_name" ] || die branch name required
+
+upstream_branch="${2:-$(git default-branch)}"
+
+git fetch
+git checkout -b $branch_name origin/$upstream_branch --no-track
