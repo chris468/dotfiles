@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -e
+
+die() {
+    echo $@ 1>&2
+    exit 1
+}
+
+mode='--no-ff'
+discard=
+
+args=()
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --no-ff|--ff)
+            mode=$1
+            shift
+            ;;
+        --discard)
+            discard=$1
+            shift
+            ;;
+    *)
+        args+=("$1")
+        shift
+        ;;
+    esac
+done
+
+set -- "${args[@]}"
+
+branch=$1
+[ -n "branch" ] && shift || die "branch is required"
+[ -n "$1" ] && message="-m \"$1\"" || message=
+[ -n "$message" ] && shift || true
+
+[ -n "$discard" ] || git merge $mode $branch $message $@
+git branch -D $branch || true
+git delete-remote-branch $branch || true
+
