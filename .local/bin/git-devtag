@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import argparse
+from subprocess import run
+
+def get_branchname():
+    r = run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], check=True, capture_output=True)
+    return r.stdout.decode('utf-8').strip()
+
+def get_tags(basename, tier):
+    r = run(['git', 'tag', '-l', f'{basename}/{tier}*'], check=True, capture_output=True)
+
+    tags = r.stdout.decode('utf-8').split()
+    tags_with_index = [(int(t.split('/')[-1]), t) for t in tags]
+    tags_with_index.sort()
+    print(tags_with_index)
+    return tags_with_index
+
+def create_tag(basename, tier, next):
+    tagname = f'{basename}/{tier}/{next}'
+    run(['git', 'tag', tagname], check=True)
+    run(['git', 'push', 'origin', tagname], check=True)
+
+
+def delete_tags(tags):
+    for _, tag in tags:
+        run(['git', 'tag', '-d', tag])
+        run(['git', 'push', 'origin', '--delete', tag])
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-b', '--basename', default=get_branchname())
+parser.add_argument('-k', '--keep', default=3)
+parser.add_argument('-t', '--tier', default='dev')
+args = parser.parse_args()
+
+tags = get_tags(args.basename, args.tier)
+last, _ = tags[-1] if len(tags) > 0 else (0, '')
+create_tag(args.basename, args.tier, last + 1)
+if args.keep > 2 and args.keep < len(tags):
+    delete_tags(tags[:len(tags) - args.keep])
