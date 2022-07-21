@@ -15,28 +15,43 @@ def get_tags(basename, tier):
     tags_with_index.sort()
     return tags_with_index
 
-def create_tag(basename, tier, next):
+def create_tag(basename, tier, next, dry_run):
     tagname = f'{basename}/{tier}/{next}'
     print(f'Creating {tagname}...')
+    if dry_run:
+        return
+
     run(['git', 'tag', tagname], check=True)
     run(['git', 'push', 'origin', tagname], check=True)
 
 
-def delete_tags(tags):
+def delete_tags(tags, dry_run):
     for _, tag in tags:
         print(f'Deleting {tag}...')
+        if dry_run:
+            return
+
         run(['git', 'tag', '-d', tag])
         run(['git', 'push', 'origin', '--delete', tag])
 
+def list_tags(tags):
+    for _, tag in tags:
+        print(tag)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', '--basename', default=get_branchname())
 parser.add_argument('-k', '--keep', default=3)
 parser.add_argument('-t', '--tier', default='dev')
+parser.add_argument('-d', '--dry-run', action='store_true')
+parser.add_argument('-l', '--list', action='store_true')
 args = parser.parse_args()
 
 tags = get_tags(args.basename, args.tier)
+if args.list:
+    list_tags(tags)
+    exit(0)
+
 last, _ = tags[-1] if len(tags) > 0 else (0, '')
-create_tag(args.basename, args.tier, last + 1)
-if args.keep > 2 and args.keep < len(tags):
-    delete_tags(tags[:len(tags) - args.keep])
+create_tag(args.basename, args.tier, last + 1, args.dry_run)
+if args.keep > 2 and args.keep < len(tags) + 1:
+    delete_tags(tags[:len(tags) + 1 - args.keep], args.dry_run)
