@@ -13,20 +13,20 @@ def get_tags(basename, tier):
     tags = r.stdout.decode('utf-8').split()
     tags_with_index = [(int(t.split('/')[-1]), t) for t in tags]
     tags_with_index.sort()
-    print(tags_with_index)
     return tags_with_index
 
 def create_tag(basename, tier, next):
     tagname = f'{basename}/{tier}/{next}'
+    print(f'Creating {tagname}...')
     run(['git', 'tag', tagname], check=True)
     run(['git', 'push', 'origin', tagname], check=True)
 
 
 def delete_tags(tags):
     for _, tag in tags:
+        print(f'Deleting {tag}...')
         run(['git', 'tag', '-d', tag])
         run(['git', 'push', 'origin', '--delete', tag])
-
 
 
 parser = argparse.ArgumentParser()
