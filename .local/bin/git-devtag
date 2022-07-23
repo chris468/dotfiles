@@ -18,21 +18,18 @@ def get_tags(basename, tier):
 def create_tag(basename, tier, next, dry_run):
     tagname = f'{basename}/{tier}/{next}'
     print(f'Creating {tagname}...')
-    if dry_run:
-        return
+    if not dry_run:
+        run(['git', 'tag', tagname], check=True, capture_output=True)
+        run(['git', 'push', 'origin', tagname], check=True, capture_output=True)
 
-    run(['git', 'tag', tagname], check=True)
-    run(['git', 'push', 'origin', tagname], check=True)
-
+    return tagname
 
 def delete_tags(tags, dry_run):
     for _, tag in tags:
         print(f'Deleting {tag}...')
-        if dry_run:
-            return
-
-        run(['git', 'tag', '-d', tag])
-        run(['git', 'push', 'origin', '--delete', tag])
+        if not dry_run:
+            run(['git', 'tag', '-d', tag], capture_output=True)
+            run(['git', 'push', 'origin', '--delete', tag], capture_output=True)
 
 def list_tags(tags):
     for _, tag in tags:
@@ -52,6 +49,9 @@ if args.list:
     exit(0)
 
 last, _ = tags[-1] if len(tags) > 0 else (0, '')
-create_tag(args.basename, args.tier, last + 1, args.dry_run)
+newtag = create_tag(args.basename, args.tier, last + 1, args.dry_run)
 if args.keep > 2 and args.keep < len(tags) + 1:
     delete_tags(tags[:len(tags) + 1 - args.keep], args.dry_run)
+
+print()
+print(f'Created tag {newtag}')
