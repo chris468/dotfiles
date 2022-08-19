@@ -1,0 +1,2 @@
+set -e AWS_PROFILE
+set -e KUBECONFIG
