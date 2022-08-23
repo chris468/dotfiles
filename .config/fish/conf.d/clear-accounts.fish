@@ -1,6 +1,5 @@
 if not status is-interactive
    or not status is-login
-   or test -n "$TMUX"
     exit
 end
 
