@@ -70,3 +70,4 @@ augroup explorer
 augroup END
 
 let g:NERDTreeMinimalUI=1
+let g:NERDTreeIgnore=['\~$', '__pycache__']
