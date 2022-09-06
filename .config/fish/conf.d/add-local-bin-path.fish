@@ -1,4 +1,4 @@
-set paths ~/.local/bin ~/.dotnet/tools
+set paths ~/.local/bin ~/.dotnet/tools ~/.linuxbrew/bin
 
 for path in $paths
     if test -d $path ;
