@@ -20,7 +20,9 @@
             "keys": "f11"
         }
     ],
+    "alwaysShowNotificationIcon": true,
     "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+    "minimizeToNotificationArea": false,
     "profiles": 
     {
         "defaults": 
@@ -342,5 +344,6 @@
             "white": "#C0C0C0",
             "yellow": "#808000"
         }
-    ]
+    ],
+    "tabWidthMode": "equal"
 }
