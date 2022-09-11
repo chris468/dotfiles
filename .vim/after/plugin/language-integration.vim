@@ -42,6 +42,28 @@ function! s:configure_coc()
     nnoremap <silent><nowait> <space>k :<C-u>CocPrev<CR>
     nnoremap <silent><nowait> <space>p :<C-u>CocListResume<CR>
 
+    inoremap <silent><expr> <C-j>
+          \ coc#pum#visible() ? coc#pum#next(1) :
+          \ CheckBackspace() ? "\<C-j>" :
+          \ coc#refresh()
+    inoremap <expr><C-k> coc#pum#visible() ? coc#pum#prev(2) : "\<C-k>"
+
+    inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+
+    inoremap <silent><expr> <Esc> coc#pum#visible() ? coc#pum#cancel() : "\<Esc>"
+
+
+    function! CheckBackspace() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    " Use <c-space> to trigger completion.
+    if has('nvim')
+      inoremap <silent><expr> <c-space> coc#refresh()
+    else
+      inoremap <silent><expr> <c-@> coc#refresh()
+    endif
 endfunction
 
 function! s:configure_ale()
