@@ -82,8 +82,8 @@ endfunction
 function! s:configure_language_integration()
     if &filetype == 'cs'
         call s:configure_omnisharp()
-    elseif index(keys(g:ale_linters), &filetype) == -1
-        call s:configure_coc()
+  " elseif index(keys(g:ale_linters), &filetype) == -1
+  "     call s:configure_coc()
     else
         call s:configure_ale()
     endif

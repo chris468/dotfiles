@@ -24,9 +24,9 @@ function! extensions#load()
         Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
 
-        if executable('node')
-            Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-        endif
+      " if executable('node')
+      "     Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+      " endif
 
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
