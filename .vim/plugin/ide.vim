@@ -36,7 +36,7 @@ set foldlevelstart=99
 "   autocmd BufWinEnter * silent! loadview
 " augroup END
 
-let g:rooter_patterns = ['.git', 'package.json', '*.sln']
+let g:rooter_patterns = ['.git', 'package.json', '*.sln', 'pyproject.toml']
 let g:rooter_manual_only = 1
 
 function s:find_files(check_for_git)
