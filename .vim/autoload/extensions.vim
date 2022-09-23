@@ -45,7 +45,7 @@ function! extensions#load()
         Plug 'elixir-editors/vim-elixir'
 
         " C#
-        Plug 'OmniSharp/omnisharp-vim'
+      " Plug 'OmniSharp/omnisharp-vim'
 
         " git
         Plug 'tpope/vim-fugitive'
