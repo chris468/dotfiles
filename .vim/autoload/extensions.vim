@@ -1,4 +1,4 @@
-let s:vim_plug_path = expand('<sfile>:p:h') . '/../plugged'
+let s:vim_plug_path = expand('<sfile>:p:h') . '/../.extensions'
 
 function! extensions#load()
 
@@ -24,14 +24,6 @@ function! extensions#load()
         Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
 
-      " if executable('node')
-      "     Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-      " endif
-      "
-
-        Plug 'prabirshrestha/vim-lsp'
-        Plug 'mattn/vim-lsp-settings'
-
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
 
@@ -41,11 +33,8 @@ function! extensions#load()
             Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
         end
 
-        " specific language support
-        Plug 'elixir-editors/vim-elixir'
-
         " C#
-      " Plug 'OmniSharp/omnisharp-vim'
+        Plug 'OmniSharp/omnisharp-vim'
 
         " git
         Plug 'tpope/vim-fugitive'
