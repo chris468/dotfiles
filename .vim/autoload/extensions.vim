@@ -29,8 +29,8 @@ function! extensions#load()
       " endif
       "
 
-        Plug 'prabirshrestha/vim-lsp'
-        Plug 'mattn/vim-lsp-settings'
+      " Plug 'prabirshrestha/vim-lsp'
+      " Plug 'mattn/vim-lsp-settings'
 
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
