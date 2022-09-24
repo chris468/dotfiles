@@ -24,14 +24,6 @@ function! extensions#load()
         Plug 'junegunn/fzf.vim'
         Plug 'prabirshrestha/asyncomplete.vim'
 
-      " if executable('node')
-      "     Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-      " endif
-      "
-
-      " Plug 'prabirshrestha/vim-lsp'
-      " Plug 'mattn/vim-lsp-settings'
-
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
 
