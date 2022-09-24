@@ -15,3 +15,9 @@ let g:ale_python_pylsp_config = {
         \'configurationSources': [ 'flake8' ]
     \},
 \}
+
+" Use ALE's function for asyncomplete defaults
+augroup AleSetup
+    autocmd!
+    autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ale#get_source_options())
+augroup end
