@@ -1,5 +1,6 @@
 " Keyboard mappings:
 " N                 I       Action
+" ---------------------------------------------------------------------
 " gd                -       go to definition
 " gy                -       go to type definition
 " gi                -       go to implementation
@@ -11,11 +12,6 @@
 " <leader>j         -       Next error/warn/etc
 " <leader>k         -       Previous error/warn/etc
 " <leader>p         -       Resume error/warn/etc (coc-specific?)
-"                   <C-j>   Show completion menu / Next completion item
-"                   <C-k>   Previous completion item
-"                   <CR>    Accept completion
-"                   <Esc>   Cancel completion
-"
 
 function! s:configure_language_service_mappings()
     let l:omnisharp = &filetype == 'cs' || exists('g:OmniSharp_loaded')

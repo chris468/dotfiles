@@ -1,3 +1,6 @@
+let g:asyncomplete_auto_popup=0
+
+
 " Don't require explicit selection
 let g:asyncomplete_auto_completeopt = 0
 set completeopt=menuone,noinsert
