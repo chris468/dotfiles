@@ -33,9 +33,6 @@ function! extensions#load()
             Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
         end
 
-        " specific language support
-        Plug 'elixir-editors/vim-elixir'
-
         " C#
         Plug 'OmniSharp/omnisharp-vim'
 
