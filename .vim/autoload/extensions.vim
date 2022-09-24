@@ -1,4 +1,4 @@
-let s:vim_plug_path = expand('<sfile>:p:h') . '/../plugged'
+let s:vim_plug_path = expand('<sfile>:p:h') . '/../.extensions'
 
 function! extensions#load()
 
