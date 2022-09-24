@@ -18,8 +18,5 @@ inoremap <silent><expr> <C-j>
   \ <SID>check_back_space() ? "\<C-j>" :
   \ asyncomplete#force_refresh()
 
+
 inoremap <expr><C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-
-inoremap <expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
-
-
