@@ -14,9 +14,9 @@
 " <leader>p         -       Resume error/warn/etc (coc-specific?)
 
 function! s:configure_language_service_mappings()
-    let l:omnisharp = &filetype == 'cs' || exists('g:OmniSharp_loaded')
+    let l:omnisharp = &filetype == 'cs' && exists('g:OmniSharp_loaded')
     if l:omnisharp
-        let b:language_service = 'omnisharp'
+        let b:language_service_mappings = 'omnisharp'
         nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
         " nmap <silent> <buffer> gy " None
         nmap <silent> <buffer> gi <Plug>(omnisharp_find_implementations)
