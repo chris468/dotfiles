@@ -1,5 +1,4 @@
-" disabled for now
-finish
+if !exists('g:did_coc_loaded') | finish | endif
 
 function! s:coc_show_documentation()
   if (index(['vim','help'], &filetype) >= 0)

@@ -1,3 +1,5 @@
+if !exists('g:OmniSharp_loaded') | finish | endif
+
 function! s:configure_omnisharp()
     if &filetype == 'cs'
         let b:language_service = 'omnisharp'

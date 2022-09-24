@@ -1,3 +1,5 @@
+if !exists('g:loaded_ale') | finish | endif
+
 function! s:configure_ale()
     if &filetype != 'cs' " && index(keys(g:ale_linters), &filetype) == -1
         let b:language_service = 'ale'

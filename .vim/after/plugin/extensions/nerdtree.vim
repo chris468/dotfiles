@@ -1,6 +1,4 @@
-if !exists('g:NERDTree')
-    finish
-endif
+if !exists('g:NERDTree') | finish | endif
 
 function s:has_no_arguments()
     return argc() == 0

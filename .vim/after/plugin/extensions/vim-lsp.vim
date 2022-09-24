@@ -1,3 +1,5 @@
+if !exists('g:lsp_loaded') | finish | endif
+
 "function! s:on_lsp_buffer_enabled() abort
 "    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
 "    setlocal omnifunc=lsp#complete
