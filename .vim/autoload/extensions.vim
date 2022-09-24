@@ -27,12 +27,6 @@ function! extensions#load()
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
 
-        if has('python3')
-            Plug 'SirVer/ultisnips'
-            Plug 'honza/vim-snippets'
-            Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
-        end
-
         " C#
         Plug 'OmniSharp/omnisharp-vim'
 
