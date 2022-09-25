@@ -5,13 +5,13 @@ oh_my_posh_version="10.3.0"
 function __install_oh_my_posh {
 
     function download {
-        curl -L -o ~/.local/bin/oh-my-posh $oh_my_posh_url -s
-        chmod +x ~/.local/bin/oh-my-posh
+        curl -L -o ~/.local/bin/oh-my-posh${oh_my_posh_extension} $oh_my_posh_url -s
+        chmod +x ~/.local/bin/oh-my-posh${oh_my_posh_extension}
     }
 
     oh_my_posh_extension=""
 
-{% if yadm.os == "MSys" %}
+{% if yadm.os == "Msys" %}
     oh_my_posh_os="windows"
     oh_my_posh_extension=".exe"
 {% else %}
@@ -19,7 +19,6 @@ function __install_oh_my_posh {
     oh_my_posh_os="linux"
 {% else %}
     oh_my_posh_os="{{ yadm.os }}"
-{% endif %}
 {% endif %}
 
 {% if yadm.arch == "x86_64" %}
