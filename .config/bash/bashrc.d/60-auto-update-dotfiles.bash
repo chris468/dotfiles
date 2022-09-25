@@ -12,12 +12,12 @@ function _set_auto_update_status {
         unset YADM_AUTO_UPDATE_STATUS
     fi
 
-    if [ -n "$(yadm status -s)" ]
-    then
-        export YADM_CHANGES=1
-    else
-        export YADM_CHANGES=0
-    fi
+#   if [ -n "$(yadm status -s -uno)" ]
+#   then
+#       export YADM_CHANGES=1
+#   else
+#       export YADM_CHANGES=0
+#   fi
 }
 
 # Note: put at the fronte of the list so that it will run before
