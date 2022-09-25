@@ -14,7 +14,7 @@
             "{{ if not .Env.YADM_AUTO_UPDATE_STATUS }}p:warning-foreground{{ end }}"
           ],
           "style": "plain",
-          "template": "<p:separator-foreground>[</>\u25cf{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict \"UPTODATE\" \"\u2713\" \"RECENT\" \"\u23ce\" \"UPDATING\" \"\u2193\u2026\" \"UPDATED\" \"\u2193\u2713\" \"CHECKING\" \"?\u2026\" \"FAILED\" \"\u2193\u2a2f\") .Env.YADM_AUTO_UPDATE_STATUS }}{{ else }}?{{ end }}<p:separator-foreground>]\u2501</>",
+          "template": "<p:separator-foreground>[</>\u25cf{{ if eq .Env.YADM_CHANGES \"1\" }}<p:git-changed-foreground>~</>{{ end }}{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict \"UPTODATE\" \"\u2713\" \"RECENT\" \"\u23ce\" \"UPDATING\" \"\u2193\u2026\" \"UPDATED\" \"\u2193\u2713\" \"CHECKING\" \"?\u2026\" \"FAILED\" \"\u2193\u2a2f\") .Env.YADM_AUTO_UPDATE_STATUS }}{{ else }}?{{ end }}<p:separator-foreground>]\u2501</>",
           "type": "text"
         },
         {
