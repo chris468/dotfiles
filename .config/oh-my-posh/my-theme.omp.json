@@ -133,7 +133,8 @@
           "foreground": "#007acc",
           "properties": {
             "mapped_shell_names": {
-              "fish": "$",
+              "fish": "fi$",
+              "bash": "$",
               "pwsh": "PS >"
             }
           },
