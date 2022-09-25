@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "console_title_template": "{{ .Shell }}/{{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}*{{ end }}",
+  "console_title_template": "{{ .Shell }}{{ if .Env.WSL_DISTRO_NAME }}+{{ .Env.WSL_DISTRO_NAME }}{{ end }} {{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}*{{ end }}",
   "blocks": [
     {
       "alignment": "right",
@@ -53,8 +53,20 @@
       "segments": [
         {
           "foreground": "p:session-local-foreground",
+          "foreground_templates": [
+            "{{ if .Env.SSH_CLIENT }}p:session-remote-foreground{{ end }}"
+          ],
           "style": "plain",
-          "template": "<p:separator-foreground>\u250c[</>{{ if .Env.SSH_CLIENT }}<p:session-remote-foreground>{{ end }}{{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}</>{{ end }}<p:separator-foreground>]</>",
+          "template": "<p:separator-foreground>\u250c[</>{{ .UserName }}@{{ .HostName }}<p:separator-foreground>]</>",
+          "type": "session"
+        },
+        {
+          "foreground": "p:session-local-foreground",
+          "foreground_templates": [
+            "{{ if .Env.WSL_DISTRO_NAME }}p:session-remote-foreground{{ end }}"
+          ],
+          "style": "plain",
+          "template": "<p:separator-foreground>\u2501[</>{{ .Shell }}{{ if .Env.WSL_DISTRO_NAME }}+{{ .Env.WSL_DISTRO_NAME }}{{ end }}<p:separator-foreground>]</>",
           "type": "session"
         },
         {
