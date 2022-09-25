@@ -27,8 +27,9 @@ function! extensions#load()
         Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
 
-        " C#
+        " Languages
         Plug 'OmniSharp/omnisharp-vim'
+        Plug 'hashivim/vim-terraform'
 
         " git
         Plug 'tpope/vim-fugitive'
