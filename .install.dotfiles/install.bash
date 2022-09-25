@@ -31,14 +31,8 @@ EOF
 function install_yadm {
 
     mkdir -p $install_location
-    if [ ! -f $destination ] ; then
-        curl -L -o $destination $url
-        chmod +x $destination
-    fi
-
-    if [ "x$(readlink $yadm)" != "x$destination" ] ; then
-        ln -sf $destination $yadm
-    fi
+    curl -L -o $destination $url
+    chmod +x $destination
 }
 
 while [ $# -gt 0 ]; do
@@ -86,7 +80,6 @@ function install_dotfiles {
 
 url=https://raw.githubusercontent.com/TheLocehiliosan/yadm/$YADM_VERSION/yadm
 install_location=$HOME/.local/bin
-destination=$install_location/yadm-$YADM_VERSION
 yadm=$install_location/yadm
 
 install_yadm
