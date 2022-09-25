@@ -20,6 +20,11 @@ fi
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
+    for f in ~/.config/bash/profile.d/*.bash
+    do
+        . $f
+    done
+
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
