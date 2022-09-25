@@ -1,0 +1,2 @@
+unset AWS_PROFILE
+unset KUBECONFIG
