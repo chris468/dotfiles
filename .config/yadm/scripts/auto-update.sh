@@ -46,7 +46,10 @@ if [ "$1" = "-reset" ] ; then
     exit
 fi
 
-! is-recent || exit
+if is-recent
+then
+    exit
+fi
 
 touch $auto_update_in_progress
 touch $auto_update_last_update
