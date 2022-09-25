@@ -115,3 +115,5 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+eval "$(oh-my-posh --init --shell bash --config ~/.config/oh-my-posh/my-theme.omp.json)"
