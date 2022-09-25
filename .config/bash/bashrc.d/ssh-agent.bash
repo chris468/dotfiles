@@ -2,4 +2,7 @@
 
 export SSH_AUTH_SOCK=~/.ssh/.socket
 ssh-add -l >/dev/null 2>&1
-[ $? -ge 2 ] && rm -f $SSH_AUTH_SOCK && ssh-agent -t 14400 -a $SSH_AUTH_SOCK >/dev/null
+if [ $? -ge 2 ]
+then
+     rm -f $SSH_AUTH_SOCK && ssh-agent -t 14400 -a $SSH_AUTH_SOCK >/dev/null
+fi
