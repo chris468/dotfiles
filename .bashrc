@@ -116,4 +116,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
+for f in ~/.config/bash/conf.d/*.bash
+do
+    . $f
+done
+
 eval "$(oh-my-posh --init --shell bash --config ~/.config/oh-my-posh/my-theme.omp.json)"
