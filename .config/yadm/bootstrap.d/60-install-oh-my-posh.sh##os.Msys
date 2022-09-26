@@ -1,6 +1,0 @@
-#!/bin/bash
-
-if ! command -v oh-my-posh &>/dev/null
-then
-    ~/.config/bash/profile.d/install-oh-my-posh.bash
-fi
