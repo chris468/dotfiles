@@ -75,7 +75,6 @@ function Initialize-InteractiveSession {
     if (! $global:InteractiveSession ) {
         $global:InteractiveSession = $true
 
-        Import-Module ~/scoop/apps/posh-git/current/posh-git
         Configure-PSReadLine
         AutoUpdate-Dotfiles
     }
