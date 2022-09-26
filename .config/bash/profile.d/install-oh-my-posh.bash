@@ -9,23 +9,19 @@ function __install_oh_my_posh {
         chmod +x ~/.local/bin/oh-my-posh${oh_my_posh_extension}
     }
 
+    oh_my_posh_arch=$(uname -m)
+    if [ "$oh_my_posh_arch" = "x86_64" ]
+    then
+        oh_my_posh_arch=amd64
+    fi
+
+    oh_my_posh_os=$(uname -s | tr [:upper:] [:lower:])
     oh_my_posh_extension=""
-
-{% if yadm.os == "Msys" %}
-    oh_my_posh_os="windows"
-    oh_my_posh_extension=".exe"
-{% else %}
-{% if yadm.os == "WSL" %}
-    oh_my_posh_os="linux"
-{% else %}
-    oh_my_posh_os="{{ yadm.os }}"
-{% endif %}
-
-{% if yadm.arch == "x86_64" %}
-    oh_my_posh_arch="amd64"
-{% else %}
-    oh_my_posh_arch="{{ yadm.arch }}"
-{% endif %}
+    if [[ $oh_my_posh_os = mingw* ]]
+    then
+        oh_my_posh_os=windows
+        oh_my_posh_extension=".exe"
+    fi
 
     oh_my_posh_url=https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v$oh_my_posh_version/posh-$oh_my_posh_os-$oh_my_posh_arch${oh_my_posh_extension}
 
