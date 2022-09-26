@@ -1,7 +1,6 @@
 function set-kubeconfig {
     function join {
         local IFS=':'
-        shift 
         echo "$*"
     }
 
