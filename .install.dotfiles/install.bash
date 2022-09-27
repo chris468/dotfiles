@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 REPO=https://github.com/chris468/dotfiles
 YADM_VERSION=3.2.1
 CLASS=
@@ -30,9 +32,10 @@ EOF
 
 function install_yadm {
 
+    echo "Downloading yadm..."
     mkdir -p $install_location
-    curl -L -o $destination $url
-    chmod +x $destination
+    curl -Ls -o $yadm $url
+    chmod +x $yadm
 }
 
 while [ $# -gt 0 ]; do
@@ -78,9 +81,22 @@ function install_dotfiles {
     fi
 }
 
+function backup_dotfiles {
+    df=(~/.inputrc ~/.bash_completion ~/.bash_logout ~/.bashrc ~/.profile)
+    for f in "${df[@]}"
+    do
+        if [ -e $f ]
+        then
+            echo "Moving existing $f -> $f.bkp..."
+            mv $f $f.bkp
+        fi
+    done
+}
+
 url=https://raw.githubusercontent.com/TheLocehiliosan/yadm/$YADM_VERSION/yadm
 install_location=$HOME/.local/bin
 yadm=$install_location/yadm
 
 install_yadm
+backup_dotfiles
 install_dotfiles
