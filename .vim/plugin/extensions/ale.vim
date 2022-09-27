@@ -16,6 +16,10 @@ let g:ale_python_pylsp_config = {
     \},
 \}
 
+let g:ale_fixers = {
+\   'terraform': ['terraform']
+\}
+
 " Use ALE's function for asyncomplete defaults
 augroup AleSetup
     autocmd!
