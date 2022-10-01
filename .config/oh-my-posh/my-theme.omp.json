@@ -61,15 +61,6 @@
           "type": "session"
         },
         {
-          "foreground": "p:session-local-foreground",
-          "foreground_templates": [
-            "{{ if .Env.WSL_DISTRO_NAME }}p:session-remote-foreground{{ end }}"
-          ],
-          "style": "plain",
-          "template": "<p:separator-foreground>\u2500[</>{{ .Shell }}{{ if .Env.WSL_DISTRO_NAME }}+{{ .Env.WSL_DISTRO_NAME }}{{ end }}<p:separator-foreground>]</>",
-          "type": "session"
-        },
-        {
           "foreground": "p:git-foreground",
           "foreground_templates": [
             "{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-changed-foreground{{ end }}",
@@ -139,20 +130,29 @@
             "threshold": 0
           },
           "style": "plain",
-          "template": "{{ .FormattedMs }}<p:separator-foreground>]</> ",
+          "template": "{{ .FormattedMs }}<p:separator-foreground>]</>",
           "type": "executiontime"
+        },
+        {
+          "foreground": "p:session-local-foreground",
+          "foreground_templates": [
+            "{{ if .Env.WSL_DISTRO_NAME }}p:session-remote-foreground{{ end }}"
+          ],
+          "style": "plain",
+          "template": "<p:separator-foreground>\u2500[</>{{ .Shell }}{{ if .Env.WSL_DISTRO_NAME }}+{{ .Env.WSL_DISTRO_NAME }}{{ end }}<p:separator-foreground>]</>",
+          "type": "session"
         },
         {
           "foreground": "#007acc",
           "properties": {
             "mapped_shell_names": {
-              "fish": "fi$",
+              "fish": "$",
               "bash": "$",
-              "pwsh": "PS >"
+              "pwsh": ">"
             }
           },
           "style": "plain",
-          "template": "{{ .Name }}",
+          "template": " {{ .Name }}",
           "type": "shell"
         }
       ],
