@@ -1,7 +1,7 @@
 function __add_local_paths {
     local local_paths=(
-        "$HOME/bin"
         "$HOME/.local/bin"
+        "$HOME/bin"
         "/home/linuxbrew/.linuxbrew/bin"
         "$HOME/.linuxbrew/bin"
      )
