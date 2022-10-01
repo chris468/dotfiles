@@ -14,23 +14,6 @@ function yadm {
     & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && yadm $args"
 }
 
-function Update-OhMyPosh {
-    scoop update oh-my-posh
-}
-
-function Update-Dotfiles {
-    yadm fetch --no-prune
-
-    if (yadm status -sb | select-string 'behind') {
-        "Updating dotfiles..."
-        yadm pull -q --no-prune
-        yadm bootstrap
-    }
-    else {
-        "Dotfiles up to date."
-    }
-}
-
 function AutoUpdate-Dotfiles {
     Start-Job -Name AutoUpdate-Dotfiles -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh -reset" } > $null | Wait-Job
     Start-Job -Name AutoUpdate-Dotfiles -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh" } > $null
@@ -77,29 +60,6 @@ function Initialize-InteractiveSession {
 
         Configure-PSReadLine
         AutoUpdate-Dotfiles
-    }
-}
-
-function Get-AWSProfile {
-    $awsProfileInfo = @()
-    if ($env:AWS_PROFILE) {
-        $awsProfileInfo += $env:AWS_PROFILE
-    }
-    if ($env:AWS_ACCESS_KEY_ID) {
-        $awsProfileInfo += "Key"
-    }
-
-    if ($awsProfileInfo) {
-        "[AWS:$($awsProfileInfo -Join ', ')]"
-    }
-}
-
-function Get-K8sContext {
-    if (Get-Command kubectl -ErrorAction SilentlyContinue) {
-        $k8sContext = $(kubectl config current-context)
-        if ($k8sContext) {
-            "[k8s:$k8sContext]"
-        }
     }
 }
 
