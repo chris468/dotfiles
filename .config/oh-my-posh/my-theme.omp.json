@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "console_title_template": "{{ .Shell }}{{ if .Env.WSL_DISTRO_NAME }}+{{ .Env.WSL_DISTRO_NAME }}{{ end }} {{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}*{{ end }}",
+  "console_title_template": "{{ if .Env.WSL_DISTRO_NAME }}{{ .Env.WSL_DISTRO_NAME }}/{{ end }}{{ .Shell }} {{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}*{{ end }}",
   "blocks": [
     {
       "alignment": "right",
@@ -139,7 +139,7 @@
             "{{ if .Env.WSL_DISTRO_NAME }}p:session-remote-foreground{{ end }}"
           ],
           "style": "plain",
-          "template": "<p:separator-foreground>\u2500[</>{{ .Shell }}{{ if .Env.WSL_DISTRO_NAME }}+{{ .Env.WSL_DISTRO_NAME }}{{ end }}<p:separator-foreground>]</>",
+          "template": "<p:separator-foreground>\u2500[</>{{ if .Env.WSL_DISTRO_NAME }}{{ .Env.WSL_DISTRO_NAME }}/{{ end }}{{ .Shell }}<p:separator-foreground>]</>",
           "type": "session"
         },
         {
