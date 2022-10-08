@@ -1,7 +1,7 @@
 #!/bin/bash
 
 auto_update_log_dir=~/.cache/yadm/auto-update
-auto_update_status=$auto_update_log_dir/status.log
+auto_update_status=$auto_update_log_dir/status
 auto_update_last_update=$auto_update_log_dir/last_update
 auto_update_in_progress=$auto_update_log_dir/in_progress
 auto_update_log=$auto_update_log_dir/auto-update.log
@@ -11,7 +11,7 @@ function set-status {
 }
 
 function update-dotfiles  {
-    yadm fetch --no-prune
+    yadm fetch --no-prune -v
 
     if yadm status -sb | grep behind ; then
         set-status "UPDATING"
@@ -23,9 +23,13 @@ function update-dotfiles  {
     fi
 }
 
-function update-dotfiles-in-background {
-    update-dotfiles || set-status "FAILED"
+function remove_inprogress {
     rm -f $auto_update_in_progress
+}
+
+function update-dotfiles-in-background {
+    trap remove_inprogress err exit
+    update-dotfiles >$auto_update_log 2>&1 || set-status "FAILED"
 }
 
 function is-recent {
@@ -53,5 +57,5 @@ fi
 
 touch $auto_update_in_progress
 touch $auto_update_last_update
-update-dotfiles-in-background 2>&1 > $auto_update_log &
+update-dotfiles-in-background &
 

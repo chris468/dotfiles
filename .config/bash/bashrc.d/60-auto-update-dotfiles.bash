@@ -3,7 +3,7 @@
 
 function _set_auto_update_status {
     auto_update_log_dir=~/.cache/yadm/auto-update
-    auto_update_status=$auto_update_log_dir/status.log
+    auto_update_status=$auto_update_log_dir/status
 
     if [ -e $auto_update_status ]
     then
