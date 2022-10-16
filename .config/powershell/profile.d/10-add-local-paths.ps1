@@ -1,7 +1,8 @@
 function __add_local_paths {
     $local_paths=@(
         "$HOME/.local/bin",
-        "$HOME/bin"
+        "$HOME/bin",
+        "$HOME/scoop/shims"
     )
     [array]::reverse($local_paths)
 
