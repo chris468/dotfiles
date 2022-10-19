@@ -1,6 +1,6 @@
 # Modify template at '{{ yadm.source }}'
 
-oh_my_posh_version="10.3.0"
+oh_my_posh_version="12.5.0"
 
 function __install_oh_my_posh {
 
