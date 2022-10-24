@@ -15,7 +15,7 @@ MonitorUsb(wParam, lParam, msg, hwnd)
 
 CheckForErgodox()
 {
-    static Swap := 0
+    static Swap := -1
     static PID := 0
 
     UpdateStatus("Checking for ergodox")
