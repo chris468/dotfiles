@@ -34,6 +34,8 @@ function! extensions#load()
 
         " git
         Plug 'tpope/vim-fugitive'
+        Plug 'airblade/vim-gitgutter'
+        Plug 'jreybert/vimagit'
 
         if has('python3')
             Plug 'puremourning/vimspector'
