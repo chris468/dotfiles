@@ -8,3 +8,6 @@ call extensions#load()
 
 source $VIMRUNTIME/defaults.vim
 let mapleader = " "
+
+" Decrease update time to make gitgutter show up more quickly
+set updatetime=250
