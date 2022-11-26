@@ -31,6 +31,7 @@ function! extensions#load()
         Plug 'OmniSharp/omnisharp-vim'
         Plug 'hashivim/vim-terraform'
         Plug 'digitaltoad/vim-pug'
+        Plug 'jlcrochet/vim-razor'
 
         " git
         Plug 'tpope/vim-fugitive'
