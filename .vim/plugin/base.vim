@@ -6,6 +6,8 @@ set hlsearch
 set ignorecase
 set smartcase
 
+set wildignore=**/bin/**,**/obj/**,*.nupkg
+
 if (has('win32'))
     set encoding=utf-8
 endif
