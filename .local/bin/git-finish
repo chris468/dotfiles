@@ -34,7 +34,7 @@ set -- "${args[@]}"
 branch=$1
 [ -n "$branch" ] && shift || die "branch is required"
 
-[ -n "$discard" ] || git merge $mode $branch "$@"
+[ -n "$discard" ] || (git pull && git merge $mode $branch "$@")
 git branch -D $branch || true
 git delete-remote-branch $branch || true
 
