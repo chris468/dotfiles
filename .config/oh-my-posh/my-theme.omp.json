@@ -148,7 +148,8 @@
             "mapped_shell_names": {
               "fish": "$",
               "bash": "$",
-              "pwsh": ">"
+              "pwsh": ">",
+              "nu": "\u03bd"
             }
           },
           "style": "plain",
