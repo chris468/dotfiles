@@ -1,0 +1,4 @@
+# XONSH WIZARD START
+source-bash --suppress-skip-message "echo loading xonsh foreign shell"
+xontrib load bashisms #fish_completer
+# XONSH WIZARD END
