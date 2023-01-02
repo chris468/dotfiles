@@ -66,6 +66,3 @@ augroup explorer
     autocmd BufEnter * call s:prevent_replacing_explorer()
     autocmd BufEnter * call s:exit_when_only_explorer_remains()
 augroup END
-
-let g:NERDTreeMinimalUI=1
-let g:NERDTreeIgnore=['\~$', '__pycache__']
