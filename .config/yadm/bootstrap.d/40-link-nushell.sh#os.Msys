@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# git symbolic link to folder doesn't work on windows, so create it here.
+if grep -qi "win" <<< "$OS" ; then
+    if test ! -e "$APPDATA/nushell" ; then
+        (cd $config_dir && pwsh -NoProfile -Command '& { New-Item -Type SymbolicLink -Target $PWD/.config/nushell -Path "$env:APPDATA/nushell" }')
+    fi
+fi
