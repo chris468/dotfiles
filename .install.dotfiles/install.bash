@@ -6,6 +6,7 @@ REPO=https://github.com/chris468/dotfiles
 YADM_VERSION=3.2.1
 CLASS=
 BRANCH=main
+BOOTSTRAP=
 
 function usage {
     cat << EOF
@@ -27,6 +28,11 @@ options:
     -v|--version <version>
         Yadm version/tag to install. Default: $YADM_VERSION
 
+    --bootstrap|--no-bootstrap
+        Bootstrap or not without prompt. Default will prompt.
+
+any other options are passed to yadm.
+
 EOF
 }
 
@@ -42,9 +48,13 @@ while [ $# -gt 0 ]; do
     case $1 in
         -b|--branch)
             BRANCH="$2"
+            shift
+            shift
             ;;
         -c|--class)
             CLASS="$2"
+            shift
+            shift
             ;;
         -h|--help)
             usage
@@ -52,9 +62,17 @@ while [ $# -gt 0 ]; do
             ;;
         -r|--repo)
             REPO="$2"
+            shift
+            shift
             ;;
         -v|--version)
             YADM_VERSION="$2"
+            shift
+            shift
+            ;;
+        --bootstrap|--no-bootstrap)
+            BOOTSTRAP=$1
+            shift
             ;;
         *)
             echo unknown argument $1 >&2
@@ -62,10 +80,6 @@ while [ $# -gt 0 ]; do
             exit 1
             ;;
     esac
-
-    shift
-    shift
-
 done
 
 function install_dotfiles {
@@ -74,7 +88,7 @@ function install_dotfiles {
         git config --global core.symlinks true
     fi
 
-    $yadm clone -b $BRANCH $REPO
+    $yadm clone $BOOTSTRAP -b $BRANCH $REPO
 
     if [ -n "$CLASS" ] ; then
         $yadm config local.class $CLASS
