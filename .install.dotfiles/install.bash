@@ -4,7 +4,7 @@ set -e
 
 REPO=https://github.com/chris468/dotfiles
 YADM_VERSION=3.2.1
-CLASS=
+CLASS=()
 BRANCH=main
 BOOTSTRAP=
 
@@ -17,7 +17,7 @@ options:
         Branch to install. Default: $BRANCH
 
     -c|--class <class>
-        Yadm class to set. Default: none.
+        Yadm class to set. Can be specified multiple times. Default: none.
 
     -h|--help
         Display this message and exit.
@@ -52,7 +52,7 @@ while [ $# -gt 0 ]; do
             shift
             ;;
         -c|--class)
-            CLASS="$2"
+            CLASS+=("$2")
             shift
             shift
             ;;
@@ -90,9 +90,9 @@ function install_dotfiles {
 
     $yadm clone $BOOTSTRAP -b $BRANCH $REPO
 
-    if [ -n "$CLASS" ] ; then
-        $yadm config local.class $CLASS
-    fi
+    for c in ${CLASS[@]} ; do
+        $yadm config --add local.class $c
+    done
 }
 
 function backup_dotfiles {
