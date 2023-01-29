@@ -34,8 +34,11 @@ function! s:configure_language_service_mappings()
 
         if !l:omnisharp
             nmap <silent> <buffer> gd <Plug>(ale_go_to_definition)
+            nmap <silent> <buffer> gD <Plug>(ale_go_to_definition_in_split)
             nmap <silent> <buffer> gy <Plug>(ale_go_to_type_definition)
+            nmap <silent> <buffer> gY <Plug>(ale_go_to_type_definition_in_split)
             nmap <silent> <buffer> gi <Plug>(ale_go_to_implementation)
+            nmap <silent> <buffer> gI <Plug>(ale_go_to_implementation_in_split)
             nmap <silent> <buffer> gr <Plug>(ale_find_references)
 
             nmap <silent> <buffer> K <Plug>(ale-hover)
