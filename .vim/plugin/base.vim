@@ -6,7 +6,7 @@ set hlsearch
 set ignorecase
 set smartcase
 
-set wildignore=**/bin/**,**/obj/**,*.nupkg
+set wildignore=**/bin/**,**/obj/**,*.nupkg,**/__pycache__/**,*.tfstate*
 
 if (has('win32'))
     set encoding=utf-8
