@@ -1,6 +1,6 @@
 let s:languages = {
     \ 'vim':    'npm install --global vim-language-server',
-    \ 'python': 'pip install python-lsp-server flake8'
+    \ 'python': 'pip install python-lsp-server pylsp-mypy flake8'
 \ }
 
 function s:install_language_support(name)
