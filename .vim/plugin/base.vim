@@ -15,3 +15,4 @@ endif
 
 nmap <silent> <leader>h :tabprev<CR>
 nmap <silent> <leader>l :tabnext<CR>
+nmap <silent> <leader>n :nohlsearch<CR>
