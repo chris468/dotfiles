@@ -595,7 +595,7 @@ c = get_config()  #noqa
 
 ## Set the color scheme (NoColor, Neutral, Linux, or LightBG).
 #  See also: InteractiveShell.colors
-# c.TerminalInteractiveShell.colors = 'Neutral'
+c.TerminalInteractiveShell.colors = 'NoColor'
 
 ## Set to confirm when you try to exit IPython with an EOF (Control-D in Unix,
 #  Control-Z/Enter in Windows). By typing 'exit' or 'quit', you can force a
