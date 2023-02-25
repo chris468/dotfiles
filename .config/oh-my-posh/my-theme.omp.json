@@ -18,6 +18,26 @@
           "type": "text"
         },
         {
+          "type": "project",
+          "style": "diamond",
+          "foreground": "#906cff",
+          "leading_diamond": "<p:separator-foreground>[</>",
+          "trailing_diamond": "<p:separator-foreground>]\u2500</>",
+          "templates": [
+            "{{ if .Error }}{{ .Error }}{{ end }}",
+            "{{ if and (not .Error) .Name }}{{ .Name | trim }}{{ end }}",
+            "{{ if not .Error }}{{ if .Target }} ({{ .Target }}){{ else }} {{ if .Type }} ({{ if and (eq .Type \"poetry\") (eq \"1\" .Env.POETRY_ACTIVE) }}\u2666{{ end }}{{ .Type }}){{ end }}{{ end }}{{ end }}"
+          ]
+        },
+        {
+          "type": "python",
+          "style": "diamond",
+          "foreground": "#906cff",
+          "leading_diamond": "<p:separator-foreground>[</>",
+          "trailing_diamond": "<p:separator-foreground>]\u2500</>",
+          "template": "{{ if ne \"1\" .Env.POETRY_ACTIVE }}{{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}\u2666{{ .Venv }} {{ end }}{{ .Full }}{{ end }}{{ end }}"
+        },
+        {
           "foreground": "p:aws-foreground",
           "foreground_templates": [
             "{{ if contains \"admin\" .Profile }}red{{ end }}"
