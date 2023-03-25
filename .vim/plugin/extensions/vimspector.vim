@@ -6,3 +6,8 @@ let g:vimspector_sign_priority = {
   \    'vimspectorBPCond':     32,
   \    'vimspectorBPDisabled': 31,
   \ }
+
+" ensure menus show up
+if &mouse !~ 'a\|n'
+    set mouse+=n
+endif
