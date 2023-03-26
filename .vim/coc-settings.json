@@ -7,10 +7,7 @@
         "terraform",
         "tf"
       ],
-      "initializationOptions": {},
-      "settings": {
-        "coc.preferences.formatOnType": true
-      }
+      "initializationOptions": {}
     },
     "csharp-ls": {
       "command": "csharp-ls",
