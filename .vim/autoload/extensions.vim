@@ -37,11 +37,12 @@ function! extensions#load()
         endif
 
         if g:enable_ale
-            " Plug 'dense-analysis/ale'
-            " Plug 'hashivim/vim-terraform'
-            " Plug 'digitaltoad/vim-pug'
-            " Plug 'jlcrochet/vim-razor'
+            Plug 'dense-analysis/ale'
+            Plug 'digitaltoad/vim-pug'
+            Plug 'jlcrochet/vim-razor'
         endif
+
+        Plug 'hashivim/vim-terraform'
 
         " git
         Plug 'tpope/vim-fugitive'
