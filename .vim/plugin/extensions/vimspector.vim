@@ -13,6 +13,7 @@ if &mouse !~ 'a\|n'
 endif
 
 nmap <silent> <leader>vg           <Plug>VimspectorContinue
+nmap <leader>vG                    <Plug>VimspectorLaunch
 nmap <silent> <leader>vs           <Plug>VimspectorStop
 nmap <silent> <leader>vr           <Plug>VimspectorRestart
 nmap <silent> <leader>vp           <Plug>VimspectorPause
