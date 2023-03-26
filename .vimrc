@@ -2,7 +2,12 @@
 "  - extension configuration is in .vim/autoload/extension.vim
 "  - configuration to run before extensions load is in .vim/plugin
 "  - configuration to run after extension load is in .vim/after/plugin
-"
+
+
+let g:enable_omnisharp = v:false
+let g:enable_ale = v:false
+let g:enable_asyncomplete = v:false
+let g:enable_coc = v:true
 
 call extensions#load()
 

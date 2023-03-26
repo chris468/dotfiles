@@ -14,7 +14,7 @@
 " <leader>p         -       Resume error/warn/etc (coc-specific?)
 
 function! s:configure_language_service_mappings()
-    let l:omnisharp = &filetype == 'cs' && exists('g:OmniSharp_loaded')
+    let l:omnisharp = g:enable_omnisharp && &filetype == 'cs' && exists('g:OmniSharp_loaded')
     if l:omnisharp
         let b:language_service_mappings = 'omnisharp'
         nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
@@ -29,7 +29,7 @@ function! s:configure_language_service_mappings()
         nmap <silent> <buffer> <leader>s <Plug>(omnisharp_signature_help)
         imap <silent> <buffer> <C-\>s <Plug>(omnisharp_signature_help)
     endif
-    if exists('g:loaded_ale')
+    if g:enable_ale && exists('g:loaded_ale')
         let b:language_service_mappings = 'ale'
 
         if !l:omnisharp
@@ -49,6 +49,28 @@ function! s:configure_language_service_mappings()
 
         nmap <silent> <buffer> <leader>j <Plug>(ale_next)
         nmap <silent> <buffer> <leader>k <Plug>(ale_previous)
+    endif
+    if g:enable_coc && exists('g:did_coc_loaded')
+        let b:language_service_mappings = 'coc'
+
+        " if !l:omnisharp
+            nmap <silent> <buffer> gd <Plug>(coc-definition)
+            nmap <silent> <buffer> gD :call CocAction('jumpDefinition', 'pedit')<CR>
+            nmap <silent> <buffer> gy <Plug>(coc-type-definition)
+            nmap <silent> <buffer> gY :call CocAction('jumpTypeDefinition', 'pedit')<CR>
+            nmap <silent> <buffer> gi <Plug>(coc-implementation)
+            nmap <silent> <buffer> gI :call CocAction('jumpImplementation', 'pedit')<CR>
+            nmap <silent> <buffer> gr <Plug>(coc-references)
+
+            nmap <silent> <buffer> K :call ShowDocumentation()<CR>
+
+            nmap <silent> <buffer> <leader>rn <Plug>(coc-rename)
+            nmap <silent> <buffer> <leader><leader> <Plug>(coc-codeaction-cursor)
+            xmap <silent> <buffer> <leader><leader> <Plug>(coc-codeaction-selected)
+        " endif
+
+        nmap <silent> <buffer> <leader>j <Plug>(coc-diagnostic-next)
+        nmap <silent> <buffer> <leader>k <Plug>(coc-diagnostic-previous)
     endif
 endfunction
 
