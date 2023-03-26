@@ -53,6 +53,10 @@ function! s:configure_language_service_mappings()
 
         nmap <silent> <buffer> <leader>j <Plug>(coc-diagnostic-next)
         nmap <silent> <buffer> <leader>k <Plug>(coc-diagnostic-previous)
+
+        nmap <silent> <buffer> <leader>aF <Plug>(coc-format)
+        nmap <silent> <buffer> <leader>af <Plug>(coc-format-selected)
+        xmap <silent> <buffer> <leader>af <Plug>(coc-format-selected)
     endif
 
     let l:omnisharp = g:enable_omnisharp && &filetype == 'cs' && exists('g:OmniSharp_loaded')
@@ -78,4 +82,3 @@ augroup LanguageServiceMappings
     autocmd!
     autocmd BufNew,BufEnter,BufAdd,BufCreate * call s:configure_language_service_mappings()
 augroup end
-
