@@ -1,0 +1,5 @@
+highlight link LspErrorHighlight ErrorMsg
+highlight link LspErrorText Error
+highlight link LspWarningHighlight WarningMsg
+highlight link LspWarningText Warning
+highlight link lspReference DraculaInfoLine
