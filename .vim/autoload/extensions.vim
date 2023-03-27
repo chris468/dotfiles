@@ -22,16 +22,27 @@ function! extensions#load()
         " core ide utilities
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
         Plug 'junegunn/fzf.vim'
-        Plug 'prabirshrestha/asyncomplete.vim'
+        if g:enable_asyncomplete
+            Plug 'prabirshrestha/asyncomplete.vim'
+        endif
+        if g:enable_coc
+            Plug 'neoclide/coc.nvim', {'branch': 'release'}
+        endif
 
-        Plug 'dense-analysis/ale'
         Plug 'airblade/vim-rooter'
 
         " Languages
-        Plug 'OmniSharp/omnisharp-vim'
+        if g:enable_omnisharp
+            Plug 'OmniSharp/omnisharp-vim'
+        endif
+
+        if g:enable_ale
+            Plug 'dense-analysis/ale'
+            Plug 'digitaltoad/vim-pug'
+            Plug 'jlcrochet/vim-razor'
+        endif
+
         Plug 'hashivim/vim-terraform'
-        Plug 'digitaltoad/vim-pug'
-        Plug 'jlcrochet/vim-razor'
 
         " git
         Plug 'tpope/vim-fugitive'
