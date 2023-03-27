@@ -33,7 +33,28 @@ function! s:configure_language_service_mappings()
         nmap <silent> <buffer> <leader>j <Plug>(ale_next)
         nmap <silent> <buffer> <leader>k <Plug>(ale_previous)
     endif
-'
+
+    if g:enable_vim_lsp && exists('g:lsp_loaded')
+        if exists('+tagfunc')
+            setlocal tagfunc=lsp#tagfunc
+        endif
+
+        setlocal omnifunc=lsp#complete
+        nmap <silent> <buffer> gd <plug>(lsp-definition)
+        nmap <silent> <buffer> gD <plug>(lsp-peek-definition)
+        nmap <silent> <buffer> gr <plug>(lsp-references)
+        nmap <silent> <buffer> gi <plug>(lsp-implementation)
+        nmap <silent> <buffer> gI <plug>(lsp-peek-implementation)
+        nmap <silent> <buffer> gt <plug>(lsp-type-definition)
+        nmap <silent> <buffer> gT <plug>(lsp-peek-type-definition)
+        nmap <silent> <buffer> <leader>rn <plug>(lsp-rename)
+        nmap <silent> <buffer> <leader>j <plug>(lsp-previous-diagnostic)
+        nmap <silent> <buffer> <leader>k <plug>(lsp-next-diagnostic)
+        nmap <silent> <buffer> K <plug>(lsp-hover)
+        nmap <silent> <buffer> <leader><leader> <plug>(lsp-code-action)
+        nmap <silent> <buffer> <leader>s <plug>(lsp-signature-help)
+    endif
+
     if g:enable_coc && exists('g:did_coc_loaded')
         let b:language_service_mappings = 'coc'
 

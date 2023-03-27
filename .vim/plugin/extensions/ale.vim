@@ -1,4 +1,4 @@
-if ! g:enable_ale
+if ! enable_ale || ! exists('g:loaded_ale')
     finish
 endif
 
