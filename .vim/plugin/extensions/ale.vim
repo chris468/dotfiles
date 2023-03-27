@@ -1,3 +1,7 @@
+if ! enable_ale || ! exists('g:loaded_ale')
+    finish
+endif
+
 let g:ale_python_pylsp_auto_poetry=1
 
 let g:ale_linters = {

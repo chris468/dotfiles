@@ -6,8 +6,9 @@
 
 let g:enable_omnisharp = v:false
 let g:enable_ale = v:false
-let g:enable_asyncomplete = v:false
-let g:enable_coc = v:true
+let g:enable_coc = v:false
+let g:enable_vim_lsp = v:true
+let g:enable_asyncomplete = g:enable_vim_lsp
 
 call extensions#load()
 
