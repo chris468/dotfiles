@@ -36,6 +36,11 @@ function! extensions#load()
             Plug 'OmniSharp/omnisharp-vim'
         endif
 
+        if g:enable_vim_lsp
+            Plug 'prabirshrestha/vim-lsp'
+            Plug 'mattn/vim-lsp-settings'
+        endif
+
         if g:enable_ale
             Plug 'dense-analysis/ale'
             Plug 'digitaltoad/vim-pug'
