@@ -15,12 +15,6 @@ let g:lsp_settings = {
 \   'cmd': {server_info->s:start_pylsp()},
 \   'workspace_config': {
 \     'pylsp': {
-\       'plugins': {
-\         'pycodestyle': { 'enabled': v:false },
-\         'pyflakes': { 'enabled': v:false },
-\         'mccabe': { 'enabled': v:false },
-\         'flake8': { 'enabled': v:true },
-\       },
 \       'configurationSources': [ 'flake8' ]
 \     }
 \   }
