@@ -5,11 +5,9 @@ let g:lsp_document_highlight_enabled = 1
 
 function s:start_pylsp()
     if findfile('poetry.lock') isnot# ''
-        echom 'poetry'
         return ['poetry', 'run', 'pylsp']
     endif
 
-    echom 'normal'
     return ['pylsp']
 endfunction
 
