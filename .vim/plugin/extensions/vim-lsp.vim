@@ -21,3 +21,6 @@ let g:lsp_settings = {
 \   }
 \ }
 \}
+
+" logging
+" let g:lsp_log_file = expand('~/.cache/vim-lsp.log')
