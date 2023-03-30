@@ -3,4 +3,4 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 require 'extensions'
-require 'nvim-tree'
+require 'extensions.nvim-tree'

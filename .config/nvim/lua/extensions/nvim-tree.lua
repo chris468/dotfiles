@@ -3,7 +3,6 @@
 
 -- empty setup using defaults
 require("nvim-tree").setup()
-api.tree.open()
 
 -- OR setup with some options
 -- require("nvim-tree").setup({
