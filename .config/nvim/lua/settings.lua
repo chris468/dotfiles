@@ -4,7 +4,15 @@ local global_options = {
 }
 
 local options = {
-  termguicolors = true
+  backup = false,
+  directory = vim.fn.stdpath('cache')..'/swp/',
+  encoding = 'utf-8',
+  hlsearch = true,
+  ignorecase = true,
+  smartcase = true,
+  termguicolors = true,
+  wildignore = '**/bin/**,**/obj/**,*.nupkg,**/__pycache__/**,*.tfstate*',
+  wrap = false,
 }
 
 for k, v in pairs(global_options) do
