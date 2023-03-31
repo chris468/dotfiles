@@ -23,6 +23,7 @@ return packer.startup(function(use)
   use 'nvim-tree/nvim-tree.lua'
   use 'dracula/vim'
   use { 'nvim-telescope/telescope.nvim', requires = {{ 'nvim-lua/plenary.nvim' }}}
+  use 'chentoast/marks.nvim'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
