@@ -11,8 +11,6 @@ vim.keymap.set("n", "<leader>n", vim.cmd.nohlsearch, opts)
 local function ext(name, callback)
   return function()
     local result_ok, ext = pcall(require, name)
-    print(result_ok)
-    print(ext)
     if result_ok then
       callback(ext)
     end
