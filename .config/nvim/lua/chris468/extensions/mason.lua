@@ -14,5 +14,19 @@ if_ext('mason', function(mason)
     })
   end)
 
-end)
+  if_ext('mason-nvim-dap', function(mason_nvim_dap)
 
+    mason_nvim_dap.setup {
+      ensure_installed = {
+        'python',
+        'coreclr',
+        'bash',
+      },
+      automatic_setup = true,
+    }
+
+    mason_nvim_dap.setup_handlers {}
+
+  end)
+
+end)
