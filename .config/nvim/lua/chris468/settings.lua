@@ -2,6 +2,8 @@ local global_options = {
   dracula_italic = 0,
   loaded_netrw = 1,
   loaded_netrwPlugin = 1,
+  mapleader = " ",
+  maplocalleader = " ",
 }
 
 local options = {
