@@ -31,3 +31,38 @@ vim.keymap.set('n', '<leader>f', ext('telescope.builtin',
   end), opts)
 vim.keymap.set('n', '<leader>F', ext('telescope.builtin', function(t) t.find_files() end), opts)
 vim.keymap.set('n', '<leader>t', ext('telescope.builtin', function(_) vim.cmd('Telescope') end), opts)
+
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opt)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opt)
+
+local function add_lsp_mappings()
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+  vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
+  vim.keymap.set('n', 'gs', ext('telescope.builtin',
+    function(t)
+      t.lsp_dynamic_workspace_symbols { symbols = {
+        'class', 'method', 'property', 'field', 'constructor',
+        'enum', 'interface', 'function', 'enummember', 'struct', 'event',
+        'operator'
+      }
+    }
+    end), opts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', '<leader>s', vim.lsp.buf.signature_help, opts)
+  vim.keymap.set('n', '<leader><leader>', vim.lsp.buf.code_action, opts)
+  vim.keymap.set('n', '<leader>af', function() vim.lsp.buf.format { async = true } end, opts)
+end
+
+vim.cmd [[
+  augroup LspMappings
+    autocmd!
+    autocmd LspAttach * silent lua require 'mappings'.add_lsp_mappings()
+  augroup end
+]]
+
+return {
+  add_lsp_mappings = add_lsp_mappings
+}
