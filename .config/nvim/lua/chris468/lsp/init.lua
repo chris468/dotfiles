@@ -10,19 +10,23 @@ require 'chris468.util.if-ext' ('lspconfig', function(lspconfig)
     return settings
   end)()
 
-  local function config(settings)
+  local function add_capabilities(settings)
+
     local s = require 'chris468.util.if-ext' ('cmp_nvim_lsp',
       function(cmp_nvim_lsp)
         return { capabilities = cmp_nvim_lsp.default_capabilities() }
       end,
       function() return {} end
     )
-    s.settings = settings
+
+    for k, v in pairs(settings) do
+      s[k] = v
+    end
     return s
   end
 
   for server, settings in pairs(servers) do
-    lspconfig[server].setup { config(settings) }
+    lspconfig[server].setup { add_capabilities(settings) }
   end
 
 end)
