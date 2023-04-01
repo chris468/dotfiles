@@ -59,7 +59,7 @@ end
 vim.cmd [[
   augroup LspMappings
     autocmd!
-    autocmd LspAttach * silent lua require 'mappings'.add_lsp_mappings()
+    autocmd LspAttach * silent lua require 'chris468.mappings'.add_lsp_mappings()
   augroup end
 ]]
 
