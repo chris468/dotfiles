@@ -34,8 +34,11 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     use 'tommcdo/vim-exchange'
     use 'tpope/vim-surround'
 
+    use 'mfussenegger/nvim-dap'
+
     use { "williamboman/mason.nvim", run = ":MasonUpdate" }
     use { "williamboman/mason-lspconfig.nvim" }
+    use { "jay-babu/mason-nvim-dap.nvim" }
 
 
     use 'neovim/nvim-lspconfig'
