@@ -1,5 +1,5 @@
 require 'chris468.util.if-ext' ('lspconfig', function(lspconfig)
-  require 'chris468.lsp.lua_ls'(lspconfig)
-  require 'chris468.lsp.omnisharp'(lspconfig)
-  require 'chris468.lsp.pyright'(lspconfig)
+  require 'chris468.lsp.servers.lua_ls'(lspconfig)
+  require 'chris468.lsp.servers.omnisharp'(lspconfig)
+  require 'chris468.lsp.servers.pyright'(lspconfig)
 end)
