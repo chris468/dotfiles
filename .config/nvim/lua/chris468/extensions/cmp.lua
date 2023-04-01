@@ -1,4 +1,4 @@
-if_ext = require 'chris468.util.if-ext'
+local if_ext = require 'chris468.util.if-ext'
 
 if_ext('nvim-cmp', function(cmp) if_ext('cmp_nvm_lsp', function(_)
   cmp.setup {

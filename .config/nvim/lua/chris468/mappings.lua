@@ -1,7 +1,7 @@
 local function ext(name, callback)
   return function()
-    require 'chris468.util.if-ext'(name, function(ext)
-      callback(ext)
+    require 'chris468.util.if-ext'(name, function(e)
+      callback(e)
     end)
   end
 end
@@ -52,7 +52,7 @@ local lsp_mappings = {
   { map = 'gr', cmd = vim.lsp.buf.references },
   { map = 'gi', cmd = vim.lsp.buf.implementation },
   { map = 'gt', cmd = vim.lsp.buf.type_definition },
-  { 
+  {
     map = 'gs',
     cmd = ext('telescope.builtin',
       function(t)

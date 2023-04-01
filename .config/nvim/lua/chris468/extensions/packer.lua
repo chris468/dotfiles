@@ -34,6 +34,10 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     use 'tommcdo/vim-exchange'
     use 'tpope/vim-surround'
 
+    use { "williamboman/mason.nvim", run = ":MasonUpdate" }
+    use { "williamboman/mason-lspconfig.nvim" }
+
+
     use 'neovim/nvim-lspconfig'
     use 'hrsh7th/nvim-cmp'
     use 'hrsh7th/cmp-nvim-lsp'
