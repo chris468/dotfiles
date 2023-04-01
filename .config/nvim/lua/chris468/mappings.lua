@@ -32,13 +32,13 @@ local mappings = {
   { map = "<leader>et", cmd = ext('nvim-tree.api', function(t) t.tree.toggle() end) },
   {
     map = '<leader>f',
-    cmd = function(t)
+    cmd = ext('telescope.builtin', function(t)
       if 0 == os.execute('git rev-parse >/dev/null 2>&1') then
         t.git_files()
       else
         t.find_files()
       end
-    end
+    end)
   },
   { map = '<leader>F', cmd = ext('telescope.builtin', function(t) t.find_files() end) },
   { map = '<leader>t', cmd = ext('telescope.builtin', function(_) vim.cmd('Telescope') end) },
