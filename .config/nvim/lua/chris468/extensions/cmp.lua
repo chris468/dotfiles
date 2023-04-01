@@ -1,15 +1,10 @@
-local status_ok, cmp = pcall(require, 'nvim-cmp')
-if not status_ok then
-  return
-end
+if_ext = require 'chris468.util.if-ext'
 
-local status_ok, _ = pcall(require, 'cmp_nvim_lsp')
-if not status_ok then
-  return
-end
-
-cmp.setup {
-  sources = {
-    name = 'nvim_lsp'
+if_ext('nvim-cmp', function(cmp) if_ext('cmp_nvm_lsp', function(_)
+  cmp.setup {
+    sources = {
+      name = 'nvim_lsp'
+    }
   }
-}
+end) end)
+

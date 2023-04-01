@@ -1,6 +1,3 @@
-local status_ok, _ = pcall(require, 'lspconfig')
-if not status_ok then
-  return
-end
-
-require 'chris468.lsp.pyright'
+require 'chris468.util.if-ext' ('lspconfig', function(lspconfig)
+  require 'chris468.lsp.pyright'(lspconfig)
+end)

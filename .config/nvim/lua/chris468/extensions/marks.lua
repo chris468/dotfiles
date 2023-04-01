@@ -1,6 +1,3 @@
-local status_ok, marks = pcall(require, 'marks')
-if not status_ok then
-  return
-end
-
-marks.setup()
+require 'chris468.util.if-ext' ('marks', function(marks)
+  marks.setup()
+end)

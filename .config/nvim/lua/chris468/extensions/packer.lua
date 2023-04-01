@@ -11,40 +11,39 @@ end
 
 local packer_bootstrap = ensure_packer()
 
-local status_ok, packer = pcall(require, 'packer')
-if not status_ok then
-  return
-end
+return require 'chris468.util.if-ext' ('packer', function(packer)
 
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost packer.lua source <afile> | PackerSync
-  augroup end
-]])
+  vim.cmd([[
+    augroup packer_user_config
+      autocmd!
+      autocmd BufWritePost packer.lua source <afile> | PackerSync
+    augroup end
+  ]])
 
-packer.init()
+  packer.init()
 
-return packer.startup(function(use)
-  use 'wbthomason/packer.nvim'
+  return packer.startup(function(use)
+    use 'wbthomason/packer.nvim'
 
-  use 'dracula/vim'
+    use 'dracula/vim'
 
-  use 'nvim-tree/nvim-tree.lua'
-  use { 'nvim-telescope/telescope.nvim', requires = {{ 'nvim-lua/plenary.nvim' }}}
-  use 'chentoast/marks.nvim'
+    use 'nvim-tree/nvim-tree.lua'
+    use { 'nvim-telescope/telescope.nvim', requires = {{ 'nvim-lua/plenary.nvim' }}}
+    use 'chentoast/marks.nvim'
 
-  use 'tommcdo/vim-exchange'
-  use 'tpope/vim-surround'
+    use 'tommcdo/vim-exchange'
+    use 'tpope/vim-surround'
 
-  use 'neovim/nvim-lspconfig'
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-nvim-lua'
+    use 'neovim/nvim-lspconfig'
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'hrsh7th/cmp-nvim-lua'
 
-  -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
-  if packer_bootstrap then
-    require('packer').sync()
-  end
+    -- Automatically set up your configuration after cloning packer.nvim
+    -- Put this at the end after all plugins
+    if packer_bootstrap then
+      require('packer').sync()
+    end
+  end)
+
 end)

@@ -10,10 +10,9 @@ vim.keymap.set("n", "<leader>n", vim.cmd.nohlsearch, opts)
 
 local function ext(name, callback)
   return function()
-    local result_ok, ext = pcall(require, name)
-    if result_ok then
+    require 'chris468.util.if-ext'(name, function(ext)
       callback(ext)
-    end
+    end)
   end
 end
 
