@@ -29,7 +29,6 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
 
     use 'nvim-tree/nvim-tree.lua'
     use { 'nvim-telescope/telescope.nvim', requires = {{ 'nvim-lua/plenary.nvim' }}}
-    use 'chentoast/marks.nvim'
 
     use 'tommcdo/vim-exchange'
     use 'tpope/vim-surround'
