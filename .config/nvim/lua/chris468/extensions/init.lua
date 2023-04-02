@@ -46,6 +46,8 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-nvim-lua'
 
+    use 'rafcamlet/nvim-luapad'
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
