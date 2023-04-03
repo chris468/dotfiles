@@ -54,6 +54,8 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     use { 'nvim-treesitter/nvim-treesitter', tag = 'v0.8.3', disable = true }
     use { 'theHamsta/nvim-dap-virtual-text', disable = true }
 
+    use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
