@@ -49,39 +49,10 @@ local mappings = {
 }
 
 local function dap_mappings(dap)
-  local run_state = {
-    first = true
-  }
-
-  run_state.prompt = function()
-    run_state.first = false
-    require('dap.ext.vscode').load_launchjs()
-    dap.continue()
-  end
-
-  run_state.prompt_or_continue = function()
-    if dap.session() then
-      dap.continue()
-    else
-      run_state.prompt()
-    end
-  end
-
-  run_state.launch_or_continue = function()
-    if dap.session() then
-      dap.continue()
-    else
-      if run_state.first then
-        run_state.prompt()
-      else
-        dap.run_last()
-      end
-    end
-  end
-
+  local debugger = require('chris468.mappings.debugger')(dap)
   return {
-    { map = '<leader>dg', cmd = run_state.launch_or_continue },
-    { map = '<leader>dG', cmd = run_state.prompt_or_continue },
+    { map = '<leader>dg', cmd = debugger.launch_or_continue },
+    { map = '<leader>dG', cmd = debugger.prompt_or_continue },
     { map = '<leader>db', cmd = dap.toggle_breakpoint },
     { map = '<leader>ds', cmd = dap.terminate },
     { map = '<leader>dr', cmd = dap.restart },
