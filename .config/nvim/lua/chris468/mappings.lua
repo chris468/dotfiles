@@ -1,6 +1,7 @@
+local if_ext = require 'chris468.util.if-ext'
 local function ext(name, callback)
   return function()
-    require 'chris468.util.if-ext'(name, function(e)
+    if_ext(name, function(e)
       callback(e)
     end)
   end
@@ -47,6 +48,66 @@ local mappings = {
   { map = ']d', cmd = vim.diagnostic.goto_next },
 }
 
+local function dap_mappings(dap)
+  local run_state = {
+    first = true
+  }
+
+  run_state.prompt = function()
+    run_state.first = false
+    require('dap.ext.vscode').load_launchjs()
+    dap.continue()
+  end
+
+  run_state.prompt_or_continue = function()
+    if dap.session() then
+      dap.continue()
+    else
+      run_state.prompt()
+    end
+  end
+
+  run_state.launch_or_continue = function()
+    if dap.session() then
+      dap.continue()
+    else
+      if run_state.first then
+        run_state.prompt()
+      else
+        dap.run_last()
+      end
+    end
+  end
+
+  return {
+    { map = '<leader>dg', cmd = run_state.launch_or_continue },
+    { map = '<leader>dG', cmd = run_state.prompt_or_continue },
+    { map = '<leader>db', cmd = dap.toggle_breakpoint },
+    { map = '<leader>ds', cmd = dap.terminate },
+    { map = '<leader>dr', cmd = dap.restart },
+    { map = '<leader>dp', cmd = dap.pause },
+    { map = '<leader>o', cmd = dap.step_over },
+    { map = '<leader>i', cmd = dap.step_into },
+    { map = '<leader>u', cmd = dap.step_out },
+    { map = '<leader>dv', cmd = ext('dapui', function(dapui) dapui.eval() end), mode = {'n', 'x'} },
+    { map = '<leader>df', cmd = dap.focus_frame },
+    { map = '<leader>dk', cmd = dap.up },
+    { map = '<leader>dj', cmd = dap.down },
+
+    -- nmap <silent> <leader>vwo           :VimspectorShowOutput<CR>
+    -- nmap <silent> <leader>vws           :call chris468#focus_window('vimspector.StackTrace')<CR>
+    -- nmap <silent> <leader>vww           :call chris468#focus_window('vimspector.Watches')<CR>
+    -- nmap <silent> <leader>vwv           :call chris468#focus_window('vimspector.Variables')<CR>
+    --
+    -- prob not needed:
+    -- nmap <silent> <leader>vx            :call vimspector#Reset( {'interactive': v:false } )<CR>
+    -- " nmap <silent> <leader><F8>         <Plug>VimspectorJumpToNextBreakpoint
+    -- " nmap <silent> <leader><S-F8>       <Plug>VimspectorJumpToPreviousBreakpoint
+    -- " nmap <silent> <leader><S-F9>       <Plug>VimspectorAddFunctionBreakpoint
+    -- " nmap <silent> <leader><M-8>        <Plug>VimspectorDisassemble
+  }
+end
+
 local lsp_mappings = {
   { map = 'gd', cmd = vim.lsp.buf.definition },
   { map = 'gr', cmd = vim.lsp.buf.references },
@@ -83,6 +144,8 @@ vim.cmd [[
 ]]
 
 map(mappings)
+if_ext('dap', function(dap) map(dap_mappings(dap)) end)
+
 return {
-  add_lsp_mappings = add_lsp_mappings
+  add_lsp_mappings = add_lsp_mappings,
 }
