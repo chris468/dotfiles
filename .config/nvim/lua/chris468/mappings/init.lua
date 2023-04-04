@@ -1,26 +1,6 @@
 local if_ext = require 'chris468.util.if-ext'
-local function ext(name, callback)
-  return function()
-    if_ext(name, function(e)
-      callback(e)
-    end)
-  end
-end
-
-local function map(mappings)
-  for _, m in pairs(mappings) do
-    if not m.map or not m.cmd then
-      print('map and cmd are required. skipping ' .. vim.inspect(m))
-    else
-      vim.keymap.set(
-        m.mode or "n",
-        m.map,
-        m.cmd,
-        m.opts or { noremap = true, silent = true }
-      )
-    end
-  end
-end
+local util = require 'chris468.mappings.util'
+local map, ext, temporarily_disable_relativenumber = util.map, util.ext, util.temporarily_disable_relativenumber
 
 local mappings = {
   { map = "<Space>", cmd = "<Nop>", mode = "" },
@@ -46,6 +26,8 @@ local mappings = {
 
   { map = '[d', cmd = vim.diagnostic.goto_prev },
   { map = ']d', cmd = vim.diagnostic.goto_next },
+
+  { map = '<leader>R', cmd = temporarily_disable_relativenumber },
 }
 
 local function dap_mappings(dap)
