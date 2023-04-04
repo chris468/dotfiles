@@ -36,7 +36,7 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
 
     use 'mfussenegger/nvim-dap'
 
-    use { "williamboman/mason.nvim", run = ":MasonUpdate" }
+    use "williamboman/mason.nvim"
     use { "williamboman/mason-lspconfig.nvim" }
     use { "jay-babu/mason-nvim-dap.nvim" }
 
