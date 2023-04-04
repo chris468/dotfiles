@@ -51,8 +51,8 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     use 'lewis6991/gitsigns.nvim'
     use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
 
-    use { 'nvim-treesitter/nvim-treesitter', tag = 'v0.8.3', disable = true }
-    use { 'theHamsta/nvim-dap-virtual-text', disable = true }
+    use { 'nvim-treesitter/nvim-treesitter', tag = 'v0.8.3' }
+    use { 'theHamsta/nvim-dap-virtual-text' }
 
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
 
