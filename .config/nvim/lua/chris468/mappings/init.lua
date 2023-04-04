@@ -83,6 +83,7 @@ local lsp_mappings = {
   { map = '<leader>s', cmd = vim.lsp.buf.signature_help },
   { map = '<leader><leader>', cmd = vim.lsp.buf.code_action },
   { map = '<leader>af', cmd = function() vim.lsp.buf.format { async = true } end },
+  --- on cursor hold, to show full line diagnostics:  vim.diagnostic.open_float()
 }
 
 local function add_lsp_mappings()
