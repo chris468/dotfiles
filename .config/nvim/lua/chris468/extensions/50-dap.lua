@@ -27,6 +27,18 @@ require 'chris468.util.if-ext' ('dap', function(dap)
     vim.fn.sign_define(name, config)
   end
 
+  local create_autocmds = require 'chris468.util.create-autocmds'
+  create_autocmds({
+    load_launchjs = {
+      {
+        event = 'BufWritePost',
+        opts = {
+          pattern = 'launch.json',
+          callback = function() require('chris468.dap.launch').load_configs(dap, true) end,
+        }
+      }
+    }
+  })
 
 end)
 

@@ -12,8 +12,9 @@ end
 
 local packer_bootstrap = ensure_packer()
 
-local create_autocmds = require 'chris468.util.create-autocmds'
 return require 'chris468.util.if-ext' ('packer', function(packer)
+
+  local create_autocmds = require 'chris468.util.create-autocmds'
   create_autocmds({
     packer_user_config = {
       {
