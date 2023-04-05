@@ -17,7 +17,7 @@ if_ext('mason', function(mason)
 
   if_ext('mason-nvim-dap', function(mason_nvim_dap)
 
-    local configs = require_all 'chris468.dap'
+    local configs = require_all 'chris468.dap.adapters'
 
     mason_nvim_dap.setup {
       ensure_installed = {
