@@ -4,4 +4,7 @@ return {
   hint = '\u{2610}', -- '☐'
   breakpoint = '\u{25cf}', -- '●'
   disabled_breakpoint = '\u{25cb}', -- '○'
+  conditional_breakpoint = '\u{25c9}', -- '◉'
+  logpoint = '\u{25c6}', -- '◆ '
+  current_location = '\u{2192}', -- '→'
 }

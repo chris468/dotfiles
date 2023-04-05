@@ -1,4 +1,4 @@
-local sign_text = require 'chris468.util.signs'
+local sign_text = require 'chris468.util.sign-text'
 
 local signs = {
   DiagnosticSignWarn = {
