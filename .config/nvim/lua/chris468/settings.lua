@@ -22,6 +22,7 @@ local options = {
   smartcase = true,
   tabstop = 4,
   termguicolors = true,
+  updatetime = 1000,
   wildignore = '**/bin/**,**/obj/**,*.nupkg,**/__pycache__/**,*.tfstate*',
   wrap = false,
 }
@@ -31,5 +32,5 @@ for k, v in pairs(global_options) do
 end
 
 for k, v in pairs(options) do
-  vim.opt[k] = v
+  vim.o[k] = v
 end

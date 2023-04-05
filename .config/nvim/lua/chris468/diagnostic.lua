@@ -25,3 +25,16 @@ vim.diagnostic.handlers.signs = {
   end,
   hide = original_handler.hide
 }
+
+local create_autocmds = require 'chris468.util.create-autocmds'
+create_autocmds({
+  show_diagnostic = {
+    {
+      event = 'CursorHold',
+      opts = {
+        pattern = '*',
+        callback = vim.diagnostic.open_float
+      }
+    }
+  }
+})
