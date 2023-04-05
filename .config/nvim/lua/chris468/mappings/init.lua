@@ -28,6 +28,7 @@ local mappings = {
   { map = ']d', cmd = vim.diagnostic.goto_next },
 
   { map = '<leader>R', cmd = temporarily_disable_relativenumber },
+  { map = '<leader>t', cmd = ext('neotest', function(neotest) neotest.summary.toggle() end) },
 }
 
 local function dap_mappings(dap)

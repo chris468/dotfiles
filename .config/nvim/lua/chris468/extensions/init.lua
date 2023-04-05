@@ -52,9 +52,20 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
 
     use { 'nvim-treesitter/nvim-treesitter', tag = 'v0.8.3' }
-    use { 'theHamsta/nvim-dap-virtual-text' }
+    use { 'theHamsta/nvim-dap-virtual-text', requires = 'nvim-treesitter/nvim-treesitter' }
 
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+
+    use {
+      'nvim-neotest/neotest',
+      requires = {
+        'nvim-treesitter/nvim-treesitter',
+        'nvim-lua/plenary.nvim'
+      }
+    }
+
+    use { 'nvim-neotest/neotest-python', requires = { 'nvim-neotest/neotest' } }
+    use { 'Issafalcon/neotest-dotnet', requires = { 'nvim-neotest/neotest' } }
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
