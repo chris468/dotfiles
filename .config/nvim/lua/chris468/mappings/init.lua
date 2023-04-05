@@ -32,7 +32,7 @@ local mappings = {
 }
 
 local function dap_mappings(dap)
-  local debugger = require('chris468.mappings.debugger')(dap)
+  local debugger = require('chris468.dap.launch')(dap)
   return {
     { map = '<leader>dg', cmd = debugger.launch_or_continue },
     { map = '<leader>dG', cmd = debugger.prompt_or_continue },
