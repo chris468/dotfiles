@@ -1,5 +1,7 @@
 require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
 
+  local symbols = require 'chris468.util.symbols'
+
   nvim_tree.setup {
     renderer = {
       group_empty = true,
@@ -11,13 +13,14 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
       },
       icons = {
         glyphs = {
+          bookmark = symbols.bookmark,
           folder = {
-            default = '\u{25b6}',
-            open = '\u{25bd}',
-            empty = '\u{25b6}',
-            empty_open = '\u{25bd}',
-            symlink = '\u{25b6}',
-            symlink_open = '\u{25bd}',
+            default = symbols.folder_closed,
+            open = symbols.folder_open,
+            empty = symbols.folder_closed,
+            empty_open = symbols.folder_open,
+            symlink = symbols.folder_closed,
+            symlink_open = symbols.folder_open,
           },
           git = {
           },

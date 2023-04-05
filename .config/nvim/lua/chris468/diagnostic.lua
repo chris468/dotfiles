@@ -1,14 +1,14 @@
-local sign_text = require 'chris468.util.sign-text'
+local symbols = require 'chris468.util.symbols'
 
 local signs = {
   DiagnosticSignWarn = {
-    text = sign_text.warning
+    text = symbols.warning
   },
   DiagnosticSignHint = {
-    text = sign_text.hint
+    text = symbols.hint
   },
   DiagnosticSignError = {
-    text = sign_text.error
+    text = symbols.error
   }
 }
 

@@ -1,24 +1,24 @@
-require 'chris468.util.if-ext' ('dap', function(_)
-  local sign_text = require 'chris468.util.sign-text'
+require 'chris468.util.if-ext' ('dap', function(dap)
+  local symbols = require 'chris468.util.symbols'
   local signs = {
     DapBreakpoint = {
-      text = sign_text.breakpoint,
+      text = symbols.breakpoint,
       texthl = 'DraculaRed',
       linehl = 'DraculaRedInverse'
     },
     DapBreakpointConditional = {
-      text = sign_text.disabled_breakpoint,
+      text = symbols.disabled_breakpoint,
     },
     DapLogPoint = {
-      text = sign_text.logpoint,
+      text = symbols.logpoint,
       texthl = 'DraculaRed',
     },
     DapStopped = {
-      text = sign_text.current_location,
+      text = symbols.current_location,
       texthl = 'DraculaYellow',
     },
     DapBreakpointRejected = {
-      text = sign_text.disabled_breakpoint,
+      text = symbols.disabled_breakpoint,
       texthl = 'DraculaRed',
     },
   }

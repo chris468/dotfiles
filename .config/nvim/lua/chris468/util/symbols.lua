@@ -7,4 +7,7 @@ return {
   conditional_breakpoint = '\u{25c9}', -- '◉'
   logpoint = '\u{25c6}', -- '◆ '
   current_location = '\u{2192}', -- '→'
+  folder_closed = '\u{25b6}', -- '▶'
+  folder_open = '\u{25bd}', -- '▽'
+  bookmark = '\u{2605}', -- '★'
 }
