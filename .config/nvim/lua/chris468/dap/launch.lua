@@ -1,36 +1,48 @@
-local M = { defaults = {_keys = {}} }
+local M = { defaults = {} }
 local need_prompt = true
 
 local function find_defaults(dap)
-  local new_defaults = {_keys = {}}
+  local defaults = {}
+  local default_configs = {}
+  local filetype_to_default = {}
   for filetype, configs in pairs(dap.configurations) do
     for _, config in ipairs(configs) do
       if config.default then
-        new_defaults[filetype] = config
-        new_defaults._keys[#new_defaults._keys + 1] = {filetype=filetype, config=config}
-        break
+        if not filetype_to_default[filetype] then
+          filetype_to_default[filetype] = config
+        end
+        if not defaults[config] then
+          default_configs[#default_configs + 1] = config
+          defaults[config] = true
+        end
       end
     end
   end
+
+  local new_defaults = { filetype_to_default=filetype_to_default }
+  if #default_configs == 1 then
+    new_defaults.single_default = default_configs[1]
+  end
   M.defaults = new_defaults
-  print(vim.inspect(M.defaults))
 end
 
 function M.load_configs(dap, reset)
-  if reset then need_prompt = true print ('lc reset prompt') end
-  require('dap.ext.vscode').load_launchjs()
-  find_defaults(dap)
+  local if_ext = require 'chris468.util.if-ext'
+  local mappings = {}
+  if_ext('mason-nvim-dap.mappings.filetypes', function(e)
+    mappings = e.adapter_to_configs
+  end)
+  require('dap.ext.vscode').load_launchjs(nil, mappings)
 end
 
 local function select_default(dap)
   M.load_configs(dap)
   find_defaults(dap)
-  if #M.defaults._keys == 1 then
-    return M.defaults._keys[1].config
+  if M.defaults.single_default then
+    return M.defaults.single_default
   end
 
-  local ft = vim.bo.filetype
-  return M.defaults[ft]
+  return M.defaults.filetype_to_default[vim.bo.filetype]
 end
 
 function M.prompt(dap)
@@ -48,21 +60,16 @@ function M.prompt_or_continue(dap)
 end
 
 function M.launch_or_continue(dap)
-  print('loc', need_prompt)
   if dap.session() then
-    print('cont')
     dap.continue()
   else
     local default = select_default(dap)
     if default then
-      print('default', vim.inspect(default))
       dap.run(default)
     else
       if need_prompt then
-        print('prompt')
         M.prompt(dap)
       else
-        print('run last')
         dap.run_last()
       end
     end
