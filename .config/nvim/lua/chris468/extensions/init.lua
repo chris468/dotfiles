@@ -12,14 +12,19 @@ end
 
 local packer_bootstrap = ensure_packer()
 
+local create_autocmds = require 'chris468.util.create-autocmds'
 return require 'chris468.util.if-ext' ('packer', function(packer)
-
-  vim.cmd([[
-    augroup packer_user_config
-      autocmd!
-      autocmd BufWritePost ]] .. stdpath('config') .. [[/lua/chris468/extensions/init.lua source <afile> | PackerSync
-    augroup end
-  ]])
+  create_autocmds({
+    packer_user_config = {
+      {
+        event = 'BufWritePost',
+        opts = {
+          pattern = stdpath('config') .. '/lua/chris468/extensions/init.lua',
+          command = 'source <afile> | PackerSync'
+        }
+      }
+    }
+  })
 
   packer.init()
 
