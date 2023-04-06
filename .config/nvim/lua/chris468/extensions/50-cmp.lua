@@ -62,6 +62,7 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
     sources = {
       { name = 'luasnip' },
       { name = 'nvim_lsp' },
+      { name = 'buffer' },
     },
     mapping = {},
   }
@@ -73,5 +74,21 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
   end
 
   cmp.setup(options)
+
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' },
+    }
+  })
+
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'path' },
+      { name = 'cmdline' },
+    }
+  })
+
 end)
 
