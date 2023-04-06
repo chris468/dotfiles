@@ -8,12 +8,10 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
   end
 
-  cmp.setup {
-    sources = {
-      { name = 'nvim_lsp' },
-    },
-    mapping = {
-      ["<Tab>"] = cmp.mapping(function(fallback)
+  local mappings = {
+    {
+      keys = { '<Tab>', '<C-N>', '<C-J>', },
+      mapping = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
         elseif has_words_before() then
@@ -22,31 +20,52 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
           fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
         end
       end, { "i", "s" }),
-
-      ["<S-Tab>"] = cmp.mapping(function(fallback)
+    },
+    {
+      keys = { '<S-Tab>', '<C-P>', '<C-K>' },
+      mapping = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
         else
           fallback()
         end
       end, { "i", "s" }),
-
-      ["<CR>"] = cmp.mapping(function(fallback)
+    },
+    {
+      keys = { '<CR>' },
+      mapping = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.confirm()
         else
           fallback()
         end
-      end),
-
-      ["<Esc>"] = cmp.mapping(function(fallback)
+      end)
+    },
+    {
+      keys = { '<C-E>' },
+      mapping = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.abort()
         else
           fallback()
         end
       end),
-    }
+    },
   }
+
+  local options = {
+    sources = {
+      { name = 'nvim_lsp' },
+    },
+    mapping = {},
+  }
+
+  for _, ms in ipairs(mappings) do
+    for _, k in ipairs(ms.keys) do
+      options.mapping[k] = ms.mapping
+    end
+  end
+
+  cmp.setup(options)
 end)
 
