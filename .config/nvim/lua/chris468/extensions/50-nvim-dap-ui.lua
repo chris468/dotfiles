@@ -1,5 +1,4 @@
-require 'chris468.util.if-ext' ({'dap', 'dapui'}, function(exts)
-  local dap, dapui = exts.dap, exts.dapui
+require 'chris468.util.if-ext' ({'dap', 'dapui'}, function(dap, dapui)
   dapui.setup()
 
   dap.listeners.after.event_initialized["dapui_config"] = function()

@@ -11,10 +11,9 @@ return function(ext_names, callback, fail_callback)
       local f = fail_callback or function(_) end
       return f()
     end
-    exts[ext_name] = ext
+    exts[#exts + 1] = ext
   end
 
-  if single then exts = exts[ext_names[1]] end
-
-  return callback(exts)
+  local unpack = unpack or table.unpack
+  return callback(unpack(exts))
 end
