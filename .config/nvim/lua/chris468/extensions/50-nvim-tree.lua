@@ -7,6 +7,23 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
     git = {
       show_on_open_dirs = false,
     },
+    modified = {
+      enable = true,
+      show_on_open_dirs = false,
+    },
+    diagnostics = {
+      enable = true,
+      show_on_dirs = true,
+      show_on_open_dirs = false,
+      severity = {
+        min = vim.diagnostic.severity.WARN,
+        max = vim.diagnostic.severity.ERROR,
+      },
+      icons = {
+        warning = symbols.warning,
+        error = symbols.error,
+      }
+    },
     renderer = {
       group_empty = true,
       full_name = true,
@@ -17,9 +34,11 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
         }
       },
       icons = {
+        modified_placement = 'signcolumn',
         show = {
           file = false,
           folder_arrow = false,
+          modified = true,
         },
         glyphs = {
           bookmark = symbols.bookmark,
