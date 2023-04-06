@@ -1,6 +1,6 @@
 local if_ext = require 'chris468.util.if-ext'
 
-if_ext('nvim-cmp', function(cmp) if_ext('cmp_nvm_lsp', function(_)
+if_ext('nvim-cmp', function(cmp) if_ext('cmp-nvm-lsp', function(_)
 
   local has_words_before = function()
     unpack = unpack or table.unpack
