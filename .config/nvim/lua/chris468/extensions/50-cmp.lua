@@ -9,13 +9,7 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
   end
 
   cmp.setup {
-    snippet = {
-      expand = function(args)
-        require 'luasnip'.lsp_expand(args.body)
-      end
-    },
     sources = {
-      { name = 'luasnip' },
       { name = 'nvim_lsp' },
     },
     mapping = {
