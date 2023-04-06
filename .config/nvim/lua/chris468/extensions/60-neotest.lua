@@ -6,13 +6,14 @@ if_ext ('neotest', function(neotest)
     if_ext(n, function(a) adapters[#adapters + 1] = a end)
   end
 
+local symbols = require 'chris468.util.symbols'
   neotest.setup {
     adapters = adapters,
     icons = {
-      passed = '\u{2714}', -- '✔ '
-      failed = '\u{2717}', -- '✗ '
-      skipped = '\u{25ec}', -- '◬',
-      running_animated = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' }
+      passed = symbols.passed,
+      failed = symbols.failed,
+      skipped = symbols.skipped,
+      running_animated = symbols.progress_animation,
     }
   }
 end)
