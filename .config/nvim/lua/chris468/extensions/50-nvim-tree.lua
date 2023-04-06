@@ -6,12 +6,14 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
     renderer = {
       group_empty = true,
       full_name = true,
-      indent_width = 1,
       indent_markers = {
         enable = true,
-        inline_arrows = false,
       },
       icons = {
+        show = {
+          file = false,
+          folder_arrow = false,
+        },
         glyphs = {
           bookmark = symbols.bookmark,
           folder = {
@@ -23,6 +25,9 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
             symlink_open = symbols.folder_open,
           },
           git = {
+            unstaged = "~",
+            staged = "~",
+            deleted = "✗",
           },
         },
       },
