@@ -3,7 +3,7 @@ local function filter_libs(filter, files_iter, initial_state)
     while true do
       local name, _ = files_iter(state)
       if name == nil then break end
-      local lib_name, is_lib = string.gsub(name, '.lua', '')
+      local lib_name, is_lib = string.gsub(name, '%.lua$', '')
       if is_lib > 0 and filter(lib_name) then return lib_name end
     end
   end
