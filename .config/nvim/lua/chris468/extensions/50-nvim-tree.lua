@@ -3,11 +3,17 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
   local symbols = require 'chris468.util.symbols'
 
   nvim_tree.setup {
+    git = {
+      show_on_open_dirs = false,
+    },
     renderer = {
       group_empty = true,
       full_name = true,
       indent_markers = {
         enable = true,
+        icons = {
+          item = '├',
+        }
       },
       icons = {
         show = {
