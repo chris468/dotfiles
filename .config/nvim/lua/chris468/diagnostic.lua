@@ -4,6 +4,9 @@ local signs = {
   DiagnosticSignWarn = {
     text = symbols.warning
   },
+  DiagnosticSignInfo = {
+    text = symbols.info
+  },
   DiagnosticSignHint = {
     text = symbols.hint
   },
