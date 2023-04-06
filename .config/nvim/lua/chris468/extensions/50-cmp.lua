@@ -51,7 +51,7 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
     },
     {
       keys = { '<CR>' },
-      mapping = mapping(cmp.confirm, false, {'i', 's'})
+      mapping = mapping(function() cmp.confirm { select = true } end, false, {'i', 's'})
     },
     {
       keys = { '<C-E>' },
