@@ -4,10 +4,16 @@ local map, ext, temporarily_disable_relativenumber = util.map, util.ext, util.te
 
 local mappings = {
   { map = "<Space>", cmd = "<Nop>", mode = "" },
+
+  -- Navigation
   { map = "<leader>h", cmd = vim.cmd.tabprevious },
   { map = "<leader>l", cmd = vim.cmd.tabnext },
   { map = "<leader>n", cmd = vim.cmd.nohlsearch },
+  { map = '[d', cmd = vim.diagnostic.goto_prev },
+  { map = ']d', cmd = vim.diagnostic.goto_next },
 
+
+  -- Browsers
   { map = "<leader>ef", cmd = ext('nvim-tree.api', function(t) t.tree.open() end) },
   { map = "<leader>eF", cmd = ext('nvim-tree.api', function(t) t.tree.open({find_file = true}) end) },
   { map = "<leader>et", cmd = ext('nvim-tree.api', function(t) t.tree.toggle() end) },
@@ -22,13 +28,13 @@ local mappings = {
     end)
   },
   { map = '<leader>F', cmd = ext('telescope.builtin', function(t) t.find_files() end) },
-  { map = '<leader>t', cmd = ext('telescope.builtin', function(_) vim.cmd('Telescope') end) },
-
-  { map = '[d', cmd = vim.diagnostic.goto_prev },
-  { map = ']d', cmd = vim.diagnostic.goto_next },
-
-  { map = '<leader>R', cmd = temporarily_disable_relativenumber },
   { map = '<leader>t', cmd = ext('neotest', function(neotest) neotest.summary.toggle() end) },
+  { map = '<leader>T', cmd = ext('telescope.builtin', function(_) vim.cmd('Telescope') end) },
+  { map = '<leader>p', cmd = ext('telescope', function(telescope) telescope.extensions.projects.projects {} end) },
+  { map = '<leader>rt', cmd = ext('telescope.builtin', function(telescope) telescope.resume() end ) },
+
+  -- Tools
+  { map = '<leader>R', cmd = temporarily_disable_relativenumber },
 }
 
 local function dap_mappings(dap)

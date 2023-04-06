@@ -3,6 +3,7 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
   local symbols = require 'chris468.util.symbols'
 
   nvim_tree.setup {
+    sync_root_with_cwd = true,
     git = {
       show_on_open_dirs = false,
     },
