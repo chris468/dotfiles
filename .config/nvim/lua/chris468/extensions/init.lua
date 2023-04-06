@@ -48,9 +48,11 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
 
 
     use 'neovim/nvim-lspconfig'
+    use 'L3MON4D3/LuaSnip'
     use 'hrsh7th/nvim-cmp'
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-nvim-lua'
+    use 'saadparwaiz1/cmp_luasnip'
 
     use 'rafcamlet/nvim-luapad'
 
