@@ -17,6 +17,7 @@ local mappings = {
   { map = "<leader>ef", cmd = ext('nvim-tree.api', function(t) t.tree.open() end) },
   { map = "<leader>eF", cmd = ext('nvim-tree.api', function(t) t.tree.open({find_file = true}) end) },
   { map = "<leader>et", cmd = ext('nvim-tree.api', function(t) t.tree.toggle() end) },
+
   {
     map = '<leader>f',
     cmd = ext('telescope.builtin', function(t)
@@ -28,10 +29,12 @@ local mappings = {
     end)
   },
   { map = '<leader>F', cmd = ext('telescope.builtin', function(t) t.find_files() end) },
-  { map = '<leader>t', cmd = ext('neotest', function(neotest) neotest.summary.toggle() end) },
   { map = '<leader>T', cmd = ext('telescope.builtin', function(_) vim.cmd('Telescope') end) },
   { map = '<leader>p', cmd = ext('telescope', function(telescope) telescope.extensions.projects.projects {} end) },
   { map = '<leader>rt', cmd = ext('telescope.builtin', function(telescope) telescope.resume() end ) },
+  { map = '<leader>s', cmd = ext('telescope.builtin', function(t) t.live_grep() end) },
+
+  { map = '<leader>t', cmd = ext('neotest', function(neotest) neotest.summary.toggle() end) },
 
   -- Tools
   { map = '<leader>R', cmd = temporarily_disable_relativenumber },
@@ -87,7 +90,7 @@ local lsp_mappings = {
    },
   { map = '<leader>rn', cmd = vim.lsp.buf.rename },
   { map = 'K', cmd = vim.lsp.buf.hover },
-  { map = '<leader>s', cmd = vim.lsp.buf.signature_help },
+  { map = '<leader>S', cmd = vim.lsp.buf.signature_help },
   { map = '<leader><leader>', cmd = vim.lsp.buf.code_action },
   { map = '<leader>af', cmd = function() vim.lsp.buf.format { async = true } end },
 }
