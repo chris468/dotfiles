@@ -18,7 +18,7 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
       { name = 'luasnip' },
       { name = 'nvim_lsp' },
     },
-    mappings = {
+    mapping = {
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
@@ -36,6 +36,22 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
           fallback()
         end
       end, { "i", "s" }),
+
+      ["<CR>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.confirm()
+        else
+          fallback()
+        end
+      end),
+
+      ["<Esc>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.abort()
+        else
+          fallback()
+        end
+      end),
     }
   }
 end)

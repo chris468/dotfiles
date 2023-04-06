@@ -20,6 +20,7 @@ local options = {
   hlsearch = true,
   ignorecase = true,
   number = true,
+  pumheight=10,
   relativenumber = true,
   shiftwidth = 4,
   signcolumn = 'yes',
