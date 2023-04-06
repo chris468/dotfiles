@@ -7,9 +7,9 @@ local global_options = {
 }
 
 local options = {
-  background = dark,
   backup = false,
   completeopt = {
+    "menu",
     "menuone", -- show menu even if only one completion
     "noselect", -- require explicit selection
   },
