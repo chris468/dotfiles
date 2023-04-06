@@ -77,6 +77,8 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     use 'nvim-lualine/lualine.nvim'
     use { 'ahmedkhalf/project.nvim', requires = 'nvim-telescope/telescope.nvim' }
 
+    use 'chrisbra/unicode.vim'
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
