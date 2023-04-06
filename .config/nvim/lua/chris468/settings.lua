@@ -9,6 +9,10 @@ local global_options = {
 local options = {
   background = dark,
   backup = false,
+  completeopt = {
+    "menuone", -- show menu even if only one completion
+    "noselect", -- require explicit selection
+  },
   cursorline = true,
   directory = vim.fn.stdpath('cache')..'/swp/',
   encoding = 'utf-8',
@@ -32,5 +36,5 @@ for k, v in pairs(global_options) do
 end
 
 for k, v in pairs(options) do
-  vim.o[k] = v
+  vim.opt[k] = v
 end
