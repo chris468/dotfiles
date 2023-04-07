@@ -1,11 +1,20 @@
-return {
-  adapter = function(default)
-    if not default.command or default.command == '' then
-      default.command = vim.fn.exepath('debugy-adapter')
-    end
-    if not default.command or default.command == '' then
-      print('debugpy-adapter not found')
-    end
-    return default
-  end
-}
+return function(_)
+  local dap = require 'dap'
+
+  local command_typo = vim.fn.exepath('debugpy-adapter')
+  local command = (command_typo and command_typo ~= '') and command_typo or vim.fn.exepath('debugy-adapter')
+
+  dap.adapters.python = {
+    type = 'executable',
+    command = command
+  }
+
+  dap.configurations.python = {
+    {
+      name = "Python: Launch file",
+      program = "${file}",
+      request = "launch",
+      type = "python"
+    }
+  }
+end
