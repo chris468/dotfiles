@@ -20,9 +20,6 @@ if_ext('mason-nvim-dap', function(mason_nvim_dap)
   local custom_handlers = require_all 'chris468.dap.adapters'
   local handlers = vim.tbl_extend('error', default_handler, custom_handlers)
 
-  print(vim.inspect(handlers))
   mason_nvim_dap.setup_handlers(handlers)
-  print(vim.inspect(require('dap').adapters))
-  print(vim.inspect(require('dap').configurations))
 end)
 
