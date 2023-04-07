@@ -13,12 +13,12 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
     local callbacks = {
       next = {
         completion = cmp.select_next_item,
-        snippet_available = luasnip.expand_or_locally_jumpable,
+        snippet_available = luasnip.expand_or_jumpable,
         snippet = luasnip.expand_or_jump,
       },
       prev = {
         completion = cmp.select_prev_item,
-        snippet_available = function() return luasnip.expand_or_locally_jumpable(-1) end,
+        snippet_available = function() return luasnip.expand_or_jumpable(-1) end,
         snippet = function() luasnip.expand_or_jump(-1) end,
       },
     }

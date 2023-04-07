@@ -56,6 +56,7 @@ require 'chris468.util.if-ext' ('packer', function(packer)
 
       { 'neovim/nvim-lspconfig' }, -- bug fixes since last tag
       { 'L3MON4D3/LuaSnip', tag = 'v1.*' },
+      { 'rafamadriz/friendly-snippets' }, -- no tabs
       { 'saadparwaiz1/cmp_luasnip' }, -- no tags
       { 'hrsh7th/cmp-buffer' },  -- no tags
       { 'hrsh7th/cmp-cmdline' }, -- no tags
