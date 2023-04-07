@@ -1,6 +1,6 @@
 local if_ext = require 'chris468.util.if-ext'
 
-if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
+if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
 
   local has_words_before = function()
     unpack = unpack or table.unpack
@@ -8,61 +8,60 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
   end
 
-  -- set invisible to false to fallback even if nothing to call if invisible
-  -- if left null, the callback will be called unconditionally
-  local function mapping(callback, invisible, modes)
-    local always = invisible == nil
-    modes = modes or { 'i', 's', 'c' }
-
-    if always then
-      return cmp.mapping(function(_) callback() end, modes)
-    else
-      return cmp.mapping(function(fallback)
-        if cmp.visible() then
-          callback()
-        elseif invisible and has_words_before() then
-          invisible()
-        else
-          fallback()
-        end
-      end, modes)
+  local function navigate(direction, include_snippets, start)
+    start = start ~= nil and start or true
+    local callbacks = {
+      next = {
+        completion = cmp.select_next_item,
+        snippet_available = luasnip.expand_or_locally_jumpable,
+        snippet = luasnip.expand_or_jump,
+      },
+      prev = {
+        completion = cmp.select_prev_item,
+        snippet_available = function() return luasnip.expand_or_locally_jumpable(-1) end,
+        snippet = function() luasnip.expand_or_jump(-1) end,
+      },
+    }
+    return function(fallback)
+      if cmp.visible() then
+        callbacks[direction].completion()
+      elseif include_snippets and callbacks[direction].snippet_available() then
+        callbacks[direction].snippet()
+      elseif start and has_words_before then
+        cmp.complete()
+      else
+        fallback()
+      end
     end
   end
 
+  local function start()
+    if not cmp.visible() then
+      cmp.complete()
+    end
+  end
 
-  local mappings = {
-    {
-      keys = { '<C-Space>', }, mapping = mapping(cmp.complete) },
-    {
-      keys = { '<Tab>', '<C-N>', '<C-J>', },
-      mapping = mapping(cmp.select_next_item, cmp.complete)
-    },
-    {
-      keys = { '<Down>', },
-      mapping = mapping(cmp.select_next_item, cmp.complete, { 'i', 's' })
-    },
-    {
-      keys = { '<S-Tab>', '<C-P>', '<C-K>', },
-      mapping = mapping(cmp.select_prev_item, cmp.complete)
-    },
-    {
-      keys = { '<Up>', },
-      mapping = mapping(cmp.select_prev_item, cmp.complete, { 'i', 's' })
-    },
-    {
-      keys = { '<CR>' },
-      mapping = mapping(function() cmp.confirm { select = true } end, false, {'i', 's'})
-    },
-    {
-      keys = { '<C-E>' },
-      mapping = mapping(cmp.abort, false)
-    },
-  }
+  local function abort()
+    if cmp.visible() then
+      cmp.abort()
+    end
+  end
+
+  local function safe_confirm(fallback)
+    if cmp.visible() and cmp.get_active_entry() then
+      cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+    else
+      fallback()
+    end
+  end
+
+      -- keys = { '<Tab>', '<C-N>', '<C-J>', },
+      --keys = { '<S-Tab>', '<C-P>', '<C-K>', },
 
   local options = {
     snippet = {
       expand = function(args)
-        require 'luasnip'.lsp_expand(args.body)
+        luasnip.lsp_expand(args.body)
       end
     },
     sources = {
@@ -70,12 +69,29 @@ if_ext({'cmp', 'cmp_nvim_lsp'}, function(cmp, _)
       { name = 'nvim_lsp' },
       { name = 'buffer' },
     },
-    mapping = {},
+    mapping = {
+      ['<C-Space>'] = start,
+      ['<C-N>'] = navigate('next', true),
+      ['<Down>'] = cmp.mapping(navigate('next', false, false), { 'i', 's' }),
+      ['<C-P>'] = navigate('prev', true),
+      ['<Up>'] = cmp.mapping(navigate('prev', false, false), { 'i', 's' }),
+      ['<C-E>'] = abort,
+      ['<CR>' ] = cmp.mapping({
+        i = safe_confirm,
+        s = cmp.mapping.confirm({ select = true }),
+        c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+      }),
+    },
   }
 
-  for _, ms in ipairs(mappings) do
-    for _, k in ipairs(ms.keys) do
-      options.mapping[k] = ms.mapping
+  local alternates = {
+    ['<C-N>'] = { '<Tab>', '<C-J>', },
+    ['<C-P>'] = { '<S-Tab>', '<C-K>'  },
+  }
+
+  for k, alts in pairs(alternates) do
+    for _, alt in ipairs(alts) do
+      options.mapping[alt] = options.mapping[k]
     end
   end
 
