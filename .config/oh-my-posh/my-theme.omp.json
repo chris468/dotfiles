@@ -181,7 +181,7 @@
     }
   ],
   "final_space": true,
-  "osc99": true,
+  "osc99": false,
   "palette": {
     "aws-foreground": "#faa029",
     "aws-key-background": "#4f1e1e",
