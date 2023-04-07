@@ -13,12 +13,14 @@ local options = {
     "menuone", -- show menu even if only one completion
     "noselect", -- require explicit selection
   },
-  cursorline = true,
+  cursorline = true,  
   directory = vim.fn.stdpath('cache')..'/swp/',
   encoding = 'utf-8',
   expandtab = true,
   hlsearch = true,
   ignorecase = true,
+  list = true,
+  listchars = {tab = '  →', trail = '⋅', nbsp = '⋅', eol = '↲', },
   number = true,
   pumheight=10,
   relativenumber = true,
