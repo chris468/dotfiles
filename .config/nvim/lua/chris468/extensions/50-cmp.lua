@@ -18,8 +18,8 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
       },
       prev = {
         completion = cmp.select_prev_item,
-        snippet_available = function() return luasnip.expand_or_jumpable(-1) end,
-        snippet = function() luasnip.expand_or_jump(-1) end,
+        snippet_available = function() return luasnip.jumpable(-1) end,
+        snippet = function() luasnip.jump(-1) end,
       },
     }
     return function(fallback)
@@ -27,7 +27,7 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
         callbacks[direction].completion()
       elseif include_snippets and callbacks[direction].snippet_available() then
         callbacks[direction].snippet()
-      elseif start and has_words_before then
+      elseif start and has_words_before() then
         cmp.complete()
       else
         fallback()
@@ -71,9 +71,9 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
     },
     mapping = {
       ['<C-Space>'] = start,
-      ['<C-N>'] = navigate('next', true),
+      ['<C-N>'] = cmp.mapping(navigate('next', true), { 'i', 's', }),
       ['<Down>'] = cmp.mapping(navigate('next', false, false), { 'i', 's' }),
-      ['<C-P>'] = navigate('prev', true),
+      ['<C-P>'] = cmp.mapping(navigate('prev', true), { 'i', 's', }),
       ['<Up>'] = cmp.mapping(navigate('prev', false, false), { 'i', 's' }),
       ['<C-E>'] = abort,
       ['<CR>' ] = cmp.mapping({
