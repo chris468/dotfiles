@@ -35,8 +35,10 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
     end
   end
 
-  local function start()
-    if not cmp.visible() then
+  local function start_or_select_and_complete()
+    if cmp.visible() then
+      cmp.confirm({select = true })
+    else
       cmp.complete()
     end
   end
@@ -70,7 +72,7 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
       { name = 'buffer' },
     },
     mapping = {
-      ['<C-Space>'] = start,
+      ['<C-Space>'] = start_or_select_and_complete,
       ['<C-N>'] = cmp.mapping(navigate('next', true), { 'i', 's', }),
       ['<Down>'] = cmp.mapping(navigate('next', false, false), { 'i', 's' }),
       ['<C-P>'] = cmp.mapping(navigate('prev', true), { 'i', 's', }),
