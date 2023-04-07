@@ -1,7 +1,7 @@
 require 'chris468.settings'
-require 'chris468.extensions'
-require 'chris468.colorscheme'
-require 'chris468.mappings'
-require 'chris468.tabstops'
-require 'chris468.lsp'
-require 'chris468.diagnostic'
+if require 'chris468.extensions' then
+  require 'chris468.colorscheme'
+  require 'chris468.mappings'
+  require 'chris468.tabstops'
+  require 'chris468.diagnostic'
+end

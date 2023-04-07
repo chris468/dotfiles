@@ -12,7 +12,7 @@ end
 
 local packer_bootstrap = ensure_packer()
 
-return require 'chris468.util.if-ext' ('packer', function(packer)
+require 'chris468.util.if-ext' ('packer', function(packer)
 
   local create_autocmds = require 'chris468.util.create-autocmds'
   create_autocmds({
@@ -96,11 +96,16 @@ return require 'chris468.util.if-ext' ('packer', function(packer)
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
+      vim.cmd [[ autocmd User PackerComplete echo 'Packages installed, restart needed' ]]
       require('packer').sync()
     end
   end)
 
-  local require_all = require('chris468.util.require-all')
-  require_all('chris468.extensions')
+  if not packer_bootstrap then
+    local require_all = require('chris468.util.require-all')
+    require_all('chris468.extensions')
+  end
 
 end)
+
+return not packer_bootstrap
