@@ -2,6 +2,7 @@ require('chris468.util.if-ext')('lualine', function(lualine)
   local symbols = require 'chris468.util.symbols'
   lualine.setup {
     theme = 'dracula',
+    extensions = { 'quickfix', 'nvim-tree', 'nvim-dap-ui', },
     sections = {
       lualine_b = {
         {
