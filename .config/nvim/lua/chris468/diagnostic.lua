@@ -29,16 +29,23 @@ vim.diagnostic.handlers.signs = {
   hide = original_handler.hide
 }
 
-local augroup = vim.api.nvim_create_augroup
-local autocmd = vim.api.nvim_create_autocmd
-local function create_chris468_diagnostic_buffer_augroup(args)
-  local function update(a)
-    local w = vim.fn.bufwinid(a.buf)
-    vim.diagnostic.setloclist({ winnr = w, open = false})
+local function update(always, buf)
+  if #vim.lsp.get_active_clients{bufnr = buf} == 0 then
+    return
   end
 
-  update(args)
+  local wid = vim.fn.bufwinid(buf)
+  local wst = vim.w[wid]
+  if always or wst._chris468_diag_loc_buf ~= buf then
+    vim.diagnostic.setloclist({ winnr = wid, open = false})
+    wst._chris468_diag_loc_buf = buf
+  end
+end
 
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
+
+local function create_chris468_diagnostic_buffer_augroup(args)
   local group = augroup('chris468_diagnostic_buffer', {clear = true})
   autocmd('CursorHold', {
     group = group,
@@ -48,10 +55,11 @@ local function create_chris468_diagnostic_buffer_augroup(args)
   autocmd({'BufEnter', 'DiagnosticChanged'}, {
     group = group,
     buffer = 0,
-    callback = update
+    callback = function(a) update(a.event == 'DiagnosticChanged', a.buf) end
   })
 end
-autocmd('BufEnter', {
+
+autocmd('BufWinEnter', {
   group = augroup('chris468_diagnostic', { clear = true }),
   callback = create_chris468_diagnostic_buffer_augroup
 })
