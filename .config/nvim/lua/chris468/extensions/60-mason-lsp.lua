@@ -6,6 +6,8 @@ if_ext({ 'lspconfig', 'mason-lspconfig' }, function(lspconfig, mason_lspconfig)
       "lua_ls",
       "omnisharp",
       "bashls",
+      "jsonls",
+      "yamlls",
     }
   })
 
