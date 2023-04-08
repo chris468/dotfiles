@@ -15,8 +15,13 @@ require('chris468.util.if-ext')('lualine', function(lualine)
         },
         'diff',
         { 'diagnostics',
-          sections = { 'error', 'warn' },
-          symbols = { error = symbols.error, warn = symbols.warning, },
+          sections = { 'error', 'warn', 'info', 'hint' },
+          symbols = {
+            error = symbols.error,
+            warn = symbols.warning,
+            info = symbols.info,
+            hint = symbols.hint,
+          },
         },
       },
       lualine_x = {

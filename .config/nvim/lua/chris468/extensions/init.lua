@@ -64,6 +64,10 @@ require 'chris468.util.if-ext' ('packer', function(packer)
       { 'hrsh7th/cmp-nvim-lua' }, -- no tags
       { 'hrsh7th/cmp-path' }, -- no tags
       { 'hrsh7th/nvim-cmp' }, -- no tags
+      {
+        'jose-elias-alvarez/null-ls.nvim', -- no tags
+        requires = 'nvim-lua/plenary.nvim',
+      },
 
       { 'rafcamlet/nvim-luapad' }, -- outdated tags
 
