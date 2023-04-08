@@ -4,6 +4,10 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
 
   nvim_tree.setup {
     sync_root_with_cwd = true,
+    view = {
+      number = true,
+      relativenumber = true,
+    },
     git = {
       show_on_open_dirs = false,
     },
@@ -42,6 +46,7 @@ require 'chris468.util.if-ext' ('nvim-tree', function(nvim_tree)
         },
         glyphs = {
           bookmark = symbols.bookmark,
+          symlink = '',
           folder = {
             default = symbols.folder_closed,
             open = symbols.folder_open,

@@ -13,7 +13,7 @@ local options = {
     "menuone", -- show menu even if only one completion
     "noselect", -- require explicit selection
   },
-  cursorline = true,  
+  cursorline = true,
   directory = vim.fn.stdpath('cache')..'/swp/',
   encoding = 'utf-8',
   expandtab = true,
