@@ -46,20 +46,21 @@ local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
 local function create_chris468_diagnostic_buffer_augroup(args)
+  update(false, args.buf)
   local group = augroup('chris468_diagnostic_buffer', {clear = true})
   autocmd('CursorHold', {
     group = group,
     buffer = 0,
     callback = vim.diagnostic.open_float,
   })
-  autocmd({'BufEnter', 'DiagnosticChanged'}, {
+  autocmd({'BufEnter', 'BufWinEnter', 'DiagnosticChanged'}, {
     group = group,
     buffer = 0,
     callback = function(a) update(a.event == 'DiagnosticChanged', a.buf) end
   })
 end
 
-autocmd('BufWinEnter', {
+autocmd({'BufWinEnter', 'BufEnter', 'LspAttach', }, {
   group = augroup('chris468_diagnostic', { clear = true }),
   callback = create_chris468_diagnostic_buffer_augroup
 })
