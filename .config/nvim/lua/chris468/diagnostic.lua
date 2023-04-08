@@ -29,15 +29,29 @@ vim.diagnostic.handlers.signs = {
   hide = original_handler.hide
 }
 
-local create_autocmds = require 'chris468.util.create-autocmds'
-create_autocmds({
-  show_diagnostic = {
-    {
-      event = 'CursorHold',
-      opts = {
-        pattern = '*',
-        callback = vim.diagnostic.open_float
-      }
-    }
-  }
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
+local function create_chris468_diagnostic_buffer_augroup(args)
+  local function update(a)
+    local w = vim.fn.bufwinid(a.buf)
+    vim.diagnostic.setloclist({ winnr = w, open = false})
+  end
+
+  update(args)
+
+  local group = augroup('chris468_diagnostic_buffer', {clear = true})
+  autocmd('CursorHold', {
+    group = group,
+    buffer = 0,
+    callback = vim.diagnostic.open_float,
+  })
+  autocmd({'BufEnter', 'DiagnosticChanged'}, {
+    group = group,
+    buffer = 0,
+    callback = update
+  })
+end
+autocmd('BufEnter', {
+  group = augroup('chris468_diagnostic', { clear = true }),
+  callback = create_chris468_diagnostic_buffer_augroup
 })
