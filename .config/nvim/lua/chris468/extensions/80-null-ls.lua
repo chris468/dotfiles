@@ -7,7 +7,7 @@ if_ext('null-ls', function(null_ls)
     debug = true,
     sources = {
       diagnostics.flake8,
-      formatting.autopep8,
+      formatting.black,
       formatting.prettier,
     }
   }
