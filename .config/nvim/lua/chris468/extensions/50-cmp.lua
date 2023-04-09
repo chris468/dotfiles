@@ -65,11 +65,16 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
         luasnip.lsp_expand(args.body)
       end
     },
-    sources = {
-      { name = 'luasnip' },
-      { name = 'nvim_lsp' },
-      { name = 'buffer' },
-    },
+    sources = cmp.config.sources(
+      {
+        { name = 'nvim_lua' },
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+      },
+      {
+        { name = 'buffer' },
+      }
+    ),
     mapping = {
       ['<C-Space>'] = cmp.mapping(start_or_select_and_complete, { 'i', 's', 'c', }),
       ['<C-N>'] = cmp.mapping({
