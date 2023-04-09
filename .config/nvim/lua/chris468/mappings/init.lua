@@ -37,12 +37,18 @@ local mappings = {
             end
         end),
     },
-    { map = "<leader>F", cmd = ext("telescope.builtin", function(t)
-        t.find_files()
-    end) },
-    { map = "<leader>T", cmd = ext("telescope.builtin", function(_)
-        vim.cmd("Telescope")
-    end) },
+    {
+        map = "<leader>F",
+        cmd = ext("telescope.builtin", function(t)
+            t.find_files()
+        end),
+    },
+    {
+        map = "<leader>T",
+        cmd = ext("telescope.builtin", function(_)
+            vim.cmd("Telescope")
+        end),
+    },
     {
         map = "<leader>p",
         cmd = ext("telescope", function(telescope)
@@ -55,13 +61,19 @@ local mappings = {
             telescope.resume()
         end),
     },
-    { map = "<leader>s", cmd = ext("telescope.builtin", function(t)
-        t.live_grep()
-    end) },
+    {
+        map = "<leader>s",
+        cmd = ext("telescope.builtin", function(t)
+            t.live_grep()
+        end),
+    },
 
-    { map = "<leader>t", cmd = ext("neotest", function(neotest)
-        neotest.summary.toggle()
-    end) },
+    {
+        map = "<leader>t",
+        cmd = ext("neotest", function(neotest)
+            neotest.summary.toggle()
+        end),
+    },
 
     -- Tools
     { map = "<leader>R", cmd = temporarily_disable_relativenumber },

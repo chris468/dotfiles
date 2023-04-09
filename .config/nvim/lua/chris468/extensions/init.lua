@@ -27,78 +27,28 @@ require("chris468.util.if-ext")("packer", function(packer)
             { "wbthomason/packer.nvim" }, -- no tags
             { "nvim-lua/plenary.nvim", tag = "v0.*" },
 
-            {
-                "dracula/vim",
-                branch = "master",
-                as = "dracula",
-            },
+            { "dracula/vim", branch = "master", as = "dracula" },
 
-            {
-                "nvim-tree/nvim-tree.lua",
-                -- only has `nightly` tag
-                config = function()
-                    require("chris468.extensions.configure-nvim-tree")
-                end,
-            },
+            { "nvim-tree/nvim-tree.lua" }, -- only has `nightly` tag
 
             {
                 "nvim-telescope/telescope.nvim",
                 -- tag = 'v0.*' , *lots* of changes since tag, fear bug fixes.
                 requires = { "nvim-lua/plenary.nvim" },
-                config = function()
-                    require("chris468.extensions.configure-nvim-tree")
-                end,
             },
 
             { "tommcdo/vim-exchange" }, -- no tags
 
             { "tpope/vim-surround" }, -- tags are pretty old
 
-            {
-                "mfussenegger/nvim-dap",
-                tag = "0.*",
-                config = function()
-                    require("chris468.extensions.configure-dap")
-                end,
-            },
+            { "mfussenegger/nvim-dap", tag = "0.*" },
 
-            {
-                "williamboman/mason.nvim",
-                -- no tgs
-                config = function()
-                    require("chris468.extensions.configure-mason")
-                end,
-            },
-            {
-                "williamboman/mason-lspconfig.nvim",
-                -- no tags
-                requires = {
-                    "williamboman/mason.nvim",
-                    "neovim/nvim-lspconfig",
-                },
-                config = function()
-                    require("chris468.extensions.configure-mason-lsp")
-                end,
-            },
-            {
-                "jay-babu/mason-nvim-dap.nvim",
-                tag = "v1.*",
-                requires = {
-                    "williamboman/mason.nvim",
-                },
-                config = function()
-                    require("chris468.extensions.configure-mason-dap")
-                end,
-            },
+            { "williamboman/mason.nvim" }, -- no tgs
+            { "williamboman/mason-lspconfig.nvim" }, -- no tags
+            { "jay-babu/mason-nvim-dap.nvim", tag = "v1.*" },
 
             { "neovim/nvim-lspconfig" }, -- bug fixes since last tag
-            {
-                "L3MON4D3/LuaSnip",
-                tag = "v1.*",
-                configure = function()
-                    require("configure-luasnip")
-                end,
-            },
+            { "L3MON4D3/LuaSnip", tag = "v1.*" },
             { "rafamadriz/friendly-snippets" }, -- no tabs
             { "saadparwaiz1/cmp_luasnip" }, -- no tags
             { "hrsh7th/cmp-buffer" }, -- no tags
@@ -106,70 +56,22 @@ require("chris468.util.if-ext")("packer", function(packer)
             { "hrsh7th/cmp-nvim-lsp" }, -- no tags
             { "hrsh7th/cmp-nvim-lua" }, -- no tags
             { "hrsh7th/cmp-path" }, -- no tags
+            { "hrsh7th/nvim-cmp" }, -- no tags
             {
-                "hrsh7th/nvim-cmp",
-                -- no tags
-                requires = "L3MON4D3/LuaSnip", -- requires a snippet provider
-                config = function()
-                    require("chris468.extensions.configure-cmp")
-                end,
-            },
-            {
-                "jose-elias-alvarez/null-ls.nvim",
-                -- no tags
+                "jose-elias-alvarez/null-ls.nvim", -- no tags
                 requires = "nvim-lua/plenary.nvim",
-                config = function()
-                    require("chris468.extensions.configure-null-ls")
-                end,
             },
-            {
-                "windwp/nvim-autopairs",
-                -- no tags
-                config = function()
-                    require("chris468.extensions.configure-autopairs")
-                end,
-            },
-            {
-                "rafcamlet/nvim-luapad",
-                -- outdated tags
-                config = function()
-                    require("chris468.extensions.configure-luapad")
-                end,
-            },
+            { "windwp/nvim-autopairs" }, -- no tags
 
-            {
-                "lewis6991/gitsigns.nvim",
-                tag = "v0.*",
-                config = function()
-                    require("chris468.extensions.configure-gitsigns")
-                end,
-            },
+            { "rafcamlet/nvim-luapad" }, -- outdated tags
+
+            { "lewis6991/gitsigns.nvim", tag = "v0.*" },
             { "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" }, -- no tags
 
-            {
-                "nvim-treesitter/nvim-treesitter",
-                tag = "v0.8.*",
-                config = function()
-                    require("chris468.extensions.configure-nvim-treesitter")
-                end,
-            },
-            {
-                "theHamsta/nvim-dap-virtual-text",
-                -- no tags
-                requires = "nvim-treesitter/nvim-treesitter",
-                config = function()
-                    require("chris468.extensions.configure-nvim-dap-virtual-text")
-                end,
-            },
+            { "nvim-treesitter/nvim-treesitter", tag = "v0.8.*" },
+            { "theHamsta/nvim-dap-virtual-text", requires = "nvim-treesitter/nvim-treesitter" }, -- no tags
 
-            {
-                "rcarriga/nvim-dap-ui",
-                tag = "v3.*",
-                requires = { "mfussenegger/nvim-dap" },
-                config = function()
-                    require("chris468.extensions.configure-nvim-dap-ui")
-                end,
-            },
+            { "rcarriga/nvim-dap-ui", tag = "v3.*", requires = { "mfussenegger/nvim-dap" } },
 
             {
                 "nvim-neotest/neotest",
@@ -178,44 +80,14 @@ require("chris468.util.if-ext")("packer", function(packer)
                     "nvim-treesitter/nvim-treesitter",
                     "nvim-lua/plenary.nvim",
                 },
-                config = function()
-                    require("chris468.extensions.configure-neotest")
-                end,
             },
 
-            {
-                "nvim-neotest/neotest-python",
-                -- no tags
-                requires = { "nvim-neotest/neotest" },
-            },
-            {
-                "Issafalcon/neotest-dotnet",
-                tag = "v1.*",
-                requires = { "nvim-neotest/neotest" },
-            },
-            {
-                "lukas-reineke/indent-blankline.nvim",
-                tag = "v2.*",
-                config = function()
-                    require("chris468.extensions.configure-indent_blankline")
-                end,
-            },
+            { "nvim-neotest/neotest-python", requires = { "nvim-neotest/neotest" } }, -- no tags
+            { "Issafalcon/neotest-dotnet", tag = "v1.*", requires = { "nvim-neotest/neotest" } },
+            { "lukas-reineke/indent-blankline.nvim", tag = "v2.*" },
 
-            {
-                "nvim-lualine/lualine.nvim",
-                -- tags look like only compat
-                config = function()
-                    require("chris468.extensions.configure-lualine")
-                end,
-            },
-            {
-                "ahmedkhalf/project.nvim",
-                -- no tags
-                requires = "nvim-telescope/telescope.nvim",
-                config = function()
-                    require("chris468.extensions.configure-project")
-                end,
-            },
+            { "nvim-lualine/lualine.nvim" }, -- tags look like only compat
+            { "ahmedkhalf/project.nvim", requires = "nvim-telescope/telescope.nvim" }, -- no tags
 
             { "chrisbra/unicode.vim" }, -- unicode.vim tags are really old
         })
@@ -227,6 +99,11 @@ require("chris468.util.if-ext")("packer", function(packer)
             require("packer").sync()
         end
     end)
+
+    if not packer_bootstrap then
+        local require_all = require("chris468.util.require-all")
+        require_all("chris468.extensions")
+    end
 end)
 
 return not packer_bootstrap
