@@ -7,5 +7,4 @@ vim.cmd([[
   autocmd Filetype html setlocal ts=2 sw=2 et
   autocmd Filetype yaml setlocal ts=2 sw=2 et
   autocmd Filetype tf setlocal ts=2 sw=2 et
-  autocmd Filetype lua setlocal ts=2 sw=2 et
 ]])
