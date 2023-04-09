@@ -43,9 +43,11 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
     end
   end
 
-  local function abort()
+  local function abort(fallback)
     if cmp.visible() then
       cmp.abort()
+    elseif fallback then
+      fallback()
     end
   end
 
