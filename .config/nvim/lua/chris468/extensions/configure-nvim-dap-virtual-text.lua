@@ -1,3 +1,2 @@
-local dvt = require 'nvim-dap-virtual-text'
+local dvt = require("nvim-dap-virtual-text")
 dvt.setup()
-

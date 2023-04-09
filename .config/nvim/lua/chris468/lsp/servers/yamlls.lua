@@ -1,8 +1,7 @@
 return {
-  settings = {
-    yaml = {
-      keyOrdering = false,
-    }
-  }
+    settings = {
+        yaml = {
+            keyOrdering = false,
+        },
+    },
 }
-

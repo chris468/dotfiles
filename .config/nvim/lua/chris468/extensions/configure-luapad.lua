@@ -1,3 +1,2 @@
-local luapad = require 'luapad'
-luapad.setup {}
-
+local luapad = require("luapad")
+luapad.setup({})

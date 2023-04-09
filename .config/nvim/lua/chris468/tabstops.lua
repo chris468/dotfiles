@@ -9,4 +9,3 @@ vim.cmd([[
   autocmd Filetype tf setlocal ts=2 sw=2 et
   autocmd Filetype lua setlocal ts=2 sw=2 et
 ]])
-
