@@ -34,7 +34,7 @@ require 'chris468.util.if-ext' ('packer', function(packer)
       { 'wbthomason/packer.nvim' }, -- no tags
       { 'nvim-lua/plenary.nvim', tag='v0.*' },
 
-      { 'dracula/vim', branch = 'master' },
+      { 'dracula/vim', branch = 'master', as = 'dracula' },
 
       { 'nvim-tree/nvim-tree.lua' }, -- only has `nightly` tag
 
