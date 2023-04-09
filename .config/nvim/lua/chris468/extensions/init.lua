@@ -68,6 +68,7 @@ require 'chris468.util.if-ext' ('packer', function(packer)
         'jose-elias-alvarez/null-ls.nvim', -- no tags
         requires = 'nvim-lua/plenary.nvim',
       },
+      { 'windwp/nvim-autopairs' }, -- no tags
 
       { 'rafcamlet/nvim-luapad' }, -- outdated tags
 
