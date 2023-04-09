@@ -124,5 +124,13 @@ if_ext({'cmp', 'cmp_nvim_lsp', 'luasnip'}, function(cmp, _, luasnip)
     }
   })
 
+  local augroup, autocmd = vim.api.nvim_create_augroup, vim.api.nvim_create_autocmd
+  autocmd(
+    'CmdWinEnter',
+    {
+      group = augroup('chris468_cmp', {}),
+      callback = function(_) abort() end,
+    }
+  )
 end)
 
