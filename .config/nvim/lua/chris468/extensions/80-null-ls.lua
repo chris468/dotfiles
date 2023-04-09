@@ -8,6 +8,7 @@ if_ext('null-ls', function(null_ls)
     sources = {
       diagnostics.flake8,
       formatting.autopep8,
+      formatting.prettier,
     }
   }
 end)
