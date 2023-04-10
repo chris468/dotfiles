@@ -57,7 +57,7 @@ lvim.builtin.telescope.defaults.mappings = {
 --   d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
 --   q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
 --   l = { "<cmd>Trouble loclist<cr>", "LocationList" },
---   w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
+--   w = { o"<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 -- }
 
 -- TODO: User Config for predefined plugins
@@ -72,6 +72,7 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
 lvim.builtin.treesitter.ensure_installed = {
   "bash",
   "c",
+  "c_sharp",
   "javascript",
   "json",
   "lua",
@@ -84,8 +85,9 @@ lvim.builtin.treesitter.ensure_installed = {
   "yaml",
 }
 
-lvim.builtin.treesitter.ignore_install = { "haskell" }
+lvim.builtin.treesitter.ignore_install = { "haskell", "help" }
 lvim.builtin.treesitter.highlight.enable = true
+lvim.builtin.treesitter.highlight.disable = { "help" }
 
 -- generic LSP settings
 
@@ -164,10 +166,45 @@ lvim.builtin.treesitter.highlight.enable = true
 
 -- Additional Plugins
 lvim.plugins = {
-    {
-      "dracula/vim",
-      as = "dracula",
+  {
+    "dracula/vim",
+    as = "dracula",
+    disable = lvim.colorscheme ~= "dracula",
+  },
+  { "chrisbra/unicode.vim" },
+  { "tommcdo/vim-exchange" },
+  { "tpope/vim-surround" },
+  {
+    "nvim-neotest/neotest",
+    tag = "v2.*",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      tag = "v0.*",
     },
+    config = function(_)
+      require("neotest").setup({
+        adapters = { "neotest-python", "neotest-dotnet" },
+      })
+    end,
+    module = "neotest",
+  },
+  {
+    "nvim-neotest/neotest-python",
+    requires = {
+      "nvim-neotest/neotest"
+    },
+    module = "neotest",
+    ft = { "python" },
+  },
+  {
+    "Issafalcon/neotest-dotnet",
+    tag = "v1.*",
+    requires = {
+      "nvim-neotest/neotest"
+    },
+    module = "neotest",
+    ft = { "cs" },
+  },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
