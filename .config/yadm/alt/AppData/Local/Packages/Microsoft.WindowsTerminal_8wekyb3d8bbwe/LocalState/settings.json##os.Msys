@@ -36,7 +36,7 @@
             "font": 
             {
                 "face": "Cascadia Mono PL",
-                "size": 10
+                "size": 10.0
             }
         },
         "list": 
