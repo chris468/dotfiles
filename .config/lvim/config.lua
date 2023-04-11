@@ -231,7 +231,15 @@ lvim.plugins = {
       "Glgrep",
       "Gedit"
     },
-    ft = {"fugitive"}
+    ft = { "fugitive" }
+  },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    tag = "v1.*"
+  },
+  {
+    "rafcamlet/nvim-luapad",
+    cmd = { "Luapad", "Luarun" },
   },
 }
 
