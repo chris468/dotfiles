@@ -35,8 +35,9 @@
             "colorScheme": "Dracula",
             "font": 
             {
-                "face": "Cascadia Mono PL",
-                "size": 10.0
+                "face": "SauceCodePro NFM",
+                "size": 11.0,
+                "weight": "normal"
             }
         },
         "list": 
