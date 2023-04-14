@@ -72,6 +72,8 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 lvim.builtin.gitsigns.opts.yadm.enable = true
 
+vim.list_extend(lvim.builtin.project.patterns, {"pyproject.toml", "*.sln"})
+
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
   "bash",
