@@ -18,6 +18,13 @@
         {
             "command": "find",
             "keys": "ctrl+shift+f"
+        },
+        {
+            "command":
+            {
+                "action": "quakeMode"
+            },
+            "keys": "win+shift+`"
         }
     ],
     "copyFormatting": "none",
