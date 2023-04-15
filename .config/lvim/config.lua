@@ -8,7 +8,7 @@ an executable
 ]]
 -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
 --
-require('chris468.config').setup()
+require('chris468').config()
 
 -- general
 lvim.log.level = "warn"
@@ -65,6 +65,12 @@ lvim.builtin.which_key.mappings["t"] = {
   l = { "<cmd>Trouble loclist<cr>", "LocationList" },
   w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
+
+lvim.builtin.which_key.mappings["T"] = {
+  name = "+Neotest",
+  t = { function() require('neotest').summary.toggle() end, "Toggle Summary"}
+}
+
 
 -- TODO: User Config for predefined plugins
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile

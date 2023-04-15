@@ -5,7 +5,6 @@ function M.config()
     {
       "dracula/vim",
       as = "dracula",
-      disable = lvim.colorscheme ~= "dracula",
     },
     {
       "chrisbra/unicode.vim",
@@ -17,16 +16,11 @@ function M.config()
     { "tpope/vim-surround" },
     {
       "nvim-neotest/neotest",
-      tag = "v2.*",
+      tag = "v3.*",
       requires = {
         "nvim-lua/plenary.nvim",
-        tag = "v0.*",
       },
-      config = function(_)
-        require("neotest").setup({
-          adapters = { "neotest-python", "neotest-dotnet" },
-        })
-      end,
+      config = function(_) require('chris468.neotest').setup() end,
       module = "neotest",
     },
     {
@@ -35,7 +29,6 @@ function M.config()
         "nvim-neotest/neotest"
       },
       module = "neotest",
-      ft = { "python" },
     },
     {
       "Issafalcon/neotest-dotnet",
@@ -44,7 +37,6 @@ function M.config()
         "nvim-neotest/neotest"
       },
       module = "neotest",
-      ft = { "cs" },
     },
     {
       "folke/trouble.nvim",
