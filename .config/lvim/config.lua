@@ -7,12 +7,11 @@ a global executable or a path to
 an executable
 ]]
 -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
+--
+require('chris468.config').setup()
 
 vim.g.Unicode_no_default_mappings = true
 
-lvim.builtin.dap.on_config_done = function(dap)
-  require("chris468.dap").setup(dap)
-end
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
@@ -97,10 +96,6 @@ lvim.builtin.treesitter.ensure_installed = {
 lvim.builtin.treesitter.ignore_install = { "haskell", "help" }
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.highlight.disable = { "help" }
-
-lvim.chris468 = {
-  dap = {}
-}
 
 lvim.chris468.dap.ensure_installed = {"python"}
 
