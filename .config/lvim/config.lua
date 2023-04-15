@@ -191,3 +191,13 @@ lvim.chris468.dap.ensure_installed = {"python"}
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
+vim.api.nvim_create_autocmd("FileType",
+  {
+    pattern = "alpha",
+    callback = function()
+      vim.cmd([[
+        nnoremap <silent> <buffer> <Esc> :Alpha<CR>
+        nnoremap <silent> <buffer> q :Alpha<CR>
+      ]])
+    end
+  })
