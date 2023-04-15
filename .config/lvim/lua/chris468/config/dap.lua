@@ -8,7 +8,7 @@ function M.config()
   }
 
   lvim.builtin.dap.on_config_done = function(dap)
-    require("chris468.dap").setup(dap)
+    require("chris468.config.dap").setup(dap)
   end
 
 end
