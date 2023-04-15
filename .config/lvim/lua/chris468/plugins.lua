@@ -7,7 +7,12 @@ function M.config()
       as = "dracula",
       disable = lvim.colorscheme ~= "dracula",
     },
-    { "chrisbra/unicode.vim" },
+    {
+      "chrisbra/unicode.vim",
+      setup = function(_)
+        vim.g.Unicode_no_default_mappings = true
+      end,
+    },
     { "tommcdo/vim-exchange" },
     { "tpope/vim-surround" },
     {

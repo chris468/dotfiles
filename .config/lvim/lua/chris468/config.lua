@@ -6,8 +6,8 @@ end
 
 function M.setup()
   config()
-  require('chris468.config.dap').config()
-  require('chris468.config.plugins').config()
+  require('chris468.dap').config()
+  require('chris468.plugins').config()
 end
 
 return M

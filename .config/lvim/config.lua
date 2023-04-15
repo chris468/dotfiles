@@ -10,8 +10,6 @@ an executable
 --
 require('chris468.config').setup()
 
-vim.g.Unicode_no_default_mappings = true
-
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
@@ -74,6 +72,8 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 lvim.builtin.gitsigns.opts.yadm.enable = true
 
+-- final 2 params are optionalthey are optional
+---@diagnostic disable-next-line: missing-parameter
 vim.list_extend(lvim.builtin.project.patterns, {"pyproject.toml", "*.sln"})
 
 -- if you don't want all the parsers change this to a table of the ones you want
