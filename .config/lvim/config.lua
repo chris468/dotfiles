@@ -27,6 +27,8 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- vim.keymap.del("n", "<C-Up>")
 -- override a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>" -- or vim.keymap.set("n", "<C-q>", ":q<cr>" )
+lvim.keys.term_mode["<C-W>n"] = "<C-\\><C-N>"
+lvim.keys.term_mode["<C-W><C-W>"] = "<C-W>"
 
 lvim.builtin.project.manual_mode = true
 
