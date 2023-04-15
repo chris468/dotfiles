@@ -10,6 +10,9 @@ an executable
 
 vim.g.Unicode_no_default_mappings = true
 
+lvim.builtin.dap.on_config_done = function(dap)
+  require("chris468.dap").setup(dap)
+end
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
@@ -94,6 +97,12 @@ lvim.builtin.treesitter.ensure_installed = {
 lvim.builtin.treesitter.ignore_install = { "haskell", "help" }
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.highlight.disable = { "help" }
+
+lvim.chris468 = {
+  dap = {}
+}
+
+lvim.chris468.dap.ensure_installed = {"python"}
 
 -- generic LSP settings
 
@@ -237,7 +246,7 @@ lvim.plugins = {
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
-    tag = "v1.*"
+    tag = "v2.0.0", -- 2.0.1 uses a new function, not available in lvim's current mason-registry
   },
   {
     "rafcamlet/nvim-luapad",
