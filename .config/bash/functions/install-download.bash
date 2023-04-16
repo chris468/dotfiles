@@ -5,7 +5,7 @@ function install-download {
   link_src="$4"
   link_dest="$5"
 
-  dest="$LOCAL_OPT/$name/$version"
+  dest="$(installed-download-destination $name $version)"
 
   function unpack {
     case "$uri" in
@@ -22,4 +22,8 @@ function install-download {
   then
     ln -sf "$dest/$link_src" "$LOCAL_OPT/$link_dest"
   fi
+}
+
+function installed-download-destination {
+  echo "$LOCAL_OPT/$1/$2"
 }
