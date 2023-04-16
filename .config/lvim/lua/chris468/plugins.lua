@@ -20,7 +20,7 @@ function M.config()
       requires = {
         "nvim-lua/plenary.nvim",
       },
-      config = function(_) require('chris468.neotest').setup() end,
+      config = function(_) require('chris468.testrunner').setup() end,
     },
     {
       "nvim-neotest/neotest-python",

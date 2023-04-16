@@ -108,6 +108,7 @@ lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.highlight.disable = { "help" }
 
 lvim.chris468.dap.ensure_installed = {"python"}
+lvim.chris468.testrunner.adapters = { "neotest-python", "neotest-dotnet" }
 
 -- generic LSP settings
 

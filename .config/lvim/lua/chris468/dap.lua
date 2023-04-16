@@ -24,7 +24,7 @@ function M.setup(_)
     handlers = {}
   })
 
-  local group = vim.api.nvim_create_augroup("chris468.dap", {clear = false})
+  local group = vim.api.nvim_create_augroup("chris468.dap", {clear = true})
   vim.api.nvim_create_autocmd(
     "DirChanged",
     {
