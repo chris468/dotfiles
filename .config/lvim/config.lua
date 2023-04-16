@@ -107,8 +107,15 @@ lvim.builtin.treesitter.ignore_install = { "haskell", "help" }
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.highlight.disable = { "help" }
 
-lvim.chris468.dap.ensure_installed = {"python"}
+lvim.chris468.dap.ensure_installed = {"python", "netcoredbg"}
 lvim.chris468.testrunner.adapters = { "neotest-python", "neotest-dotnet" }
+lvim.chris468.testrunner["neotest-dotnet"] = {
+  discovery_root = "solution",
+  dap = {
+    justMyCode = false
+  }
+}
+
 
 -- generic LSP settings
 

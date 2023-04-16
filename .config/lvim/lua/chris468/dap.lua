@@ -21,7 +21,16 @@ function M.setup(_)
   local mason_dap = require("mason-nvim-dap")
   mason_dap.setup({
     ensure_installed = lvim.chris468.dap.ensure_installed or {},
-    handlers = {}
+    handlers = {
+      mason_dap.default_setup,
+      coreclr = function(config)
+        mason_dap.default_setup(config)
+        mason_dap.default_setup({
+          name = 'netcoredbg',
+          adapters = config.adapters
+        })
+      end
+    }
   })
 
   local group = vim.api.nvim_create_augroup("chris468.dap", {clear = true})
