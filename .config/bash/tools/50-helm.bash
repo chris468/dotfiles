@@ -5,3 +5,8 @@ if [ "$1" == "--install" ]
 then
   install-download "$HELM_URI" helm "$HELM_VERSION" linux-amd64/helm bin/helm
 fi
+
+if command -v helm &> /dev/null
+then
+    eval "$(helm completion bash)"
+fi

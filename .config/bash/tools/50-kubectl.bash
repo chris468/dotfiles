@@ -7,3 +7,9 @@ if [ "$1" == "--install" ]
 then
   install-download "$KUBECTL_URI" kubectl "$KUBECTL_VERSION" kubectl bin/kubectl
 fi
+
+if command -v kubectl &> /dev/null
+then
+    eval "$(kubectl completion bash)"
+fi
+
