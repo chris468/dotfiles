@@ -116,7 +116,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-for f in ~/.config/bash/functions/*.bash ~/.config/bash/bashrc.d/*.bash
+for f in ~/.config/bash/{functions,bashrc.d,bashrc.d/install}/*.bash 
 do
     . $f
 done
