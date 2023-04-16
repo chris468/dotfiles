@@ -21,14 +21,12 @@ function M.config()
         "nvim-lua/plenary.nvim",
       },
       config = function(_) require('chris468.neotest').setup() end,
-      module = "neotest",
     },
     {
       "nvim-neotest/neotest-python",
       requires = {
         "nvim-neotest/neotest"
       },
-      module = "neotest",
     },
     {
       "Issafalcon/neotest-dotnet",
@@ -36,7 +34,6 @@ function M.config()
       requires = {
         "nvim-neotest/neotest"
       },
-      module = "neotest",
     },
     {
       "folke/trouble.nvim",
