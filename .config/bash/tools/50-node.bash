@@ -7,7 +7,7 @@ if [ "$1" == "--install" ]
 then
   mkdir -p "$NVM_DIR"
 
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh \
+  download -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh \
     | NVM_DIR="$NVM_DIR" PROFILE=/dev/null bash
 fi
 

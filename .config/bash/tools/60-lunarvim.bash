@@ -7,7 +7,7 @@ if [ "$1" == "--install" ]
 then
   __lvim_config_changes="$(yadm status -s -unormal ~/.config/lvim)"
 
-  curl https://raw.githubusercontent.com/lunarvim/lunarvim/$LVIM_INSTALLER_VERSION/utils/installer/install.sh \
+  download https://raw.githubusercontent.com/lunarvim/lunarvim/$LVIM_INSTALLER_VERSION/utils/installer/install.sh \
           | LV_BRANCH=$LVIM_VERSION bash -s -- -y --install-dependencies
 
   if [ -z "$__lvim_config_changes" ]

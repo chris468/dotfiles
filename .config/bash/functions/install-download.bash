@@ -16,7 +16,7 @@ function install-download {
 
   mkdir -p "$dest"
 
-  curl -L "$uri" | unpack
+  download "$uri" | unpack
 
   if [ -n "$link_src" ] && [ -n "$link_dest" ]
   then

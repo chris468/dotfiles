@@ -8,7 +8,7 @@ if [ "$1" == "--install" ]
 then
   if [ ! -f "$NEOVIM_DESTINATION" ]
   then
-      curl -L -o "$NEOVIM_DESTINATION" https://github.com/neovim/neovim/releases/download/$NEOVIM_VERSION/nvim.appimage
+  download -o "$NEOVIM_DESTINATION" https://github.com/neovim/neovim/releases/download/$NEOVIM_VERSION/nvim.appimage
       chmod +x "$NEOVIM_DESTINATION"
 
       ln -sfr "$NEOVIM_DESTINATION" "$NEOVIM_LINK"
