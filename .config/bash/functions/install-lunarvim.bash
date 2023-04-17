@@ -1,17 +1,17 @@
+function install-neovim {
+  NEOVIM_VERSION="${1:-v0.8.3}"
+  NEOVIM_URL="https://github.com/neovim/neovim/releases/download/$NEOVIM_VERSION/nvim.appimage"
+
+  if [ ! -f "$NEOVIM_DESTINATION" ]
+  then
+    install-download "$NEOVIM_URL" nvim $NEOVIM_VERSION nvim bin/nvim
+  fi
+}
+
 function install-lunarvim {
 
   function install-deps {
     brew install python node rust
-  }
-
-  function install-neovim {
-    NEOVIM_VERSION="v0.8.3"
-    NEOVIM_URL="https://github.com/neovim/neovim/releases/download/$NEOVIM_VERSION/nvim.appimage"
-
-    if [ ! -f "$NEOVIM_DESTINATION" ]
-    then
-      install-download "$NEOVIM_URL" nvim $NEOVIM_VERSION nvim bin/nvim
-    fi
   }
 
   function install-lvim {

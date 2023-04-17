@@ -20,7 +20,7 @@ function install-download {
 
   if [ -n "$link_src" ] && [ -n "$link_dest" ]
   then
-    ln -sf "$dest/$link_src" "$LOCAL_OPT/$link_dest"
+    ln -sfr "$dest/$link_src" "$LOCAL_OPT/$link_dest"
   fi
 }
 
