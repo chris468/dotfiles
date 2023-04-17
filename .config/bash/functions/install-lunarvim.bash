@@ -1,39 +1,38 @@
 function install-neovim {
   NEOVIM_VERSION="${1:-v0.8.3}"
-  LVIM_INSTALLER_VERSION="fc6873809934917b470bff1b072171879899a36b"
-  NEOVIM_INSTALLER_URL="https://raw.githubusercontent.com/lunarvim/lunarvim/$LVIM_INSTALLER_VERSION/utils/installer/install-neovim-from-release"
-  NEOVIM_PREFIX="$LOCAL_OPT/neovim/$NEOVIM_VERSION"
-
-  if [ ! -d "$NEOVIM_PREFIX" ]
+  if [ "$(uname -o)" == "Msys" ]
   then
-    download $NEOVIM_INSTALLER_URL \
-      | RELEASE_VER=$NEOVIM_VERSION INSTALL_PREFIX="$NEOVIM_PREFIX" \
-      bash
+      NEOVIM_ARCHIVE=nvim-win64.zip
+      NEOVIM_TARGET=nvim-win64
+      NEOVIM_LINK=nvim/current
+  else
+      NEOVIM_ARCHIVE=nvim.appimage
+      NEOVIM_TARGET=bin/nvim
+      NEOVIM_LINK=bin/nvim
   fi
+  NEOVIM_URL="https://github.com/neovim/neovim/releases/download/$NEOVIM_VERSION/$NEOVIM_ARCHIVE"
 
-  ln -sfr "$NEOVIM_PREFIX/bin/nvim" "$LOCAL_OPT/bin/nvim"
+  install-download "$NEOVIM_URL" nvim $NEOVIM_VERSION $NEOVIM_TARGET $NEOVIM_LINK
 }
 
 function install-lunarvim {
 
   function install-deps {
-    brew install python node rust
+    if [ "$(uname -o)" == "Msys" ]
+    then
+        ensure-scoop
+        scoop install python nodejs rust
+    else
+        brew install python node rust
+    fi
   }
 
   function install-lvim {
-    LVIM_VERSION="${1:-release-1.2/neovim-0.8}"
+    LVIM_VERSION='release-1.2/neovim-0.8'
     LVIM_INSTALLER_VERSION="fc6873809934917b470bff1b072171879899a36b"
     LVIM_INSTALLER_URL="https://raw.githubusercontent.com/lunarvim/lunarvim/$LVIM_INSTALLER_VERSION/utils/installer/install.sh"
-    LVIM_PREFIX="$LOCAL_OPT/lunarvim/$LVIM_VERSION"
 
-    if [ ! -d "$LVIM_PREFIX" ]
-    then
-      download $LVIM_INSTALLER_URL \
-        | INSTALL_PREFIX="$LVIM_PREFIX" LV_BRANCH=$LVIM_VERSION \
-        bash -s -- -y --install-dependencies
-    fi
-
-    ln -sfr "$LVIM_PREFIX/bin/lvim" "$LOCAL_OPT/bin/lvim"
+    download $LVIM_INSTALLER_URL | LV_BRANCH=$LVIM_VERSION bash -s -- -y --install-dependencies
   }
 
   function check-for-config-changes {

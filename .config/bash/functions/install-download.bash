@@ -7,9 +7,16 @@ function install-download {
 
   dest="$(installed-download-destination $name $version)"
 
+  function unpack-zip {
+    tmp_archive="$(mktemp tmp.${name}.XXXX)"
+    cat > $tmp_archive
+    unzip -q -o $tmp_archive -d $dest
+  }
+
   function unpack {
     case "$uri" in
       *.tar.gz | *.tgz) tar -C "$dest" -xz ;;
+      *.zip) unpack-zip ;;
       *) cat > "$dest/$name" && chmod +x "$dest/$name" ;;
     esac
   }

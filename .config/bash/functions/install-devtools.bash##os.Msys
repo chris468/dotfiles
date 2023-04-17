@@ -1,0 +1,11 @@
+function install-devtools {
+    ensure-scoop
+    scoop install \
+        aws \
+        azure-cli \
+        gh \
+        helm \
+        k9s \
+        kubectl \
+        nodejs
+}
