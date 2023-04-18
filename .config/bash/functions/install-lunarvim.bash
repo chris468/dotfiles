@@ -21,7 +21,7 @@ function install-lunarvim {
     if [ "$(uname -o)" == "Msys" ]
     then
         ensure-scoop
-        scoop install python nodejs rust make
+        scoop install python nodejs rust make gcc
     else
         brew install python node rust
     fi
