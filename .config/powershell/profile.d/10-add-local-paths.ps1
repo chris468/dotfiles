@@ -1,16 +1,12 @@
 function __add_local_paths {
     $local_paths=@(
         "$HOME/.local/bin",
-        "$HOME/bin",
+        "$HOME/.local/opt/nvim/current/bin",
+        "$HOME/.local/opt/bin",
         "$HOME/scoop/shims"
     )
-    [array]::reverse($local_paths)
 
-     foreach ($p in $local_paths) {
-         if ( Test-Path -PathType Container $p ) {
-             $env:PATH="$p;$env:PATH"
-         }
-     }
+    prepend-path $local_paths -Persist
 }
 
-. __add_local_paths
+__add_local_paths
