@@ -21,7 +21,7 @@ function install-lunarvim {
     if [ "$(uname -o)" == "Msys" ]
     then
         ensure-scoop
-        scoop install python nodejs rust
+        scoop install python nodejs rust make
     else
         brew install python node rust
     fi
@@ -30,11 +30,22 @@ function install-lunarvim {
   function install-lvim {
     LVIM_VERSION='release-1.2/neovim-0.8'
     LVIM_INSTALLER_VERSION="fc6873809934917b470bff1b072171879899a36b"
-    LVIM_INSTALLER_URL="https://raw.githubusercontent.com/lunarvim/lunarvim/$LVIM_INSTALLER_VERSION/utils/installer/install.sh"
 
-    download $LVIM_INSTALLER_URL \
-      | INSTALL_PREFIX="$LOCAL_OPT" LV_BRANCH=$LVIM_VERSION \
-      bash -s -- -y --install-dependencies
+    if [ "$(uname -o)" == "Msys" ]
+    then
+        LVIM_INSTALLER_URL="https://raw.githubusercontent.com/lunarvim/lunarvim/$LVIM_INSTALLER_VERSION/utils/installer/install.ps1"
+
+        local cmd
+        cmd='& { $LV_BRANCH='"'$LVIM_VERSION'; Invoke-WebRequest $LVIM_INSTALLER_URL -UseBasicParsing | Invoke-Expression } \""
+        echo $cmd
+        pwsh -c "$cmd"
+    else
+        LVIM_INSTALLER_URL="https://raw.githubusercontent.com/lunarvim/lunarvim/$LVIM_INSTALLER_VERSION/utils/installer/install.sh"
+
+        download $LVIM_INSTALLER_URL \
+          | INSTALL_PREFIX="$LOCAL_OPT" LV_BRANCH=$LVIM_VERSION \
+          bash -s -- -y --install-dependencies
+    fi
   }
 
   function check-for-config-changes {

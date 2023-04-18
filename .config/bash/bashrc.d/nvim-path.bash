@@ -1,0 +1,1 @@
+nvim-path.bash##os.Msys

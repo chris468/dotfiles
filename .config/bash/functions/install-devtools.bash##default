@@ -1,0 +1,12 @@
+function install-devtools {
+  brew install \
+    awscli \
+    azure-cli \
+    gh \
+    helm \
+    k9s \
+    kubectl \
+    node
+
+  install-dotnet --channel LTS
+}
