@@ -5,6 +5,7 @@ Documents/
 AppData/
 .vsvimrc
 _vimrc
+vimfiles
 {{- end }}
 
 {{- if not .work }}
