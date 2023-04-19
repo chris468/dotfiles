@@ -3,4 +3,10 @@ private_dot_config/powershell/
 {{- else }}
 Documents/
 AppData/
+.vsvimrc
+_vimrc
+{{- end }}
+
+{{- if not .work }}
+.vim/plugin/work.vim
 {{- end }}
