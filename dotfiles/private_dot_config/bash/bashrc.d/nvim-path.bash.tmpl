@@ -1,1 +1,3 @@
+{{- if eq .chezmoi.os "windows" }}
 prepend-path "$HOME/.local/opt/nvim/current/bin"
+{{- end }}

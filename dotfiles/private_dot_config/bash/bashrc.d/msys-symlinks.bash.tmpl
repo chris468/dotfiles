@@ -1,5 +1,7 @@
+{{- if eq .chezmoi.os "windows" }}
 #!/bin/bash
 
 if grep -qi "win" <<< "$OS" ; then
     export MSYS=winsymlinks:nativestrict
 fi
+{{- end }}

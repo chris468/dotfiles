@@ -1,0 +1,24 @@
+function install-devtools {
+{{- if eq .chezmoi.os "windows" }}
+    ensure-scoop
+    scoop install \
+        aws \
+        azure-cli \
+        gh \
+        helm \
+        k9s \
+        kubectl \
+        nodejs
+{{- else }}
+  brew install \
+    awscli \
+    azure-cli \
+    gh \
+    helm \
+    k9s \
+    kubectl \
+    node
+
+  install-dotnet --channel LTS
+{{- end }}
+}
