@@ -1,3 +1,4 @@
+*.priv.*
 {{- if eq .chezmoi.os "windows" }}
 private_dot_config/powershell/
 {{- else }}
