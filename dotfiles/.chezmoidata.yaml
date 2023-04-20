@@ -1,1 +1,3 @@
 work: false
+versions:
+  oh_my_posh: "14.26.0"

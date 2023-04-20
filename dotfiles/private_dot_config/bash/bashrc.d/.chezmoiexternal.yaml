@@ -1,4 +1,0 @@
-"dracula-theme.bash":
-  type: file
-  url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
-  refreshPeriod: "672h"
