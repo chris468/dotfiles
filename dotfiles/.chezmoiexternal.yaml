@@ -10,3 +10,4 @@
 ".local/opt/bin/oh-my-posh{{ $extension }}":
   type: file
   url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ .versions.oh_my_posh }}/posh-{{ .chezmoi.os }}-{{ .chezmoi.arch }}{{ $extension }}"
+  executable: true
