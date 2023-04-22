@@ -1,18 +1,6 @@
-# Prerequisites
-
-Install is always with bash. On Windows, use git bash.
-On windows, the user must have permission to create symlinks.
-
-# Quick install
+# Install via [chezmoi](https;//chezmoi.io)
 
 ```
-curl -L https://raw.githubusercontent.com/chris468/dotfiles/main/.install.dotfiles/install.bash | bash
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/opt/bin init --apply --branch chezmoi chris468
 ```
 
-# Install with parameters
-
-```
-curl -L https://raw.githubusercontent.com/chris468/dotfiles/main/.install.dotfiles/install.bash | bash -s -- <options>
-```
-
-See [install.bash](./install.bash) or run `bash install.bash --help` for options.
