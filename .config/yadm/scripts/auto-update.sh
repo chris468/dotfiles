@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exit
+
 auto_update_log_dir=~/.cache/yadm/auto-update
 auto_update_status=$auto_update_log_dir/status
 auto_update_last_update=$auto_update_log_dir/last_update
