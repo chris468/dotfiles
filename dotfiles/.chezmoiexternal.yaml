@@ -11,3 +11,11 @@
   type: file
   url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ .versions.oh_my_posh }}/posh-{{ .chezmoi.os }}-{{ .chezmoi.arch }}{{ $extension }}"
   executable: true
+
+".asdf":
+  type: git-repo
+  url: "https://github.com/asdf-vm/asdf.git"
+  clone:
+    args:
+      - "--branch"
+      - "{{ .versions.asdf }}"

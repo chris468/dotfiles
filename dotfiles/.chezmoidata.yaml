@@ -1,2 +1,18 @@
 versions:
+  asdf: "v0.11.3"
   oh_my_posh: "14.26.0"
+
+asdf:
+  - name: dotnet
+    versions:
+      - "latest:6"
+  - name: k9s
+    repo: "https://github.com/looztra/asdf-k9s"
+    versions:
+      - "latest"
+  - name: nodejs
+    versions:
+      - "latest:lts"
+  - name: rust
+    versions:
+      - "latest:stable"

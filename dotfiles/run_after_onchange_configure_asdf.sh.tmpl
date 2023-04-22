@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if ! command -v asdf &>/dev/null
+then
+  . ~/.asdf/asdf.sh
+fi
+
+{{- range $plugin := .asdf }}
+asdf plugin add {{ $plugin.name }} {{ default "" (index $plugin "repo") }}
+{{-   range $version := $plugin.versions }}
+asdf install {{ $plugin.name }} {{ $version }}
+{{-   end }}
+asdf global {{ $plugin.name }} {{ index $plugin.versions 0 }}
+{{ end }}
+# checksum: {{ .asdf | toString | sha256sum }}
