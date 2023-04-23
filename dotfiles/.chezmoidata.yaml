@@ -1,12 +1,19 @@
-versions:
-  asdf: "v0.11.3"
-  oh_my_posh: "14.26.0"
+tools:
+  asdf:
+    versions: "v0.11.3"
+    package_manager: external
+  oh_my_posh:
+    versions: "14.26.0"
+    package_manager: external
   dotnet:
-    - LTS
-  lunarvim: "release-1.2/neovim-0.8"
-  lunarvim_installer: "fc6873809934917b470bff1b072171879899a36b"
-
-asdf:
+    versions: LTS
+    package_manager: script
+  lunarvim:
+    versions: "release-1.2/neovim-0.8"
+    package_manager: script
+  lunarvim_installer:
+    versions: "fc6873809934917b470bff1b072171879899a36b"
+    package_manager: script
   chezmoi:
   neovim:
     versions: "0.8.3"
