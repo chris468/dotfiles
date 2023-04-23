@@ -8,7 +8,7 @@ fi
 {{- range $plugin, $spec := .tools }}
 {{-   $spec = default (dict) $spec }}
 {{-   if and (eq "asdf" (default "asdf" (index $spec "package_manager"))) (or (not (index $spec "group")) (index $ $spec.group)) }}
-{{-     $versions := default "latest" (index $spec "versions") }}
+{{-     $versions := default "latest" (index $spec "version") }}
 {{-     $versions = kindIs "slice" $versions | ternary $versions (list $versions) }}
 asdf plugin add {{ $plugin }} {{ default "" (index $spec "repo") }}
 {{-     range $version := $versions }}
@@ -32,7 +32,7 @@ then
   cp -a "$LVIM_CONFIG" "$LVIM_CONFIG_BACKUP"
 fi
 
-INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .tools.lunarvim.versions }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
+INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .tools.lunarvim.version }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
 
 if [ -d "$LVIM_CONFIG_BACKUP" ]
 then
@@ -44,7 +44,7 @@ fi
 {{- end }}
 
 {{- if .devtools }}
-{{-   range (kindIs "slice" .tools.dotnet.versions | ternary .tools.dotnet.versions (list .tools.dotnet.versions)) }}
+{{-   range (kindIs "slice" .tools.dotnet.version | ternary .tools.dotnet.version (list .tools.dotnet.version)) }}
 ~/.local/opt/sbin/dotnet-install.sh --channel {{ . }}
 {{-   end}}
 {{- end}}
