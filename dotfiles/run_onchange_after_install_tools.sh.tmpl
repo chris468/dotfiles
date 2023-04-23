@@ -1,3 +1,4 @@
+chezmoi:template:missing-key=zero
 #!/usr/bin/env bash
 
 if ! command -v asdf &>/dev/null
@@ -7,18 +8,20 @@ fi
 
 {{- range $plugin, $spec := .tools }}
 {{-   $spec = default (dict) $spec }}
-{{-   if and (eq "asdf" (default "asdf" (index $spec "package_manager"))) (or (not (index $spec "group")) (index $ $spec.group)) }}
-{{-     $versions := default "latest" (index $spec "version") }}
-{{-     $versions = kindIs "slice" $versions | ternary $versions (list $versions) }}
-asdf plugin add {{ $plugin }} {{ default "" (index $spec "repo") }}
-{{-     range $version := $versions }}
+{{-   if eq "asdf" (default "asdf" $spec.package_manager) }}
+{{-     if or (not $spec.group) (index $ $spec.group) }}
+{{-       $versions := default "latest" $spec.version }}
+{{-       $versions = kindIs "slice" $versions | ternary $versions (list $versions) }}
+asdf plugin add {{ $plugin }} {{ default "" $spec.repo }}
+{{-       range $version := $versions }}
 asdf install {{ $plugin }} {{ $version }}
-{{-     end }}
+{{-       end }}
 asdf global {{ $plugin }} {{ index $versions 0 }}
-{{-   else}}
+{{-     else}}
 asdf plugin remove {{ $plugin }}
+{{-     end }}
 {{-   end }}
-{{ end }}
+{{- end }}
 
 {{- if eq .chezmoi.os "windows" }}
 echo TODO
