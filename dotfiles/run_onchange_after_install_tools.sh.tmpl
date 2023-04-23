@@ -5,17 +5,18 @@ then
   . ~/.asdf/asdf.sh
 fi
 
-{{- range $plugin := .asdf }}
-{{- if or (not (index $plugin "group")) (index $ $plugin.group) }}
-{{-   $versions := default (list "latest") (index $plugin "versions") }}
-asdf plugin add {{ $plugin.name }} {{ default "" (index $plugin "repo") }}
-{{-   range $version := $versions }}
-asdf install {{ $plugin.name }} {{ $version }}
-asdf global {{ $plugin.name }} {{ index $versions 0 }}
+{{- range $plugin, $spec := .asdf }}
+{{-   $spec = default (dict) $spec }}
+{{-   if or (not (index $spec "group")) (index $ $spec.group) }}
+{{-     $versions := default (list "latest") (index $spec "versions") }}
+asdf plugin add {{ $plugin }} {{ default "" (index $spec "repo") }}
+{{-     range $version := $versions }}
+asdf install {{ $plugin }} {{ $version }}
+asdf global {{ $plugin }} {{ index $versions 0 }}
+{{-     end }}
+{{-   else}}
+asdf plugin remove {{ $plugin }}
 {{-   end }}
-{{- else}}
-asdf plugin remove {{ $plugin.name }}
-{{- end }}
 {{ end }}
 
 {{- if eq .chezmoi.os "windows" }}

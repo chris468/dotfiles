@@ -7,26 +7,26 @@ versions:
   lunarvim_installer: "fc6873809934917b470bff1b072171879899a36b"
 
 asdf:
-  - name: chezmoi
-  - name: neovim
+  chezmoi:
+  neovim:
     versions:
       - "0.8.3"
-  - name: nodejs
+  nodejs:
     versions:
       - "latest:lts"
-  - name: rust
+  rust:
     versions:
       - "latest:stable"
-  - name: awscli
+  awscli:
     group: devtools
-  - name: azure-cli
+  azure-cli:
     group: devtools
-  - name: github-cli
+  github-cli:
     group: devtools
-  - name: helm
+  helm:
     group: devtools
-  - name: k9s
+  k9s:
     group: devtools
     repo: "https://github.com/looztra/asdf-k9s"
-  - name: kubectl
+  kubectl:
     group: devtools
