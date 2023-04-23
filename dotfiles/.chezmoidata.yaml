@@ -1,21 +1,30 @@
 versions:
   asdf: "v0.11.3"
   oh_my_posh: "14.26.0"
+  dotnet:
+    - LTS
 
 asdf:
   - name: chezmoi
+  - name: neovim
     versions:
-      - "latest"
-  - name: dotnet
-    versions:
-      - "latest:6"
-  - name: k9s
-    repo: "https://github.com/looztra/asdf-k9s"
-    versions:
-      - "latest"
+      - "0.8.3"
   - name: nodejs
     versions:
       - "latest:lts"
   - name: rust
     versions:
       - "latest:stable"
+  - name: awscli
+    group: devtools
+  - name: azure-cli
+    group: devtools
+  - name: github-cli
+    group: devtools
+  - name: helm
+    group: devtools
+  - name: k9s
+    group: devtools
+    repo: "https://github.com/looztra/asdf-k9s"
+  - name: kubectl
+    group: devtools

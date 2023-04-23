@@ -19,3 +19,11 @@
     args:
       - "--branch"
       - "{{ .versions.asdf }}"
+
+{{- if .devtools }}
+".local/opt/bin/dotnet-install.sh":
+  type: file
+  url: "https://dot.net/v1/dotnet-install.sh"
+  executable: true
+  refreshPeriod: "168h"
+{{- end }}

@@ -6,10 +6,20 @@ then
 fi
 
 {{- range $plugin := .asdf }}
+{{- if or (not (index $plugin "group")) (index $ $plugin.group) }}
+{{-   $versions := default (list "latest") (index $plugin "versions") }}
 asdf plugin add {{ $plugin.name }} {{ default "" (index $plugin "repo") }}
-{{-   range $version := $plugin.versions }}
+{{-   range $version := $versions }}
 asdf install {{ $plugin.name }} {{ $version }}
+asdf global {{ $plugin.name }} {{ index $versions 0 }}
 {{-   end }}
-asdf global {{ $plugin.name }} {{ index $plugin.versions 0 }}
+{{- else}}
+asdf plugin remove {{ $plugin.name }}
+{{- end }}
 {{ end }}
-# checksum: {{ .asdf | toString | sha256sum }}
+
+{{- if .devtools }}
+{{-   range .versions.dotnet }}
+~/.local/opt/bin/dotnet-install.sh --channel {{ . }}
+{{-   end}}
+{{- end}}
