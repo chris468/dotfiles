@@ -9,14 +9,11 @@ versions:
 asdf:
   chezmoi:
   neovim:
-    versions:
-      - "0.8.3"
+    versions: "0.8.3"
   nodejs:
-    versions:
-      - "latest:lts"
+    versions: "latest:lts"
   rust:
-    versions:
-      - "latest:stable"
+    versions: "latest:stable"
   awscli:
     group: devtools
   azure-cli:
