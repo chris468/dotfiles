@@ -12,12 +12,24 @@ fi
 {{-     if or (not $spec.group) (index $ $spec.group) }}
 {{-       $versions := default "latest" $spec.version }}
 {{-       $versions = kindIs "slice" $versions | ternary $versions (list $versions) }}
-asdf plugin add {{ $plugin }} {{ default "" $spec.repo }}
-{{-       range $version := $versions }}
-asdf install {{ $plugin }} {{ $version }}
+{{-       $has_all_deps := true }}
+{{-       range default (list) (index $spec "dependencies") }}
+{{-         $has_all_deps = and $has_all_deps (lookPath . ) }}
 {{-       end }}
-asdf global {{ $plugin }} {{ index $versions 0 }}
-{{-     else}}
+{{-       if $has_all_deps }}
+if {{ default "true" $spec.dependency_check }} ; then
+  asdf plugin add {{ $plugin }} {{ default "" $spec.repo }}
+{{-         range $version := $versions }}
+  asdf install {{ $plugin }} {{ $version }}
+{{-         end }}
+  asdf global {{ $plugin }} {{ index $versions 0 }}
+else
+  echo "Dependency check for {{ $plugin }} failed." >&2
+fi
+{{-       else }}
+echo "Skipping {{ $plugin }} due to missing dependencies." >&2
+echo "{{ $plugin }} dependencies: {{ .dependencies | join ", " }}" >&2
+{{-       end }}
 asdf plugin remove {{ $plugin }}
 {{-     end }}
 {{-   end }}

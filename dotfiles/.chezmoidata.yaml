@@ -11,6 +11,8 @@ tools:
   lunarvim:
     version: "release-1.2/neovim-0.8"
     package_manager: script
+    dependencies:
+      - pip3
   lunarvim_installer:
     version: "fc6873809934917b470bff1b072171879899a36b"
     package_manager: script
@@ -23,8 +25,14 @@ tools:
     version: "latest:stable"
   awscli:
     group: devtools
+    dependencies:
+      - unzip
+      - pip3
   azure-cli:
     group: devtools
+    dependencies:
+      - pip3
+    dependency_check: pip3 show virtualenv
   github-cli:
     group: devtools
   helm:
