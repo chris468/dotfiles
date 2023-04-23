@@ -21,7 +21,24 @@ asdf plugin remove {{ $plugin.name }}
 {{- if eq .chezmoi.os "windows" }}
 echo TODO
 {{- else }}
-INSTALLER_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .versions.lunarvim }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
+
+LVIM_CONFIG="$HOME/.config/lvim"
+LVIM_CONFIG_BACKUP="$LVIM_CONFIG.bkp"
+if [ -d "$LVIM_CONFIG" ]
+then
+  echo "Backing up $LVIM_CONFIG --> $LVIM_CONFIG_BACKUP"
+  cp -a "$LVIM_CONFIG" "$LVIM_CONFIG_BACKUP"
+fi
+
+INSTALLER_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .versions.lunarvim }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-depen
+
+if [ -d "$LVIM_CONFIG_BACKUP" ]
+then
+  echo "Restoring $LVIM_CONFIG_BACKUP --> $LVIM_CONFIG"
+  rm -rf "$LVIM_CONFIG"
+  mv "$LVIM_CONFIG_BACKUP" "$LVIM_CONFIG"
+fi
+
 {{- end }}
 
 {{- if .devtools }}
