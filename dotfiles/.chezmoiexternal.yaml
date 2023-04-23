@@ -3,13 +3,10 @@
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
   refreshPeriod: "672h"
 
-{{- $extension := "" }}
-{{- if eq .chezmoi.os "windows" }}
-{{-   $extension := ".exe" }}
-{{- end }}
-".local/opt/bin/oh-my-posh{{ $extension }}":
+{{- $oh_my_posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
+".local/opt/bin/oh-my-posh{{ $oh_my_posh_ext }}":
   type: file
-  url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ .versions.oh_my_posh }}/posh-{{ .chezmoi.os }}-{{ .chezmoi.arch }}{{ $extension }}"
+  url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ .versions.oh_my_posh }}/posh-{{ .chezmoi.os }}-{{ .chezmoi.arch }}{{ $oh_my_posh_ext }}"
   executable: true
 
 ".asdf":
@@ -20,8 +17,15 @@
       - "--branch"
       - "{{ .versions.asdf }}"
 
+{{- $lunarvim_installer_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" }}
+".local/opt/sbin/install-lunarvim{{ $lunarvim_installer_ext }}":
+  type: file
+  url: "https://raw.githubusercontent.com/lunarvim/lunarvim/{{ default .versions.lunarvim  (index .versions "lunarvim_installer") }}/utils/installer/install{{ $lunarvim_installer_ext }}"
+  executable: true
+  refreshPeriod: "168h"
+
 {{- if .devtools }}
-".local/opt/bin/dotnet-install.sh":
+".local/opt/sbin/dotnet-install.sh":
   type: file
   url: "https://dot.net/v1/dotnet-install.sh"
   executable: true

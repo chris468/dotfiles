@@ -2,6 +2,8 @@
 
 ## Prerequisites
 
+- python3-pip (for neovim python dependencies)
+
 ### devtools
 - unzip (for installing aws-cli)
 - python3-venv (for installing azure-cli)

@@ -18,8 +18,14 @@ asdf plugin remove {{ $plugin.name }}
 {{- end }}
 {{ end }}
 
+{{- if eq .chezmoi.os "windows" }}
+echo TODO
+{{- else }}
+INSTALLER_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .versions.lunarvim }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
+{{- end }}
+
 {{- if .devtools }}
 {{-   range .versions.dotnet }}
-~/.local/opt/bin/dotnet-install.sh --channel {{ . }}
+~/.local/opt/sbin/dotnet-install.sh --channel {{ . }}
 {{-   end}}
 {{- end}}
