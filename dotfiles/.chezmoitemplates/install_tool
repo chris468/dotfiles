@@ -16,7 +16,7 @@ fi
 {{-     end }}
 {{-   else }}
 echo "Skipping {{ .name }} due to missing dependencies." >&2
-echo "{{ .name }} dependencies: {{ .dependencies | join ", " }}" >&2
+echo "{{ .name }} dependencies: {{ $spec.dependencies | join ", " }}" >&2
 {{-   end }}
 {{- else }}
 {{    default "" .remove_command }}

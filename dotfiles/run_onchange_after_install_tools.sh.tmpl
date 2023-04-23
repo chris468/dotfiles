@@ -8,8 +8,8 @@ fi
 
 function asdf-install {
   name=$1 ; shift
-  repo=$2 ; shift
-  default_version=$3
+  repo=$1 ; shift
+  default_version=$1
 
   asdf plugin add $name $repo
 
