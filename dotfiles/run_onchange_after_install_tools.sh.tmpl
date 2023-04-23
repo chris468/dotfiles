@@ -6,32 +6,35 @@ then
   . ~/.asdf/asdf.sh
 fi
 
+function asdf-install {
+  name=$1 ; shift
+  repo=$2 ; shift
+  default_version=$3
+
+  asdf plugin add $name $repo
+
+  while [ $# -ne 0 ]
+  do
+    version=$1 ; shift
+    asdf install $name $version
+  done
+
+  asdf global $name $default_version
+}
+
 {{- range $plugin, $spec := .tools }}
 {{-   $spec = default (dict) $spec }}
-{{-   if eq "asdf" (default "asdf" $spec.package_manager) }}
-{{-     if or (not $spec.group) (index $ $spec.group) }}
-{{-       $versions := default "latest" $spec.version }}
-{{-       $versions = kindIs "slice" $versions | ternary $versions (list $versions) }}
-{{-       $has_all_deps := true }}
-{{-       range default (list) (index $spec "dependencies") }}
-{{-         $has_all_deps = and $has_all_deps (lookPath . ) }}
-{{-       end }}
-{{-       if $has_all_deps }}
-if {{ default "true" $spec.dependency_check }} ; then
-  asdf plugin add {{ $plugin }} {{ default "" $spec.repo }}
-{{-         range $version := $versions }}
-  asdf install {{ $plugin }} {{ $version }}
-{{-         end }}
-  asdf global {{ $plugin }} {{ index $versions 0 }}
-else
-  echo "Dependency check for {{ $plugin }} failed." >&2
-fi
-{{-       else }}
-echo "Skipping {{ $plugin }} due to missing dependencies." >&2
-echo "{{ $plugin }} dependencies: {{ .dependencies | join ", " }}" >&2
-{{-       end }}
-asdf plugin remove {{ $plugin }}
-{{-     end }}
+{{-   if eq "asdf" ($spec.package_manager | default "asdf") }}
+{{-     $versions := $spec.version | default "latest" }}
+{{-     $versions = kindIs "slice" $versions | ternary ($versions | join " ") $versions }}
+{{-     template "install_tool" (dict
+          "name" $plugin
+          "spec" $spec
+          "install" (or (not $spec.group) (index $ $spec.group))
+          "install_command" (cat "asdf-install" $plugin ($spec.repo | default "" | squote) $versions)
+          "remove_command" (cat "asdf plugin remove" $plugin)
+        )
+}}
 {{-   end }}
 {{- end }}
 

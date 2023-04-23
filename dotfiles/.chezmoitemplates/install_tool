@@ -1,0 +1,23 @@
+chezmoi:template:missing-key=zero
+{{- if .install }}
+{{-   $spec := default (dict) .spec }}
+{{-   $has_all_deps := true }}
+{{-   range default (list) $spec.dependencies }}
+{{-     $has_all_deps = and $has_all_deps (lookPath . ) }}
+{{-   end }}
+{{-   if $has_all_deps }}
+{{-     if $spec.dependency_check }}
+if {{ $spec.dependency_check }} ; then {{ "" }}
+{{-     end }}
+{{-     default "false" .install_command }}
+{{-     if $spec.dependency_check }}
+else echo "Dependency check for {{ .name }} failed." >&2
+fi
+{{-     end }}
+{{-   else }}
+echo "Skipping {{ .name }} due to missing dependencies." >&2
+echo "{{ .name }} dependencies: {{ .dependencies | join ", " }}" >&2
+{{-   end }}
+{{- else }}
+{{    default "" .remove_command }}
+{{- end }}
