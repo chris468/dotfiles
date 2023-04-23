@@ -1,6 +1,6 @@
 # Install via [chezmoi](https;//chezmoi.io)
 
 ```
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/opt/bin init --apply --branch chezmoi chris468
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $(mktemp -d /tmp/bootstrap-dotfiles-XXX) init --apply --branch chezmoi chris468
 ```
 

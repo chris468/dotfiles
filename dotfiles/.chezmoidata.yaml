@@ -3,6 +3,9 @@ versions:
   oh_my_posh: "14.26.0"
 
 asdf:
+  - name: chezmoi
+    versions:
+      - "latest"
   - name: dotnet
     versions:
       - "latest:6"
