@@ -6,7 +6,9 @@ tools:
     version: "14.26.0"
     package_manager: external
   dotnet:
-    version: LTS
+    version: 
+      - LTS
+      - STS
     package_manager: script
   lunarvim:
     version: "release-1.2/neovim-0.8"
@@ -18,7 +20,9 @@ tools:
     package_manager: script
   chezmoi:
   neovim:
-    version: "0.8.3"
+    version: 
+      - "latest:0.8"
+      - "latest:0.9"
   nodejs:
     version: "latest:lts"
   rust:

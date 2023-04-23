@@ -22,6 +22,39 @@ function asdf-install {
   asdf global $name $default_version
 }
 
+function install-lunarvim {
+{{- if eq .chezmoi.os "windows" }}
+  echo TODO
+{{- else }}
+
+  LVIM_CONFIG="$HOME/.config/lvim"
+  LVIM_CONFIG_BACKUP="$LVIM_CONFIG.bkp"
+  if [ -d "$LVIM_CONFIG" ]
+  then
+    echo "Backing up $LVIM_CONFIG --> $LVIM_CONFIG_BACKUP"
+    cp -a "$LVIM_CONFIG" "$LVIM_CONFIG_BACKUP"
+  fi
+
+  INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .tools.lunarvim.version }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
+
+  if [ -d "$LVIM_CONFIG_BACKUP" ]
+  then
+    echo "Restoring $LVIM_CONFIG_BACKUP --> $LVIM_CONFIG"
+    rm -rf "$LVIM_CONFIG"
+    mv "$LVIM_CONFIG_BACKUP" "$LVIM_CONFIG"
+  fi
+{{- end }}
+}
+
+function install-dotnet {
+  while [ $# -ne 0 ]
+  do
+    version=$1 ; shift
+    ~/.local/opt/sbin/dotnet-install.sh --channel $version
+  done
+}
+{{ "" }}
+
 {{- range $plugin, $spec := .tools }}
 {{-   $spec = default (dict) $spec }}
 {{-   if eq "asdf" ($spec.package_manager | default "asdf") }}
@@ -38,31 +71,18 @@ function asdf-install {
 {{-   end }}
 {{- end }}
 
-{{- if eq .chezmoi.os "windows" }}
-echo TODO
-{{- else }}
+{{- template "install_tool" (dict
+      "name" "lunarvim"
+      "spec" .tools.lunarvim
+      "install" true
+      "install_command" "install-lunarvim"
+    )
+}}
 
-LVIM_CONFIG="$HOME/.config/lvim"
-LVIM_CONFIG_BACKUP="$LVIM_CONFIG.bkp"
-if [ -d "$LVIM_CONFIG" ]
-then
-  echo "Backing up $LVIM_CONFIG --> $LVIM_CONFIG_BACKUP"
-  cp -a "$LVIM_CONFIG" "$LVIM_CONFIG_BACKUP"
-fi
-
-INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .tools.lunarvim.version }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
-
-if [ -d "$LVIM_CONFIG_BACKUP" ]
-then
-  echo "Restoring $LVIM_CONFIG_BACKUP --> $LVIM_CONFIG"
-  rm -rf "$LVIM_CONFIG"
-  mv "$LVIM_CONFIG_BACKUP" "$LVIM_CONFIG"
-fi
-
-{{- end }}
-
-{{- if .devtools }}
-{{-   range (kindIs "slice" .tools.dotnet.version | ternary .tools.dotnet.version (list .tools.dotnet.version)) }}
-~/.local/opt/sbin/dotnet-install.sh --channel {{ . }}
-{{-   end}}
-{{- end}}
+{{- template "install_tool" (dict
+      "name" "dotnet"
+      "spec" .tools.dotnet
+      "install" .devtools
+      "install_command" (cat "install-dotnet" (kindIs "slice" .tools.dotnet.version | ternary (.tools.dotnet.version | join " ") .tools.dotnet.version))
+    )
+}}
