@@ -1,6 +1,6 @@
 chezmoi:template:missing-key=zero
-{{- if .install }}
 {{-   $spec := default (dict) .spec }}
+{{- if .install }}
 {{-   $has_all_deps := true }}
 {{-   range default (list) $spec.dependencies }}
 {{-     $has_all_deps = and $has_all_deps (lookPath . ) }}
@@ -9,15 +9,19 @@ chezmoi:template:missing-key=zero
 {{-     if $spec.dependency_check }}
 if {{ $spec.dependency_check }} ; then {{ "" }}
 {{-     end }}
-{{-     default "false" .install_command }}
+{{-     default "false" .install_command }} || FAILED_TOOLS="$FAILED_TOOLS"$'\n'"{{ .name }} install failed with code $?."$'\n'
 {{-     if $spec.dependency_check }}
-else echo "Dependency check for {{ .name }} failed." >&2
+else
+  msg=$'\n'"Dependency check for '{{ $spec.dependency_check }}' {{ .name }} failed."$'\n'"Install dependencies and run update-tools."$'\n'
+  echo "$msg" >&2
+  FAILED_TOOLS="$FAILED_TOOLS$msg"
 fi
 {{-     end }}
 {{-   else }}
-echo "Skipping {{ .name }} due to missing dependencies." >&2
-echo "{{ .name }} dependencies: {{ $spec.dependencies | join ", " }}" >&2
+msg=$'\n'"Skipping {{ .name }} due to missing dependencies."$'\n'"{{ .name }} dependencies: {{ $spec.dependencies | join ", " }}"$'\n'"Install dependencies and run chezmoi apply."$'\n'
+echo "$msg" >&2
+FAILED_TOOLS="$FAILED_TOOLS$msg"
 {{-   end }}
-{{- else }}
+{{- else}}
 {{    default "" .remove_command }}
 {{- end }}

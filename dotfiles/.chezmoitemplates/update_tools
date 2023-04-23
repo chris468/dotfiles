@@ -1,12 +1,15 @@
 chezmoi:template:missing-key=zero
 #!/usr/bin/env bash
 
+FAILED_TOOLS=
+
 if ! command -v asdf &>/dev/null
 then
   . ~/.asdf/asdf.sh
 fi
 
 function asdf-install {
+  set -e
   name=$1 ; shift
   repo=$1 ; shift
   default_version=$1
@@ -23,6 +26,7 @@ function asdf-install {
 }
 
 function install-lunarvim {
+  set -e
 {{- if eq .chezmoi.os "windows" }}
   echo TODO
 {{- else }}
@@ -47,6 +51,7 @@ function install-lunarvim {
 }
 
 function install-dotnet {
+  set -e
   while [ $# -ne 0 ]
   do
     version=$1 ; shift
@@ -86,3 +91,9 @@ function install-dotnet {
       "install_command" (cat "install-dotnet" (kindIs "slice" .tools.dotnet.version | ternary (.tools.dotnet.version | join " ") .tools.dotnet.version))
     )
 }}
+
+if [ -n "$FAILED_TOOLS" ]
+then
+  echo $'\n'"Some tools were not installed due to missing dependencies or errors:"$'\n'"$FAILED_TOOLS" >&2
+fi
+

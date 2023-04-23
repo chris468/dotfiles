@@ -36,7 +36,7 @@ tools:
     group: devtools
     dependencies:
       - pip3
-    dependency_check: pip3 show virtualenv
+    dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
   github-cli:
     group: devtools
   helm:
