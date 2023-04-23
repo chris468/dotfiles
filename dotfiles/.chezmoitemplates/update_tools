@@ -1,6 +1,9 @@
 chezmoi:template:missing-key=zero
 #!/usr/bin/env bash
 
+# For first install, ensure that the paths are set.
+. ~/.config/bash/bashrc.d/50-environment.bash
+
 FAILED_TOOLS=
 
 if ! command -v asdf &>/dev/null

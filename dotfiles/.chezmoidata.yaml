@@ -46,3 +46,28 @@ tools:
     repo: "https://github.com/looztra/asdf-k9s"
   kubectl:
     group: devtools
+
+environment:
+  - name: AWS_PROFILE
+    action: unset
+  - name: KUBECONFIG
+    action: unset
+  - name: GPG_TTY
+    action: command
+    value: tty
+  - name: IPYTHONDIR
+    value: "$HOME/.config/ipython"
+  - name: LOCAL_INSTALL_DIR
+    value: "$HOME/.local/opt"
+    export: false
+  - name: DOTNET_ROOT
+    value: "$LOCAL_INSTALL_DIR/dotnet"
+  - name: DOTNET_INSTALL_DIR
+    value: "$DOTNET_ROOT"
+  - name: PATH 
+    action: prepend
+    value:
+      - "$HOME/.local/bin"
+      - "$HOME/.dotnet/tools"
+      - "$DOTNET_INSTALL_DIR"
+      - "$LOCAL_INSTALL_DIR/bin"

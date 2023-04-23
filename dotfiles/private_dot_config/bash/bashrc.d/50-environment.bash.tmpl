@@ -1,0 +1,29 @@
+chezmoi:template:missing-key=zero
+
+function __prepend_environment {
+  name="$1"
+  val="$2"
+  export="$3"
+
+  case "$(eval "echo \$$name")" in
+    *$val:*) true ;;
+    *) eval "$export$name=\"$val:\$$name\"" ;;
+  esac
+}
+
+{{- range $i, $e := .environment }}
+
+{{- if not .name }}
+{{-   fail (list ".environment[" $i "] is missing required key `name`." | join "") }}
+{{- end }}
+
+{{-   if eq "set" (.action | default "set") }}
+{{ (eq .export nil | ternary true .export) | ternary "export " "" }}{{ .name }}={{ .value }}
+{{-   else if eq "unset" .action }}
+unset {{ .name }}
+{{-   else if eq "prepend" .action }}
+{{-     range (kindIs "slice" $e.value | ternary $e.value (list $e.value)) | reverse }}
+__prepend_environment {{ $e.name }} "{{ . }}" '{{ (eq $e.export nil | ternary true $e.export) | ternary "export " "" }}'
+{{-     end }}
+{{-   end }}
+{{- end}}

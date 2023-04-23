@@ -1,6 +1,3 @@
-DOTNET_INSTALL_PATH="$LOCAL_OPT/dotnet"
-prepend-path "$HOME/.dotnet/tools"
-
 function _dotnet_bash_complete()
 {
   local cur="${COMP_WORDS[COMP_CWORD]}" IFS=$'\n'
