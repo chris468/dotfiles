@@ -1,0 +1,18 @@
+{{- if lookPath "yadm" -}}
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+YADMREPO="$HOME/.local/share/yadm/repo.git"
+if [ -d "$YADMREPO" ]
+then
+  IFS=$'\n'
+  for f in $(yadm -C "$HOME" ls-tree --name-only -r HEAD "$HOME")
+  do
+    rm -f "$f"
+  done
+  mv "$YADMREPO" "$YADMREPO.bkp"
+fi
+
+{{- end -}}

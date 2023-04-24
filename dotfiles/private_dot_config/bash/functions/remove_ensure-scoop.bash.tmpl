@@ -1,8 +1,0 @@
-{{- if eq .chezmoi.os "windows" }}
-function ensure-scoop {
-    if ! command -v scoop &> /dev/null
-    then
-        pwsh -c "& { irm get.scoop.sh | iex }"
-    fi
-}
-{{- end }}
