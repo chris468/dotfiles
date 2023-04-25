@@ -1,7 +1,5 @@
 #!/bin/bash
 
-exit
-
 auto_update_log_dir=~/.cache/yadm/auto-update
 auto_update_status=$auto_update_log_dir/status
 auto_update_last_update=$auto_update_log_dir/last_update
@@ -15,9 +13,15 @@ function set-status {
 function update-dotfiles  {
     yadm fetch --no-prune -v
 
+    if [ "$(yadm branch --show-current)" == "main" ]
+    then
+      yadm checkout yadm/main
+    fi
+
     if yadm status -sb | grep behind ; then
         set-status "UPDATING"
         yadm pull -q --no-prune
+
         yadm bootstrap
         set-status "UPDATED"
     else
