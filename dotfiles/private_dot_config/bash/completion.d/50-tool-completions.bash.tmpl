@@ -1,0 +1,22 @@
+chezmoi:template:missing-key=zero
+function __chris468_load_completion {
+  local fn
+  fn="__chris468_complete_$1"
+  if command -v "$fn" &> /dev/null
+  then
+    "$fn" &> /dev/null && return 124
+  fi
+}
+
+{{- range $name, $tool := .tools }}
+{{-   if and (ne nil .completion) (or (not .group) (index $ .group)) }}
+
+# Completion for {{ $name }}
+{{-   $binary := .completion.binary | default (.completion.command | split " ")._0 }}
+{{-   $eval := or (eq nil .completion.eval) .completion.eval }}
+function __chris468_complete_{{ $name }} {
+  {{ if $eval }}eval "$({{ end }}{{ .completion.command | replace "SHELL" "bash" }}{{ if $eval }})"{{ end }} && return 124
+}
+complete -o bashdefault -o default -F __chris468_complete_{{ $name }} {{ $name }}
+{{-   end }}
+{{- end }}
