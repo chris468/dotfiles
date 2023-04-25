@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# for f in ~/.config/bash/completions/*.bash
-# do
-#     . "$f"
-# done
+for f in ~/.config/bash/completions/*.bash
+do
+    . "$f"
+done

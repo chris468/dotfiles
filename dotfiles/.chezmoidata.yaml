@@ -19,6 +19,8 @@ tools:
     version: "fc6873809934917b470bff1b072171879899a36b"
     package_manager: script
   chezmoi:
+    completion:
+      command: chezmoi completion SHELL
   neovim:
     version: 
       - "latest:0.8"
@@ -32,6 +34,10 @@ tools:
     dependencies:
       - unzip
       - pip3
+    completion:
+      command: complete -C aws_completer aws
+      binary: aws_completer
+      eval: false
   azure-cli:
     group: devtools
     dependencies:
@@ -39,13 +45,19 @@ tools:
     dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
   github-cli:
     group: devtools
+    completion:
+      command: gh completion --shell SHELL
   helm:
     group: devtools
+    completion:
+      command: helm completion SHELL
   k9s:
     group: devtools
     repo: "https://github.com/looztra/asdf-k9s"
   kubectl:
     group: devtools
+    completion:
+      command: kubectl completion SHELL
 
 environment:
   - name: AWS_PROFILE
