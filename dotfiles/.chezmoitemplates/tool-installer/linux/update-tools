@@ -68,7 +68,7 @@ function install-dotnet {
 {{-   if eq "asdf" ($spec.package_manager | default "asdf") }}
 {{-     $versions := $spec.version | default "latest" }}
 {{-     $versions = kindIs "slice" $versions | ternary ($versions | join " ") $versions }}
-{{-     template "install_tool" (dict
+{{-     template "tool-installer/linux/install-tool" (dict
           "name" $plugin
           "spec" $spec
           "install" (or (not $spec.group) (index $ $spec.group))
@@ -79,7 +79,7 @@ function install-dotnet {
 {{-   end }}
 {{- end }}
 
-{{- template "install_tool" (dict
+{{- template "tool-installer/linux/install-tool" (dict
       "name" "lunarvim"
       "spec" .tools.lunarvim
       "install" true
@@ -87,7 +87,7 @@ function install-dotnet {
     )
 }}
 
-{{- template "install_tool" (dict
+{{- template "tool-installer/linux/install-tool" (dict
       "name" "dotnet"
       "spec" .tools.dotnet
       "install" .devtools
