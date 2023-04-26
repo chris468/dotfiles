@@ -2,3 +2,12 @@
 data:
   work: false #{ $work }}
   devtools: true
+{{- if eq .chezmoi.os "windows" }}
+interpreters:
+  sh:
+    command: C:\Program Files\Git\bin\bash.exe
+  ps1:
+    command: pwsh
+    args:
+      - "-NoLogo"
+{{- end  }}
