@@ -27,6 +27,11 @@ tools:
       - "latest:0.9"
   nodejs:
     version: "latest:lts"
+    completion:
+      - binary: node
+        command: node --completion-bash
+      - binary: npm
+        command: npm completion
   rust:
     version: "latest:stable"
   awscli:
@@ -35,17 +40,21 @@ tools:
       - unzip
       - pip3
     completion:
+      binary: aws
       command: complete -C aws_completer aws
-      binary: aws_completer
       eval: false
   azure-cli:
     group: devtools
     dependencies:
       - pip3
     dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
+    completion:
+      binary: az
+      command: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
   github-cli:
     group: devtools
     completion:
+      binary: gh
       command: gh completion --shell SHELL
   helm:
     group: devtools

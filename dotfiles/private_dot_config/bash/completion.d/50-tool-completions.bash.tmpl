@@ -10,13 +10,18 @@ function __chris468_load_completion {
 
 {{- range $name, $tool := .tools }}
 {{-   if and (ne nil .completion) (or (not .group) (index $ .group)) }}
+{{-     $completions := kindIs "slice" .completion | ternary .completion (list .completion) }}
 
-# Completion for {{ $name }}
-{{-   $binary := .completion.binary | default (.completion.command | split " ")._0 }}
-{{-   $eval := or (eq nil .completion.eval) .completion.eval }}
-function __chris468_complete_{{ $name }} {
-  {{ if $eval }}eval "$({{ end }}{{ .completion.command | replace "SHELL" "bash" }}{{ if $eval }})"{{ end }} && return 124
+# Completions for {{ $name }}
+{{-     range $completions }}
+{{-       $binary := .binary | default $name }}
+{{-       $eval := or (eq nil .eval) .eval }}
+# Completion for {{ $binary }}
+function __chris468_complete_{{ $binary }} {
+  {{ if $eval }}eval "$({{ end }}{{ .command | replace "SHELL" "bash" }}{{ if $eval }})"{{ end }} && return 124
 }
-complete -o bashdefault -o default -F __chris468_complete_{{ $name }} {{ $name }}
+complete -o bashdefault -o default -F __chris468_complete_{{ $binary }} {{ $binary }}
+{{ "" }}
+{{-     end }}
 {{-   end }}
 {{- end }}
