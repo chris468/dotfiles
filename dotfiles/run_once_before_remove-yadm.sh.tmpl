@@ -1,18 +1,26 @@
-{{- if lookPath "yadm" -}}
+{{- if lookPath "git" -}}
 #!/usr/bin/env bash
 
 set -e
 set -o pipefail
 
-YADMREPO="$HOME/.local/share/yadm/repo.git"
-if [ -d "$YADMREPO" ]
+YADM_ROOT="$HOME/.local/share/yadm"
+YADM_REPO="$YADM_ROOT/repo.git"
+YADM_BACKUP="$YADM_ROOT/dotfiles.bkp"
+if [ -d "$YADM_REPO" ]
 then
+  echo "Moving yadm dotfiles to $YADM_BACKUP..."
   IFS=$'\n'
-  for f in $(yadm -C "$HOME" ls-tree --name-only -r HEAD "$HOME")
+  for f in $(GIT_DIR="$YADM_REPO" git -C "$HOME" ls-tree --name-only -r HEAD "$HOME")
   do
-    rm -f "$f"
+    if [ -f "$HOME/$f" ]
+    then
+      parent="$YADM_BACKUP/$(dirname "$f")"
+      mkdir -p "$parent"
+      mv "$HOME/$f" "$YADM_BACKUP/$f"
+    fi
   done
-  mv "$YADMREPO" "$YADMREPO.bkp"
+  mv "$YADM_REPO" "$YADM_REPO.bkp"
 fi
 
 {{- end -}}
