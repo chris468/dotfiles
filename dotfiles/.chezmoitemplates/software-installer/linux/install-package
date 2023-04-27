@@ -1,5 +1,5 @@
 chezmoi:template:missing-key=zero
-{{-   $spec := default (dict) .spec }}
+{{- $spec := default (dict) .spec }}
 {{- if .install }}
 {{-   $has_all_deps := true }}
 {{-   range default (list) $spec.dependencies }}

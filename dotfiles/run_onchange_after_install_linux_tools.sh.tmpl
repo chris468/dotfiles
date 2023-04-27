@@ -1,4 +1,4 @@
 chezmoi:template:missing-key=zero
 {{- if ne .chezmoi.os "windows" }}
-{{- template "tool-installer/linux/update-tools" . }}
+{{- template "software-installer/linux/update" . }}
 {{- end }}

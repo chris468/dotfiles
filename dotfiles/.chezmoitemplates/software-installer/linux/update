@@ -1,4 +1,5 @@
 chezmoi:template:missing-key=zero
+{{- $software := (includeTemplate "software" .) | fromYaml -}}
 #!/usr/bin/env bash
 
 # For first install, ensure that the paths are set.
@@ -42,7 +43,7 @@ function install-lunarvim {
     cp -a "$LVIM_CONFIG" "$LVIM_CONFIG_BACKUP"
   fi
 
-  INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ .tools.lunarvim.version }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
+  INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ $software.lunarvim.version }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
 
   if [ -d "$LVIM_CONFIG_BACKUP" ]
   then
@@ -63,12 +64,12 @@ function install-dotnet {
 }
 {{ "" }}
 
-{{- range $plugin, $spec := .tools }}
+{{- range $plugin, $spec := $software }}
 {{-   $spec = default (dict) $spec }}
 {{-   if eq "asdf" ($spec.package_manager | default "asdf") }}
 {{-     $versions := $spec.version | default "latest" }}
 {{-     $versions = kindIs "slice" $versions | ternary ($versions | join " ") $versions }}
-{{-     template "tool-installer/linux/install-tool" (dict
+{{-     template "software-installer/linux/install-package" (dict
           "name" $plugin
           "spec" $spec
           "install" (or (not $spec.group) (index $ $spec.group))
@@ -79,19 +80,19 @@ function install-dotnet {
 {{-   end }}
 {{- end }}
 
-{{- template "tool-installer/linux/install-tool" (dict
+{{- template "software-installer/linux/install-package" (dict
       "name" "lunarvim"
-      "spec" .tools.lunarvim
+      "spec" $software.lunarvim
       "install" true
       "install_command" "install-lunarvim"
     )
 }}
 
-{{- template "tool-installer/linux/install-tool" (dict
+{{- template "software-installer/linux/install-package" (dict
       "name" "dotnet"
-      "spec" .tools.dotnet
+      "spec" $software.dotnet
       "install" .devtools
-      "install_command" (cat "install-dotnet" (kindIs "slice" .tools.dotnet.version | ternary (.tools.dotnet.version | join " ") .tools.dotnet.version))
+      "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join " ") $software.dotnet.version))
     )
 }}
 
