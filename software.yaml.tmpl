@@ -1,67 +1,93 @@
 asdf:
   version: "v0.11.3"
   package_manager: external
+
 oh_my_posh:
   version: "14.26.0"
   package_manager: external
+
 dotnet:
   version: 
     - LTS
     - STS
   package_manager: script
+
 lunarvim:
   version: "release-1.2/neovim-0.8"
   package_manager: script
+{{- if ne "windows" .chezmoi.os }}
   dependencies:
     - pip3
+{{- end }}
+
 lunarvim_installer:
   version: "fc6873809934917b470bff1b072171879899a36b"
   package_manager: script
+
 chezmoi:
   completion:
     command: chezmoi completion SHELL
+
 neovim:
   version: 
-    - "latest:0.8"
-    - "latest:0.9"
+    - "0.8.3"
+    - "latest"
+
+{{- if eq "windows" .chezmoi.os }}
+nodejs-lts:
+{{- else }}
 nodejs:
   version: "latest:lts"
+{{- end }}
   completion:
     - binary: node
       command: node --completion-bash
     - binary: npm
       command: npm completion
+
 rust:
+{{- if ne "windows" .chezmoi.os }}
   version: "latest:stable"
+{{- end }}
+
 awscli:
   group: devtools
+{{- if ne "windows" .chezmoi.os }}
   dependencies:
     - unzip
     - pip3
+{{- end }}
   completion:
     binary: aws
     command: complete -C aws_completer aws
     eval: false
+
 azure-cli:
   group: devtools
+{{- if ne "windows" .chezmoi.os}}
   dependencies:
     - pip3
+{{- end }}
   dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
   completion:
     binary: az
     command: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
+
 github-cli:
   group: devtools
   completion:
     binary: gh
     command: gh completion --shell SHELL
+
 helm:
   group: devtools
   completion:
     command: helm completion SHELL
+
 k9s:
   group: devtools
   repo: "https://github.com/looztra/asdf-k9s"
+
 kubectl:
   group: devtools
   completion:
