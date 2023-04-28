@@ -1,3 +1,4 @@
+{{- $script_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" -}}
 {{- $software := (includeTemplate "software" .) | fromYaml -}}
 ".config/bash/bashrc.d/dracula-theme.bash":
   type: file
@@ -20,17 +21,16 @@
       - "{{ $software.asdf.version }}"
 {{- end }}
 
-{{- $lunarvim_installer_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" }}
-".local/opt/sbin/install-lunarvim{{ $lunarvim_installer_ext }}":
+".local/opt/sbin/install-lunarvim{{ $script_ext }}":
   type: file
-  url: "https://raw.githubusercontent.com/lunarvim/lunarvim/{{ default $software.lunarvim.version  (index $software "lunarvim_installer").version }}/utils/installer/install{{ $lunarvim_installer_ext }}"
+  url: "https://raw.githubusercontent.com/lunarvim/lunarvim/{{ default $software.lunarvim.version  (index $software "lunarvim_installer").version }}/utils/installer/install{{ $script_ext }}"
   executable: true
   refreshPeriod: "168h"
 
 {{- if .devtools }}
-".local/opt/sbin/dotnet-install.sh":
+".local/opt/sbin/dotnet-install{{ $script_ext }}":
   type: file
-  url: "https://dot.net/v1/dotnet-install.sh"
+  url: "https://dot.net/v1/dotnet-install{{ $script_ext }}"
   executable: true
   refreshPeriod: "168h"
 {{- end }}

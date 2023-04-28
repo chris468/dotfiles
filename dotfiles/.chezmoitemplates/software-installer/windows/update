@@ -1,0 +1,87 @@
+chezmoi:template:missing-key=zero
+{{- $software := (includeTemplate "software" .) | fromYaml -}}
+
+$error.Clear()
+
+function script:scoop-install(
+    [string]$name,
+    [string]$bucket,
+    [string[]]$versions) {
+  if ($bucket -and !(scoop bucket list).name -contains "$bucket") {
+    scoop bucket add "$bucket"
+    if ($LASTEXITCODE) { throw "Failed to add bucket $bucket" }
+  }
+  foreach ($version in $versions) {
+    scoop install "$name$version"
+    if ($LASTEXITCODE) { Write-Error "Failed to install $name$version" }
+  }
+
+  scoop reset $name$versions[0]
+  if ($LASTEXITCODE) { Write-Error "Failed to set default to $name$versions[0]" }
+}
+
+function script:scoop-remove(
+    [string]$name,
+    [string[]]$versions) {
+  foreach ($version in $versions) {
+    scoop uninstall "$name$version"
+    if ($LASTEXITCODE) { Write-Error "Failed to remove $name$version" }
+  }
+}
+
+function install-lunarvim {
+  echo TODO
+}
+
+function install-dotnet([string[]]$versions) {
+  foreach ($version in $versions) {
+    & "$HOME/.local/opt/sbin/dotnet-install.ps1" -Channel $version
+  }
+}
+{{ "" }}
+
+if (!(Get-Command scoop 2>&1 | Out-Null)) {
+  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+  Invoke-RestMethod https://get.scoop.sh | Invoke-Expression
+}
+
+{{ "" }}
+{{- range $plugin, $spec := $software }}
+{{-   $spec = default (dict) $spec }}
+{{-   if eq "asdf" ($spec.package_manager | default "asdf") }}
+{{-     $raw_versions := $spec.version | default (list "latest") }}
+{{-     $raw_versions = kindIs "slice" $raw_versions | ternary $raw_versions (list $raw_versions) }}
+{{-     $versions := (list) }}
+{{-     range $raw_versions }}{{ $versions = ((eq . "latest" | ternary "" (join "" (list "@" .))) | squote | append $versions) }}{{ end }}
+{{     template "software-installer/windows/install-package" (dict
+          "name" $plugin
+          "spec" $spec
+          "install" (or (not $spec.group) (index $ $spec.group))
+          "install_command" (cat "scoop-install" "-name" $plugin "-bucket" ($spec.repo | default "" | squote) "-versions" ($versions | join ","))
+          "remove_command" (cat "scoop-remove" "-name" $plugin "-versions" ($versions | join ","))
+        )
+}}
+{{-   end }}
+{{- end }}
+{{ template "software-installer/windows/install-package" (dict
+      "name" "lunarvim"
+      "spec" $software.lunarvim
+      "install" true
+      "install_command" "install-lunarvim"
+    )
+}}
+{{ template "software-installer/windows/install-package" (dict
+      "name" "dotnet"
+      "spec" $software.dotnet
+      "install" .devtools
+      "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join " ") $software.dotnet.version))
+    )
+}}
+
+if ($error.Count) {
+    Write-Output "Install failed:"
+    for ($i = $error.Count - 1; $i -ge 0; $i--) {
+      Write-Output $error[$i]
+    }
+    exit 1
+}

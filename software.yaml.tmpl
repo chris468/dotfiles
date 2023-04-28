@@ -67,8 +67,8 @@ azure-cli:
 {{- if ne "windows" .chezmoi.os}}
   dependencies:
     - pip3
-{{- end }}
   dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
+{{- end }}
   completion:
     binary: az
     command: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
