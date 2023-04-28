@@ -1,0 +1,28 @@
+chezmoi:template:missing-key=zero
+
+function Script:Prepend-Environment(
+      [string]$name,
+      [string]$value)
+{
+    $current=[Environment]::GetEnvironmentVariable($name)
+    if (!($current -contains "$value;")) {
+        [Environment]::SetEnvironmentVariable($name, "$value;$current")
+    }
+}
+
+{{- range $i, $e := .environment }}
+
+{{-   if not .name }}
+{{-     fail (list ".environment[" $i "] is missing required key `name`." | join "") }}
+{{-   end }}
+
+{{-   if eq "set" (.action | default "set") }}
+[Environment]::SetEnvironmentVariable({{ .name | quote }}, {{ .value | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }})
+{{-   else if eq "unset" .action }}
+[Environment]::SetEnvironmentVariable({{ .name | quote }}, $null)
+{{-   else if eq "prepend" .action }}
+{{-     range (kindIs "slice" $e.value | ternary $e.value (list $e.value)) | reverse }}
+Prepend-Environment {{ $e.name | quote }} {{ . | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }}
+{{-     end }}
+{{-   end }}
+{{- end }}

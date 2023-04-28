@@ -1,7 +1,7 @@
 chezmoi:template:missing-key=zero
 {{- $software := (includeTemplate "software" .) | fromYaml -}}
 
-$error.Clear()
+. $HOME/.config/powershell/profile.d/20-environment.ps1
 
 function script:scoop-install(
     [string]$name,
@@ -16,7 +16,7 @@ function script:scoop-install(
     if ($LASTEXITCODE) { Write-Error "Failed to install $name$version" }
   }
 
-  scoop reset $name$versions[0]
+  scoop reset ($name + $versions[0])
   if ($LASTEXITCODE) { Write-Error "Failed to set default to $name$versions[0]" }
 }
 
@@ -40,7 +40,7 @@ function install-dotnet([string[]]$versions) {
 }
 {{ "" }}
 
-if (!(Get-Command scoop 2>&1 | Out-Null)) {
+if (!(Get-Command scoop 2>$null)) {
   Write-Host "Installing scoop..."
   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
   Invoke-RestMethod https://get.scoop.sh | Invoke-Expression
@@ -78,11 +78,3 @@ if (!(Get-Command scoop 2>&1 | Out-Null)) {
       "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join ",") $software.dotnet.version))
     )
 }}
-
-if ($error.Count) {
-    Write-Output "Install failed:"
-    for ($i = $error.Count - 1; $i -ge 0; $i--) {
-      Write-Output $error[$i]
-    }
-    exit 1
-}

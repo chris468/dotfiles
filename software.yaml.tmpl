@@ -50,7 +50,11 @@ rust:
   version: "latest:stable"
 {{- end }}
 
+{{- if eq "windows" .chezmoi.os }}
+aws:
+{{- else }}
 awscli:
+{{- end }}
   group: devtools
 {{- if ne "windows" .chezmoi.os }}
   dependencies:
@@ -73,7 +77,11 @@ azure-cli:
     binary: az
     command: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
 
+{{- if eq "windows" .chezmoi.os }}
+gh:
+{{- else }}
 github-cli:
+{{- end }}
   group: devtools
   completion:
     binary: gh

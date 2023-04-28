@@ -15,10 +15,13 @@ environment:
     value: "$LOCAL_INSTALL_DIR/dotnet"
   - name: DOTNET_INSTALL_DIR
     value: "$DOTNET_ROOT"
-  - name: PATH 
+  - name: SCOOP
+    value: "$LOCAL_INSTALL_DIR/scoop"
+  - name: PATH
     action: prepend
     value:
       - "$HOME/.local/bin"
       - "$HOME/.dotnet/tools"
-      - "$DOTNET_INSTALL_DIR"
       - "$LOCAL_INSTALL_DIR/bin"
+      - "$DOTNET_INSTALL_DIR"
+      - "$SCOOP/shims"
