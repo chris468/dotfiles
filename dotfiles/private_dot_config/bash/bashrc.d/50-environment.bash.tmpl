@@ -11,10 +11,10 @@ function __prepend_environment {
   esac
 }
 
-{{- range $i, $e := .environment }}
+{{- range $i, $e := (includeTemplate "environment" .) | fromYaml }}
 
 {{- if not .name }}
-{{-   fail (list ".environment[" $i "] is missing required key `name`." | join "") }}
+{{-   fail (list "environment[" $i "] is missing required key `name`." | join "") }}
 {{- end }}
 
 {{-   if eq "set" (.action | default "set") }}
