@@ -75,7 +75,7 @@ if (!(Get-Command scoop 2>&1 | Out-Null)) {
       "name" "dotnet"
       "spec" $software.dotnet
       "install" .devtools
-      "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join " ") $software.dotnet.version))
+      "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join ",") $software.dotnet.version))
     )
 }}
 
