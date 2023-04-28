@@ -13,15 +13,17 @@ environment:
     export: false
   - name: DOTNET_ROOT
     value: "$LOCAL_INSTALL_DIR/dotnet"
+    persist: true
   - name: DOTNET_INSTALL_DIR
     value: "$DOTNET_ROOT"
   - name: SCOOP
+    persist: true
     value: "$LOCAL_INSTALL_DIR/scoop"
   - name: PATH
     action: prepend
+    persist: true
     value:
       - "$HOME/.local/bin"
       - "$HOME/.dotnet/tools"
       - "$LOCAL_INSTALL_DIR/bin"
       - "$DOTNET_INSTALL_DIR"
-      - "$SCOOP/shims"

@@ -1,28 +1,49 @@
 chezmoi:template:missing-key=zero
 
+function Script:Get-EnvironmentVariable([string]$name, [bool]$persisted)
+{
+    $scope = if ($persisted) { "User" } else { "Process" }
+    return [Environment]::GetEnvironmentVariable($name, $scope)
+}
+
+function Script:Set-EnvironmentVariable([string]$name, [string]$value, [bool]$persisted)
+{
+    $scope = if ($persisted) { "User" } else { "Process" }
+    [Environment]::SetEnvironmentVariable($name, $value, $scope)
+}
+
 function Script:Prepend-Environment(
       [string]$name,
-      [string]$value)
+      [string]$value,
+      [bool]$persisted)
 {
-    $current=[Environment]::GetEnvironmentVariable($name)
+    $current=Get-EnvironmentVariable $name $persisted
     if (!($current -contains "$value;")) {
-        [Environment]::SetEnvironmentVariable($name, "$value;$current")
+        Set-EnvironmentVariable $name "$value;$current" $persisted
     }
 }
 
 {{- range $i, $e := .environment }}
-
 {{-   if not .name }}
 {{-     fail (list ".environment[" $i "] is missing required key `name`." | join "") }}
 {{-   end }}
 
 {{-   if eq "set" (.action | default "set") }}
-[Environment]::SetEnvironmentVariable({{ .name | quote }}, {{ .value | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }})
+Set-EnvironmentVariable {{ .name | quote }} {{ .value | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }} $false
+{{-     if .persist }}
+Set-EnvironmentVariable {{ .name | quote }} {{ .value | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }} $true
+{{-     end }}
 {{-   else if eq "unset" .action }}
-[Environment]::SetEnvironmentVariable({{ .name | quote }}, $null)
+Set-EnvironmentVariable {{ .name | quote }} $null $false
+{{-     if .persist }}
+Set-EnvironmentVariable {{ .name | quote }} $null $true
+{{-     end }}
 {{-   else if eq "prepend" .action }}
 {{-     range (kindIs "slice" $e.value | ternary $e.value (list $e.value)) | reverse }}
-Prepend-Environment {{ $e.name | quote }} {{ . | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }}
+Prepend-Environment {{ $e.name | quote }} {{ . | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }} $false
+{{-       if $e.persist }}
+Prepend-Environment {{ $e.name | quote }} {{ . | replace "$" "$env:" | replace "$env:HOME" "$HOME" | quote }} $true
+{{-       end }}
 {{-     end }}
 {{-   end }}
 {{- end }}
