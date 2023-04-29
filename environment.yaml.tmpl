@@ -6,23 +6,33 @@
   action: command
   value: tty
 - name: IPYTHONDIR
-  value: "$HOME/.config/ipython"
+  path: true
+  value: {{ joinPath .chezmoi.homeDir ".config" "ipython" }}
+{{- $localInstallDir := joinPath .chezmoi.homeDir ".local" "opt" }}
 - name: LOCAL_INSTALL_DIR
-  value: "$HOME/.local/opt"
+  path: true
+  value: {{ $localInstallDir }}
   export: false
+{{- $dotnetRoot := joinPath $localInstallDir "dotnet" }}
 - name: DOTNET_ROOT
-  value: "$LOCAL_INSTALL_DIR/dotnet"
+  path: true
+  value: {{ $dotnetRoot }}
   persist: true
 - name: DOTNET_INSTALL_DIR
-  value: "$DOTNET_ROOT"
+  path: true
+  value: {{ $dotnetRoot }}
+{{- if eq "windows" .chezmoi.os }}
 - name: SCOOP
+  path: true
   persist: true
-  value: "$LOCAL_INSTALL_DIR/scoop"
+  value: {{ joinPath $localInstallDir "scoop" }}
+{{- end }}
 - name: PATH
+  path: true
   action: prepend
   persist: true
   value:
-    - "$HOME/.local/bin"
-    - "$HOME/.dotnet/tools"
-    - "$LOCAL_INSTALL_DIR/bin"
-    - "$DOTNET_INSTALL_DIR"
+    - {{ joinPath $.chezmoi.homeDir ".local" "bin" }}
+    - {{ joinPath .chezmoi.homeDir ".dotnet" "tools" }}
+    - {{ joinPath $localInstallDir "bin" }}
+    - {{ $dotnetRoot }}
