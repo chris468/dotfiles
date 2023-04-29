@@ -1,5 +1,5 @@
 chezmoi:template:missing-key=zero
-
+{{- if eq "windows" .chezmoi.os -}}
 {{- includeTemplate "windows/set-environment" (dict
         "chezmoi" .chezmoi
         "persist" true
@@ -7,3 +7,4 @@ chezmoi:template:missing-key=zero
         "unset" "[Environment]::SetEnvironmentVariable(\"$name\", $null, \"User\")"
         "prepend" "Prepend-Environment $name $value User")
 -}}
+{{- end -}}
