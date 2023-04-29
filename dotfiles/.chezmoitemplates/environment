@@ -1,0 +1,1 @@
+{{- (includeTemplate "../environment.yaml.tmpl" .) -}}

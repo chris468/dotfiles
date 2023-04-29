@@ -1,0 +1,23 @@
+chezmoi:template:missing-key=zero
+{{- $spec := default (dict) .spec }}
+{{- if .install }}
+{{-   $has_all_deps := true }}
+{{-   range default (list) $spec.dependencies }}
+{{-     $has_all_deps = and $has_all_deps (lookPath . ) }}
+{{-   end }}
+{{-   if $has_all_deps }}
+{{-     if $spec.dependency_check }}
+try {
+  {{ $spec.dependency_check }}
+} catch {
+  Write-Error "{{ .name }} failed dependency check: $_.Exception.Message"
+  return
+}
+{{     end }}
+{{-     .install_command | default "Write-Error 'Missing install command'" }}
+{{-   else }}
+Write-Error "Skipping {{ .name }} due to missing dependencies.`nDependencies: {{ $spec.dependencies | join ", " }}`nInstall dependencies and run chezmoi apply."
+{{-   end }}
+{{- else}}
+{{    default "" .remove_command }}
+{{- end }}

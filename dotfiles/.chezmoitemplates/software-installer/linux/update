@@ -1,0 +1,103 @@
+chezmoi:template:missing-key=zero
+{{- $software := (includeTemplate "software" .) | fromYaml -}}
+#!/usr/bin/env bash
+
+# For first install, ensure that the paths are set.
+. ~/.config/bash/bashrc.d/50-environment.bash
+
+FAILED_TOOLS=
+
+if ! command -v asdf &>/dev/null
+then
+  . ~/.asdf/asdf.sh
+fi
+
+function asdf-install {
+  set -e
+  name=$1 ; shift
+  repo=$1 ; shift
+  default_version=$1
+
+  asdf plugin add $name $repo
+
+  while [ $# -ne 0 ]
+  do
+    version=$1 ; shift
+    asdf install $name $version
+  done
+
+  asdf global $name $default_version
+}
+
+function install-lunarvim {
+  set -e
+{{- if eq .chezmoi.os "windows" }}
+  echo TODO
+{{- else }}
+
+  LVIM_CONFIG="$HOME/.config/lvim"
+  LVIM_CONFIG_BACKUP="$LVIM_CONFIG.bkp"
+  if [ -d "$LVIM_CONFIG" ]
+  then
+    echo "Backing up $LVIM_CONFIG --> $LVIM_CONFIG_BACKUP"
+    cp -a "$LVIM_CONFIG" "$LVIM_CONFIG_BACKUP"
+  fi
+
+  INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ $software.lunarvim.version }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
+
+  if [ -d "$LVIM_CONFIG_BACKUP" ]
+  then
+    echo "Restoring $LVIM_CONFIG_BACKUP --> $LVIM_CONFIG"
+    rm -rf "$LVIM_CONFIG"
+    mv "$LVIM_CONFIG_BACKUP" "$LVIM_CONFIG"
+  fi
+{{- end }}
+}
+
+function install-dotnet {
+  set -e
+  while [ $# -ne 0 ]
+  do
+    version=$1 ; shift
+    ~/.local/opt/sbin/dotnet-install.sh --channel $version
+  done
+}
+{{ "" }}
+
+{{- range $plugin, $spec := $software }}
+{{-   $spec = default (dict) $spec }}
+{{-   if eq "asdf" ($spec.package_manager | default "asdf") }}
+{{-     $versions := $spec.version | default "latest" }}
+{{-     $versions = kindIs "slice" $versions | ternary ($versions | join " ") $versions }}
+{{-     template "software-installer/linux/install-package" (dict
+          "name" $plugin
+          "spec" $spec
+          "install" (or (not $spec.group) (index $ $spec.group))
+          "install_command" (cat "asdf-install" $plugin ($spec.repo | default "" | squote) $versions)
+          "remove_command" (cat "asdf plugin remove" $plugin)
+        )
+}}
+{{-   end }}
+{{- end }}
+
+{{- template "software-installer/linux/install-package" (dict
+      "name" "lunarvim"
+      "spec" $software.lunarvim
+      "install" true
+      "install_command" "install-lunarvim"
+    )
+}}
+
+{{- template "software-installer/linux/install-package" (dict
+      "name" "dotnet"
+      "spec" $software.dotnet
+      "install" .devtools
+      "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join " ") $software.dotnet.version))
+    )
+}}
+
+if [ -n "$FAILED_TOOLS" ]
+then
+  echo $'\n'"Some tools were not installed due to missing dependencies or errors:"$'\n'"$FAILED_TOOLS" >&2
+fi
+

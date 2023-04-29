@@ -1,0 +1,5 @@
+{{- if eq "windows" (0 | index .).chezmoi.os -}}
+{{- 1 | index . | replace "\\" "/" -}}
+{{- else -}}
+{{ 1 | index . }}
+{{- end -}}

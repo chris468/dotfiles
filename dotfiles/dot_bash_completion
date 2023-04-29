@@ -1,0 +1,5 @@
+for f in ~/.config/bash/completion.d/*.bash 
+do
+    . $f
+done
+

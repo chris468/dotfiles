@@ -1,0 +1,14 @@
+*.priv.*
+{{- if eq .chezmoi.os "windows" }}
+private_dot_config/powershell/
+{{- else }}
+Documents/
+AppData/
+.vsvimrc
+_vimrc
+vimfiles
+{{- end }}
+
+{{- if not .work }}
+.vim/plugin/work.vim
+{{- end }}
