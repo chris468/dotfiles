@@ -9,16 +9,6 @@ function Configure-Prompt {
         }
     }
 
-    function Install-Dependencies {
-        # start a login shell to cause bash to install/update yadm and oh-my-posh
-        Start-Job -Name Install-Dependencies -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' --login -c "export MSYS=winsymlinks:nativestrict && echo" } > $null | Wait-Job
-    }
-
-    function AutoUpdate-Dotfiles {
-        Start-Job -Name AutoUpdate-Dotfiles -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh -reset" } > $null | Wait-Job
-        Start-Job -Name AutoUpdate-Dotfiles -ScriptBlock { & 'C:\Program Files\Git\bin\bash.exe' -c "export MSYS=winsymlinks:nativestrict && ~/.config/yadm/scripts/auto-update.sh" } > $null
-    }
-
     function Initialize-InteractiveSession {
 
         function Configure-PSReadline {
@@ -30,9 +20,7 @@ function Configure-Prompt {
         if (! $global:InteractiveSession ) {
             $global:InteractiveSession = $true
 
-            Install-Dependencies
             Configure-PSReadLine
-            AutoUpdate-Dotfiles
         }
     }
 
@@ -46,14 +34,6 @@ function Configure-Prompt {
     [ScriptBlock]$PromptWrapper = {
 
         Initialize-InteractiveSession
-        $auto_update_status="~/.cache/yadm/auto-update/status.log"
-        if (Test-Path "$auto_update_status") {
-            $env:YADM_AUTO_UPDATE_STATUS=$(Get-Content "$auto_update_status")
-        }
-        else {
-            Remove-Item env:YADM_AUTO_UPDATE_STATUS
-        }
-
         $(OhMyPoshPrompt)
     }
 
