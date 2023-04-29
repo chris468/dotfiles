@@ -22,19 +22,9 @@ function Script:Prepend-Environment(
     }
 }
 
-{{- range $i, $e := (includeTemplate "environment" .) | fromYaml }}
-{{-   if true }}
-{{-     if not .name }}
-{{-       fail (list "environment[" $i "] is missing required key `name`." | join "") }}
-{{-     end }}
-
-{{-     if eq "set" (.action | default "set") }}
-$env:{{ .name }}="{{ .value | replace "$" "$env:" | replace "$env:HOME" "$HOME" }}"
-{{-     else if eq "unset" .action }}
-Remove-Item Env:\{{ .name }} 2>&1 | Out-Null
-{{-     else if eq "prepend" .action }}
-{{-       $valueList := .value | kindIs "slice" | ternary .value (list .value) | reverse }}
-Prepend-Environment "{{ $e.name }}" "{{$valueList | first }}"{{ range $valueList | rest}},"{{ . }}"{{ end }}
-{{-     end }}
-{{-   end }}
-{{- end }}
+{{- includeTemplate "windows/set-environment" (dict
+        "chezmoi" .chezmoi
+        "set" "$env:$name=\"$value\""
+        "unset" "Remove-Item Env:\\$name 2>&1 | Out-Null"
+        "prepend" "Prepend-Environment $name $value")
+-}}

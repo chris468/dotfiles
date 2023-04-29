@@ -1,0 +1,18 @@
+chezmoi:template:missing-key=zero
+{{- range $i, $e := (includeTemplate "environment" .) | fromYaml }}
+{{-   if eq .persist $.persist }}
+{{-     if not .name }}
+{{-       fail (list "environment[" $i "] is missing required key `name`." | join "") }}
+{{-     end }}
+
+{{-     if eq "set" (.action | default "set") }}
+{{ $.set | replace "$name" .name | replace "$value" .value }}
+{{-     else if eq "unset" .action }}
+{{ $.unset | replace "$name" .name | replace "$value" (.value | default "") }}
+{{-     else if eq "prepend" .action }}
+{{-       $valueList := .value | kindIs "slice" | ternary .value (list .value) | reverse }}
+{{ $.prepend | replace "$name" .name | replace "$value" (includeTemplate "windows/toPwshArray" $valueList) }}
+{{-     end }}
+{{-   end }}
+{{- end }}
+
