@@ -1,6 +1,30 @@
 chezmoi:template:missing-key=zero
+
+function Script:Prepend-Environment(
+      [string]$name,
+      [string[]]$values,
+      [string]$scope="Process")
+{
+    $original=[Environment]::GetEnvironmentVariable($name, $scope)
+    $originalNormalized=@()
+    foreach ($p in $original -split ";") {
+        $originalNormalized += $p.ToUpper() -replace "/","\"
+    }
+
+    $prepend=""
+    foreach ($p in $values) {
+        if ($originalNormalized -notcontains ($p.ToUpper() -replace "/","\")) {
+            $prepend += "$p;"
+        }
+    }
+
+    if ($prepend) {
+        [Environment]::SetEnvironmentVariable($name, "$prepend$original", $scope)
+    }
+}
+
 {{- range $i, $e := (includeTemplate "environment" .) | fromYaml }}
-{{-   if eq .persist $.persist }}
+{{-   if eq (.persist | default false) $.persist }}
 {{-     if not .name }}
 {{-       fail (list "environment[" $i "] is missing required key `name`." | join "") }}
 {{-     end }}

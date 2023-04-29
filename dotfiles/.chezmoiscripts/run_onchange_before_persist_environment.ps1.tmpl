@@ -1,0 +1,9 @@
+chezmoi:template:missing-key=zero
+
+{{- includeTemplate "windows/set-environment" (dict
+        "chezmoi" .chezmoi
+        "persist" true
+        "set" "[Environment]::SetEnvironmentVariable(\"$name\", \"$value\", \"User\")"
+        "unset" "[Environment]::SetEnvironmentVariable(\"$name\", $null, \"User\")"
+        "prepend" "Prepend-Environment $name $value User")
+-}}
