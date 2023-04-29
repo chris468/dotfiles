@@ -27,7 +27,7 @@ function Configure-Prompt {
     # oh my posh replaces the prompt function. To be able to make sure Initialize-InteractiveSession,
     # configure the posh prompt inside the initial prompt function.
     $theme = "$config_dir/oh-my-posh/current-theme.omp.json"
-    oh-my-posh --init --shell pwsh --config $theme | Invoke-Expression
+    oh-my-posh init pwsh --config $theme | Invoke-Expression
 
     Set-Item function:OhMyPoshPrompt (Get-Item function:Prompt).ScriptBlock -Force
 
