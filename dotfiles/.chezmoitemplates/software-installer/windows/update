@@ -63,6 +63,7 @@ if (!(Get-Command scoop 2>$null)) {
         )
 }}
 {{-   end }}
+{{-   includeTemplate "software-installer/generate-completion" (dict "chezmoi" $.chezmoi "spec" $spec) }}
 {{- end }}
 {{ template "software-installer/windows/install-package" (dict
       "name" "lunarvim"
