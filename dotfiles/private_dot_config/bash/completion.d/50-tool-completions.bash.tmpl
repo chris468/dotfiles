@@ -8,9 +8,11 @@ function __chris468_load_completion {
   fi
 }
 
-{{- range $name, $tool := .tools }}
-{{-   if and (ne nil .completion) (or (not .group) (index $ .group)) }}
-{{-     $completions := kindIs "slice" .completion | ternary .completion (list .completion) }}
+{{- $software := (includeTemplate "software" .) | fromYaml -}}
+{{- range $name, $t := $software }}
+{{-   $tool := $t | default (dict) }}
+{{-   if and (ne nil $tool.completion) (or (not $tool.group) (index $ $tool.group)) }}
+{{-     $completions := kindIs "slice" $tool.completion | ternary $tool.completion (list $tool.completion) }}
 
 # Completions for {{ $name }}
 {{-     range $completions }}
@@ -18,7 +20,7 @@ function __chris468_load_completion {
 {{-       $eval := or (eq nil .eval) .eval }}
 # Completion for {{ $binary }}
 function __chris468_complete_{{ $binary }} {
-  {{ if $eval }}eval "$({{ end }}{{ .command | replace "SHELL" "bash" }}{{ if $eval }})"{{ end }} && return 124
+  {{ if $eval }}eval "$({{ end }}{{ .command | replace "SHELL" "bash" }}{{ if $eval }})"{{ end }} && return 125
 }
 complete -o bashdefault -o default -F __chris468_complete_{{ $binary }} {{ $binary }}
 {{ "" }}
