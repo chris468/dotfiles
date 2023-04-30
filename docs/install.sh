@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 sh -c "$(curl -fsLS get.chezmoi.io)" -- \
-    -b $(mktemp -d /tmp/bootstrap-dotfiles-XXX) \
+    -b $HOME/.local/opt/bin \
     init --apply chris468 \
     "$@"
