@@ -1,3 +1,4 @@
+chezmoi:template:missing-key=zero
 {{- $script_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" -}}
 {{- $software := (includeTemplate "software" .) | fromYaml -}}
 ".config/bash/bashrc.d/dracula-theme.bash":
@@ -5,12 +6,22 @@
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
   refreshPeriod: "672h"
 
-{{- if ne .chezmoi.os "windows" }}
-".local/opt/bin/oh-my-posh":
+{{- $posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
+{{- $posh_filename := (list "posh-" .chezmoi.os "-" .chezmoi.arch $posh_ext) | join "" }}
+{{- $posh_version := $software.oh_my_posh.version | default "latest" }}
+{{- $posh_url_base := "https://github.com/JanDeDobbeleer/oh-my-posh/releases" }}
+{{- $posh_url_path := eq $posh_version "latest"
+                      | ternary
+                        "latest/download"
+                        ((list "download/v" $posh_version) | join "")
+}}
+".local/opt/bin/oh-my-posh{{ $posh_ext }}":
   type: file
-  url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ $software.oh_my_posh.version }}/posh-{{ .chezmoi.os }}-{{ .chezmoi.arch }}"
+  url: "{{ $posh_url_base }}/{{ $posh_url_path }}/{{ $posh_filename }}"
   executable: true
+  refreshPeriod: "168h"
 
+{{- if ne .chezmoi.os "windows" }}
 ".asdf":
   type: git-repo
   url: "https://github.com/asdf-vm/asdf.git"

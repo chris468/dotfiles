@@ -2,17 +2,11 @@ asdf:
   version: "v0.11.3"
   package_manager: external
 
-{{- if eq "windows" .chezmoi.os }}
-oh-my-posh:
-  completion:
-    command: oh-my-posh completion SHELL
-{{- else }}
-  version: "14.26.0"
+oh_my_posh:
   package_manager: external
-{{- end }}
 
 dotnet:
-  version:
+  version: 
     - LTS
     - STS
   package_manager: script
@@ -34,7 +28,7 @@ chezmoi:
     command: chezmoi completion SHELL
 
 neovim:
-  version:
+  version: 
     - "0.8.3"
     - "latest"
 
