@@ -5,13 +5,12 @@
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
   refreshPeriod: "672h"
 
-{{- $oh_my_posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
-".local/opt/bin/oh-my-posh{{ $oh_my_posh_ext }}":
+{{- if ne .chezmoi.os "windows" }}
+".local/opt/bin/oh-my-posh":
   type: file
-  url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ $software.oh_my_posh.version }}/posh-{{ .chezmoi.os }}-{{ .chezmoi.arch }}{{ $oh_my_posh_ext }}"
+  url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ $software.oh_my_posh.version }}/posh-{{ .chezmoi.os }}-{{ .chezmoi.arch }}"
   executable: true
 
-{{- if ne .chezmoi.os "windows" }}
 ".asdf":
   type: git-repo
   url: "https://github.com/asdf-vm/asdf.git"
