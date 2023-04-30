@@ -78,6 +78,7 @@ function install-dotnet {
         )
 }}
 {{-   end }}
+{{-   includeTemplate "software-installer/generate-completion" (dict "chezmoi" $.chezmoi "spec" $spec) }}
 {{- end }}
 
 {{- template "software-installer/linux/install-package" (dict

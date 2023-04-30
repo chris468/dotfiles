@@ -1,0 +1,20 @@
+{{- if eq "windows" .chezmoi.os -}}
+#!/usr/bin/env bash
+
+# Git bash doesn't automatically source these
+
+if [ -f "$HOME/.bash_completion" ]
+then
+    . "$HOME/.bash_completion"
+fi
+
+__chris468_completions="$HOME/.local/share/bash-completion/completions"
+
+for f in $(find $__chris468_completions -type f)
+do
+    . $f
+done
+
+unset __chris468_completions
+
+{{- end -}}
