@@ -40,8 +40,10 @@ nodejs:
   version: "latest:lts"
 {{- end }}
   completions:
-    node: node --completion-bash
-    npm: npm completion
+    node:
+      bash: node --completion-bash
+    npm:
+      bash: npm completion
 
 rust:
 {{- if ne "windows" .chezmoi.os }}
@@ -68,7 +70,14 @@ azure-cli:
   dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
 {{- end }}
   completions:
-    az: echo $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
+    az:
+{{- if eq "windows" .chezmoi.os }}
+{{-   $azRoot := joinPath "$env:SCOOP" "apps" "azure-cli" "current" }}
+      bash: |-
+        & {{ joinPath $azRoot "python.exe" }} {{ joinPath $azRoot "scripts" "register-python-argcomplete" }} az
+{{- else }}
+      bash: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
+{{- end }}
 
 {{- if eq "windows" .chezmoi.os }}
 gh:
