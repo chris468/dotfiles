@@ -1,5 +1,9 @@
-for f in ~/.config/bash/completion.d/*.bash 
-do
-    . $f
-done
-
+__chris468_completions_dir=~/.config/bash/completions.d
+if [ -d $__chris468_completions_dir ]
+then
+  for f in $(find $__chris468_completions_dir -iname "*.bash")
+  do
+      . $f
+  done
+fi
+unset __chris468_completions_dir
