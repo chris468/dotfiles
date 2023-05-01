@@ -13,7 +13,7 @@ then
   IFS=$'\n'
   for f in $(GIT_DIR="$YADM_REPO" git -C "$HOME" ls-tree --name-only -r HEAD "$HOME")
   do
-    if [ -f "$HOME/$f" ]
+    if [ -f "$HOME/$f" ] || [ -L "$HOME/$f" ]
     then
       parent="$YADM_BACKUP/$(dirname "$f")"
       mkdir -p "$parent"
