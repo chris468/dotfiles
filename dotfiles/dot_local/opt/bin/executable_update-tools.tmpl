@@ -1,6 +1,6 @@
 chezmoi:template:missing-key=zero
 {{- if ne .chezmoi.os "windows" -}}
-{{- template "software-installer/linux/update" . -}}
+{{- template "software-installer/install" . -}}
 {{- else -}}
 #!/usr/bin/env bash
 pwsh -NoLogo $HOME/.local/opt/bin/update-tools.ps1

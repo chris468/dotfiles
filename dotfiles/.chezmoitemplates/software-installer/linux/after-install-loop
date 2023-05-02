@@ -1,0 +1,23 @@
+chezmoi:template:missing-key=zero
+{{- $software := (includeTemplate "software" .) | fromYaml }}
+{{- includeTemplate "software-installer/linux/install-package" (dict
+      "name" "lunarvim"
+      "spec" $software.lunarvim
+      "install" true
+      "install_command" "install-lunarvim"
+    )
+}}
+
+{{- includeTemplate "software-installer/linux/install-package" (dict
+      "name" "dotnet"
+      "spec" $software.dotnet
+      "install" .devtools
+      "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join " ") $software.dotnet.version))
+    )
+}}
+
+if [ -n "$FAILED_TOOLS" ]
+then
+  echo $'\n'"Some tools were not installed due to missing dependencies or errors:"$'\n'"$FAILED_TOOLS" >&2
+fi
+

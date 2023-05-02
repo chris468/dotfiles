@@ -1,0 +1,38 @@
+chezmoi:template:missing-key=zero
+. $HOME/.config/powershell/profile.d/20-environment.ps1
+
+function script:scoop-install(
+    [string]$name,
+    [string]$bucket,
+    [string[]]$versions) {
+  if ($bucket -and !(scoop bucket list).name -contains "$bucket") {
+    scoop bucket add "$bucket"
+    if ($LASTEXITCODE) { throw "Failed to add bucket $bucket" }
+  }
+  foreach ($version in $versions) {
+    scoop install "$name$version"
+    if ($LASTEXITCODE) { Write-Error "Failed to install $name$version" }
+  }
+
+  scoop reset ($name + $versions[0])
+  if ($LASTEXITCODE) { Write-Error "Failed to set default to $name$versions[0]" }
+}
+
+function script:scoop-remove(
+    [string]$name,
+    [string[]]$versions) {
+  foreach ($version in $versions) {
+    scoop uninstall "$name$version"
+    if ($LASTEXITCODE) { Write-Error "Failed to remove $name$version" }
+  }
+}
+
+function install-lunarvim {
+  echo TODO
+}
+
+function install-dotnet([string[]]$versions) {
+  foreach ($version in $versions) {
+    & "$HOME/.local/opt/sbin/dotnet-install.ps1" -Channel $version
+  }
+}

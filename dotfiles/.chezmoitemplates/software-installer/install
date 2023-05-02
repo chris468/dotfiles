@@ -1,0 +1,21 @@
+chezmoi:template:missing-key=zero
+{{- $platform := eq .chezmoi.os "windows" | ternary "windows" "linux" -}}
+{{- includeTemplate (joinPath "software-installer" $platform "before-install-loop") . }}
+{{- $software := (includeTemplate "software" .) | fromYaml -}}
+{{- range $plugin, $spec := $software }}
+{{-   $spec = $spec | default (dict) }}
+{{-   $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
+{{-   $info := dict
+        "chezmoi" $.chezmoi
+        "plugin" $plugin
+        "spec" $spec
+        "doInstall" $doInstall
+}}
+{{-   includeTemplate (joinPath "software-installer" $platform "in-install-loop") $info }}
+{{-   includeTemplate "software-installer/common/generate-completion" (dict
+        "chezmoi" $.chezmoi
+        "spec" $spec
+      )
+}}
+{{- end }}
+{{- includeTemplate (joinPath "software-installer" $platform "after-install-loop") . }}
