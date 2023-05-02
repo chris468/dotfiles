@@ -1,19 +1,20 @@
 chezmoi:template:missing-key=zero
 {{- range $name, $completions := .spec.completions }}
-{{- $command := $completions }}
-{{- if $completions | kindIs "map" }}
-{{-   $command = $completions.bash }}
+{{- $bash := dict
+      "shell" "bash"
+      "path" (includeTemplate "fix-path" (list $ (joinPath $.chezmoi.homeDir ".local" "share" "bash-completion" "completions" $name)))
+}}
+{{- $powershell := dict
+      "shell" "powershell"
+      "path" (joinPath $.chezmoi.homeDir ".config" "powershell" "completion.d" (list $name ".ps1" | join ""))
+}}
+{{-   range (list $bash $powershell) }}
+{{-     $command := $completions }}
+{{-     if $completions | kindIs "map" }}
+{{-       $command = .shell | index $completions }}
+{{-     end}}
+{{-     if ne nil $command }}
+{{ $command | replace "SHELL" .shell }} > {{ .path }}
+{{-     end }}
+{{-   end }}
 {{- end }}
-{{- if ne nil $command }}
-{{ $command | replace "SHELL" "bash" }} > {{ $.chezmoi.homeDir }}/.local/share/bash-completion/completions/{{ $name }}
-{{- end }}
-
-{{- if $completions | kindIs "map" }}
-{{-   $command = $completions.powershell }}
-{{- end }}
-{{- if ne nil $command }}
-{{ $command | replace "SHELL" "powershell" }} > {{ $.chezmoi.homeDir }}/.config/powershell/completion.d/{{ $name }}.ps1
-{{- end }}
-
-{{- end }}
-
