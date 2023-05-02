@@ -89,8 +89,9 @@ packages:
     completions:
       kubectl: kubectl completion SHELL
 
-
 {{- if eq "windows" .chezmoi.os }}
+  - name: gcc
+
   - name: python
 {{- end }}
 
