@@ -1,6 +1,6 @@
 chezmoi:template:missing-key=zero
 {{- $script_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" -}}
-{{- $software := (includeTemplate "software" .) | fromYaml -}}
+{{- $versions := (includeTemplate "software" . | fromYaml).versions -}}
 ".config/bash/bashrc.d/dracula-theme.bash":
   type: file
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
@@ -8,7 +8,7 @@ chezmoi:template:missing-key=zero
 
 {{- $posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
 {{- $posh_filename := (list "posh-" .chezmoi.os "-" .chezmoi.arch $posh_ext) | join "" }}
-{{- $posh_version := $software.oh_my_posh.version | default "latest" }}
+{{- $posh_version := $versions.oh_my_posh | default "latest" }}
 {{- $posh_url_base := "https://github.com/JanDeDobbeleer/oh-my-posh/releases" }}
 {{- $posh_url_path := eq $posh_version "latest"
                       | ternary
@@ -28,12 +28,12 @@ chezmoi:template:missing-key=zero
   clone:
     args:
       - "--branch"
-      - "{{ $software.asdf.version }}"
+      - "{{ $versions.asdf }}"
 {{- end }}
 
 ".local/opt/sbin/install-lunarvim{{ $script_ext }}":
   type: file
-  url: "https://raw.githubusercontent.com/lunarvim/lunarvim/{{ default $software.lunarvim.version  (index $software "lunarvim_installer").version }}/utils/installer/install{{ $script_ext }}"
+  url: "https://raw.githubusercontent.com/lunarvim/lunarvim/{{ default $versions.lunarvim  (index $versions "lunarvim_installer") }}/utils/installer/install{{ $script_ext }}"
   executable: true
   refreshPeriod: "168h"
 

@@ -38,8 +38,8 @@ function install-lunarvim {
     cp -a "$LVIM_CONFIG" "$LVIM_CONFIG_BACKUP"
   fi
 
-{{- $software := (includeTemplate "software" .) | fromYaml }}
-  INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ $software.lunarvim.version }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
+{{- $versions := (includeTemplate "software" . | fromYaml).versions }}
+  INSTALL_PREFIX="$HOME/.local/opt" LV_BRANCH={{ $versions.lunarvim }} ~/.local/opt/sbin/install-lunarvim.sh -y --install-dependencies
 
   if [ -d "$LVIM_CONFIG_BACKUP" ]
   then
