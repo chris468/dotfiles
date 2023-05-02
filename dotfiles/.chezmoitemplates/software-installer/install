@@ -7,7 +7,7 @@ chezmoi:template:missing-key=zero
 {{-   $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
 {{-   $info := dict
         "chezmoi" $.chezmoi
-        "plugin" $plugin
+        "plugin" ($spec.package | default $plugin)
         "spec" $spec
         "doInstall" $doInstall
 }}

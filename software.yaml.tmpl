@@ -33,10 +33,10 @@ neovim:
     - "0.8.3"
     - "latest"
 
-{{- if eq "windows" .chezmoi.os }}
-nodejs-lts:
-{{- else }}
 nodejs:
+{{- if eq "windows" .chezmoi.os }}
+  package: nodejs-lts:
+{{- else }}
   version: "latest:lts"
 {{- end }}
   completions:
@@ -50,10 +50,9 @@ rust:
   version: "latest:stable"
 {{- end }}
 
-{{- if eq "windows" .chezmoi.os }}
-aws:
-{{- else }}
 awscli:
+{{- if eq "windows" .chezmoi.os }}
+  package: aws
 {{- end }}
   group: devtools
 {{- if ne "windows" .chezmoi.os }}
@@ -79,10 +78,9 @@ azure-cli:
       bash: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
 {{- end }}
 
-{{- if eq "windows" .chezmoi.os }}
-gh:
-{{- else }}
 github-cli:
+{{- if eq "windows" .chezmoi.os }}
+  package: gh
 {{- end }}
   group: devtools
   completions:
