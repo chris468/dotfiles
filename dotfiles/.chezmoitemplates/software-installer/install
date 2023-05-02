@@ -12,7 +12,7 @@ chezmoi:template:missing-key=zero
         "doInstall" $doInstall
 }}
 {{-   includeTemplate (joinPath "software-installer" $platform "in-install-loop") $info }}
-{{-   includeTemplate "software-installer/common/generate-completion" (dict
+{{-   includeTemplate "software-installer/common/in-install-loop" (dict
         "chezmoi" $.chezmoi
         "spec" $spec
       )
