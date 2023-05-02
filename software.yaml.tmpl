@@ -35,7 +35,11 @@ packages:
       node:
         bash: node --completion-bash
       npm:
+{{- if eq "windows" .chezmoi.os }}
+        bash: '& "C:\Program Files\Git\bin\bash.exe" -c "npm completion"'
+{{- else }}
         bash: npm completion
+{{- end }}
 
   - name: rust
 
