@@ -4,21 +4,21 @@ chezmoi:template:missing-key=zero
 {{-   $singleVersion = 0 | index $singleVersion }}
 {{- end }}
 {{- $atVersion := not $singleVersion | ternary "" (list "@" $singleVersion | join "") }}
-{{- $pluginAtVersion := list .plugin $atVersion | join "" }}
+{{- $packageAtVersion := list .package $atVersion | join "" }}
 {{- if eq "npm" .spec.package_manager }}
 {{-   includeTemplate "software-installer/linux/install-package" (dict
-        "name" .plugin
+        "name" .package
         "spec" .spec
         "install" .doInstall
-        "install_command" (cat "npm" "install" "--global" $pluginAtVersion)
+        "install_command" (cat "npm" "install" "--global" $packageAtVersion)
       )
 }}
 {{- else if eq "cargo" .spec.package_manager }}
 {{-   includeTemplate "software-installer/linux/install-package" (dict
-        "name" .plugin
+        "name" .package
         "spec" .spec
         "install" .doInstall
-        "install_command" (cat "cargo" "install" $pluginAtVersion)
+        "install_command" (cat "cargo" "install" $packageAtVersion)
       )
 }}
 {{- else if eq "pip" .spec.package_manager }}
@@ -26,10 +26,10 @@ chezmoi:template:missing-key=zero
         | ternary (list "==" $singleVersion | join "") $singleVersion
 }}
 {{-   includeTemplate "software-installer/linux/install-package" (dict
-        "name" .plugin
+        "name" .package
         "spec" .spec
         "install" .doInstall
-        "install_command" (cat "pip" "install" (list .plugin $pipVersion | join ""))
+        "install_command" (cat "pip" "install" "--user" (list .package $pipVersion | join ""))
       )
 }}
 {{- end }}

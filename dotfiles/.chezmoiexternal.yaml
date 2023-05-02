@@ -31,12 +31,6 @@ chezmoi:template:missing-key=zero
       - "{{ $versions.asdf }}"
 {{- end }}
 
-".local/opt/sbin/install-lunarvim{{ $script_ext }}":
-  type: file
-  url: "https://raw.githubusercontent.com/lunarvim/lunarvim/{{ default $versions.lunarvim  (index $versions "lunarvim_installer") }}/utils/installer/install{{ $script_ext }}"
-  executable: true
-  refreshPeriod: "168h"
-
 {{- if .devtools }}
 ".local/opt/sbin/dotnet-install{{ $script_ext }}":
   type: file
@@ -44,3 +38,14 @@ chezmoi:template:missing-key=zero
   executable: true
   refreshPeriod: "168h"
 {{- end }}
+
+".local/share/lunarvim/lvim":
+  type: git-repo
+  url: "https://github.com/LunarVim/LunarVim"
+  refreshPeriod: "168h"
+  clone:
+    args:
+      - "--branch"
+      - "{{ $versions.lunarvim }}"
+
+

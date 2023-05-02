@@ -1,14 +1,6 @@
 chezmoi:template:missing-key=zero
 {{- $versions := (includeTemplate "software" . | fromYaml).versions }}
 {{- includeTemplate "software-installer/linux/install-package" (dict
-      "name" "lunarvim"
-      "spec" (dict)
-      "install" true
-      "install_command" "install-lunarvim"
-    )
-}}
-
-{{- includeTemplate "software-installer/linux/install-package" (dict
       "name" "dotnet"
       "spec" (dict)
       "install" .devtools

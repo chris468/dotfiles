@@ -4,7 +4,6 @@ versions:
     - LTS
     - STS
   lunarvim: "release-1.2/neovim-0.8"
-  lunarvim_installer: "fc6873809934917b470bff1b072171879899a36b"
   neovim:
     - "0.8.3"
     - "latest"
@@ -89,3 +88,25 @@ packages:
     group: devtools
     completions:
       kubectl: kubectl completion SHELL
+
+{{- if eq "windows" .chezmoi.os }}
+  - name: gcc
+
+  - name: python
+{{- end }}
+
+  - name: neovim-npm
+    package: neovim
+    package_manager: npm
+
+  - name: tree-sitter-cli
+    package_manager: npm
+
+  - name: pynvim
+    package_manager: pip
+
+  - name: fd-find
+    package_manager: cargo
+
+  - name: ripgrep
+    package_manager: cargo

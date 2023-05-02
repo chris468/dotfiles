@@ -27,12 +27,14 @@ function script:scoop-remove(
   }
 }
 
-function install-lunarvim {
-  echo TODO
-}
-
 function install-dotnet([string[]]$versions) {
   foreach ($version in $versions) {
     & "$HOME/.local/opt/sbin/dotnet-install.ps1" -Channel $version
   }
+}
+
+if (!(Get-Command scoop 2>$null)) {
+  Write-Host "Installing scoop..."
+  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+  Invoke-RestMethod https://get.scoop.sh | Invoke-Expression
 }
