@@ -1,5 +1,5 @@
 chezmoi:template:missing-key=zero
-{{- $singleVersion := .spec.version | default "" }}
+{{- $singleVersion := .spec.version | default "" | toString }}
 {{- if $singleVersion | kindIs "slice" }}
 {{-   $singleVersion = 0 | index $singleVersion }}
 {{- end }}
@@ -19,6 +19,17 @@ chezmoi:template:missing-key=zero
         "spec" .spec
         "install" .doInstall
         "install_command" (cat "cargo" "install" $pluginAtVersion)
+      )
+}}
+{{- else if eq "pip" .spec.package_manager }}
+{{-   $pipVersion := ($singleVersion | regexMatch "^[0-9]")
+        | ternary (list "==" $singleVersion | join "") $singleVersion
+}}
+{{-   includeTemplate "software-installer/linux/install-package" (dict
+        "name" .plugin
+        "spec" .spec
+        "install" .doInstall
+        "install_command" (cat "pip" "install" (list .plugin $pipVersion | join ""))
       )
 }}
 {{- end }}
