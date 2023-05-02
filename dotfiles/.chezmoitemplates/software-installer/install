@@ -15,4 +15,6 @@ chezmoi:template:missing-key=zero
 {{-     includeTemplate (joinPath "software-installer" . "in-install-loop") $info }}
 {{-   end }}
 {{- end }}
-{{- includeTemplate (joinPath "software-installer" $platform "after-install-loop") . }}
+{{- range (list $platform "common") }}
+{{-   includeTemplate (joinPath "software-installer" . "after-install-loop") $ }}
+{{- end }}

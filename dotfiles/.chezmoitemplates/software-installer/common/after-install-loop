@@ -1,0 +1,2 @@
+chezmoi:template:missing-key=zero
+lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
