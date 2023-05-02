@@ -89,6 +89,11 @@ packages:
     completions:
       kubectl: kubectl completion SHELL
 
+
+{{- if eq "windows" .chezmoi.os }}
+  - name: python
+{{- end }}
+
   - name: neovim-npm
     package: neovim
     package_manager: npm
