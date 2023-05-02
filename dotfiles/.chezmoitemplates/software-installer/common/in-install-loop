@@ -29,7 +29,7 @@ chezmoi:template:missing-key=zero
         "name" .package
         "spec" .spec
         "install" .doInstall
-        "install_command" (cat "pip" "install" (list .package $pipVersion | join ""))
+        "install_command" (cat "pip" "install" "--user" (list .package $pipVersion | join ""))
       )
 }}
 {{- end }}
