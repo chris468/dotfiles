@@ -1,4 +1,20 @@
 chezmoi:template:missing-key=zero
+{{- if eq "npm" .spec.package_manager }}
+{{-   $version := .spec.version | default "" }}
+{{-   if $version | kindIs "slice" }}
+{{-     $version = 0 | index $version }}
+{{-   end }}
+{{-   $version = not $version | ternary "" (list "@" $version | join "") }}
+{{-   includeTemplate "software-installer/linux/install-package" (dict
+        "name" .plugin
+        "spec" .spec
+        "install" .doInstall
+        "install_command" (cat "npm" "install" "--global" (list .plugin $version | join "" ))
+        "remove_command" (cat "npm" "uninstall" "global" .plugin)
+      )
+}}
+{{- end }}
+
 {{- range $name, $completions := .spec.completions }}
 {{- $bash := dict
       "shell" "bash"
