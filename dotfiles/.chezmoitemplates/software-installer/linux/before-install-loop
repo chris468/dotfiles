@@ -33,6 +33,6 @@ function install-dotnet {
   while [ $# -ne 0 ]
   do
     version=$1 ; shift
-    ~/.local/opt/sbin/dotnet-install.sh --channel $version
+    ~/.local/opt/sbin/dotnet-install.sh --channel "${version}.0"
   done
 }

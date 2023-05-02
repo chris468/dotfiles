@@ -14,13 +14,14 @@
   value: {{ $localInstallDir }}
   export: false
 {{- $dotnetRoot := joinPath $localInstallDir "dotnet" }}
+{{- if ne "windows" .chezmoi.os }}
 - name: DOTNET_ROOT
   path: true
   value: {{ $dotnetRoot }}
-  persist: true
 - name: DOTNET_INSTALL_DIR
   path: true
   value: {{ $dotnetRoot }}
+{{- end }}
 {{- if eq "windows" .chezmoi.os }}
 - name: SCOOP
   path: true
@@ -35,4 +36,6 @@
     - {{ joinPath $.chezmoi.homeDir ".local" "bin" }}
     - {{ joinPath .chezmoi.homeDir ".dotnet" "tools" }}
     - {{ joinPath $localInstallDir "bin" }}
+{{- if ne "windows" .chezmoi.os }}
     - {{ $dotnetRoot }}
+{{- end }}

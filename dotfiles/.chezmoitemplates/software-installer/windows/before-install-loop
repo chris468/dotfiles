@@ -29,7 +29,7 @@ function script:scoop-remove(
 
 function install-dotnet([string[]]$versions) {
   foreach ($version in $versions) {
-    & "$HOME/.local/opt/sbin/dotnet-install.ps1" -Channel $version
+    winget install "Microsoft.DotNet.SDK.$version"
   }
 }
 
