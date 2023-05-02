@@ -2,12 +2,12 @@ chezmoi:template:missing-key=zero
 {{- $platform := eq .chezmoi.os "windows" | ternary "windows" "linux" -}}
 {{- includeTemplate (joinPath "software-installer" $platform "before-install-loop") . }}
 {{- $software := (includeTemplate "software" .) | fromYaml -}}
-{{- range $plugin, $spec := $software }}
+{{- range $name, $spec := $software }}
 {{-   $spec = $spec | default (dict) }}
 {{-   $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
 {{-   $info := dict
         "chezmoi" $.chezmoi
-        "plugin" ($spec.package | default $plugin)
+        "package" ($spec.package | default $name)
         "spec" $spec
         "doInstall" $doInstall
 }}

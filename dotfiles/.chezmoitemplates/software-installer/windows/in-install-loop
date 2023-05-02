@@ -1,5 +1,5 @@
 chezmoi:template:missing-key=zero
-{{- if eq "asdf" (.spec.package_manager | default "asdf") }}
+{{- if eq "scoop" (.spec.package_manager | default "scoop") }}
 {{-   $raw_versions := .spec.version | default (list "latest") }}
 {{-   $raw_versions = kindIs "slice" $raw_versions | ternary $raw_versions (list $raw_versions) }}
 {{-   $versions := (list) }}
@@ -9,11 +9,11 @@ chezmoi:template:missing-key=zero
 {{-   $versions = $versions | join "," }}
 {{-   $bucket := .spec.repo | default "" | squote }}
 {{-   includeTemplate "software-installer/windows/install-package" (dict
-        "name" .plugin
+        "name" .package
         "spec" .spec
         "install" .doInstall
-        "install_command" (cat "scoop-install" "-name" .plugin "-bucket" $bucket "-versions" $versions)
-        "remove_command" (cat "scoop-remove" "-name" .plugin "-versions" $versions)
+        "install_command" (cat "scoop-install" "-name" .package "-bucket" $bucket "-versions" $versions)
+        "remove_command" (cat "scoop-remove" "-name" .package "-versions" $versions)
       )
 }}
 {{- end }}
