@@ -1,0 +1,55 @@
+chezmoi:template:missing-key=zero
+{{- $singleVersion := .spec.version | default "" | toString }}
+{{- if $singleVersion | kindIs "slice" }}
+{{-   $singleVersion = 0 | index $singleVersion }}
+{{- end }}
+{{- $atVersion := not $singleVersion | ternary "" (list "@" $singleVersion | join "") }}
+{{- $pluginAtVersion := list .plugin $atVersion | join "" }}
+{{- if eq "npm" .spec.package_manager }}
+{{-   includeTemplate "software-installer/linux/install-package" (dict
+        "name" .plugin
+        "spec" .spec
+        "install" .doInstall
+        "install_command" (cat "npm" "install" "--global" $pluginAtVersion)
+      )
+}}
+{{- else if eq "cargo" .spec.package_manager }}
+{{-   includeTemplate "software-installer/linux/install-package" (dict
+        "name" .plugin
+        "spec" .spec
+        "install" .doInstall
+        "install_command" (cat "cargo" "install" $pluginAtVersion)
+      )
+}}
+{{- else if eq "pip" .spec.package_manager }}
+{{-   $pipVersion := ($singleVersion | regexMatch "^[0-9]")
+        | ternary (list "==" $singleVersion | join "") $singleVersion
+}}
+{{-   includeTemplate "software-installer/linux/install-package" (dict
+        "name" .plugin
+        "spec" .spec
+        "install" .doInstall
+        "install_command" (cat "pip" "install" (list .plugin $pipVersion | join ""))
+      )
+}}
+{{- end }}
+
+{{- range $name, $completions := .spec.completions }}
+{{- $bash := dict
+      "shell" "bash"
+      "path" (includeTemplate "fix-path" (list $ (joinPath $.chezmoi.homeDir ".local" "share" "bash-completion" "completions" $name)))
+}}
+{{- $powershell := dict
+      "shell" "powershell"
+      "path" (joinPath $.chezmoi.homeDir ".config" "powershell" "completion.d" (list $name ".ps1" | join ""))
+}}
+{{-   range (list $bash $powershell) }}
+{{-     $command := $completions }}
+{{-     if $completions | kindIs "map" }}
+{{-       $command = .shell | index $completions }}
+{{-     end}}
+{{-     if ne nil $command }}
+{{ $command | replace "SHELL" .shell }} > {{ .path }}
+{{-     end }}
+{{-   end }}
+{{- end }}

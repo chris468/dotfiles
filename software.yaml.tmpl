@@ -1,103 +1,91 @@
-asdf:
-  version: "v0.11.3"
-  package_manager: external
-
-oh_my_posh:
-  package_manager: external
-
-dotnet:
-  version: 
+versions:
+  asdf: "v0.11.3"
+  dotnet:
     - LTS
     - STS
-  package_manager: script
-
-lunarvim:
-  version: "release-1.2/neovim-0.8"
-  package_manager: script
-{{- if ne "windows" .chezmoi.os }}
-  dependencies:
-    - pip3
-{{- end }}
-
-lunarvim_installer:
-  version: "fc6873809934917b470bff1b072171879899a36b"
-  package_manager: script
-
-chezmoi:
-  completions:
-    chezmoi: chezmoi completion SHELL
-  package_manager: other
-
-neovim:
-  version: 
+  lunarvim: "release-1.2/neovim-0.8"
+  lunarvim_installer: "fc6873809934917b470bff1b072171879899a36b"
+  neovim:
     - "0.8.3"
     - "latest"
-
-{{- if eq "windows" .chezmoi.os }}
-nodejs-lts:
-{{- else }}
-nodejs:
-  version: "latest:lts"
-{{- end }}
-  completions:
-    node:
-      bash: node --completion-bash
-    npm:
-      bash: npm completion
-
-rust:
 {{- if ne "windows" .chezmoi.os }}
-  version: "latest:stable"
+  nodejs: "latest:lts"
+  rust: "latest:stable"
 {{- end }}
 
-{{- if eq "windows" .chezmoi.os }}
-aws:
-{{- else }}
-awscli:
-{{- end }}
-  group: devtools
+packages:
+  - name: lunarvim
+    package_manager: script
 {{- if ne "windows" .chezmoi.os }}
-  dependencies:
-    - unzip
-    - pip3
+    dependencies:
+      - pip3
 {{- end }}
 
-azure-cli:
-  group: devtools
+  - name: chezmoi
+    completions:
+      chezmoi: chezmoi completion SHELL
+    package_manager: other
+
+  - name: neovim
+
+  - name: nodejs
+{{- if eq "windows" .chezmoi.os }}
+    package: nodejs-lts
+{{- end }}
+    completions:
+      node:
+        bash: node --completion-bash
+      npm:
+        bash: npm completion
+
+  - name: rust
+
+  - name: awscli
+{{- if eq "windows" .chezmoi.os }}
+    package: aws
+{{- end }}
+    group: devtools
+{{- if ne "windows" .chezmoi.os }}
+    dependencies:
+      - unzip
+      - pip3
+{{- end }}
+
+  - name: azure-cli
+    group: devtools
 {{- if ne "windows" .chezmoi.os}}
-  dependencies:
-    - pip3
-  dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
+    dependencies:
+      - pip3
+    dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
 {{- end }}
-  completions:
-    az:
+    completions:
+      az:
 {{- if eq "windows" .chezmoi.os }}
 {{-   $azRoot := joinPath "$env:SCOOP" "apps" "azure-cli" "current" }}
-      bash: |-
-        & {{ joinPath $azRoot "python.exe" }} {{ joinPath $azRoot "scripts" "register-python-argcomplete" }} az
+        bash: |-
+          & {{ joinPath $azRoot "python.exe" }} {{ joinPath $azRoot "scripts" "register-python-argcomplete" }} az
 {{- else }}
-      bash: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
+        bash: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
 {{- end }}
 
+  - name: github-cli
 {{- if eq "windows" .chezmoi.os }}
-gh:
-{{- else }}
-github-cli:
+    package: gh
 {{- end }}
-  group: devtools
-  completions:
-    gh: gh completion --shell SHELL
+    group: devtools
+    completions:
+      gh: gh completion --shell SHELL
 
-helm:
-  group: devtools
-  completions:
-    helm: helm completion SHELL
+  - name: helm
+    group: devtools
+    completions:
+      helm: helm completion SHELL
 
-k9s:
-  group: devtools
-  repo: "https://github.com/looztra/asdf-k9s"
+  - name: k9s
+    group: devtools
+    repo: "https://github.com/looztra/asdf-k9s"
 
-kubectl:
-  group: devtools
-  completions:
-    kubectl: kubectl completion SHELL
+  - name: kubectl
+    group: devtools
+    completions:
+      kubectl: kubectl completion SHELL

@@ -1,16 +1,16 @@
 chezmoi:template:missing-key=zero
-{{- $software := (includeTemplate "software" .) | fromYaml }}
+{{- $versions := (includeTemplate "software" . | fromYaml).versions }}
 {{ includeTemplate "software-installer/windows/install-package" (dict
       "name" "lunarvim"
-      "spec" $software.lunarvim
+      "spec" (dict)
       "install" true
       "install_command" "install-lunarvim"
     )
 }}
 {{ includeTemplate "software-installer/windows/install-package" (dict
       "name" "dotnet"
-      "spec" $software.dotnet
+      "spec" (dict)
       "install" .devtools
-      "install_command" (cat "install-dotnet" (kindIs "slice" $software.dotnet.version | ternary ($software.dotnet.version | join ",") $software.dotnet.version))
+      "install_command" (cat "install-dotnet" (kindIs "slice" $versions.dotnet | ternary ($versions.dotnet | join ",") $versions.dotnet))
     )
 }}
