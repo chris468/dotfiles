@@ -538,3 +538,5 @@ let-env config = {
     }
   ]
 }
+
+source ~/.config/nushell/oh-my-posh.nu
