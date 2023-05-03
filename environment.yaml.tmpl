@@ -38,4 +38,6 @@
     - {{ joinPath $localInstallDir "bin" }}
 {{- if ne "windows" .chezmoi.os }}
     - {{ $dotnetRoot }}
+{{- else }}
+    - {{ joinPath .chezmoi.homeDir ".cargo" "bin" }}
 {{- end }}
