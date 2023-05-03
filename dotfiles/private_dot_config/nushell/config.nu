@@ -1,12 +1,12 @@
-# The default config record. This is where much of your global configuration is setup.
-let-env config = {
-  # true or false to enable or disable the welcome banner at startup
+use ~/.config/nushell/nu_scripts/themes/themes/dracula.nu
+
+let-env config = ({
   show_banner: false
   edit_mode: vi
   cursor_shape: {
     vi_insert: block
     vi_normal: line
   }
-}
+} | merge { color_config: (dracula) })
 
 source ~/.config/nushell/oh-my-posh.nu
