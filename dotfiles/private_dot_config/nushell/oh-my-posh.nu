@@ -1,6 +1,6 @@
 export-env {
     let-env POWERLINE_COMMAND = 'oh-my-posh'
-    let-env POSH_THEME = "/home/chris/.config/oh-my-posh/current-theme.omp.json"
+    let-env POSH_THEME = "~/.config/oh-my-posh/current-theme.omp.json"
     let-env PROMPT_INDICATOR = ""
     let-env POSH_PID = (random uuid)
     # By default displays the right prompt on the first line
@@ -10,7 +10,7 @@ export-env {
     let-env POSH_SHELL_VERSION = (version | get version)
 
     # PROMPTS
-    let-env PROMPT_MULTILINE_INDICATOR = (^"/home/chris/.local/opt/bin/oh-my-posh" print secondary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)")
+    let-env PROMPT_MULTILINE_INDICATOR = (^"~/.local/opt/bin/oh-my-posh" print secondary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)")
 
     let-env PROMPT_COMMAND = { ||
         # We have to do this because the initial value of `$env.CMD_DURATION_MS` is always `0823`,
@@ -23,7 +23,7 @@ export-env {
         let clear = (history | last 1 | get 0.command) == "clear"
 
         let width = ((term size).columns | into string)
-        ^"/home/chris/.local/opt/bin/oh-my-posh" print primary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=($cmd_duration)" $"--error=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)" $"--cleared=($clear)"
+        ^"~/.local/opt/bin/oh-my-posh" print primary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=($cmd_duration)" $"--error=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)" $"--cleared=($clear)"
     }
 }
 
