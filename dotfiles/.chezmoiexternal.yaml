@@ -48,4 +48,7 @@ chezmoi:template:missing-key=zero
       - "--branch"
       - "{{ $versions.lunarvim }}"
 
-
+".config/nushell/nu_scripts":
+  type: git-repo
+  url: "https://github.com/nushell/nu_scripts"
+  refreshPeriod: "168h"

@@ -1,0 +1,11 @@
+{{- if eq "linux" .chezmoi.os }}
+if [ -f ".asdf/asdf.sh" ]
+then
+  . "$HOME/.asdf/asdf.sh"
+  . "$HOME/.asdf/completions/asdf.bash"
+
+  __rs_bin="${ASDF_DIR}/installs/rust/stable/bin"
+  [[ ":$PATH:" == *":$__rs_bin:"* ]] || export PATH="$__rs_bin:$PATH"
+  unset __rs_bin
+fi
+{{- end }}
