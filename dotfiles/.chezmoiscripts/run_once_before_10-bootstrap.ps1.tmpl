@@ -1,0 +1,12 @@
+chezmoi:template:missing-key=zero
+{{- if eq "windows" .chezmoi.os }}
+if (!(Get-Command scoop 2>$null)) {
+  Write-Host "Installing scoop..."
+  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+  Invoke-RestMethod https://get.scoop.sh | Invoke-Expression
+}
+
+if (!(Get-Command git 2>$null)) {
+  scoop install git
+}
+{{- end }}
