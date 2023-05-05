@@ -1,14 +1,13 @@
 chezmoi:template:missing-key=zero
 {{- $platform := eq .chezmoi.os "windows" | ternary "windows" "linux" -}}
 {{- includeTemplate (joinPath "software-installer" $platform "before-install-loop") . }}
-{{- $software := (includeTemplate "software" .) | fromYaml -}}
-{{- range $spec := $software.packages }}
+{{- range $spec := .software.packages }}
 {{-   $spec = $spec | default (dict) }}
 {{-   $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
 {{-   $info := dict
         "chezmoi" $.chezmoi
         "package" ($spec.package | default $spec.name)
-        "spec" (merge $spec (dict "version" ($spec.name | index $software.versions)))
+        "spec" (merge $spec (dict "version" ($spec.name | index $.software.versions)))
         "doInstall" $doInstall
 }}
 {{-   range (list $platform "common") }}

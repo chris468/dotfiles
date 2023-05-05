@@ -1,7 +1,34 @@
+{{- /* define variables here and add to $data below */ -}}
+{{- /* this is so they can be passed to the software and environment templates */ -}}
 #{ $work := promptBoolOnce . "work" "Work machine (y/N)" false }}
+{{ $work := false }}
+{{ $devtools := true }}
+
+{{- $localInstallDir := joinPath .chezmoi.homeDir ".local" "opt" }}
+{{- $paths := dict
+      "localInstallDir" $localInstallDir
+      "localInstallBinDir" (joinPath $localInstallDir "bin")
+}}
+{{-   if eq "windows" .chezmoi.os }}
+{{-   $paths = set $paths "scoopDir" (joinPath $localInstallDir "scoop") }}
+{{-   else }}
+{{-   $paths = set $paths "dotnetRoot" (joinPath $localInstallDir "dotnet") }}
+{{-   end }}
+
+{{- $data := (dict 
+    "work" $work
+    "devtools" $devtools
+    "paths" $paths) | merge .
+}}
+{{- $dot := $data | merge . }}
+
+{{- /* anything needed by software or enviroment needs to be in the $data dict above */ -}}
 data:
-  work: false #{ $work }}
-  devtools: true
+{{ $data | toYaml | indent 2 }}
+  software:
+{{ includeTemplate "../software.yaml.tmpl" $dot | indent 4 }}
+  environment:
+{{ includeTemplate "../environment.yaml.tmpl" $dot | indent 4 }}
 {{- if eq .chezmoi.os "windows" }}
 interpreters:
   sh:

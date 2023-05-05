@@ -23,7 +23,7 @@ function Script:Prepend-Environment(
     }
 }
 
-{{- range $i, $e := (includeTemplate "environment" .) | fromYaml }}
+{{- range $i, $e := .environment }}
 {{-   if eq (.persist | default false) $.persist }}
 {{-     if not .name }}
 {{-       fail (list "environment[" $i "] is missing required key `name`." | join "") }}
