@@ -1,6 +1,5 @@
 chezmoi:template:missing-key=zero
 {{- $script_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" -}}
-{{- $versions := (includeTemplate "software" . | fromYaml).versions -}}
 ".config/bash/bashrc.d/dracula-theme.bash":
   type: file
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
@@ -8,7 +7,7 @@ chezmoi:template:missing-key=zero
 
 {{- $posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
 {{- $posh_filename := (list "posh-" .chezmoi.os "-" .chezmoi.arch $posh_ext) | join "" }}
-{{- $posh_version := $versions.oh_my_posh | default "latest" }}
+{{- $posh_version := .software.versions.oh_my_posh | default "latest" }}
 {{- $posh_url_base := "https://github.com/JanDeDobbeleer/oh-my-posh/releases" }}
 {{- $posh_url_path := eq $posh_version "latest"
                       | ternary
@@ -28,7 +27,7 @@ chezmoi:template:missing-key=zero
   clone:
     args:
       - "--branch"
-      - "{{ $versions.asdf }}"
+      - "{{ .software.versions.asdf }}"
 {{- end }}
 
 {{- if .devtools }}
@@ -46,7 +45,7 @@ chezmoi:template:missing-key=zero
   clone:
     args:
       - "--branch"
-      - "{{ $versions.lunarvim }}"
+      - "{{ .software.versions.lunarvim }}"
 
 ".config/nushell/nu_scripts":
   type: git-repo

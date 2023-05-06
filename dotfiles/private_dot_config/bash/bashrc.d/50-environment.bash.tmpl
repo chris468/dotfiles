@@ -15,7 +15,7 @@ function __prepend_environment {
   done
 }
 
-{{- range $i, $e := (includeTemplate "environment" .) | fromYaml }}
+{{- range $i, $e := .environment }}
 {{-   $value := .value }}
 {{-   if .value | kindIs "slice" }}
 {{-     if .path }}

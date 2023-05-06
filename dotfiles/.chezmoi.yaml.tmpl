@@ -1,11 +1,73 @@
-#{ $work := promptBoolOnce . "work" "Work machine (y/N)" false }}
+{{- $work := false -}}
+{{- $devtools := true -}}
+
+{{- $localInstallDir := joinPath .chezmoi.homeDir ".local" "opt" -}}
+{{- $paths := dict
+      "localInstall" $localInstallDir
+      "localInstallBin" (joinPath $localInstallDir "bin")
+      "dotnetRoot" (joinPath $localInstallDir "dotnet")
+-}}
+{{- if eq "windows" .chezmoi.os -}}
+{{- $scoop := joinPath $localInstallDir "scoop" -}}
+{{- $paths = $paths | merge (dict
+        "scoop" $scoop
+        "bash" (joinPath $scoop "apps" "git" "current" "bin" "bash.exe")
+    )
+-}}
+{{- end -}}
+
 data:
-  work: false #{ $work }}
-  devtools: true
+  work: {{ $work }}
+  devtools: {{ $devtools }}
+  paths:
+{{ $paths | toYaml | indent 4 }}
+  environment:
+    - name: AWS_PROFILE
+      action: unset
+    - name: KUBECONFIG
+      action: unset
+    - name: GPG_TTY
+      action: command
+      value: tty
+    - name: IPYTHONDIR
+      path: true
+      value: {{ joinPath .chezmoi.homeDir ".config" "ipython" }}
+    - name: LOCAL_INSTALL_DIR
+      path: true
+      value: {{ $paths.localInstall }}
+      export: false
+{{- if ne "windows" .chezmoi.os }}
+    - name: DOTNET_ROOT
+      path: true
+      value: {{ $paths.dotnetRoot }}
+    - name: DOTNET_INSTALL_DIR
+      path: true
+      value: {{ $paths.dotnetRoot }}
+{{- end }}
+{{- if eq "windows" .chezmoi.os }}
+    - name: SCOOP
+      path: true
+      persist: true
+      value: {{ $paths.scoop }}
+{{- end }}
+    - name: PATH
+      path: true
+      action: prepend
+      persist: true
+      value:
+        - {{ joinPath $.chezmoi.homeDir ".local" "bin" }}
+        - {{ joinPath .chezmoi.homeDir ".dotnet" "tools" }}
+        - {{ joinPath $paths.localInstallBin }}
+{{- if ne "windows" .chezmoi.os }}
+        - {{ $paths.dotnetRoot }}
+{{- else }}
+        - {{ joinPath .chezmoi.homeDir ".cargo" "bin" }}
+{{- end }}
+
 {{- if eq .chezmoi.os "windows" }}
 interpreters:
   sh:
-    command: "C:\\Program Files\\Git\\bin\\bash.exe"
+    command: {{ $paths.bash }}
   ps1:
     command: pwsh
     args:
