@@ -3,16 +3,21 @@ chezmoi:template:missing-key=zero
 {{- includeTemplate (joinPath "software-installer" $platform "before-install-loop") . }}
 {{- range $spec := .software.packages }}
 {{-   $spec = $spec | default (dict) }}
-{{-   $osSpec := $.chezmoi.os | index $spec }}
-{{-   $osSpec = $osSpec | eq nil | ternary $spec.default $osSpec }}
-{{-   $osSpec = $osSpec | eq nil | ternary (dict) $osSpec }}
+{{-   $osSpec := $.chezmoi.os | hasKey $spec
+        | ternary ($.chezmoi.os | index $spec) (
+          "default" | hasKey $spec
+            | ternary $spec.default dict
+        )
+-}}
+{{- $osSpec = eq nil $osSpec | ternary (dict) $osSpec }}
 {{-   if $osSpec | kindIs "map" }}
 {{-     $spec = $spec | merge ($osSpec | deepCopy) }}
 {{-     $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
 {{-     $version := $spec.name | index $.software.versions }}
 {{-     if $version | kindIs "map" }}
-{{-       $version = $.chezmoi.os | index $version }}
-{{-       $version = $.chezmoi.os | eq nil | ternary $version.default $version }}
+{{-       $version = $.chezmoi.os | hasKey $version
+            | ternary ($.chezmoi.os | index $version) $version.default
+-}}
 {{-     end }}
 {{-     $info := dict
           "chezmoi" $.chezmoi
