@@ -1,0 +1,122 @@
+software:
+  versions:
+    asdf: "v0.11.3"
+    dotnet:
+      - 6
+      - 7
+    lunarvim: "release-1.2/neovim-0.8"
+    neovim:
+      - "0.8.3"
+      - "latest"
+    nodejs:
+      default: "latest:lts"
+      windows:
+    rust: 
+      default: "latest:stable"
+      windows:
+
+  packages:
+    - name: lunarvim
+      package_manager: script
+      windows:
+        dependencies:
+      default:
+        dependencies:
+          - pip3
+
+    - name: chezmoi
+      completions:
+        chezmoi: chezmoi completion SHELL
+      package_manager: other
+
+    - name: neovim
+
+    - name: nodejs
+      windows:
+        package: nodejs-lts
+        completions:
+          node:
+            bash: node --completion-bash
+          npm:
+            bash: '& "C:\Program Files\Git\bin\bash.exe" -c "npm completion"'
+      default:
+        completions:
+          node:
+            bash: node --completion-bash
+          npm:
+            bash: npm completion
+
+    - name: rust
+
+    - name: awscli
+      group: devtools
+      windows: 
+        package: aws
+      default:
+        dependencies:
+          - unzip
+          - pip3
+
+    - name: azure-cli
+      group: devtools
+      default:
+        dependencies:
+          - pip3
+        dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
+        completions:
+          az:
+            bash: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
+      windows:
+        completions:
+          az:
+            bash: |-
+              & $env:SCOOP/apps/azure-cli/current/python.exe $env:SCOOP/apps/azure-cli/current/scripts/register-python-argcomplete
+
+    - name: github-cli
+      group: devtools
+      completions:
+        gh: gh completion --shell SHELL
+      windows:
+        package: gh
+
+    - name: helm
+      group: devtools
+      completions:
+        helm: helm completion SHELL
+
+    - name: k9s
+      group: devtools
+      repo: "https://github.com/looztra/asdf-k9s"
+
+    - name: kubectl
+      group: devtools
+      completions:
+        kubectl: kubectl completion SHELL
+
+    - name: gcc
+      windows:
+      default: false
+
+    - name: python
+      windows:
+      default: false
+
+    - name: neovim-npm
+      package: neovim
+      package_manager: npm
+
+    - name: tree-sitter-cli
+      package_manager: npm
+
+    - name: pynvim
+      package_manager: pip
+
+    - name: fd-find
+      package_manager: cargo
+
+    - name: ripgrep
+      package_manager: cargo
+
+    - name: nu
+      package_manager: cargo
+
