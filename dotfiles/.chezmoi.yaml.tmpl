@@ -44,6 +44,38 @@ data:
       path: true
       value: {{ $paths.dotnetRoot }}
 {{- end }}
+{{-   $dataHome := joinPath .chezmoi.homeDir ".local" "share" }}
+{{-   $configHome := joinPath .chezmoi.homeDir ".config" }}
+{{-   $cacheHome := joinPath .chezmoi.homeDir ".cache" }}
+{{-   $lunarvimRuntime := joinPath $dataHome "lunarvim" }}
+    - name: XDG_DATA_HOME
+      path: true
+      persist: true
+      value: $dataHome
+    - name: XDG_CONFIG_HOME
+      path: true
+      persist: true
+      value: $configHome
+    - name: XDG_CACHE_HOME
+      path: true
+      persist: true
+      value: $cacheHome
+    - name: LUNARVIM_RUNTIME_DIR
+      path: true
+      persist: true
+      value: $lunarvimRuntime
+    - name: LUNARVIM_CONFIG_DIR
+      path: true
+      persist: true
+      value: {{ joinPath $configHome "lvim" }}
+    - name: LUNARVIM_CACHE_DIR
+      path: true
+      persist: true
+      value: {{ joinPath $cacheHome "lvim" }}
+    - name: LUNARVIM_BASE_DIR
+      path: true
+      persist: true
+      value: {{ joinPath $lunarvimRuntime "lvim" }}
 {{- if eq "windows" .chezmoi.os }}
     - name: SCOOP
       path: true
