@@ -5,6 +5,8 @@ if (!(Get-Command scoop 2>$null)) {
   Invoke-RestMethod https://get.scoop.sh | Invoke-Expression
 }
 
+$env:PATH="$env:SCOOP/shims:$env:PATH"
+
 Write-Host "Installing git..."
 scoop install git
 
