@@ -10,10 +10,10 @@ software:
       - "latest"
     nodejs:
       default: "latest:lts"
-      windows:
+      windows: {}
     rust: 
       default: "latest:stable"
-      windows:
+      windows: {}
 
   packages:
     - name: lunarvim
@@ -94,11 +94,11 @@ software:
         kubectl: kubectl completion SHELL
 
     - name: gcc
-      windows:
+      windows: {}
       default: false
 
     - name: python
-      windows:
+      windows: {}
       default: false
 
     - name: neovim-npm
