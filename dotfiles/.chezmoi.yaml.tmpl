@@ -5,7 +5,7 @@
 {{- $paths := dict
       "localInstall" $localInstallDir
       "localInstallBin" (joinPath $localInstallDir "bin")
-      "scoopDir" (joinPath $localInstallDir "scoop")
+      "scoop" (joinPath $localInstallDir "scoop")
       "dotnetRoot" (joinPath $localInstallDir "dotnet")
 -}}
 
@@ -41,7 +41,7 @@ data:
     - name: SCOOP
       path: true
       persist: true
-      value: {{ $paths.scoopDir }}
+      value: {{ $paths.scoop }}
 {{- end }}
     - name: PATH
       path: true
