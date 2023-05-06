@@ -1,4 +1,2 @@
 chezmoi:template:missing-key=zero
-{{- if eq "windows" .chezmoi.os -}}
 {{- template "set-pwsh-environment" . -}}
-{{- end -}}

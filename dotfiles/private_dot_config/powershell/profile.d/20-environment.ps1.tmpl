@@ -1,9 +1,2 @@
 chezmoi:template:missing-key=zero
-
-{{- includeTemplate "windows/set-environment" (. | merge (dict
-        "persist" false
-        "set" "$env:$name=\"$value\""
-        "unset" "Remove-Item Env:\\$name 2>&1 | Out-Null"
-        "prepend" "Prepend-Environment $name $value"
-    ))
--}}
+& {{ joinPath .paths.localInstall "sbin" "set-environment.ps1" }}
