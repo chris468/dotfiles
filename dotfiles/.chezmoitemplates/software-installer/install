@@ -3,15 +3,24 @@ chezmoi:template:missing-key=zero
 {{- includeTemplate (joinPath "software-installer" $platform "before-install-loop") . }}
 {{- range $spec := .software.packages }}
 {{-   $spec = $spec | default (dict) }}
-{{-   $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
-{{-   $info := dict
-        "chezmoi" $.chezmoi
-        "package" ($spec.package | default $spec.name)
-        "spec" (merge $spec (dict "version" ($spec.name | index $.software.versions)))
-        "doInstall" $doInstall
+{{-   $osSpec := $.chezmoi.os | index $spec | default $spec.default }}
+{{-   $osSpec = $osSpec | kindIs "invalid" | ternary (dict) $osSpec}}
+{{-   if $osSpec | kindIs "map" }}
+{{-     $spec = $spec | merge ($osSpec | deepCopy) }}
+{{-     $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
+{{-     $version := $spec.name | index $.software.versions }}
+{{-     if $version | kindIs "map" }}
+{{-       $version = $.chezmoi.os | index $version | default $version.default }}
+{{-     end }}
+{{-     $info := dict
+          "chezmoi" $.chezmoi
+          "package" ($spec.package | default $spec.name)
+          "spec" (merge $spec (dict "version" $version))
+          "doInstall" $doInstall
 }}
-{{-   range (list $platform "common") }}
-{{-     includeTemplate (joinPath "software-installer" . "in-install-loop") $info }}
+{{-     range (list $platform "common") }}
+{{-       includeTemplate (joinPath "software-installer" . "in-install-loop") $info }}
+{{-     end }}
 {{-   end }}
 {{- end }}
 {{- range (list $platform "common") }}

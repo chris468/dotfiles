@@ -1,19 +1,19 @@
-{{ $work := false }}
-{{ $devtools := true }}
+{{- $work := false -}}
+{{- $devtools := true -}}
 
-{{- $localInstallDir := joinPath .chezmoi.homeDir ".local" "opt" }}
+{{- $localInstallDir := joinPath .chezmoi.homeDir ".local" "opt" -}}
 {{- $paths := dict
       "localInstall" $localInstallDir
       "localInstallBin" (joinPath $localInstallDir "bin")
       "scoopDir" (joinPath $localInstallDir "scoop")
       "dotnetRoot" (joinPath $localInstallDir "dotnet")
-}}
+-}}
 
 data:
   work: {{ $work }}
   devtools: {{ $devtools }}
-  paths: {{ $paths }}
-
+  paths:
+{{ $paths | toYaml | indent 4 }}
   software:
     versions:
       asdf: "v0.11.3"
@@ -24,18 +24,21 @@ data:
       neovim:
         - "0.8.3"
         - "latest"
-{{- if ne "windows" .chezmoi.os }}
-      nodejs: "latest:lts"
-      rust: "latest:stable"
-{{- end }}
+      nodejs:
+        default: "latest:lts"
+        windows:
+      rust: 
+        default: "latest:stable"
+        windows:
 
     packages:
       - name: lunarvim
         package_manager: script
-{{- if ne "windows" .chezmoi.os }}
-        dependencies:
-          - pip3
-{{- end }}
+        windows:
+          dependencies:
+        default:
+          dependencies:
+            - pip3
 
       - name: chezmoi
         completions:
@@ -45,56 +48,53 @@ data:
       - name: neovim
 
       - name: nodejs
-{{- if eq "windows" .chezmoi.os }}
-        package: nodejs-lts
-{{- end }}
-        completions:
-          node:
-            bash: node --completion-bash
-          npm:
-{{- if eq "windows" .chezmoi.os }}
-            bash: '& "C:\Program Files\Git\bin\bash.exe" -c "npm completion"'
-{{- else }}
-            bash: npm completion
-{{- end }}
+        windows:
+          package: nodejs-lts
+          completions:
+            node:
+              bash: node --completion-bash
+            npm:
+              bash: '& "C:\Program Files\Git\bin\bash.exe" -c "npm completion"'
+        default:
+          completions:
+            node:
+              bash: node --completion-bash
+            npm:
+              bash: npm completion
 
       - name: rust
 
       - name: awscli
-{{- if eq "windows" .chezmoi.os }}
-        package: aws
-{{- end }}
         group: devtools
-{{- if ne "windows" .chezmoi.os }}
-        dependencies:
-          - unzip
-          - pip3
-{{- end }}
+        windows: 
+          package: aws
+        default:
+          dependencies:
+            - unzip
+            - pip3
 
       - name: azure-cli
         group: devtools
-{{- if ne "windows" .chezmoi.os}}
-        dependencies:
-          - pip3
-        dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
-{{- end }}
-        completions:
-          az:
-{{- if eq "windows" .chezmoi.os }}
-{{-   $azRoot := joinPath "$env:SCOOP" "apps" "azure-cli" "current" }}
-            bash: |-
-              & {{ joinPath $azRoot "python.exe" }} {{ joinPath $azRoot "scripts" "register-python-argcomplete" }} az
-{{- else }}
-            bash: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
-{{- end }}
+        default:
+          dependencies:
+            - pip3
+          dependency_check: 'export VENV="$(mktemp -d /tmp/bootstrap-dotfiles-venv-XXX)/venv" && python3 -m venv $VENV && $VENV/bin/python -m ensurepip'
+          completions:
+            az:
+              bash: $(dirname $(asdf which az))/venv/bin/register-python-argcomplete az
+        windows:
+          completions:
+            az:
+{{-   $azRoot := joinPath "$paths.scoop" "apps" "azure-cli" "current" }}
+              bash: |-
+                & {{ joinPath $azRoot "python.exe" }} {{ joinPath $azRoot "scripts" "register-python-argcomplete" }} az
 
       - name: github-cli
-{{- if eq "windows" .chezmoi.os }}
-        package: gh
-{{- end }}
         group: devtools
         completions:
           gh: gh completion --shell SHELL
+        windows:
+          package: gh
 
       - name: helm
         group: devtools
@@ -110,11 +110,13 @@ data:
         completions:
           kubectl: kubectl completion SHELL
 
-{{- if eq "windows" .chezmoi.os }}
       - name: gcc
+        windows:
+        default: false
 
       - name: python
-{{- end }}
+        windows:
+        default: false
 
       - name: neovim-npm
         package: neovim
