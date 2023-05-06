@@ -23,11 +23,12 @@ function Initialize-InteractiveSession {
     }
 }
 
-if (Get-Command oh-my-posh 2>&1 | Out-Null) {
+$OH_MY_POSH="$HOME/.local/opt/bin/oh-my-posh"
+if (Get-Command $OH_MY_POSH 2>&1 | Out-Null) {
     New-Alias -Name 'Set-PoshContext' -Value 'Initialize-InteractiveSession' -Scope Global -Force
 
     $theme = "$config_dir/oh-my-posh/current-theme.omp.json"
-    oh-my-posh init pwsh --config $theme | Invoke-Expression
+    & $OH_MY_POSH init pwsh --config $theme | Invoke-Expression
 } else {
     Initialize-InteractiveSession
 }
