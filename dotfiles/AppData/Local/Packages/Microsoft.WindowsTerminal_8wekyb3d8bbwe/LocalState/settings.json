@@ -49,10 +49,12 @@
                 "source": "Windows.Terminal.Wsl"
             },
             {
-                "guid": "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}",
+                "guid": "{f4b4c2de-e7c2-47a3-adbd-fdb935585b81}",
                 "hidden": false,
                 "name": "Git Bash",
-                "source": "Git"
+                "commandline": "%SCOOP%\\apps\\git\\current\\bin\\bash.exe -li",
+                "icon": "%SCOOP%\\apps\\git\\current\\usr\\share\\git\\git-for-windows.ico",
+                "startingDirectory": "%USERPROFILE%"
             },
             {
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
