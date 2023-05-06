@@ -5,9 +5,16 @@
 {{- $paths := dict
       "localInstall" $localInstallDir
       "localInstallBin" (joinPath $localInstallDir "bin")
-      "scoop" (joinPath $localInstallDir "scoop")
       "dotnetRoot" (joinPath $localInstallDir "dotnet")
 -}}
+{{- if eq "windows" .chezmoi.os -}}
+{{- $scoop := joinPath $localInstallDir "scoop" -}}
+{{- $paths = $paths | merge (dict
+        "scoop" $scoop
+        "bash" (joinPath $scoop "apps" "git" "current" "bin" "bash.exe")
+    )
+-}}
+{{- end -}}
 
 data:
   work: {{ $work }}
@@ -60,7 +67,7 @@ data:
 {{- if eq .chezmoi.os "windows" }}
 interpreters:
   sh:
-    command: "C:\\Program Files\\Git\\bin\\bash.exe"
+    command: {{ $paths.bash }}
   ps1:
     command: pwsh
     args:
