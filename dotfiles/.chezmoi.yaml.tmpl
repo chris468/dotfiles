@@ -51,19 +51,19 @@ data:
     - name: XDG_DATA_HOME
       path: true
       persist: true
-      value: $dataHome
+      value: {{ $dataHome }}
     - name: XDG_CONFIG_HOME
       path: true
       persist: true
-      value: $configHome
+      value: {{ $configHome }}
     - name: XDG_CACHE_HOME
       path: true
       persist: true
-      value: $cacheHome
+      value: {{ $cacheHome }}
     - name: LUNARVIM_RUNTIME_DIR
       path: true
       persist: true
-      value: $lunarvimRuntime
+      value: {{ $lunarvimRuntime }}
     - name: LUNARVIM_CONFIG_DIR
       path: true
       persist: true
