@@ -3,23 +3,25 @@ chezmoi:template:missing-key=zero
 function Script:Prepend-Environment(
       [string]$name,
       [string[]]$values,
-      [string]$scope="Process")
+      [string[]]$scopes="Process")
 {
-    $original=[Environment]::GetEnvironmentVariable($name, $scope)
-    $originalNormalized=@()
-    foreach ($p in $original -split ";") {
-        $originalNormalized += $p.ToUpper() -replace "/","\"
-    }
-
-    $prepend=""
-    foreach ($p in $values) {
-        if ($originalNormalized -notcontains ($p.ToUpper() -replace "/","\")) {
-            $prepend += "$p;"
+    foreach ($scope in $scopes) {
+        $original=[Environment]::GetEnvironmentVariable($name, $scope)
+        $originalNormalized=@()
+        foreach ($p in $original -split ";") {
+            $originalNormalized += $p.ToUpper() -replace "/","\"
         }
-    }
 
-    if ($prepend) {
-        [Environment]::SetEnvironmentVariable($name, "$prepend$original", $scope)
+        $prepend=""
+        foreach ($p in $values) {
+            if ($originalNormalized -notcontains ($p.ToUpper() -replace "/","\")) {
+                $prepend += "$p;"
+            }
+        }
+
+        if ($prepend) {
+            [Environment]::SetEnvironmentVariable($name, "$prepend$original", $scope)
+        }
     }
 }
 
