@@ -1,3 +1,4 @@
 .local/opt/sbin/install-lunarvim
 .local/opt/sbin/install-lunarvim.ps1
 .config/bash/profile.d/upgrade-chezmoi.bash
+.config/.vim/plugin/packer_compiled.lua

@@ -1,2 +1,3 @@
 chezmoi:template:missing-key=zero
-lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+git -C {{ joinPath .paths.lunarvimRuntime "lvim" }} checkout {{ .software.versions.lunarvim }}
+ lvim --headless -c 'quitall'
