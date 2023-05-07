@@ -4,11 +4,11 @@ function M.config()
   lvim.plugins = {
     {
       "dracula/vim",
-      as = "dracula",
+      name = "dracula",
     },
     {
       "chrisbra/unicode.vim",
-      setup = function(_)
+      init = function(_)
         vim.g.Unicode_no_default_mappings = true
       end,
     },
@@ -16,22 +16,22 @@ function M.config()
     { "tpope/vim-surround" },
     {
       "nvim-neotest/neotest",
-      tag = "v3.*",
-      requires = {
+      version = "v3.*",
+      dependencies = {
         "nvim-lua/plenary.nvim",
       },
       config = function(_) require('chris468.testrunner').setup() end,
     },
     {
       "nvim-neotest/neotest-python",
-      requires = {
+      dependencies = {
         "nvim-neotest/neotest"
       },
     },
     {
       "Issafalcon/neotest-dotnet",
-      tag = "v1.*",
-      requires = {
+      version = "v1.*",
+      dependencies = {
         "nvim-neotest/neotest"
       },
     },
@@ -61,7 +61,7 @@ function M.config()
     },
     {
       "jay-babu/mason-nvim-dap.nvim",
-      tag = "v2.0.0", -- 2.0.1 uses a new function, not available in lvim's current mason-registry
+      version = "v2.0.0", -- 2.0.1 uses a new function, not available in lvim's current mason-registry
     },
     {
       "rafcamlet/nvim-luapad",
