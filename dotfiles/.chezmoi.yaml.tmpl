@@ -82,6 +82,16 @@ data:
       path: true
       persist: true
       value: {{ $paths.scoop }}
+{{- else }}
+{{- $asdf := joinPath .chezmoi.homeDir ".asdf" }}
+{{- $asdfInstalls := joinPath $asdf "installs"}}
+{{- $rustInstall := joinPath $asdfInstalls "rust" "stable" }}
+    - name: ASDF_DIR
+      value: $asdf
+    - name: CARGO_HOME
+      value: $rustInstall
+    - name: RUSTUP_HOME
+      value: $rustInstall
 {{- end }}
     - name: PATH
       path: true
