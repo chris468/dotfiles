@@ -30,7 +30,7 @@ chezmoi:template:missing-key=zero
 {{- end }}
 
 {{- if .devtools }}
-"{{ joinPath .paths.localInstallSbin "dotnet-install.ps1"}}":
+"{{ joinPath .paths.relativeLocalInstallSbin "dotnet-install.ps1"}}":
   type: file
   url: "https://dot.net/v1/dotnet-install.ps1"
   executable: true

@@ -1,8 +1,10 @@
 {{- $work := false -}}
 {{- $devtools := true -}}
 
-{{- $localInstallDir := joinPath .chezmoi.homeDir ".local" "opt" -}}
+{{- $relativeLocalInstallDir := joinPath ".local" "opt" }}
+{{- $localInstallDir := joinPath .chezmoi.homeDir $relativeLocalInstallDir -}}
 {{- $paths := dict
+      "relativeLocalInstall" $relativeLocalInstallDir
       "localInstall" $localInstallDir
       "localInstallBin" (joinPath $localInstallDir "bin")
       "localInstallSbin" (joinPath $localInstallDir "sbin")
