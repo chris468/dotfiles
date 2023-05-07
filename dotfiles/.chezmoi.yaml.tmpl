@@ -13,10 +13,8 @@
 {{- $_lunarvimConfig := joinPath $_configHome "lvim" -}}
 {{- $_lunarvimCache := joinPath $_cacheHome "lvim" -}}
 {{- $_lunarvimBase := joinPath $_lunarvimRuntime "lvim" -}}
-{{- $_asdf := ".asdf" -}}
-{{- $_asdfInstalls := joinPath $_asdf "installs" -}}
-{{- $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
 {{- $_ipython := joinPath $_configHome "ipython" -}}
+{{- $_cargoHome := joinPath $_localInstall "cargo" -}}
 {{- $_relativePaths := dict
       "localBin" $_localBin
       "localInstall" $_localInstall
@@ -30,10 +28,8 @@
       "lunarvimConfig" $_lunarvimConfig
       "lunarvimCache" $_lunarvimCache
       "lunarvimBase" $_lunarvimBase
-      "asdf" $_asdf
-      "asdfInstalls" $_asdfInstalls
-      "rustInstall" $_rustInstall
       "ipython" $_ipython
+      "cargoHome" $_cargoHome
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
@@ -45,8 +41,14 @@
 -}}
 {{- else -}}
 {{-   $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
+{{-   $_asdf := joinPath $_localInstall "asdf" -}}
+{{-   $_asdfInstalls := joinPath $_asdf "installs" -}}
+{{-   $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
 {{-   $_platformRelativePaths = dict
         "dotnetRoot" $_dotnetRoot
+        "asdf" $_asdf
+        "asdfInstalls" $_asdfInstalls
+        "rustInstall" $_rustInstall
 -}}
 {{- end -}}
 {{- $_relativePaths = merge $_relativePaths $_platformRelativePaths }}
@@ -112,6 +114,10 @@ data:
       path: true
       persist: true
       value: {{ $paths.lunarvimBase  }}
+    - name: CARGO_HOME
+      path: true
+      persist: true
+      value: {{ $paths.cargoHome }}
 {{- if eq "windows" .chezmoi.os }}
     - name: SCOOP
       path: true
@@ -120,8 +126,6 @@ data:
 {{- else }}
     - name: ASDF_DIR
       value: {{ $paths.asdf }}
-    - name: CARGO_HOME
-      value: {{ $paths.rustInstall }}
     - name: RUSTUP_HOME
       value: {{ $paths.rustInstall }}
 {{- end }}
