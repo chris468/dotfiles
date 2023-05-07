@@ -39,7 +39,7 @@
 {{- if eq "windows" .chezmoi.os -}}
 {{-   $_scoop := joinPath $_localInstall "scoop" -}}
 {{-   $_bash := joinPath $_scoop "apps" "git" "current" "bin" "bash.exe" }}
-{{-   $_platformRelativePaths = dict }}
+{{-   $_platformRelativePaths = dict
         "scoop" $_scoop
         "bash" $_bash
 -}}
