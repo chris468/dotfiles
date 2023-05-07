@@ -5,6 +5,7 @@
 {{- $paths := dict
       "localInstall" $localInstallDir
       "localInstallBin" (joinPath $localInstallDir "bin")
+      "localInstallSbin" (joinPath $localInstallDir "sbin")
       "dotnetRoot" (joinPath $localInstallDir "dotnet")
 -}}
 {{- if eq "windows" .chezmoi.os -}}

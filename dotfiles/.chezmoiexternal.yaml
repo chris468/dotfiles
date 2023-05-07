@@ -1,5 +1,4 @@
 chezmoi:template:missing-key=zero
-{{- $script_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" -}}
 ".config/bash/bashrc.d/dracula-theme.bash":
   type: file
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
@@ -31,9 +30,9 @@ chezmoi:template:missing-key=zero
 {{- end }}
 
 {{- if .devtools }}
-".local/opt/sbin/dotnet-install{{ $script_ext }}":
+"{{ joinPath .paths.localInstallSbin "dotnet-install.ps1"}}":
   type: file
-  url: "https://dot.net/v1/dotnet-install{{ $script_ext }}"
+  url: "https://dot.net/v1/dotnet-install.ps1"
   executable: true
   refreshPeriod: "168h"
 {{- end }}
