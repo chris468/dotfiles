@@ -29,10 +29,10 @@ chezmoi:template:missing-key=zero
       - "{{ .software.versions.asdf }}"
 {{- end }}
 
-{{- if .devtools }}
-{{ joinPath .paths.relative.localInstallSbin "dotnet-install.ps1" |quote }}:
+{{- if and .devtools (ne .chezmoi.os "windows") }}
+{{ joinPath .paths.relative.localInstallSbin "dotnet-install.sh" |quote }}:
   type: file
-  url: "https://dot.net/v1/dotnet-install.ps1"
+  url: "https://dot.net/v1/dotnet-install.sh"
   executable: true
   refreshPeriod: "168h"
 {{- end }}
