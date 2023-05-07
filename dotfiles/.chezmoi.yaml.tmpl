@@ -35,21 +35,21 @@
       "rustInstall" $_rustInstall
       "ipython" $_ipython
 -}}
+{{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
 {{-   $_scoop := joinPath $_localInstall "scoop" -}}
 {{-   $_bash := joinPath $_scoop "apps" "git" "current" "bin" "bash.exe" }}
-{{-   $_relativePaths = $_relativePaths | merge (dict
+{{-   $_platformRelativePaths = dict }}
         "scoop" $_scoop
         "bash" $_bash
-      )
 -}}
 {{- else -}}
 {{-   $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
-{{-   $_relativePaths = $_relativePaths | merge (dict
+{{-   $_platformRelativePaths = dict
         "dotnetRoot" $_dotnetRoot
-      )
 -}}
 {{- end -}}
+{{- $_relativePaths = merge $_relativePaths $_platformRelativePaths }}
 {{- $paths := dict -}}
 {{- range $k, $v := $_relativePaths -}}
 {{-   $paths = set $paths $k (joinPath $.chezmoi.homeDir $v) -}}
