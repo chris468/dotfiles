@@ -4,9 +4,8 @@ software:
     dotnet:
       - 6
       - 7
-    lunarvim: "release-1.2/neovim-0.8"
+    lunarvim: "release-1.3/neovim-0.9"
     neovim:
-      - "0.8.3"
       - "latest"
     nodejs:
       default: "latest:lts"
