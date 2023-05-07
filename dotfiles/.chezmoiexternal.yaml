@@ -1,6 +1,5 @@
 chezmoi:template:missing-key=zero
-{{- $script_ext := (eq .chezmoi.os "windows") | ternary ".ps1" ".sh" -}}
-".config/bash/bashrc.d/dracula-theme.bash":
+{{ joinPath .paths.relative.configHome "bash" "bashrc.d" "dracula-theme.bash" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
   refreshPeriod: "672h"
@@ -14,14 +13,14 @@ chezmoi:template:missing-key=zero
                         "latest/download"
                         ((list "download/v" $posh_version) | join "")
 }}
-".local/opt/bin/oh-my-posh{{ $posh_ext }}":
+{{ list (joinPath .paths.relative.localInstallBin "oh-my-posh") $posh_ext | join "" | quote }}:
   type: file
   url: "{{ $posh_url_base }}/{{ $posh_url_path }}/{{ $posh_filename }}"
   executable: true
   refreshPeriod: "168h"
 
 {{- if ne .chezmoi.os "windows" }}
-".asdf":
+{{ .paths.relative.asdf | quote }}:
   type: git-repo
   url: "https://github.com/asdf-vm/asdf.git"
   clone:
@@ -30,15 +29,15 @@ chezmoi:template:missing-key=zero
       - "{{ .software.versions.asdf }}"
 {{- end }}
 
-{{- if .devtools }}
-".local/opt/sbin/dotnet-install{{ $script_ext }}":
+{{- if and .devtools (ne .chezmoi.os "windows") }}
+{{ joinPath .paths.relative.localInstallSbin "dotnet-install.sh" |quote }}:
   type: file
-  url: "https://dot.net/v1/dotnet-install{{ $script_ext }}"
+  url: "https://dot.net/v1/dotnet-install.sh"
   executable: true
   refreshPeriod: "168h"
 {{- end }}
 
-".local/share/lunarvim/lvim":
+{{ .paths.relative.lunarvimBase | quote }}:
   type: git-repo
   url: "https://github.com/LunarVim/LunarVim"
   refreshPeriod: "168h"
@@ -47,7 +46,7 @@ chezmoi:template:missing-key=zero
       - "--branch"
       - "{{ .software.versions.lunarvim }}"
 
-".config/nushell/nu_scripts":
+{{ joinPath .paths.relative.configHome "nushell" "nu_scripts" | quote }}:
   type: git-repo
   url: "https://github.com/nushell/nu_scripts"
   refreshPeriod: "168h"

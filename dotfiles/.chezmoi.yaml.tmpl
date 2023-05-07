@@ -1,20 +1,60 @@
 {{- $work := false -}}
 {{- $devtools := true -}}
 
-{{- $localInstallDir := joinPath .chezmoi.homeDir ".local" "opt" -}}
-{{- $paths := dict
-      "localInstall" $localInstallDir
-      "localInstallBin" (joinPath $localInstallDir "bin")
-      "dotnetRoot" (joinPath $localInstallDir "dotnet")
+{{- $_localBin := joinPath ".local" "bin" -}}
+{{- $_localInstall := joinPath ".local" "opt" -}}
+{{- $_localInstallBin := joinPath $_localInstall "bin" -}}
+{{- $_localInstallSbin := joinPath $_localInstall "sbin" -}}
+{{- $_dotnetTools := joinPath ".dotnet" "tools" -}}
+{{- $_dataHome := joinPath ".local" "share" -}}
+{{- $_configHome := ".config" -}}
+{{- $_cacheHome := ".cache" -}}
+{{- $_lunarvimRuntime := joinPath $_dataHome "lunarvim" -}}
+{{- $_lunarvimConfig := joinPath $_configHome "lvim" -}}
+{{- $_lunarvimCache := joinPath $_cacheHome "lvim" -}}
+{{- $_lunarvimBase := joinPath $_lunarvimRuntime "lvim" -}}
+{{- $_asdf := ".asdf" -}}
+{{- $_asdfInstalls := joinPath $_asdf "installs" -}}
+{{- $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
+{{- $_ipython := joinPath $_configHome "ipython" -}}
+{{- $_relativePaths := dict
+      "localBin" $_localBin
+      "localInstall" $_localInstall
+      "localInstallBin" $_localInstallBin
+      "localInstallSbin" $_localInstallSbin
+      "dotnetTools" $_dotnetTools
+      "dataHome" $_dataHome
+      "configHome" $_configHome
+      "cacheHome" $_cacheHome
+      "lunarvimRuntime" $_lunarvimRuntime
+      "lunarvimConfig" $_lunarvimConfig
+      "lunarvimCache" $_lunarvimCache
+      "lunarvimBase" $_lunarvimBase
+      "asdf" $_asdf
+      "asdfInstalls" $_asdfInstalls
+      "rustInstall" $_rustInstall
+      "ipython" $_ipython
 -}}
+{{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
-{{- $scoop := joinPath $localInstallDir "scoop" -}}
-{{- $paths = $paths | merge (dict
-        "scoop" $scoop
-        "bash" (joinPath $scoop "apps" "git" "current" "bin" "bash.exe")
-    )
+{{-   $_scoop := joinPath $_localInstall "scoop" -}}
+{{-   $_bash := joinPath $_scoop "apps" "git" "current" "bin" "bash.exe" }}
+{{-   $_platformRelativePaths = dict }}
+        "scoop" $_scoop
+        "bash" $_bash
+-}}
+{{- else -}}
+{{-   $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
+{{-   $_platformRelativePaths = dict
+        "dotnetRoot" $_dotnetRoot
 -}}
 {{- end -}}
+{{- $_relativePaths = merge $_relativePaths $_platformRelativePaths }}
+{{- $paths := dict -}}
+{{- range $k, $v := $_relativePaths -}}
+{{-   $paths = set $paths $k (joinPath $.chezmoi.homeDir $v) -}}
+{{- end -}}
+{{- $paths = set $paths "relative" $_relativePaths -}}
 
 data:
   work: {{ $work }}
@@ -31,7 +71,7 @@ data:
       value: tty
     - name: IPYTHONDIR
       path: true
-      value: {{ joinPath .chezmoi.homeDir ".config" "ipython" }}
+      value: {{ $paths.ipython }}
     - name: LOCAL_INSTALL_DIR
       path: true
       value: {{ $paths.localInstall }}
@@ -44,52 +84,55 @@ data:
       path: true
       value: {{ $paths.dotnetRoot }}
 {{- end }}
-{{-   $dataHome := joinPath .chezmoi.homeDir ".local" "share" }}
-{{-   $configHome := joinPath .chezmoi.homeDir ".config" }}
-{{-   $cacheHome := joinPath .chezmoi.homeDir ".cache" }}
-{{-   $lunarvimRuntime := joinPath $dataHome "lunarvim" }}
     - name: XDG_DATA_HOME
       path: true
       persist: true
-      value: {{ $dataHome }}
+      value: {{ $paths.dataHome }}
     - name: XDG_CONFIG_HOME
       path: true
       persist: true
-      value: {{ $configHome }}
+      value: {{ $paths.configHome }}
     - name: XDG_CACHE_HOME
       path: true
       persist: true
-      value: {{ $cacheHome }}
+      value: {{ $paths.cacheHome }}
     - name: LUNARVIM_RUNTIME_DIR
       path: true
       persist: true
-      value: {{ $lunarvimRuntime }}
+      value: {{ $paths.lunarvimRuntime }}
     - name: LUNARVIM_CONFIG_DIR
       path: true
       persist: true
-      value: {{ joinPath $configHome "lvim" }}
+      value: {{ $paths.lunarvimConfig }}
     - name: LUNARVIM_CACHE_DIR
       path: true
       persist: true
-      value: {{ joinPath $cacheHome "lvim" }}
+      value: {{ $paths.lunarvimCache }}
     - name: LUNARVIM_BASE_DIR
       path: true
       persist: true
-      value: {{ joinPath $lunarvimRuntime "lvim" }}
+      value: {{ $paths.lunarvimBase  }}
 {{- if eq "windows" .chezmoi.os }}
     - name: SCOOP
       path: true
       persist: true
       value: {{ $paths.scoop }}
+{{- else }}
+    - name: ASDF_DIR
+      value: {{ $paths.asdf }}
+    - name: CARGO_HOME
+      value: {{ $paths.rustInstall }}
+    - name: RUSTUP_HOME
+      value: {{ $paths.rustInstall }}
 {{- end }}
     - name: PATH
       path: true
       action: prepend
       persist: true
       value:
-        - {{ joinPath $.chezmoi.homeDir ".local" "bin" }}
-        - {{ joinPath .chezmoi.homeDir ".dotnet" "tools" }}
-        - {{ joinPath $paths.localInstallBin }}
+        - {{ $paths.localBin }}
+        - {{ $paths.dotnetTools }}
+        - {{ $paths.localInstallBin }}
 {{- if ne "windows" .chezmoi.os }}
         - {{ $paths.dotnetRoot }}
 {{- else }}
