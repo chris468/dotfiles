@@ -126,6 +126,8 @@ data:
 {{- else }}
     - name: ASDF_DIR
       value: {{ $paths.asdf }}
+    - name: ASDF_DATA_DIR
+      value: {{ $paths.asdf }}
     - name: RUSTUP_HOME
       value: {{ $paths.rustInstall }}
 {{- end }}
