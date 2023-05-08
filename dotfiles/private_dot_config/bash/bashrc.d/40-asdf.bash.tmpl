@@ -1,9 +1,11 @@
 {{- if eq "linux" .chezmoi.os }}
-__asdf="{{ joinPath .paths.asdf "asdf.sh" }}"
+ASDF_DIR="{{ .paths.asdf }}"
+ASDF_DATA_DIR="$ASDF_DIR"
+__asdf="$ASDF_DIR/asdf.sh"
 if [ -f "$__asdf" ]
 then
   . "$__asdf"
-  . "{{ joinPath .paths.asdf "completions" "asdf.bash" }}"
+  . "$ASDF_DIR/completions/asdf.bash"
 
   __rs_env="{{ joinPath .paths.rustInstall "env" }}"
   if [ -e "$__rs_env" ]
