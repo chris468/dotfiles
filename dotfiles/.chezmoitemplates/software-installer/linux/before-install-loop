@@ -7,7 +7,7 @@ FAILED_TOOLS=
 
 if ! command -v asdf &>/dev/null
 then
-  . ~/.asdf/asdf.sh
+  . {{ joinPath .paths.asdf "asdf.sh" }}
 fi
 
 function asdf-install {

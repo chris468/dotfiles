@@ -1,11 +1,19 @@
 {{- if eq "linux" .chezmoi.os }}
-if [ -f ".asdf/asdf.sh" ]
+ASDF_DIR="{{ .paths.asdf }}"
+ASDF_DATA_DIR="$ASDF_DIR"
+__asdf="$ASDF_DIR/asdf.sh"
+if [ -f "$__asdf" ]
 then
-  . "$HOME/.asdf/asdf.sh"
-  . "$HOME/.asdf/completions/asdf.bash"
+  . "$__asdf"
+  . "$ASDF_DIR/completions/asdf.bash"
 
-  __rs_bin="${ASDF_DIR}/installs/rust/stable/bin"
-  [[ ":$PATH:" == *":$__rs_bin:"* ]] || export PATH="$__rs_bin:$PATH"
-  unset __rs_bin
+  __rs_env="{{ joinPath .paths.rustInstall "env" }}"
+  if [ -e "$__rs_env" ]
+  then
+    . "$__rs_env"
+  fi
+  unset __rs_env
 fi
+
+unset __asdf
 {{- end }}
