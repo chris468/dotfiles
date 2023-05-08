@@ -15,6 +15,7 @@
 {{- $_lunarvimBase := joinPath $_lunarvimRuntime "lvim" -}}
 {{- $_ipython := joinPath $_configHome "ipython" -}}
 {{- $_cargoHome := joinPath $_localInstall "cargo" -}}
+{{- $_cargoBin := joinPath $_cargoHome "bin" -}}
 {{- $_relativePaths := dict
       "localBin" $_localBin
       "localInstall" $_localInstall
@@ -30,6 +31,7 @@
       "lunarvimBase" $_lunarvimBase
       "ipython" $_ipython
       "cargoHome" $_cargoHome
+      "cargoBin" $_cargoBin
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
@@ -139,10 +141,10 @@ data:
         - {{ $paths.localBin }}
         - {{ $paths.dotnetTools }}
         - {{ $paths.localInstallBin }}
+        - {{ $paths.cargoBin }}
 {{- if ne "windows" .chezmoi.os }}
         - {{ $paths.dotnetRoot }}
 {{- else }}
-        - {{ joinPath .chezmoi.homeDir ".cargo" "bin" }}
 {{- end }}
 
 {{- if eq .chezmoi.os "windows" }}
