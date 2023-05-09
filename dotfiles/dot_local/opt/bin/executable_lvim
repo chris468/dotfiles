@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-exec -a lvim nvim -u "$LUNARVIM_BASE_DIR/init.lua" "$@"
+export NVIM_APPNAME=lvim
+exec -a $NVIM_APPNAME nvim -u "$LUNARVIM_BASE_DIR/init.lua" "$@"
