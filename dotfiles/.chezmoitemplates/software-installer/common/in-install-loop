@@ -38,10 +38,7 @@ chezmoi:template:missing-key=zero
 {{- range $name, $completions := .spec.completions }}
 {{- $bash := dict
       "shell" "bash"
-      "path" (includeTemplate "fix-path" (dict
-        "dot" $
-        "path" (joinPath $.paths.dataHome "bash-completion" "completions" $name)
-      ))
+      "path" (joinPath $.paths.dataHome "bash-completion" "completions" $name)
 }}
 {{- $powershell := dict
       "shell" "powershell"

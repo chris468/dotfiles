@@ -1,9 +1,11 @@
 {{- if eq "windows" .dot.chezmoi.os -}}
-{{- regexReplaceAll
-     "^([[:alpha:]]):(.*)" 
-     (.path | replace "\\" "/")
-     "/${1}${2}"
--}}
+{{-   $split := regexSplit ":" .path 2 -}}
+{{-   $path := $split | last}}
+{{-   $driveLetter := "" }}
+{{-   if $split | initial -}}
+{{-     $driveLetter = list "/" (0 | index $split | lower) | join "" -}}
+{{-   end }}
+{{-   list $driveLetter $path | join "" | replace "\\" "/" -}}
 {{- else -}}
-{{- .path -}}
+{{-   .path -}}
 {{- end -}}
