@@ -118,4 +118,12 @@ software:
 
     - name: nu
       package_manager: cargo
+zsh:
+  externalPlugins:
+    - name: zsh-autosuggestions
+      url: "https://github.com/zsh-user/zsh-autosuggestions"
+    - name: zsh-syntax-highlighting
+      url: "https://github.com/zsh-user/zsh-syntax-highlighting"
+    - name: zsh-history-substring-search
+      url: "https://github.com/zsh-user/zsh-history-substring-search"
 

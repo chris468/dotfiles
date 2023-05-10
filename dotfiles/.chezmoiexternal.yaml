@@ -53,19 +53,13 @@ chezmoi:template:missing-key=zero
 
 {{- if ne "windows" .chezmoi.os }}
 {{ joinPath .paths.relative.localInstall "oh-my-zsh" | quote }}:
-  url: "https://github.com/zsh-user/zsh-autosuggestions"
+  url: "https://github.com/ohmyzsh/ohmyzsh"
   type: git-repo
   refreshPeriod: "168h"
-{{ joinPath .paths.relative.zshPlugins "zsh-autosuggestions" | quote }}:
+{{-   range .zsh.externalPlugins }}
+{{ joinPath $.paths.relative.zshPlugins .name | quote }}:
   type: git-repo
-  url: "https://github.com/zsh-users/zsh-autosuggestions"
+  url: {{ .url | quote }}
   refreshPeriod: "168h"
-{{ joinPath .paths.relative.zshPlugins "zsh-syntax-highlighting" | quote }}:
-  url: https://github.com/zsh-users/zsh-syntax-highlighting
-  type: git-repo
-  refreshPeriod: "168h"
-{{ joinPath .paths.relative.zshPlugins "zsh-history-substring-search" | quote }}:
-  url: https://github.com/zsh-users/zsh-history-substring-search
-  type: git-repo
-  refreshPeriod: "168h"
+{{-   end }}
 {{- end }}
