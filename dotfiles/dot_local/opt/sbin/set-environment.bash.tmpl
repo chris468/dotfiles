@@ -22,15 +22,15 @@ function __prepend_environment {
 {{-     if .path }}
 {{-       $value = list }}
 {{-       range .value }}
-{{-          $value = append $value (. | quote) }}
+{{-          $value = append $value ((list $ .) | includeTemplate "fix-path") }}
 {{-       end }}
 {{-     else }}
-{{-       $value = .value | quote }}
+{{-       $value = .value }}
 {{      end }}
 {{-   else if .path }}
-{{-     $value = .value | quote }}
+{{-     $value = (list $ .value) | includeTemplate "fix-path" }}
 {{-   else }}
-{{      $value = .value | quote }}
+{{      $value = .value }}
 {{-   end }}
 {{-   $valueList := eq $value nil | ternary nil ($value | kindIs "slice" | ternary $value (list $value)) }}
 {{-   $export := eq .export nil | ternary true .export | ternary "export " "" }}
@@ -40,10 +40,10 @@ function __prepend_environment {
 {{-   end }}
 
 {{-   if eq "set" (.action | default "set") }}
-{{ $export }}{{ .name }}={{ $value }}
+{{ $export }}{{ .name }}="{{ $value }}"
 {{-   else if eq "unset" .action }}
 unset {{ .name }}
 {{-   else if eq "prepend" .action }}
-__prepend_environment {{ $e.name }} "{{ $export }}" {{ range $valueList | reverse }} {{ . }}{{ end }}
+__prepend_environment {{ $e.name }} "{{ $export }}" {{ range $valueList | reverse }} "{{ . }}"{{ end }}
 {{-   end }}
 {{ end }}

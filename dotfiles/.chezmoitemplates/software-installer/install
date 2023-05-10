@@ -19,10 +19,11 @@ chezmoi:template:missing-key=zero
             | ternary ($.chezmoi.os | index $version) $version.default
 -}}
 {{-     end }}
-{{-     $info := $ | merge (dict
+{{-     $info := dict
+          "chezmoi" $.chezmoi
           "package" ($spec.package | default $spec.name)
           "spec" (merge $spec (dict "version" $version))
-          "doInstall" $doInstall)
+          "doInstall" $doInstall
 }}
 {{-     range (list $platform "common") }}
 {{-       includeTemplate (joinPath "software-installer" . "in-install-loop") $info }}

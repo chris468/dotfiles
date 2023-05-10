@@ -38,11 +38,11 @@ chezmoi:template:missing-key=zero
 {{- range $name, $completions := .spec.completions }}
 {{- $bash := dict
       "shell" "bash"
-      "path" (joinPath $.paths.dataHome "bash-completion" "completions" $name | quote)
+      "path" (includeTemplate "fix-path" (list $ (joinPath $.chezmoi.homeDir ".local" "share" "bash-completion" "completions" $name)))
 }}
 {{- $powershell := dict
       "shell" "powershell"
-      "path" (joinPath $.chezmoi.homeDir ".config" "powershell" "completion.d" (list $name ".ps1" | join "") | quote)
+      "path" (joinPath $.chezmoi.homeDir ".config" "powershell" "completion.d" (list $name ".ps1" | join ""))
 }}
 {{-   range (list $bash $powershell) }}
 {{-     $command := $completions }}

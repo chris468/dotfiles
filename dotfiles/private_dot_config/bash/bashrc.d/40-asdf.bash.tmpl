@@ -7,7 +7,7 @@ then
   . "$__asdf"
   . "$ASDF_DIR/completions/asdf.bash"
 
-  __rs_env={{ joinPath .paths.rustInstall "env" | quote }}
+  __rs_env="{{ joinPath .paths.rustInstall "env" }}"
   if [ -e "$__rs_env" ]
   then
     . "$__rs_env"
