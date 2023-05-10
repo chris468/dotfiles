@@ -152,6 +152,8 @@ data:
         - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
 {{- end }}
 
+umask: 0o022
+
 {{- if eq .chezmoi.os "windows" }}
 interpreters:
   sh:
