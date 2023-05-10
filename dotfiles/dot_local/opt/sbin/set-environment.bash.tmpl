@@ -22,13 +22,19 @@ function __prepend_environment {
 {{-     if .path }}
 {{-       $value = list }}
 {{-       range .value }}
-{{-          $value = append $value ((list $ .) | includeTemplate "fix-path") }}
+{{-          $value = append $value (includeTemplate "fix-path" (dict
+               "dot" $
+               "path" .
+             )) }}
 {{-       end }}
 {{-     else }}
 {{-       $value = .value }}
 {{      end }}
 {{-   else if .path }}
-{{-     $value = (list $ .value) | includeTemplate "fix-path" }}
+{{-     $value = includeTemplate "fix-path" (dict
+          "dot" $
+          "path" .value
+        ) }}
 {{-   else }}
 {{      $value = .value }}
 {{-   end }}

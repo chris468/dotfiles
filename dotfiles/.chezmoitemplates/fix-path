@@ -1,5 +1,11 @@
-{{- if eq "windows" (0 | index .).chezmoi.os -}}
-{{- 1 | index . | replace "\\" "/" -}}
+{{- if eq "windows" .dot.chezmoi.os -}}
+{{-   $split := regexSplit ":" .path 2 -}}
+{{-   $path := $split | last}}
+{{-   $driveLetter := "" }}
+{{-   if $split | initial -}}
+{{-     $driveLetter = list "/" (0 | index $split | lower) | join "" -}}
+{{-   end }}
+{{-   list $driveLetter $path | join "" | replace "\\" "/" -}}
 {{- else -}}
-{{ 1 | index . }}
+{{-   .path -}}
 {{- end -}}
