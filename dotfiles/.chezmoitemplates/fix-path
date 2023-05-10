@@ -1,5 +1,9 @@
-{{- if eq "windows" (0 | index .).chezmoi.os -}}
-{{- 1 | index . | replace "\\" "/" -}}
+{{- if eq "windows" .dot.chezmoi.os -}}
+{{- regexReplaceAll
+     "^([[:alpha:]]):(.*)" 
+     (.path | replace "\\" "/")
+     "/${1}${2}"
+- }}
 {{- else -}}
-{{ 1 | index . }}
+{{- .path -}}
 {{- end -}}
