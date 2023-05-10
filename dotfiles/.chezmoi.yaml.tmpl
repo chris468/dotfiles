@@ -17,6 +17,8 @@
 {{- $_ipython := joinPath $_configHome "ipython" -}}
 {{- $_cargoHome := joinPath $_localInstall "cargo" -}}
 {{- $_cargoBin := joinPath $_cargoHome "bin" -}}
+{{- $_zshConfig := joinPath $_configHome "zsh" -}}
+{{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
 {{- $_relativePaths := dict
       "localBin" $_localBin
       "localInstall" $_localInstall
@@ -33,6 +35,8 @@
       "ipython" $_ipython
       "cargoHome" $_cargoHome
       "cargoBin" $_cargoBin
+      "zshConfig" $_zshConfig
+      "zshPlugins" $_zshPlugins
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}

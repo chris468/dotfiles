@@ -56,10 +56,12 @@ chezmoi:template:missing-key=zero
   url: "https://github.com/zsh-user/zsh-autosuggestions"
   type: git-repo
   refreshPeriod: "168h"
-  private: true
-{{ joinPath .paths.relative.configHome "zsh" "plugins" "zsh-autosuggestions"| quote }}:
+{{ joinPath .paths.relative.zshPlugins "zsh-autosuggestions" | quote }}:
   type: git-repo
   url: "https://github.com/zsh-users/zsh-autosuggestions"
   refreshPeriod: "168h"
-  private: true
+{{ joinPath .paths.relative.zshPlugins "zsh-syntax-highlighting" | quote }}:
+  url: https://github.com/zsh-users/zsh-syntax-highlighting
+  type: git-repo
+  refreshPeriod: "168h"
 {{- end }}
