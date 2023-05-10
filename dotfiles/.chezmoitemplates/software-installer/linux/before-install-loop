@@ -1,13 +1,13 @@
 chezmoi:template:missing-key=zero
 #!/usr/bin/env bash
 
-source {{ joinPath .paths.localInstallSbin "set-environment.bash" }}
+source {{ joinPath .paths.localInstallSbin "set-environment.bash" | quote }}
 
 FAILED_TOOLS=
 
 if ! command -v asdf &>/dev/null
 then
-  . {{ joinPath .paths.asdf "asdf.sh" }}
+  . {{ joinPath .paths.asdf "asdf.sh" | quote }}
 fi
 
 function asdf-install {
@@ -32,6 +32,6 @@ function install-dotnet {
   while [ $# -ne 0 ]
   do
     version=$1 ; shift
-    {{ joinPath .paths.localInstallSbin "dotnet-install.sh" }} --channel "${version}.0"
+    {{ joinPath .paths.localInstallSbin "dotnet-install.sh" | quote }} --channel "${version}.0"
   done
 }

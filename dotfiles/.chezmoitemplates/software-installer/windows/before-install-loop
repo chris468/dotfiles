@@ -1,5 +1,5 @@
 chezmoi:template:missing-key=zero
-. {{ joinPath .paths.localInstallSbin "set-environment.ps1" }}
+. {{ joinPath .paths.localInstallSbin "set-environment.ps1" | quote }}
 
 function script:scoop-install(
     [string]$name,
