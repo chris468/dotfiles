@@ -50,3 +50,11 @@ chezmoi:template:missing-key=zero
   type: git-repo
   url: "https://github.com/nushell/nu_scripts"
   refreshPeriod: "168h"
+
+{{- if ne "windows" .chezmoi.os }}
+{{ joinPath .paths.relative.localInstall "oh-my-zsh" | quote }}:
+  type: git-repo
+  url: "https://github.com/ohmyzsh/ohmyzsh"
+  refreshPeriod: "168h"
+  private: true
+{{- end }}
