@@ -64,4 +64,8 @@ chezmoi:template:missing-key=zero
   url: https://github.com/zsh-users/zsh-syntax-highlighting
   type: git-repo
   refreshPeriod: "168h"
+{{ joinPath .paths.relative.zshPlugins "zsh-history-substring-search" | quote }}:
+  url: https://github.com/zsh-users/zsh-history-substring-search
+  type: git-repo
+  refreshPeriod: "168h"
 {{- end }}
