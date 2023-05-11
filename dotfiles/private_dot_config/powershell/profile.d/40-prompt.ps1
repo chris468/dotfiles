@@ -26,8 +26,7 @@ function Initialize-InteractiveSession {
 if (Get-Command oh-my-posh 2>$null) {
     New-Alias -Name 'Set-PoshContext' -Value 'Initialize-InteractiveSession' -Scope Global -Force
 
-    $theme = "$config_dir/oh-my-posh/current-theme.omp.json"
-    oh-my-posh init pwsh --config $theme | Invoke-Expression
+    oh-my-posh init pwsh | Invoke-Expression
 } else {
     Initialize-InteractiveSession
 }

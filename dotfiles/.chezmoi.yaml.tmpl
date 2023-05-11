@@ -1,5 +1,6 @@
 {{- $work := false -}}
 {{- $devtools := true -}}
+{{- $poshTheme := "my-theme.omp.json" -}}
 
 {{- $_localBin := joinPath ".local" "bin" -}}
 {{- $_localInstall := joinPath ".local" "opt" -}}
@@ -80,6 +81,9 @@ data:
       path: true
       value: {{ $paths.localInstall }}
       export: false
+    - name: POSH_THEME
+      path: true
+      value: {{ joinPath $paths.configHome "oh-my-posh" $poshTheme }}
 {{- if ne "windows" .chezmoi.os }}
     - name: DOTNET_ROOT
       path: true
