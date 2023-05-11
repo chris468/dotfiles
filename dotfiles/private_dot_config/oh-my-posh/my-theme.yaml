@@ -1,0 +1,169 @@
+$schema: https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+version: 2
+final_space: true
+osc99: false
+palette:
+  aws-foreground: '#faa029'
+  aws-key-background: '#4f1e1e'
+  error-foreground: '#ff8080'
+  executiontime-foreground: '#757575'
+  git-ahead-foreground: '#89d1dc'
+  git-behind-foreground: '#c5b6ad'
+  git-changed-foreground: '#ff9248'
+  git-foreground: '#95ffa4'
+  git-local-and-remote-changes-foreground: '#f26d50'
+  kubectl-foreground: '#316ce4'
+  pending-foreground: '#1733a3'
+  separator-foreground: '#5e81ac'
+  session-local-foreground: '#0077c2'
+  session-remote-foreground: '#32a881'
+  shell-foreground: '#91ddff'
+  success-foreground: '#00897b'
+  time-foreground: '#689f38'
+  warning-foreground: '#9fa317'
+console_title_template: '{{ if .Env.WSL_DISTRO_NAME }}{{ .Env.WSL_DISTRO_NAME }}/{{
+  end }}{{ .Shell }} {{ .UserName }}@{{ .HostName }}{{ if .Env.SSH_CLIENT }}*{{ end
+  }}'
+blocks:
+  - alignment: right
+    segments:
+      - foreground: p:success-foreground
+        foreground_templates:
+          - '{{ if eq .Env.YADM_AUTO_UPDATE_STATUS "FAILED" }}p:error-foreground{{
+            end }}'
+          - '{{ if eq .Env.YADM_AUTO_UPDATE_STATUS "UPDATING" }}p:pending-foreground{{
+            end }}'
+          - '{{ if eq .Env.YADM_AUTO_UPDATE_STATUS "CHECKING" }}p:pending-foreground{{
+            end }}'
+          - '{{ if not .Env.YADM_AUTO_UPDATE_STATUS }}p:warning-foreground{{ end }}'
+        style: plain
+        template: <p:separator-foreground>[</>●{{ if eq .Env.YADM_CHANGES "1" }}<p:git-changed-foreground>~</>{{
+          end }}{{ if .Env.YADM_AUTO_UPDATE_STATUS }}{{ get (dict "UPTODATE" "✓" "RECENT"
+          "⏎" "UPDATING" "↓…" "UPDATED" "↓✓" "CHECKING" "?…" "FAILED" "↓⨯") .Env.YADM_AUTO_UPDATE_STATUS
+          }}{{ else }}?{{ end }}<p:separator-foreground>]─</>
+        type: text
+      - type: project
+        style: diamond
+        foreground: '#906cff'
+        leading_diamond: <p:separator-foreground>[</>
+        trailing_diamond: <p:separator-foreground>]─</>
+        templates:
+          - '{{ if .Error }}{{ .Error }}{{ end }}'
+          - '{{ if and (not .Error) .Name }}{{ .Name | trim }}{{ end }}'
+          - '{{ if not .Error }}{{ if .Target }} ({{ .Target }}){{ else }} {{ if .Type
+            }} ({{ if and (eq .Type "poetry") (eq "1" .Env.POETRY_ACTIVE) }}♦{{ end
+            }}{{ .Type }}){{ end }}{{ end }}{{ end }}'
+      - type: python
+        style: diamond
+        foreground: '#906cff'
+        leading_diamond: <p:separator-foreground>[</>
+        trailing_diamond: <p:separator-foreground>]─</>
+        template: '{{ if ne "1" .Env.POETRY_ACTIVE }}{{ if .Error }}{{ .Error }}{{
+          else }}{{ if .Venv }}♦{{ .Venv }} {{ end }}{{ .Full }}{{ end }}{{ end }}'
+      - foreground: p:aws-foreground
+        foreground_templates:
+          - '{{ if contains "admin" .Profile }}red{{ end }}'
+        style: plain
+        template: <p:separator-foreground>[</>{{.Profile}}{{ if and .Region (ne .Region
+          "us-east-1") }}@{{.Region}}{{end}}<p:separator-foreground>]─</>
+        type: aws
+      - foreground: p:kubectl-foreground
+        foreground_templates:
+          - '{{ if contains "admin" .Context }}red{{ end }}'
+        style: plain
+        template: '<p:separator-foreground>[</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<p:separator-foreground>]─</>'
+        type: kubectl
+      - foreground: p:time-foreground
+        properties:
+          time_format: Mon Jan _2 15:04:05
+        style: plain
+        template: <p:separator-foreground>[</>{{ .CurrentDate | date .Format }}<p:separator-foreground>]</>
+        type: time
+    type: prompt
+  - alignment: left
+    newline: true
+    segments:
+      - foreground: p:session-local-foreground
+        foreground_templates:
+          - '{{ if .Env.SSH_CLIENT }}p:session-remote-foreground{{ end }}'
+        style: plain
+        template: <p:separator-foreground>┌[</>{{ .UserName }}@{{ .HostName }}<p:separator-foreground>]</>
+        type: session
+      - foreground: p:git-foreground
+        foreground_templates:
+          - '{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-changed-foreground{{
+            end }}'
+          - '{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:git-local-and-remote-changes-foreground{{
+            end }}'
+          - '{{ if gt .Ahead 0 }}p:git-ahead-foreground{{ end }}'
+          - '{{ if gt .Behind 0 }}p:git-behind-foreground{{ end }}'
+        properties:
+          branch_ahead_icon: ↑
+          branch_behind_icon: ↓
+          branch_gone: ≢
+          branch_icon: ' '
+          branch_identical_icon: ≡
+          cherry_pick_icon: '✓ '
+          commit_icon: '▷ '
+          fetch_stash_count: true
+          fetch_status: true
+          merge_icon: '◴ '
+          no_commits_icon: '[no commits]'
+          rebase_icon: 'Ɫ '
+          tag_icon: '▶ '
+        style: plain
+        template: <p:separator-foreground>─[</>{{ .HEAD }}{{ .BranchStatus }}{{ if
+          .Working.Changed }} {{ .Working.String }}{{ end }}{{ if and (.Working.Changed)
+          (.Staging.Changed) }} │{{ end }}{{ if .Staging.Changed }} {{ .Staging.String
+          }}{{ end }}{{ if gt .StashCount 0 }} {{ .StashCount }}{{ end }}<p:separator-foreground>]</>
+        type: git
+      - foreground: p:shell-foreground
+        properties:
+          folder_icon: …
+          max_depth: 4
+          style: agnoster_short
+        style: plain
+        template: <p:separator-foreground>─[</>{{ .Path }}<p:separator-foreground>]</>
+        type: path
+    type: prompt
+  - alignment: left
+    newline: true
+    segments:
+      - foreground: p:executiontime-foreground
+        style: plain
+        template: <p:separator-foreground>└</>
+        type: text
+      - foreground: p:success-foreground
+        foreground_templates:
+          - '{{ if ne .Code 0 }}p:error-foreground{{ end }}'
+        properties:
+          always_enabled: true
+        style: plain
+        template: '<p:separator-foreground>[</>{{ if ne .Code 0 }}⨯ {{ .Meaning }}{{
+          else }}✓{{ end }} '
+        type: exit
+      - foreground: '#83769c'
+        properties:
+          style: austin
+          threshold: 0
+        style: plain
+        template: '{{ .FormattedMs }}<p:separator-foreground>]</>'
+        type: executiontime
+      - foreground: p:session-local-foreground
+        foreground_templates:
+          - '{{ if .Env.WSL_DISTRO_NAME }}p:session-remote-foreground{{ end }}'
+        style: plain
+        template: <p:separator-foreground>─[</>{{ if .Env.WSL_DISTRO_NAME }}{{ .Env.WSL_DISTRO_NAME
+          }}/{{ end }}{{ .Shell }}<p:separator-foreground>]</>
+        type: session
+      - foreground: '#007acc'
+        properties:
+          mapped_shell_names:
+            fish: $
+            bash: $
+            pwsh: '>'
+            nu: ν
+        style: plain
+        template: ' {{ .Name }}'
+        type: shell
+    type: prompt
