@@ -1,17 +1,22 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 version: 2
 palette:
-  background: "#282a36"
-  foreground: "#f8f8f2"
-  selection: "#44475a"
-  comment: "#6272a4"
-  red: "#ff5555"
-  orange: "#ffb86c"
-  yellow: "#f1fa8c"
-  green: "#50fa7b"
-  purple: "#bd93f9"
-  cyan: "#8be9fd"
-  pink: "#ff79c6"
+  # dracula colors from https://spec.draculatheme.com/#sec-Standard
+  draculaBackground: "#282a36"
+  draculaForeground: "#f8f8f2"
+  draculaSelection: "#44475a"
+  draculaComment: "#6272a4"
+  draculaRed: "#ff5555"
+  draculaOrange: "#ffb86c"
+  draculaYellow: "#f1fa8c"
+  draculaGreen: "#50fa7b"
+  draculaPurple: "#bd93f9"
+  draculaCyan: "#8be9fd"
+  draculaPink: "#ff79c6"
+
+  draculaBlack: "p:draculaBackground"
+  draculaWhite: "p:draculaForeground"
+
 blocks:
   - type: prompt
     alignment: left
