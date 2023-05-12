@@ -25,6 +25,18 @@ blocks:
     alignment: left
     newline: true
     segments:
+      - type: text
+        style: plain
+        foreground: p:draculaPurple
+        template: '┏ '
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: text
+        style: plain
+        foreground: p:draculaPurple
+        template: '┗ '
       - type: session
         style: diamond
         leading_diamond: ''
