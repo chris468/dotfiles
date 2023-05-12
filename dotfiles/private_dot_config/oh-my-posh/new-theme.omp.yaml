@@ -24,9 +24,23 @@ blocks:
       - type: session
         style: diamond
         leading_diamond: ''
-        trailing_diamond: ' '
+        trailing_diamond: ''
         foreground: p:draculaBlack
         background: p:draculaPurple
+      - type: shell
+        style: diamond
+        trailing_diamond: ' '
+        foreground: p:draculaBlack
+        background: p:draculaGreen
+        background_templates:
+          - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
+        properties:
+          mapped_shell_names:
+            bash: '$'
+            pwsh: ''
+            nu: 'ν'
+            zsh: '%'
+            xonsh: ''
   - type: rprompt
     segments:
       - type: text
