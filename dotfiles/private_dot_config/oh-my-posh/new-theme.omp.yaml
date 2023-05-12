@@ -21,6 +21,7 @@ blocks:
   - type: prompt
     alignment: left
     segments: []
+
   - type: prompt
     alignment: left
     newline: true
@@ -29,9 +30,23 @@ blocks:
         style: plain
         foreground: p:draculaPurple
         template: '┏ '
-      - type: git
+
+      - type: path
         style: diamond
         leading_diamond: ''
+        trailing_diamond: ''
+        foreground: p:draculaBlack
+        background: p:draculaComment
+        template: ' {{ if not .Writable }}{{ end }}{{ .Path }} '
+        properties:
+          style: mixed
+          home_icon: ''
+          folder_icon: ''
+          folder_separator_icon: '/'
+          mapped_locations_enabled: true
+
+      - type: git
+        style: diamond
         trailing_diamond: ''
         foreground: p:draculaBlack
         background: p:draculaGreen
@@ -40,15 +55,16 @@ blocks:
           - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:draculaOrange{{ end }}"
           - "{{ if gt .Ahead 0 }}p:draculaPink{{ end }}"
           - "{{ if gt .Behind 0 }}p:draculaPurple{{ end }}"
-        template: "{{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus
+        template: " {{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus
           }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and
           (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} 
           {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{
-          end }}"
+          end }} "
         properties:
           fetch_status: true
           fetch_stash_count: true
           fetch_upstream_icon: true
+
   - type: prompt
     alignment: left
     newline: true
@@ -57,12 +73,14 @@ blocks:
         style: plain
         foreground: p:draculaPurple
         template: '┗ '
+
       - type: session
         style: diamond
         leading_diamond: ''
         trailing_diamond: ''
         foreground: p:draculaBlack
         background: p:draculaPurple
+
       - type: shell
         style: diamond
         trailing_diamond: ' '
@@ -77,6 +95,7 @@ blocks:
             nu: 'ν'
             zsh: '%'
             xonsh: ''
+
   - type: rprompt
     segments:
       - type: exit
