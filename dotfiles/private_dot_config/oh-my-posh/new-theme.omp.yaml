@@ -43,6 +43,9 @@ blocks:
             xonsh: ''
   - type: rprompt
     segments:
-      - type: text
-        style: plain
-        template: '<'
+      - type: exit
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ''
+        foreground: p:draculaBlack
+        background: p:draculaRed
