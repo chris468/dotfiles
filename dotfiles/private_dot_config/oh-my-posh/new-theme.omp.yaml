@@ -29,11 +29,23 @@ blocks:
       - type: text
         style: plain
         foreground: p:draculaPurple
-        template: '┏ '
+        template: '╭─'
+
+      - type: os
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ''
+        foreground: p:draculaComment
+        background: p:draculaCyan
+
+      - type: session
+        style: diamond
+        trailing_diamond: ''
+        foreground: p:draculaBlack
+        background: p:draculaPurple
 
       - type: path
         style: diamond
-        leading_diamond: ''
         trailing_diamond: ''
         foreground: p:draculaWhite
         background: p:draculaComment
@@ -65,6 +77,14 @@ blocks:
           fetch_stash_count: true
           fetch_upstream_icon: true
 
+      - type: executiontime
+        style: diamond
+        trailing_diamond: ''
+        foreground: p:draculaForeground
+        background: p:draculaSelection
+        properties:
+          threshold: 0
+
   - type: prompt
     alignment: left
     newline: true
@@ -72,35 +92,38 @@ blocks:
       - type: text
         style: plain
         foreground: p:draculaPurple
-        template: '┗ '
+        template: '╰─'
 
-      - type: session
-        style: diamond
-        leading_diamond: ''
-        trailing_diamond: ''
-        foreground: p:draculaBlack
-        background: p:draculaPurple
+      - type: text
+        style: plain
+        foreground: p:draculaGreen
+        foreground_templates:
+          - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
+        template: ' '
 
+
+  - type: rprompt
+    segments:
       - type: shell
         style: diamond
-        trailing_diamond: ' '
+        leading_diamond: ''
+        trailing_diamond: ''
         foreground: p:draculaBlack
         background: p:draculaGreen
         background_templates:
           - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
         properties:
           mapped_shell_names:
-            bash: '$'
-            pwsh: ''
-            nu: 'ν'
-            zsh: '%'
+            bash: '<b>$</b>'
+            pwsh: ''
+            nu: '<b>ν</b>'
+            zsh: '<b>%</b>'
             xonsh: ''
 
-  - type: rprompt
-    segments:
       - type: exit
         style: diamond
-        leading_diamond: ''
         trailing_diamond: ''
         foreground: p:draculaBlack
         background: p:draculaRed
+
+
