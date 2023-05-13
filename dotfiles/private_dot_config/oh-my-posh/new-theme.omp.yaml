@@ -122,6 +122,7 @@ blocks:
         trailing_diamond: ''
         foreground: p:textOnCyan
         background: p:draculaCyan
+        template: '{{ if .WSL }}{{ end }}{{ .Icon }} '
 
       - type: session
         style: diamond
