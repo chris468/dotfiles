@@ -1,0 +1,196 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+version: 2
+palette:
+  # dracula colors from https://spec.draculatheme.com/#sec-Standard
+  draculaBackground: "#282a36"
+  draculaBlack: "p:draculaBackground"
+  draculaForeground: "#f8f8f2"
+  draculaWhite: "p:draculaForeground"
+  draculaSelection: "#44475a"
+  draculaDarkPurple: "p:draculaSelection"
+  draculaComment: "#6272a4"
+  draculaLightGray: "p:draculaComment"
+  draculaRed: "#ff5555"
+  draculaOrange: "#ffb86c"
+  draculaYellow: "#f1fa8c"
+  draculaGreen: "#50fa7b"
+  draculaPurple: "#bd93f9"
+  draculaCyan: "#8be9fd"
+  draculaPink: "#ff79c6"
+
+  textOnPurple: p:draculaBlack
+  textOnYellow: p:draculaBlack
+  textOnCyan: p:draculaBlack
+  textOnOrange: p:draculaBlack
+  textOnGreen: p:draculaBlack
+  textOnPink: p:draculaBlack
+  textOnRed: p:draculaBlack
+  textOnDarkPurple: p:draculaPurple
+
+blocks:
+  - type: prompt
+    alignment: left
+    segments:
+      - type: text
+        alias: ProjectRow
+        style: plain
+        foreground: p:draculaPurple
+        template: '{{ if or
+            .Segments.Git.UpstreamURL
+            .Segments.Project.Type
+            .Segments.Python.Venv
+            .Segments.Kubectl.Context
+            .Segments.Aws.Profile
+         }}╭─{{ end }}'
+
+      - type: git
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ' '
+        foreground: p:textOnGreen
+        background: p:draculaGreen
+        foreground_templates:
+          - "{{ if or (.Working.Changed) (.Staging.Changed) }}p:textOnYellow{{ end }}"
+          - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:textOnOrange{{ end }}"
+          - "{{ if gt .Ahead 0 }}p:textOnPink{{ end }}"
+          - "{{ if gt .Behind 0 }}p:textOnPurple{{ end }}"
+        background_templates:
+          - "{{ if or (.Working.Changed) (.Staging.Changed) }}p:draculaYellow{{ end }}"
+          - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:draculaOrange{{ end }}"
+          - "{{ if gt .Ahead 0 }}p:draculaPink{{ end }}"
+          - "{{ if gt .Behind 0 }}p:draculaPurple{{ end }}"
+        template: " {{ .UpstreamIcon }}{{ .RepoName }} {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus
+          }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and
+          (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} 
+          {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{
+          end }} "
+        properties:
+          fetch_status: true
+          fetch_stash_count: true
+          fetch_upstream_icon: true
+
+      - type: project
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ' '
+        foreground: p:textOnPurple
+        background: p:draculaPurple
+
+      - type: python
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ' '
+        foreground: p:textOnYellow
+        background: p:draculaYellow
+
+      - type: kubectl
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ' '
+        foreground: p:textOnCyan
+        background: p:draculaCyan
+        template: '{{ if .Context
+          }}󱃾 {{ .Context }}{{ if .Namespace }}:{{ .Namespace }}{{ end }}{{ end }}'
+
+      - type: aws
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ' '
+        foreground: p:textOnOrange
+        background: p:draculaOrange
+        template: '{{ if or .Profile .Region
+          }}󰸏 {{ .Profile }}{{ if and .Region (ne .Region "us-east-1") }}@{{ .Region }}{{ end }}{{ end }}'
+
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: text
+        style: plain
+        foreground: p:draculaPurple
+        template: '{{ if or
+              .Segments.Git.UpstreamURL
+              .Segments.Project.Type
+              .Segments.Python.Venv
+            .Segments.Kubectl.Context
+            .Segments.Aws.Profile
+            }}│ {{else}}╭─{{ end }}'
+
+      - type: os
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ''
+        foreground: p:textOnCyan
+        background: p:draculaCyan
+        template: '{{ if .WSL }}{{ end }}{{ .Icon }} '
+
+      - type: session
+        style: diamond
+        trailing_diamond: ''
+        foreground: p:textOnPurple
+        background: p:draculaPurple
+
+      - type: path
+        style: diamond
+        trailing_diamond: ''
+        foreground: p:draculaWhite
+        background: p:draculaComment
+        template: ' {{ if not .Writable }}{{ end }}{{ .Path }} '
+        properties:
+          style: mixed
+          home_icon: ''
+          folder_icon: ''
+          folder_separator_icon: '/'
+          mapped_locations_enabled: true
+
+      - type: executiontime
+        style: diamond
+        trailing_diamond: ''
+        foreground: p:textOnDarkPurple
+        background: p:draculaDarkPurple
+        properties:
+          threshold: 0
+
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: text
+        style: plain
+        foreground: p:draculaPurple
+        template: '╰─'
+
+      - type: text
+        style: plain
+        foreground: p:draculaGreen
+        foreground_templates:
+          - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
+        template: ' '
+
+
+  - type: rprompt
+    segments:
+      - type: shell
+        style: diamond
+        leading_diamond: ''
+        trailing_diamond: ''
+        foreground: p:textOnGreen
+        background: p:draculaGreen
+        background_templates:
+          - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
+        template: '{{ .Name }}{{ if .Env.CHEZMOI }}{{ end }}'
+        properties:
+          mapped_shell_names:
+            bash: '<b>$</b>'
+            pwsh: ''
+            nu: '<b>ν</b>'
+            zsh: '<b>%</b>'
+            xonsh: ''
+
+      - type: exit
+        style: diamond
+        trailing_diamond: ''
+        foreground: p:textOnRed
+        background: p:draculaRed
+
+
