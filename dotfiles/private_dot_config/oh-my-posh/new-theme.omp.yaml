@@ -177,6 +177,7 @@ blocks:
         background: p:draculaGreen
         background_templates:
           - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
+        template: '{{ .Name }}{{ if .Env.CHEZMOI }}{{ end }}'
         properties:
           mapped_shell_names:
             bash: '<b>$</b>'
