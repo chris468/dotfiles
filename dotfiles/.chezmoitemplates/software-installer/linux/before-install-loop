@@ -1,7 +1,7 @@
 chezmoi:template:missing-key=zero
 #!/usr/bin/env bash
 
-source {{ joinPath .paths.localInstallSbin "set-environment.bash" }}
+source {{ joinPath .paths.localInstallSbin "set-environment" }}
 
 FAILED_TOOLS=
 

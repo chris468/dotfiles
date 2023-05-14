@@ -50,3 +50,14 @@ chezmoi:template:missing-key=zero
   type: git-repo
   url: "https://github.com/nushell/nu_scripts"
   refreshPeriod: "168h"
+
+{{ joinPath .paths.relative.localInstall "oh-my-zsh" | quote }}:
+  url: "https://github.com/ohmyzsh/ohmyzsh"
+  type: git-repo
+  refreshPeriod: "168h"
+{{-   range .zsh.externalPlugins }}
+{{ joinPath $.paths.relative.zshPlugins .name | quote }}:
+  type: git-repo
+  url: {{ .url | quote }}
+  refreshPeriod: "168h"
+{{-   end }}
