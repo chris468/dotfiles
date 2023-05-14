@@ -149,6 +149,7 @@ data:
 {{- if ne "windows" .chezmoi.os }}
         - {{ $paths.dotnetRoot }}
 {{- else }}
+        - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
 {{- end }}
 
 {{- if eq .chezmoi.os "windows" }}
