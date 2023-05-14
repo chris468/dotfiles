@@ -21,12 +21,15 @@ zstyle ':omz:update' mode disabled  # disable automatic updates
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM="$HOME/.config/zsh"
 
+VI_MODE_SET_CURSOR=true
+
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  vi-mode
   zsh-syntax-highlighting
   zsh-history-substring-search
   zsh-autosuggestions
