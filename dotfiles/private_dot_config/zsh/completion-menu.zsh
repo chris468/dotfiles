@@ -1,6 +1,7 @@
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' format '%ds'
+zstyle ':completion:*:*:*:*:corrections' format '%B%F{yellow}%d%f%b'
+zstyle ':completion:*:*:*:*:descriptions' format '%B%F{blue}%d%f%b'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
 eval "$(dircolors -b)"
