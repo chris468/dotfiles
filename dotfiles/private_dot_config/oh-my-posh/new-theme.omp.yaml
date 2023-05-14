@@ -36,7 +36,7 @@ blocks:
         style: plain
         foreground: p:draculaPurple
         template: '{{ if or
-            .Segments.Git.UpstreamURL
+            .Segments.Git.HEAD
             .Segments.Project.Type
             .Segments.Python.Venv
             .Segments.Kubectl.Context
@@ -109,7 +109,7 @@ blocks:
         style: plain
         foreground: p:draculaPurple
         template: '{{ if or
-              .Segments.Git.UpstreamURL
+              .Segments.Git.HEAD
               .Segments.Project.Type
               .Segments.Python.Venv
             .Segments.Kubectl.Context
