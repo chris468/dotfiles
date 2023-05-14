@@ -51,7 +51,6 @@ chezmoi:template:missing-key=zero
   url: "https://github.com/nushell/nu_scripts"
   refreshPeriod: "168h"
 
-{{- if ne "windows" .chezmoi.os }}
 {{ joinPath .paths.relative.localInstall "oh-my-zsh" | quote }}:
   url: "https://github.com/ohmyzsh/ohmyzsh"
   type: git-repo
@@ -62,4 +61,3 @@ chezmoi:template:missing-key=zero
   url: {{ .url | quote }}
   refreshPeriod: "168h"
 {{-   end }}
-{{- end }}

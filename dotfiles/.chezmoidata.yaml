@@ -121,9 +121,9 @@ software:
 zsh:
   externalPlugins:
     - name: zsh-autosuggestions
-      url: "https://github.com/zsh-user/zsh-autosuggestions"
+      url: "https://github.com/zsh-users/zsh-autosuggestions"
     - name: zsh-syntax-highlighting
-      url: "https://github.com/zsh-user/zsh-syntax-highlighting"
+      url: "https://github.com/zsh-users/zsh-syntax-highlighting"
     - name: zsh-history-substring-search
-      url: "https://github.com/zsh-user/zsh-history-substring-search"
+      url: "https://github.com/zsh-users/zsh-history-substring-search"
 
