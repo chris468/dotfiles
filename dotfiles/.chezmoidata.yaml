@@ -69,7 +69,7 @@ software:
         completions:
           az:
             bash: |-
-              & $env:SCOOP/apps/azure-cli/current/python.exe $env:SCOOP/apps/azure-cli/current/scripts/register-python-argcomplete
+              & $env:SCOOP/apps/azure-cli/current/python.exe $env:SCOOP/apps/azure-cli/current/scripts/register-python-argcomplete az
 
     - name: github-cli
       group: devtools
