@@ -16,4 +16,5 @@ $zsh_version=(Invoke-RestMethod "https://packages.msys2.org/api/search?query=zsh
 
 Write-Host "Installing zsh ${zsh_version}..."
 $zsh_uri="https://mirror.msys2.org/msys/x86_64/zsh-${zsh_version}-x86_64.pkg.tar.zst"
-& $env:SCOOP\shims\bash.exe -c "curl -L '$zsh_uri' | tar -C `$SCOOP/apps/git/current -x --zstd"
+{{- /* exclude etc/zsh to avoid warnings from including bash profile */}}
+& $env:SCOOP\shims\bash.exe -c "curl -L '$zsh_uri' | tar -C `$SCOOP/apps/git/current -x --zstd --exclude etc/zsh"
