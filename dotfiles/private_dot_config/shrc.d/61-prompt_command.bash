@@ -1,6 +1,6 @@
 function _prompt_commands {
     ret=$?
-    for c in ~/.config/bash/bashrc.d/prompt_command.d/*.bash
+    for c in $(find ~/.config/shrc.d/prompt_command.d -maxdepth 1 -type f -name '*.bash')
     do
         . $c
     done
