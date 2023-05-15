@@ -1,6 +1,6 @@
 # based on https://unix.stackexchange.com/questions/132065/how-do-i-get-ssh-agent-to-work-in-all-terminals/132117#132117
 
-export SSH_AUTH_SOCK=~/.ssh/.socket
+export SSH_AUTH_SOCK=/tmp/$USER-ssh.sock
 ssh-add -l >/dev/null 2>&1
 if [ $? -ge 2 ]
 then

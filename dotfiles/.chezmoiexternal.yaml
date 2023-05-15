@@ -1,5 +1,5 @@
 chezmoi:template:missing-key=zero
-{{ joinPath .paths.relative.configHome "bash" "bashrc.d" "dracula-theme.bash" | quote }}:
+{{ joinPath .paths.relative.configHome "shellrc.d" "dracula-theme.sh" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
   refreshPeriod: "672h"

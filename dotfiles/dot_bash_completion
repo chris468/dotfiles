@@ -1,7 +1,7 @@
 __chris468_completions_dir=~/.config/bash/completions.d
 if [ -d $__chris468_completions_dir ]
 then
-  for f in $(find $__chris468_completions_dir -iname "*.bash")
+  for f in $(find $__chris468_completions_dir -maxdepth 1 -type f -name "*.bash")
   do
       . $f
   done
