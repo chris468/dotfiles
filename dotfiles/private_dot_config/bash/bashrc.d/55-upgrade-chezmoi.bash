@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 last_chezmoi_upgrade="$HOME/.cache/dotfiles/last-chezmoi-upgrade"
 

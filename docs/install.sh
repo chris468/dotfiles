@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 sh -c "$(curl -fsLS get.chezmoi.io)" -- \
     -b $HOME/.local/opt/bin \

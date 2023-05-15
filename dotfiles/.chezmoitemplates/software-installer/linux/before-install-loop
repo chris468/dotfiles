@@ -1,5 +1,5 @@
 chezmoi:template:missing-key=zero
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 source {{ joinPath .paths.localInstallSbin "set-environment" }}
 
