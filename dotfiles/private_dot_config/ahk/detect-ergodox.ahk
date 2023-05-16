@@ -19,7 +19,7 @@ CheckForErgodox()
     static PID := 0
 
     UpdateStatus("Checking for ergodox")
-    RunWait, "C:\Program Files\PowerShell\7\pwsh.EXE" -File "%A_ScriptDir%\detect-usb-device.ps1" "Ergodox EZ" -OutputPath "%A_AppData%\swapkeys\ergodox-present", , Hide
+    RunWait, "pwsh.EXE" -File "%A_ScriptDir%\detect-usb-device.ps1" "Ergodox EZ" -OutputPath "%A_AppData%\swapkeys\ergodox-present", , Hide
     FileReadLine, ErgodoxPresent, %A_AppData%\swapkeys\ergodox-present, 1
     if (ErgodoxPresent != Swap)
     {
