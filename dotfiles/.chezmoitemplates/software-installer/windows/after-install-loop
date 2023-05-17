@@ -11,12 +11,4 @@ chezmoi:template:missing-key=zero
     )
 }}
 
-Write-Host "Checking current zsh version..."
-$zsh_version=(Invoke-RestMethod "https://packages.msys2.org/api/search?query=zsh&qtype=binpkg").results.exact.version
-
-Write-Host "Installing zsh ${zsh_version}..."
-$zsh_uri="https://mirror.msys2.org/msys/x86_64/zsh-${zsh_version}-x86_64.pkg.tar.zst"
-{{- /* exclude etc/zsh to avoid warnings from including bash profile */}}
-& $env:SCOOP\shims\bash.exe -c "curl -L '$zsh_uri' | tar -C `$SCOOP/apps/git/current -x --zstd --exclude etc/zsh"
-
 Remove-Item $env:SCOOP\apps\git\current\usr\bin\zsh*.exe
