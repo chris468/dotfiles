@@ -22,7 +22,7 @@
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
-    "defaultProfile": "{61f80ac4-84c3-49d2-8872-31b66336a1b4}",
+    "defaultProfile": "{f4b4c2de-e7c2-47a3-adbd-fdb935585b81}",
     "profiles": 
     {
         "defaults": 
@@ -47,14 +47,6 @@
                 "hidden": false,
                 "name": "Ubuntu",
                 "source": "Windows.Terminal.Wsl"
-            },
-            {
-                "guid": "{61f80ac4-84c3-49d2-8872-31b66336a1b4}",
-                "hidden": false,
-                "name": "Git Zsh",
-                "commandline": "%SCOOP%\\apps\\git\\current\\usr\\bin\\zsh.exe -li",
-                "icon": "%SCOOP%\\apps\\git\\current\\usr\\share\\git\\git-for-windows.ico",
-                "startingDirectory": "%USERPROFILE%"
             },
             {
                 "guid": "{f4b4c2de-e7c2-47a3-adbd-fdb935585b81}",
