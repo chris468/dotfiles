@@ -64,7 +64,7 @@
             },
             {
                 "colorScheme": "Dracula (Admin)",
-                "commandline": "\"C:\\Program Files\\PowerShell\\7\\pwsh.exe\"",
+                "commandline": "pwsh.exe",
                 "elevate": true,
                 "guid": "{705c5402-658e-42d8-8cc7-691ce68addf8}",
                 "hidden": false,
