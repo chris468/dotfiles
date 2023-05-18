@@ -87,7 +87,8 @@ software:
 
     - name: k9s
       group: devtools
-      repo: "https://github.com/looztra/asdf-k9s"
+      linux:
+        repo: "https://github.com/looztra/asdf-k9s"
 
     - name: kubectl
       group: devtools
