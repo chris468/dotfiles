@@ -15,8 +15,6 @@
 {{- $_lunarvimCache := joinPath $_cacheHome "lvim" -}}
 {{- $_lunarvimBase := joinPath $_lunarvimRuntime "lvim" -}}
 {{- $_ipython := joinPath $_configHome "ipython" -}}
-{{- $_cargoHome := joinPath $_localInstall "cargo" -}}
-{{- $_cargoBin := joinPath $_cargoHome "bin" -}}
 {{- $_zshConfig := joinPath $_configHome "zsh" -}}
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
 {{- $_relativePaths := dict
@@ -33,8 +31,6 @@
       "lunarvimCache" $_lunarvimCache
       "lunarvimBase" $_lunarvimBase
       "ipython" $_ipython
-      "cargoHome" $_cargoHome
-      "cargoBin" $_cargoBin
       "zshConfig" $_zshConfig
       "zshPlugins" $_zshPlugins
 -}}
@@ -124,10 +120,6 @@ data:
       path: true
       persist: true
       value: {{ $paths.lunarvimBase  }}
-    - name: CARGO_HOME
-      path: true
-      persist: true
-      value: {{ $paths.cargoHome }}
 {{- if eq "windows" .chezmoi.os }}
     - name: SCOOP
       path: true
@@ -149,7 +141,6 @@ data:
         - {{ $paths.localBin }}
         - {{ $paths.dotnetTools }}
         - {{ $paths.localInstallBin }}
-        - {{ $paths.cargoBin }}
 {{- if ne "windows" .chezmoi.os }}
         - {{ $paths.dotnetRoot }}
 {{- else }}

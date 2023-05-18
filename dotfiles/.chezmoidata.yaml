@@ -46,6 +46,8 @@ software:
             bash: npm completion
 
     - name: rust
+      windows:
+        package: rustup-gnu
 
     - name: awscli
       group: devtools
