@@ -11,6 +11,8 @@ chezmoi:template:missing-key=zero
     )
 }}
 
+{{ joinPath .paths.fzf "install" }} --xdg --no-update-rc --key-bindings --completion
+
 if [ -n "$FAILED_TOOLS" ]
 then
   echo $'\n'"Some tools were not installed due to missing dependencies or errors:"$'\n'"$FAILED_TOOLS" >&2

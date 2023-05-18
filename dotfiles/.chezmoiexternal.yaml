@@ -61,3 +61,8 @@ chezmoi:template:missing-key=zero
   url: {{ .url | quote }}
   refreshPeriod: "168h"
 {{-   end }}
+
+{{ joinPath .paths.relative.fzf | quote }}:
+  type: git-repo
+  url: https://github.com/junegunn/fzf
+  refreshPeriod: "168h"
