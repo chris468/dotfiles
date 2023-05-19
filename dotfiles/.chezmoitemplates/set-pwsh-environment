@@ -12,16 +12,20 @@ function Script:Set-Environment(
     [string]$value,
     [bool]$persist)
 {
-    $scope = if ($persist) { "User" } else { "Process" }
-    [Environment]::SetEnvironmentVariable($name, "$value", $scope)
+    if ((Get-Environment $name $persist) -ne $value) {
+      $scope = if ($persist) { "User" } else { "Process" }
+      [Environment]::SetEnvironmentVariable($name, "$value", $scope)
+    }
 }
 
 function Script:Unset-Environment(
     [string]$name,
     [bool]$persist)
 {
-    $scope = if ($persist) { "User" } else { "Process" }
-    [Environment]::SetEnvironmentVariable($name, $null, $scope)
+    if ((Get-Environment $name $persist) -ne $null) {
+      $scope = if ($persist) { "User" } else { "Process" }
+      [Environment]::SetEnvironmentVariable($name, $null, $scope)
+    }
 }
 
 function Script:Prepend-Environment(
@@ -63,4 +67,3 @@ Prepend-Environment "{{ $e.name }}" {{ template "toPwshArray" $valueList }} {{ $
 {{-     end }}
 {{-   end }}
 {{- end }}
-
