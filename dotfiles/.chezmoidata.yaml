@@ -108,6 +108,11 @@ software:
       windows:
       default: false
 
+    - name: posh-git
+      repo: extras
+      default: false
+      windows:
+
     - name: neovim-npm
       package: neovim
       package_manager: npm
