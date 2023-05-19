@@ -17,6 +17,8 @@
 {{- $_ipython := joinPath $_configHome "ipython" -}}
 {{- $_zshConfig := joinPath $_configHome "zsh" -}}
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
+{{- $_fzf := joinPath $_localInstall "fzf" -}}
+{{- $_fzfBin := joinPath $_fzf "bin" -}}
 {{- $_relativePaths := dict
       "localBin" $_localBin
       "localInstall" $_localInstall
@@ -33,6 +35,8 @@
       "ipython" $_ipython
       "zshConfig" $_zshConfig
       "zshPlugins" $_zshPlugins
+      "fzf" $_fzf
+      "fzfBin" $_fzfBin
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
@@ -141,6 +145,7 @@ data:
         - {{ $paths.localBin }}
         - {{ $paths.dotnetTools }}
         - {{ $paths.localInstallBin }}
+        - {{ $paths.fzfBin }}
 {{- if ne "windows" .chezmoi.os }}
         - {{ $paths.dotnetRoot }}
 {{- else }}

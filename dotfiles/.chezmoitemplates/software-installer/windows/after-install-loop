@@ -11,4 +11,11 @@ chezmoi:template:missing-key=zero
     )
 }}
 
+{{ $fzfInstall := includeTemplate "fix-path" (dict
+      "dot" .
+      "path" (joinPath .paths.fzf "install") 
+) }}
+{{ .paths.bash }} -c '{{ $fzfInstall }} --xdg --no-update-rc --key-bindings --completion --no-fish --no-zsh'
+
+
 Remove-Item $env:SCOOP\apps\git\current\usr\bin\zsh*.exe
