@@ -10,8 +10,9 @@ function script:scoop-install(
     if ($LASTEXITCODE) { throw "Failed to add bucket $bucket" }
   }
   foreach ($version in $versions) {
-    scoop install "$name$version"
-    if ($LASTEXITCODE) { Write-Error "Failed to install $name$version" }
+    $op = if (scoop prefix $name 6>$null) { "update" } else { "install" }
+    scoop $op "$name$version"
+    if ($LASTEXITCODE) { Write-Error "Failed to $op $name$version" }
   }
 
   scoop reset ($name + $versions[0])
