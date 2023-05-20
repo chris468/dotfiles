@@ -8,6 +8,7 @@
 {{- $_localInstallSbin := joinPath $_localInstall "sbin" -}}
 {{- $_dotnetTools := joinPath ".dotnet" "tools" -}}
 {{- $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
+{{- $_gitCredentialManager := joinPath $_localInstall "git-credential-manager" -}}
 {{- $_dataHome := joinPath ".local" "share" -}}
 {{- $_configHome := ".config" -}}
 {{- $_cacheHome := ".cache" -}}
@@ -27,6 +28,7 @@
       "localInstallSbin" $_localInstallSbin
       "dotnetTools" $_dotnetTools
       "dotnetRoot" $_dotnetRoot
+      "gitCredentialManager" $_gitCredentialManager
       "dataHome" $_dataHome
       "configHome" $_configHome
       "cacheHome" $_cacheHome

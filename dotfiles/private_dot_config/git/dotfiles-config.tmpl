@@ -17,3 +17,15 @@
 	ff = only
 [init]
 	defaultBranch = main
+[credential]
+	helper =
+	helper = {{ template "fix-path" (dict 
+                "dot" .
+                "path" (joinPath .paths.gitCredentialManager "git-credential-manager")
+              )
+          }}
+{{- if eq "linux" .chezmoi.os }}
+  credentialStore = cache
+{{- end }}
+[credential "https://dev.azure.com"]
+	useHttpPath = true
