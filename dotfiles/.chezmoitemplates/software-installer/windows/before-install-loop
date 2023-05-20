@@ -30,6 +30,6 @@ function script:scoop-remove(
 
 function install-dotnet([string[]]$versions) {
   foreach ($version in $versions) {
-    winget install "Microsoft.DotNet.SDK.$version"
+    & {{ joinPath .paths.localInstallSbin "dotnet-install.ps1" | quote }} -Channel $version
   }
 }

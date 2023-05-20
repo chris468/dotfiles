@@ -7,6 +7,7 @@
 {{- $_localInstallBin := joinPath $_localInstall "bin" -}}
 {{- $_localInstallSbin := joinPath $_localInstall "sbin" -}}
 {{- $_dotnetTools := joinPath ".dotnet" "tools" -}}
+{{- $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
 {{- $_dataHome := joinPath ".local" "share" -}}
 {{- $_configHome := ".config" -}}
 {{- $_cacheHome := ".cache" -}}
@@ -25,6 +26,7 @@
       "localInstallBin" $_localInstallBin
       "localInstallSbin" $_localInstallSbin
       "dotnetTools" $_dotnetTools
+      "dotnetRoot" $_dotnetRoot
       "dataHome" $_dataHome
       "configHome" $_configHome
       "cacheHome" $_cacheHome
@@ -47,12 +49,10 @@
         "bash" $_bash
 -}}
 {{- else -}}
-{{-   $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
 {{-   $_asdf := joinPath $_localInstall "asdf" -}}
 {{-   $_asdfInstalls := joinPath $_asdf "installs" -}}
 {{-   $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
 {{-   $_platformRelativePaths = dict
-        "dotnetRoot" $_dotnetRoot
         "asdf" $_asdf
         "asdfInstalls" $_asdfInstalls
         "rustInstall" $_rustInstall
@@ -88,14 +88,12 @@ data:
     - name: POSH_THEME
       path: true
       value: {{ joinPath $paths.configHome "oh-my-posh" $poshTheme }}
-{{- if ne "windows" .chezmoi.os }}
     - name: DOTNET_ROOT
       path: true
       value: {{ $paths.dotnetRoot }}
     - name: DOTNET_INSTALL_DIR
       path: true
       value: {{ $paths.dotnetRoot }}
-{{- end }}
     - name: XDG_DATA_HOME
       path: true
       persist: true
@@ -146,11 +144,14 @@ data:
         - {{ $paths.dotnetTools }}
         - {{ $paths.localInstallBin }}
         - {{ $paths.fzfBin }}
-{{- if ne "windows" .chezmoi.os }}
-        - {{ $paths.dotnetRoot }}
-{{- else }}
+{{- if eq "windows" .chezmoi.os }}
         - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
 {{- end }}
+    - name: PATH
+      path: true
+      action: prepend
+      value:
+        - {{ $paths.dotnetRoot }}
 
 umask: 0o022
 

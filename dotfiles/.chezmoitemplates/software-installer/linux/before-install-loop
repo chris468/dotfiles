@@ -32,6 +32,6 @@ function install-dotnet {
   while [ $# -ne 0 ]
   do
     version=$1 ; shift
-    {{ joinPath .paths.localInstallSbin "dotnet-install.sh" }} --channel "${version}.0"
+    {{ joinPath .paths.localInstallSbin "dotnet-install.sh" }} --channel $version
   done
 }
