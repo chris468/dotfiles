@@ -75,6 +75,7 @@ chezmoi:template:missing-key=zero
      
 {{ .paths.relative.gitCredentialManager | quote }}:
   type: archive
+  exact: true
 {{- if eq "windows" .chezmoi.os  }}
   url: {{ template "gitHubReleaseAsset" (dict
     "repo" "git-ecosystem/git-credential-manager"
