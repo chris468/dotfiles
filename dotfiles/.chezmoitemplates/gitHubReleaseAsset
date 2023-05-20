@@ -1,0 +1,7 @@
+{{- $release := gitHubLatestRelease .repo -}}
+{{- range $release.Assets -}}
+{{-   if .Name | regexMatch $.pattern -}}
+{{-     .BrowserDownloadURL -}}
+{{-     break -}}
+{{-   end }}
+{{- end }}

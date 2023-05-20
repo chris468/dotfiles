@@ -68,7 +68,20 @@ chezmoi:template:missing-key=zero
 {{-   end }}
 {{- end }}
 
-{{ joinPath .paths.relative.fzf | quote }}:
+{{ .paths.relative.fzf | quote }}:
   type: git-repo
   url: https://github.com/junegunn/fzf
   refreshPeriod: "168h"
+     
+{{ .paths.relative.gitCredentialManager | quote }}:
+  type: archive
+  url: {{ template "gitHubReleaseAsset" (dict
+    "repo" "git-ecosystem/git-credential-manager"
+    "pattern" ((list 
+      "gcm-"
+      .chezmoi.os
+      "_"
+      .chezmoi.arch
+      ".*\\d\\.tar\\.gz"
+      ) | join "")
+    )}}
