@@ -130,6 +130,7 @@ software:
       package_manager: cargo
 
     - name: nu
+      profile: nushell
       package_manager: cargo
 zsh:
   externalPlugins:
