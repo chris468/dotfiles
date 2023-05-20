@@ -12,7 +12,7 @@ chezmoi:template:missing-key=zero
 {{- $osSpec = eq nil $osSpec | ternary (dict) $osSpec }}
 {{-   if $osSpec | kindIs "map" }}
 {{-     $spec = $spec | merge ($osSpec | deepCopy) }}
-{{-     $doInstall := (or (not $spec.group) (index $ $spec.group)) }}
+{{-     $doInstall := (or (not $spec.profile) (index $.profile $spec.profile)) }}
 {{-     $version := $spec.name | index $.software.versions }}
 {{-     if $version | kindIs "map" }}
 {{-       $version = $.chezmoi.os | hasKey $version

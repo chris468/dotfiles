@@ -3,7 +3,7 @@ chezmoi:template:missing-key=zero
 {{- includeTemplate "software-installer/linux/install-package" (dict
       "name" "dotnet"
       "spec" (dict)
-      "install" .devtools
+      "install" .profile.devtools
       "install_command" (cat
         "install-dotnet"
         (kindIs "slice" $dotnetVersion | ternary ($dotnetVersion | join " ") $dotnetVersion)

@@ -50,7 +50,7 @@ software:
         package: rustup-gnu
 
     - name: awscli
-      group: devtools
+      profile: devtools
       windows: 
         package: aws
       default:
@@ -59,7 +59,7 @@ software:
           - pip3
 
     - name: azure-cli
-      group: devtools
+      profile: devtools
       default:
         dependencies:
           - pip3
@@ -74,24 +74,24 @@ software:
               & $env:SCOOP/apps/azure-cli/current/python.exe $env:SCOOP/apps/azure-cli/current/scripts/register-python-argcomplete az
 
     - name: github-cli
-      group: devtools
+      profile: devtools
       completions:
         gh: gh completion --shell SHELL
       windows:
         package: gh
 
     - name: helm
-      group: devtools
+      profile: devtools
       completions:
         helm: helm completion SHELL
 
     - name: k9s
-      group: devtools
+      profile: devtools
       linux:
         repo: "https://github.com/looztra/asdf-k9s"
 
     - name: kubectl
-      group: devtools
+      profile: devtools
       completions:
         kubectl: kubectl completion SHELL
 

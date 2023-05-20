@@ -9,6 +9,6 @@ _vimrc
 vimfiles
 {{- end }}
 
-{{- if not .work }}
+{{- if not .profile.work }}
 .vim/plugin/work.vim
 {{- end }}

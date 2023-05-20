@@ -33,7 +33,7 @@ chezmoi:template:missing-key=zero
 {{- if eq .chezmoi.os "windows" }}
 {{- $dotnetInstall = "dotnet-install.ps1" }}
 {{- end }}
-{{- if and .devtools }}
+{{- if and .profile.devtools }}
 {{ joinPath .paths.relative.localInstallSbin $dotnetInstall | quote }}:
   type: file
   url: {{ list "https://dot.net/v1" $dotnetInstall | join "/" | quote }}

@@ -66,8 +66,9 @@
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
 data:
-  work: {{ $work }}
-  devtools: {{ $devtools }}
+  profile:
+    work: {{ $work }}
+    devtools: {{ $devtools }}
   paths:
 {{ $paths | toYaml | indent 4 }}
   environment:
