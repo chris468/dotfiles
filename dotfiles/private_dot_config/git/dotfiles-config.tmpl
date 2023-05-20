@@ -18,7 +18,12 @@
 [init]
 	defaultBranch = main
 [credential]
-	helper = {{ joinPath .paths.gitCredentialManager "git-credential-manager" }}
+	helper =
+	helper = {{ template "fix-path" (dict 
+                "dot" .
+                "path" (joinPath .paths.gitCredentialManager "git-credential-manager")
+              )
+          }}
 {{- if eq "linux" .chezmoi.os }}
   credentialStore = cache
 {{- end }}
