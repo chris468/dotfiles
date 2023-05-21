@@ -21,7 +21,7 @@
 	helper =
 	helper = {{ .paths.unix.gitCredentialManager }}/git-credential-manager
 {{- if eq "linux" .chezmoi.os }}
-  credentialStore = {{ if lookPath "pass" }}gpg{{ else }}cache{{ end }}
+  credentialStore = gpg
 {{- end }}
 [credential "https://dev.azure.com"]
 	useHttpPath = true
