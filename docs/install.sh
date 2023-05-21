@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
 sh -c "$(curl -fsLS get.chezmoi.io)" -- \
-    -b $HOME/.local/opt/bin \
+    -b $HOME/.local/bin \
     init --apply chris468 \
     "$@"
