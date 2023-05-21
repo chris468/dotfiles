@@ -1,4 +1,4 @@
-{{- if eq "windows" .dot.chezmoi.os -}}
+{{- if eq "windows" .chezmoi.os -}}
 {{-   $split := regexSplit ":" .path 2 -}}
 {{-   $path := $split | last}}
 {{-   $driveLetter := "" }}
