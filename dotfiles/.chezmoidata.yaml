@@ -10,6 +10,7 @@ software:
     nodejs:
       default: "latest:lts"
       windows:
+    password_store: "1.7.4"
     rust: 
       default: "latest:stable"
       windows:

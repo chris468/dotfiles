@@ -2,13 +2,15 @@
 {{- $devtools := true -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
 
-{{- $_localInstall := joinPath ".local" "opt" -}}
-{{- $_localInstallBin := joinPath ".local" "bin" -}}
-{{- $_localInstallSbin := joinPath ".local" "sbin" -}}
+{{- $_local := ".local" -}}
+{{- $_localInstall := joinPath $_local "opt" -}}
+{{- $_localInstallBin := joinPath $_local "bin" -}}
+{{- $_localInstallSbin := joinPath $_local "sbin" -}}
+{{- $_localInstallSrc := joinPath $_local "src" -}}
 {{- $_dotnetTools := joinPath ".dotnet" "tools" -}}
 {{- $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
 {{- $_gitCredentialManager := joinPath $_localInstall "git-credential-manager" -}}
-{{- $_dataHome := joinPath ".local" "share" -}}
+{{- $_dataHome := joinPath $_local "share" -}}
 {{- $_configHome := ".config" -}}
 {{- $_cacheHome := ".cache" -}}
 {{- $_lunarvimRuntime := joinPath $_dataHome "lunarvim" -}}
@@ -20,10 +22,13 @@
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
 {{- $_fzf := joinPath $_localInstall "fzf" -}}
 {{- $_fzfBin := joinPath $_fzf "bin" -}}
+{{- $_passwordStore := joinPath $_localInstallSrc "password-store" -}}
 {{- $_relativePaths := dict
+      "local" $_local
       "localInstall" $_localInstall
       "localInstallBin" $_localInstallBin
       "localInstallSbin" $_localInstallSbin
+      "localInstallSrc" $_localInstallSrc
       "dotnetTools" $_dotnetTools
       "dotnetRoot" $_dotnetRoot
       "gitCredentialManager" $_gitCredentialManager
@@ -39,6 +44,7 @@
       "zshPlugins" $_zshPlugins
       "fzf" $_fzf
       "fzfBin" $_fzfBin
+      "passwordStore" $_passwordStore
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
