@@ -41,6 +41,13 @@ chezmoi:template:missing-key=zero
   refreshPeriod: "168h"
 {{- end }}
 
+{{- if ne "windows" .chezmoi.os }}
+{{ .paths.relative.passwordStore | quote }}:
+  type: archive
+  url: https://git.zx2c4.com/password-store/snapshot/password-store-{{ .software.versions.password_store }}.tar.xz
+  stripComponents: 1
+{{- end }}
+
 {{ .paths.relative.lunarvimBase | quote }}:
   type: git-repo
   url: "https://github.com/LunarVim/LunarVim"
@@ -72,7 +79,7 @@ chezmoi:template:missing-key=zero
   type: archive
   url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
   stripComponents: 1
-     
+
 {{ .paths.relative.gitCredentialManager | quote }}:
   type: archive
   exact: true
