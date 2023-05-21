@@ -2,10 +2,9 @@
 {{- $devtools := true -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
 
-{{- $_localBin := joinPath ".local" "bin" -}}
 {{- $_localInstall := joinPath ".local" "opt" -}}
-{{- $_localInstallBin := joinPath $_localInstall "bin" -}}
-{{- $_localInstallSbin := joinPath $_localInstall "sbin" -}}
+{{- $_localInstallBin := joinPath ".local" "bin" -}}
+{{- $_localInstallSbin := joinPath ".local" "sbin" -}}
 {{- $_dotnetTools := joinPath ".dotnet" "tools" -}}
 {{- $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
 {{- $_gitCredentialManager := joinPath $_localInstall "git-credential-manager" -}}
@@ -22,7 +21,6 @@
 {{- $_fzf := joinPath $_localInstall "fzf" -}}
 {{- $_fzfBin := joinPath $_fzf "bin" -}}
 {{- $_relativePaths := dict
-      "localBin" $_localBin
       "localInstall" $_localInstall
       "localInstallBin" $_localInstallBin
       "localInstallSbin" $_localInstallSbin
@@ -144,7 +142,6 @@ data:
       action: prepend
       persist: true
       value:
-        - {{ $paths.localBin }}
         - {{ $paths.dotnetTools }}
         - {{ $paths.localInstallBin }}
         - {{ $paths.fzfBin }}

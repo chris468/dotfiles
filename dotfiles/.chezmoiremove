@@ -1,6 +1,5 @@
 .config/.vim/plugin/packer_compiled.lua
 .config/bash/**
 .config/fish/conf.d/install-oh-my-posh.fish
-.local/opt/sbin/install-lunarvim
-.local/opt/sbin/install-lunarvim.ps1
-.local/opt/sbin/set-environment.bash
+.local/opt/bin/**
+.local/opt/sbin/**
