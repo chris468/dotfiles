@@ -69,9 +69,9 @@ chezmoi:template:missing-key=zero
 {{- end }}
 
 {{ .paths.relative.fzf | quote }}:
-  type: git-repo
-  url: https://github.com/junegunn/fzf
-  refreshPeriod: "168h"
+  type: archive
+  url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
+  stripComponents: 1
      
 {{ .paths.relative.gitCredentialManager | quote }}:
   type: archive
