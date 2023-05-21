@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-last_chezmoi_upgrade="$HOME/.cache/dotfiles/last-chezmoi-upgrade"
+last_chezmoi_upgrade={{ .paths.unix.cacheHome }}/dotfiles/last-chezmoi-upgrade
 
 [ -e "$last_chezmoi_upgrade" ] \
   && [ -n "$(find $last_chezmoi_upgrade -daystart -mtime 0)" ] \

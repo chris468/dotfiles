@@ -20,8 +20,8 @@ function __prepend_environment {
 {{-     if .path }}
 {{-       $value = list }}
 {{-       range .value }}
-{{-          $value = append $value (includeTemplate "fix-path" (dict
-               "dot" $
+{{-          $value = append $value (includeTemplate "toUnixPath" (dict
+               "chezmoi" $.chezmoi
                "path" .
              )) }}
 {{-       end }}
@@ -29,8 +29,8 @@ function __prepend_environment {
 {{-       $value = .value }}
 {{      end }}
 {{-   else if .path }}
-{{-     $value = includeTemplate "fix-path" (dict
-          "dot" $
+{{-     $value = includeTemplate "toUnixPath" (dict
+          "chezmoi" $.chezmoi
           "path" .value
         ) }}
 {{-   else }}

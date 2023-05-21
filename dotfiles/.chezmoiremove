@@ -3,3 +3,5 @@
 .config/fish/conf.d/install-oh-my-posh.fish
 .local/opt/bin/**
 .local/opt/sbin/**
+.local/bin/update-tools
+.local/bin/update-tools.ps1

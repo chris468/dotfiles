@@ -3,5 +3,5 @@ chezmoi:template:missing-key=zero
 {{- template "software-installer/install" . -}}
 {{- else -}}
 #!/usr/bin/bash
-pwsh -NoLogo $HOME/.local/opt/bin/update-tools.ps1
+pwsh -NoLogo {{ .paths.unix.localInstallBin }}/update-software.ps1
 {{- end }}

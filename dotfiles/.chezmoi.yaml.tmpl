@@ -72,6 +72,8 @@ data:
     nushell: false
   paths:
 {{ $paths | toYaml | indent 4 }}
+    unix:
+{{ includeTemplate "dotfiles/.chezmoitemplates/buildUnixPaths" (dict "chezmoi" .chezmoi "paths" $paths) | indent 6 }}
   environment:
     - name: AWS_PROFILE
       action: unset
