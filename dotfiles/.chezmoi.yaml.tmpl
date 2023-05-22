@@ -1,6 +1,7 @@
 {{- $work := false -}}
 {{- $devtools := true -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
+{{- $passGpgId := .chezmoi.username }}
 
 {{- $_local := ".local" -}}
 {{- $_localInstall := joinPath $_local "opt" -}}
@@ -72,6 +73,7 @@
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
 data:
+  passGpgId: {{ if "passGpgId" | hasKey . }}{{ .passGpgId }}{{ else }}{{ $passGpgId }}{{ end }}
   profile:
     work: {{ $work }}
     devtools: {{ $devtools }}
