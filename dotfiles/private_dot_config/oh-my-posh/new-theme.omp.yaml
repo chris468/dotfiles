@@ -119,11 +119,23 @@ blocks:
       - type: os
         style: diamond
         leading_diamond: ''
-        trailing_diamond: ''
         foreground: p:textOnCyan
         background: p:draculaCyan
-        template: '{{ if .WSL }}{{ end }}{{ .Icon }} '
+        template: '{{ if .WSL }} {{ end }}{{ .Icon }} '
 
+      - type: shell
+        style: diamond
+        trailing_diamond: ''
+        foreground: parentForeground
+        background: parentBackground
+        template: '{{ .Name }}{{ if .Env.CHEZMOI }} {{ end }} '
+        properties:
+          mapped_shell_names:
+            bash: '$'
+            pwsh: ''
+            nu: 'ν'
+            zsh: '%'
+            xonsh: ''
       - type: session
         style: diamond
         trailing_diamond: ''
@@ -160,37 +172,13 @@ blocks:
         foreground: p:draculaPurple
         template: '╰─'
 
+      - type: exit
+        style: plain
+        foreground: p:draculaRed
+
       - type: text
         style: plain
         foreground: p:draculaGreen
         foreground_templates:
           - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
         template: ' '
-
-
-  - type: rprompt
-    segments:
-      - type: shell
-        style: diamond
-        leading_diamond: ''
-        trailing_diamond: ''
-        foreground: p:textOnGreen
-        background: p:draculaGreen
-        background_templates:
-          - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
-        template: '{{ .Name }}{{ if .Env.CHEZMOI }}{{ end }}'
-        properties:
-          mapped_shell_names:
-            bash: '<b>$</b>'
-            pwsh: ''
-            nu: '<b>ν</b>'
-            zsh: '<b>%</b>'
-            xonsh: ''
-
-      - type: exit
-        style: diamond
-        trailing_diamond: ''
-        foreground: p:textOnRed
-        background: p:draculaRed
-
-
