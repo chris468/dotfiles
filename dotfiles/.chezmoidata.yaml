@@ -8,7 +8,7 @@ software:
     neovim:
       - "latest"
     nodejs:
-      default: "latest:lts"
+      default: "latest:18"
       windows:
     password_store: "1.7.4"
     rust: 
