@@ -16,6 +16,11 @@ software:
       windows:
 
   packages:
+    - name: git
+      windows:
+        profile: never
+      default: false
+
     - name: lunarvim
       package_manager: script
       windows:
@@ -38,7 +43,7 @@ software:
           node:
             bash: node --completion-bash
           npm:
-            bash: '& "$env:SCOOP\apps\git\current\bin\bash.exe" -c "npm completion"'
+            bash: '& "C:\Program Files\git\bin\bash.exe" -c "npm completion"'
       default:
         completions:
           node:
