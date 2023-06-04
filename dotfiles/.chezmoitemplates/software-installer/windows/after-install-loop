@@ -10,5 +10,3 @@ chezmoi:template:missing-key=zero
       )
     )
 }}
-
-Remove-Item $env:SCOOP\apps\git\current\usr\bin\zsh*.exe
