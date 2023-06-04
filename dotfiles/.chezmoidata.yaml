@@ -16,6 +16,11 @@ software:
       windows:
 
   packages:
+    - name: git
+      windows:
+        profile: never
+      default: false
+
     - name: lunarvim
       package_manager: script
       windows:
