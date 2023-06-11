@@ -162,6 +162,14 @@ lvim.chris468.testrunner["neotest-dotnet"] = {
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
+  {
+    command = "prettier",
+    filetypes = { "markdown" },
+    args = {
+      "--print-width", "100",
+      "--prose-wrap", "always",
+    },
+  }
 --   { command = "isort", filetypes = { "python" } },
 --   {
 --     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
