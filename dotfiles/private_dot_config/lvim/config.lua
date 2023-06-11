@@ -80,8 +80,6 @@ lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
-lvim.builtin.gitsigns.opts.yadm.enable = true
-
 -- final 2 params are optionalthey are optional
 ---@diagnostic disable-next-line: missing-parameter
 vim.list_extend(lvim.builtin.project.patterns, {"pyproject.toml", "*.sln"})
