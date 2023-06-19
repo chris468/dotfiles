@@ -67,8 +67,8 @@ function M.config()
       "rafcamlet/nvim-luapad",
       cmd = { "Luapad", "Luarun" },
     },
+    { "pearofducks/ansible-vim" },
   }
 end
 
 return M
-

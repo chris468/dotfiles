@@ -68,7 +68,7 @@ lvim.builtin.which_key.mappings["t"] = {
 
 lvim.builtin.which_key.mappings["T"] = {
   name = "+Neotest",
-  t = { function() require('neotest').summary.toggle() end, "Toggle Summary"}
+  t = { function() require('neotest').summary.toggle() end, "Toggle Summary" }
 }
 
 
@@ -82,7 +82,7 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 -- final 2 params are optionalthey are optional
 ---@diagnostic disable-next-line: missing-parameter
-vim.list_extend(lvim.builtin.project.patterns, {"pyproject.toml", "*.sln"})
+vim.list_extend(lvim.builtin.project.patterns, { "pyproject.toml", "*.sln" })
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -105,7 +105,7 @@ lvim.builtin.treesitter.ignore_install = { "haskell", "help" }
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.highlight.disable = { "help" }
 
-lvim.chris468.dap.ensure_installed = {"python", "netcoredbg"}
+lvim.chris468.dap.ensure_installed = { "python", "netcoredbg" }
 lvim.chris468.testrunner.adapters = { "neotest-python", "neotest-dotnet" }
 lvim.chris468.testrunner["neotest-dotnet"] = {
   discovery_root = "solution",
@@ -145,6 +145,9 @@ lvim.chris468.testrunner["neotest-dotnet"] = {
 -- lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
 --   return server ~= "emmet_ls"
 -- end, lvim.lsp.automatic_configuration.skipped_servers)
+lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
+  return server ~= "ansiblels"
+end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
 -- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
@@ -162,22 +165,22 @@ formatters.setup {
   { command = "black", filetypes = { "python" } },
   {
     command = "prettier",
-    filetypes = { "markdown" },
+    filetypes = { "markdown", "yaml" },
     args = {
       "--print-width", "100",
       "--prose-wrap", "always",
     },
   }
---   { command = "isort", filetypes = { "python" } },
---   {
---     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
---     command = "prettier",
---     ---@usage arguments to pass to the formatter
---     -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
---     extra_args = { "--print-with", "100" },
---     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
---     filetypes = { "typescript", "typescriptreact" },
---   },
+  --   { command = "isort", filetypes = { "python" } },
+  --   {
+  --     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+  --     command = "prettier",
+  --     ---@usage arguments to pass to the formatter
+  --     -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+  --     extra_args = { "--print-with", "100" },
+  --     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+  --     filetypes = { "typescript", "typescriptreact" },
+  --   },
 }
 
 -- -- set additional linters
@@ -213,13 +216,25 @@ formatters.setup {
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
-vim.api.nvim_create_autocmd("FileType",
-  {
-    pattern = "alpha",
-    callback = function()
-      vim.cmd([[
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "alpha",
+  callback = function()
+    vim.cmd([[
         nnoremap <silent> <buffer> <Esc> :Alpha<CR>
         nnoremap <silent> <buffer> q :Alpha<CR>
       ]])
-    end
-  })
+  end
+})
+
+local function set_ansible_filetype()
+  vim.cmd([[
+      setfiletype yaml.ansible
+  ]])
+end
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = {
+    "*/{inventory,playbooks}/*.y{,a}ml",
+  },
+  callback = set_ansible_filetype,
+})
