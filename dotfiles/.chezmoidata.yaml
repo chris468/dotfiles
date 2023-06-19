@@ -101,6 +101,8 @@ software:
       completions:
         kubectl: kubectl completion SHELL
 
+    - name: terraform
+
     - name: gcc
       windows:
       default: false
@@ -138,6 +140,7 @@ software:
     - name: nu
       profile: nushell
       package_manager: cargo
+
 zsh:
   externalPlugins:
     - name: zsh-autosuggestions
