@@ -1,7 +1,7 @@
-{{- $work := false -}}
-{{- $devtools := true -}}
+{{- $devtools := promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "devtools" "DevTools" true -}}
+{{- $work := promptBoolOnce (hasKey . "profile" | ternary (index . "profile")  (dict)) "work" "Work" false -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
-{{- $passGpgId := .chezmoi.username }}
+{{- $passGpgId := promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
 
 {{- $_local := ".local" -}}
 {{- $_localInstall := joinPath $_local "opt" -}}
@@ -73,7 +73,7 @@
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
 data:
-  passGpgId: {{ if "passGpgId" | hasKey . }}{{ .passGpgId }}{{ else }}{{ $passGpgId }}{{ end }}
+  passGpgId: {{ $passGpgId }}
   profile:
     work: {{ $work }}
     devtools: {{ $devtools }}

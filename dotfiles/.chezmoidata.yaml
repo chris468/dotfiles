@@ -37,6 +37,7 @@ software:
     - name: neovim
 
     - name: nodejs
+      profile: devtools
       windows:
         package: nodejs-lts
         completions:
@@ -52,6 +53,7 @@ software:
             bash: npm completion
 
     - name: rust
+      profile: devtools
       windows:
         package: rustup-gnu
 
@@ -102,6 +104,9 @@ software:
         kubectl: kubectl completion SHELL
 
     - name: terraform
+      profile: devtools
+      dependencies:
+        - unzip
 
     - name: gcc
       windows:
@@ -122,19 +127,24 @@ software:
       windows:
 
     - name: neovim-npm
+      profile: devtools
       package: neovim
       package_manager: npm
 
     - name: tree-sitter-cli
+      profile: devtools
       package_manager: npm
 
     - name: pynvim
+      profile: devtools
       package_manager: pip
 
     - name: fd-find
+      profile: devtools
       package_manager: cargo
 
     - name: ripgrep
+      profile: devtools
       package_manager: cargo
 
     - name: nu
