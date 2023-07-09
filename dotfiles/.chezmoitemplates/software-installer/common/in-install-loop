@@ -35,22 +35,24 @@ chezmoi:template:missing-key=zero
 }}
 {{- end }}
 
-{{- range $name, $completions := .spec.completions }}
-{{- $bash := dict
-      "shell" "bash"
-      "path" (joinPath $.paths.dataHome "bash-completion" "completions" $name)
+{{- if .doInstall }}
+{{-   range $name, $completions := .spec.completions }}
+{{-   $bash := dict
+        "shell" "bash"
+        "path" (joinPath $.paths.dataHome "bash-completion" "completions" $name)
 }}
-{{- $powershell := dict
-      "shell" "powershell"
-      "path" (joinPath $.chezmoi.homeDir ".config" "powershell" "completion.d" (list $name ".ps1" | join ""))
+{{-   $powershell := dict
+        "shell" "powershell"
+        "path" (joinPath $.chezmoi.homeDir ".config" "powershell" "completion.d" (list $name ".ps1" | join ""))
 }}
-{{-   range (list $bash $powershell) }}
-{{-     $command := $completions }}
-{{-     if $completions | kindIs "map" }}
-{{-       $command = .shell | index $completions }}
-{{-     end}}
-{{-     if ne nil $command }}
-{{ $command | replace "SHELL" .shell }} > {{ .path }}
+{{-     range (list $bash $powershell) }}
+{{-       $command := $completions }}
+{{-       if $completions | kindIs "map" }}
+{{-         $command = .shell | index $completions }}
+{{-       end }}
+{{-       if ne nil $command }}
+{{   $command | replace "SHELL" .shell }} > {{ .path }}
+{{-       end }}
 {{-     end }}
 {{-   end }}
 {{- end }}
