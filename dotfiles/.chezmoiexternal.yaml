@@ -103,3 +103,11 @@ chezmoi:template:missing-key=zero
       ) | join "")
     )}}
 {{- end }}
+
+{{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" | quote }}:
+  type: file
+  url: {{ template "gitHubReleaseAsset" (dict
+    "repo" "dracula/xfce4-terminal"
+    "pattern" "Dracula.theme"
+    )
+  }}
