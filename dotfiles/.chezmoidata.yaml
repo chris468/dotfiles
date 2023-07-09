@@ -104,6 +104,9 @@ software:
         kubectl: kubectl completion SHELL
 
     - name: terraform
+      profile: devtools
+      dependencies:
+        - unzip
 
     - name: gcc
       windows:
@@ -124,10 +127,12 @@ software:
       windows:
 
     - name: neovim-npm
+      profile: devtools
       package: neovim
       package_manager: npm
 
     - name: tree-sitter-cli
+      profile: devtools
       package_manager: npm
 
     - name: pynvim
