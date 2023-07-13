@@ -1,7 +1,9 @@
 chezmoi:template:missing-key=zero
-{{- if ne .chezmoi.os "windows" -}}
-{{- template "software-installer/install" . -}}
-{{- else -}}
+{{- if .profile.installSoftware -}}
+{{-   if ne .chezmoi.os "windows" -}}
+{{-     template "software-installer/install" . -}}
+{{-   else -}}
 #!/usr/bin/bash
 pwsh -NoLogo {{ .paths.unix.localInstallBin }}/update-software.ps1
-{{- end }}
+{{-   end }}
+{{- end -}}

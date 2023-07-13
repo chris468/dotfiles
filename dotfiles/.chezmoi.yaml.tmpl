@@ -1,7 +1,12 @@
-{{- $devtools := promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "devtools" "DevTools" true -}}
 {{- $work := promptBoolOnce (hasKey . "profile" | ternary (index . "profile")  (dict)) "work" "Work" false -}}
+{{- $installSoftware := promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "installSoftware" "Install Software" true -}}
+{{- $devtools := false -}}
+{{- $passGpgId := "" -}}
+{{- if $installSoftware -}}
+{{-   $devtools = promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "devtools" "DevTools" true -}}
+{{-   $passGpgId := promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
+{{- end -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
-{{- $passGpgId := promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
 
 {{- $_local := ".local" -}}
 {{- $_localInstall := joinPath $_local "opt" -}}
@@ -73,10 +78,15 @@
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
 data:
+{{- if $installSoftware }}
   passGpgId: {{ $passGpgId }}
+{{- end }}
   profile:
     work: {{ $work }}
+    installSoftware: {{ $installSoftware }}
+{{- if $installSoftware }}
     devtools: {{ $devtools }}
+{{- end }}
     nushell: false
   paths:
 {{ $paths | toYaml | indent 4 }}
