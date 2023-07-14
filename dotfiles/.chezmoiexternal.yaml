@@ -84,27 +84,22 @@ chezmoi:template:missing-key=zero
   url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
   stripComponents: 1
 
+{{ $gcmAssetPattern := dict
+     "windows" "gcm-win-x86.*\\d\\.zip"
+     "darwin" (list "gcm-osx-" .chezmoi.arch ".*\\d\\.tar.gz" | join "")
+     "linux" (list "gcm-linux_" .chezmoi.arch ".*\\d\\.tar.gz" | join "")
+-}}
 {{ .paths.relative.gitCredentialManager | quote }}:
   type: archive
   exact: true
-{{- if eq "windows" .chezmoi.os  }}
+{{- if eq .chezmoi.os "darwin" }}
+  stripComponents: 1
+{{- end }}
   url: {{ template "gitHubReleaseAsset" (dict
     "repo" "git-ecosystem/git-credential-manager"
-    "pattern" "gcm-win-x86.*\\d\\.zip"
+    "pattern" (.chezmoi.os | index $gcmAssetPattern)
   )
 }}
-{{- else }}
-  url: {{ template "gitHubReleaseAsset" (dict
-    "repo" "git-ecosystem/git-credential-manager"
-    "pattern" ((list 
-      "gcm-"
-      .chezmoi.os
-      "_"
-      .chezmoi.arch
-      ".*\\d\\.tar\\.gz"
-      ) | join "")
-    )}}
-{{- end }}
 
 {{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" | quote }}:
   type: file
@@ -116,11 +111,7 @@ chezmoi:template:missing-key=zero
 
 {{ joinPath .paths.relative.dataHome "fonts" | quote }}:
   type: archive
-  url: {{ template "gitHubReleaseAsset" (dict
-    "repo" "ryanoasis/nerd-fonts"
-    "pattern" "Hack.zip"
-    )
-  }}
+  url: {{ template "gitHubReleaseAsset" (dict "repo" "ryanoasis/nerd-fonts" "pattern" "Hack.zip") }}
   exact: true
   include:
     - "*Mono*"

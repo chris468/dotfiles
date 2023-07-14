@@ -1,5 +1,5 @@
 {{- if .profile.installSoftware -}}
-#!/usr/bin/bash
+#!/usr/bin/env bash
 export NVIM_APPNAME=lvim
 exec -a $NVIM_APPNAME nvim -u "$LUNARVIM_BASE_DIR/init.lua" "$@"
 {{- end -}}

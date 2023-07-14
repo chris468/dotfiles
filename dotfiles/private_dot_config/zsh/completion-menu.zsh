@@ -4,7 +4,9 @@ zstyle ':completion:*:*:*:*:corrections' format '%B%F{yellow}%d%f%b'
 zstyle ':completion:*:*:*:*:descriptions' format '%B%F{blue}%d%f%b'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
+if command -v dircolors >/dev/null ; then
+    eval "$(dircolors -b)"
+fi
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s

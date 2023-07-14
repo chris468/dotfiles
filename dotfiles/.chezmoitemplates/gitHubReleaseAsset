@@ -3,5 +3,5 @@
 {{-   if .Name | regexMatch $.pattern -}}
 {{-     .BrowserDownloadURL -}}
 {{-     break -}}
-{{-   end }}
-{{- end }}
+{{-   end -}}
+{{- end -}}
