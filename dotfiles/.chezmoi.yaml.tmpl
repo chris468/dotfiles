@@ -60,7 +60,7 @@
         "scoop" $_scoop
         "bash" $_bash
 -}}
-{{- else -}}
+{{- else if eq "linux" .chezmoi.os -}}
 {{-   $_asdf := joinPath $_localInstall "asdf" -}}
 {{-   $_asdfInstalls := joinPath $_asdf "installs" -}}
 {{-   $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
@@ -69,11 +69,16 @@
         "asdfInstalls" $_asdfInstalls
         "rustInstall" $_rustInstall
 -}}
+{{- else if eq "darwin" .chezmoi.os -}}
+{{-   $_homebrew := "/opt/homebrew" -}}
+{{-   $_platformRelativePaths = dict
+        "homebrew" $_homebrew
+-}}
 {{- end -}}
 {{- $_relativePaths = merge $_relativePaths $_platformRelativePaths }}
 {{- $paths := dict -}}
 {{- range $k, $v := $_relativePaths -}}
-{{-   $paths = set $paths $k (joinPath $.chezmoi.homeDir $v) -}}
+{{-   $paths = set $paths $k ($v | osIsAbs | ternary $v (joinPath $.chezmoi.homeDir $v)) -}}
 {{- end -}}
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
@@ -144,16 +149,19 @@ data:
       path: true
       persist: true
       value: {{ $paths.lunarvimBase  }}
-{{- if eq "windows" .chezmoi.os }}
+{{- if "scoop" | hasKey $paths }}
     - name: SCOOP
       path: true
       persist: true
       value: {{ $paths.scoop }}
-{{- else }}
+{{- end }}
+{{- if "asdf" | hasKey $paths }}
     - name: ASDF_DIR
       value: {{ $paths.asdf }}
     - name: ASDF_DATA_DIR
       value: {{ $paths.asdf }}
+{{- end }}
+{{- if "rustInstall" | hasKey $paths }}
     - name: RUSTUP_HOME
       value: {{ $paths.rustInstall }}
 {{- end }}
@@ -167,6 +175,9 @@ data:
         - {{ $paths.fzfBin }}
 {{- if eq "windows" .chezmoi.os }}
         - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
+{{- end }}
+{{- if "homebrew" | index $paths }}
+        - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
     - name: PATH
       path: true
