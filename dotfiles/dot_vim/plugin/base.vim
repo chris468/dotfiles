@@ -1,6 +1,6 @@
 set nobackup
 set nowrap
-set directory=~/.cache/swp//
+set noswapfile
 
 set hlsearch
 set ignorecase
