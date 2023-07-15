@@ -4,7 +4,7 @@
 {{- $passGpgId := "" -}}
 {{- if $installSoftware -}}
 {{-   $devtools = promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "devtools" "DevTools" true -}}
-{{-   $passGpgId := promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
+{{-   $passGpgId = promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
 {{- end -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
 
