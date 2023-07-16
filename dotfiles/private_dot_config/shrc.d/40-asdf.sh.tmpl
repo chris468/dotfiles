@@ -1,4 +1,4 @@
-{{- if eq "linux" .chezmoi.os }}
+{{- if .profile.asdf }}
 ASDF_DIR="{{ .paths.asdf }}"
 ASDF_DATA_DIR="$ASDF_DIR"
 __asdf="$ASDF_DIR/asdf.sh"

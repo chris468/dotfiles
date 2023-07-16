@@ -19,7 +19,7 @@ chezmoi:template:missing-key=zero
   executable: true
   refreshPeriod: "168h"
 
-{{- if and .profile.installSoftware ("asdf" | hasKey .paths.relative) }}
+{{- if .profile.asdf }}
 {{ .paths.relative.asdf | quote }}:
   type: git-repo
   url: "https://github.com/asdf-vm/asdf.git"

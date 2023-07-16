@@ -1,11 +1,22 @@
-{{- $work := promptBoolOnce (hasKey . "profile" | ternary (index . "profile")  (dict)) "work" "Work" false -}}
-{{- $installSoftware := promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "installSoftware" "Install Software" true -}}
+{{- $_profile := hasKey . "profile" | ternary (index . "profile") (dict) -}}
+{{- $work := promptBoolOnce $_profile "work" "Work" false -}}
+{{- $installSoftware := promptBoolOnce $_profile "installSoftware" "Install Software" true -}}
+
 {{- $devtools := false -}}
 {{- $passGpgId := "" -}}
 {{- if $installSoftware -}}
-{{-   $devtools = promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "devtools" "DevTools" true -}}
+{{-   $devtools = promptBoolOnce $_profile "devtools" "DevTools" true -}}
 {{-   $passGpgId = promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
 {{- end -}}
+
+{{- $_current_homebrew := "homebrew" | index $_profile -}}
+{{- $_default_homebrew := eq "darwin" .chezmoi.os -}}
+{{- $homebrew := hasKey $_profile "homebrew" | ternary $_current_homebrew $_default_homebrew -}}
+
+{{- $_current_asdf := "asdf" | index $_profile -}}
+{{- $_default_asdf := eq "linux" .chezmoi.os -}}
+{{- $asdf := hasKey $_profile "asdf" | ternary $_current_asdf $_default_asdf  -}}
+
 {{- $poshTheme := "new-theme.omp.yaml" -}}
 
 {{- $_local := ".local" -}}
@@ -61,18 +72,23 @@
         "bash" $_bash
 -}}
 {{- else if eq "linux" .chezmoi.os -}}
-{{-   $_asdf := joinPath $_localInstall "asdf" -}}
-{{-   $_asdfInstalls := joinPath $_asdf "installs" -}}
-{{-   $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
-{{-   $_platformRelativePaths = dict
-        "asdf" $_asdf
-        "asdfInstalls" $_asdfInstalls
-        "rustInstall" $_rustInstall
+{{-   $_homebrew := "/home/linuxbrew/.linuxbrew/" -}}
 -}}
 {{- else if eq "darwin" .chezmoi.os -}}
 {{-   $_homebrew := "/opt/homebrew" -}}
 {{-   $_platformRelativePaths = dict
         "homebrew" $_homebrew
+-}}
+{{- end -}}
+{{- if $asdf -}}
+{{-   $_asdf := joinPath $_localInstall "asdf" -}}
+{{-   $_asdfInstalls := joinPath $_asdf "installs" -}}
+{{-   $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
+{{-   $_platformRelativePaths = merge $_platformRelativePaths (dict
+        "asdf" $_asdf
+        "asdfInstalls" $_asdfInstalls
+        "rustInstall" $_rustInstall
+      )
 -}}
 {{- end -}}
 {{- $_relativePaths = merge $_relativePaths $_platformRelativePaths }}
@@ -93,6 +109,8 @@ data:
     devtools: {{ $devtools }}
 {{- end }}
     nushell: false
+    homebrew: {{ $homebrew }}
+    asdf: {{ $asdf }}
   paths:
 {{ $paths | toYaml | indent 4 }}
     unix:
@@ -155,7 +173,7 @@ data:
       persist: true
       value: {{ $paths.scoop }}
 {{- end }}
-{{- if "asdf" | hasKey $paths }}
+{{- if $asdf }}
     - name: ASDF_DIR
       value: {{ $paths.asdf }}
     - name: ASDF_DATA_DIR
@@ -176,7 +194,7 @@ data:
 {{- if eq "windows" .chezmoi.os }}
         - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
 {{- end }}
-{{- if "homebrew" | index $paths }}
+{{- if $homebrew }}
         - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
     - name: PATH
