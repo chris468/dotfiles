@@ -1,0 +1,1 @@
+{"title":"Left command to Esc / Command","rules":[{"description":"Left command to Esc / Command","manipulators":[{"type":"basic","from":{"key_code":"left_gui"},"to":[{"repeat":true,"key_code":"left_gui"}],"to_if_alone":[{"repeat":true,"key_code":"escape"}]}]}]}
