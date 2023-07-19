@@ -6,7 +6,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 Menu, Tray, Tip, Swap keys
 
 CapsLock::LCtrl
-LCtrl::CapsLock
+
+<+RShift::CapsLock
+>+LShift::CapsLock
 
 LAlt::Esc
-Esc::LAlt
