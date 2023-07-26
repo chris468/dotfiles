@@ -32,7 +32,7 @@ local mappings = {
       f = { find_git_files, "Git files (if in git repo)" },
       r = { ":Telescope oldfiles<CR>", "Recent files" },
     },
-    R = { temporarily_toggle_relative_number, "Quick toggle relative numbers" },
+    R = { temporarily_toggle_relativenumber, "Quick toggle relative numbers" },
   }, { prefix = "<leader>" }},
 }
 
