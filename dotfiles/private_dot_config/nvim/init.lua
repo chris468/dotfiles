@@ -5,4 +5,4 @@ vim.g.loaded_netrwPlugin = 1
 vim.o.swapfile = false
 vim.o.backup = false
 
-require "user.load-plugins"
+require "chris468.load-plugins"
