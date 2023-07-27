@@ -1,6 +1,5 @@
 return {
   { 'rafcamlet/nvim-luapad' }, -- setup in chris468.config.lsp
-  { 'folke/neodev.nvim' },
   {
     "williamboman/mason.nvim",
     tag = "stable",
@@ -18,7 +17,13 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     tag = "stable",
-    dependencies = { "mason.nvim" },
+    dependencies = {
+      { "mason.nvim" },
+      {
+        'folke/neodev.nvim',
+        config = function() require("neodev").setup {} end,
+      },
+    },
     config = function (_)
       require("mason-lspconfig").setup({
         ensure_installed = {
