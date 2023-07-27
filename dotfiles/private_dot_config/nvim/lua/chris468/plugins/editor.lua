@@ -1,4 +1,4 @@
 return {
-  { "tommcdo/vim-exchange" },
-  { "tpope/vim-surround" },
+	{ "tommcdo/vim-exchange" },
+	{ "tpope/vim-surround" },
 }

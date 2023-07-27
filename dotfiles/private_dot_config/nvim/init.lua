@@ -15,4 +15,4 @@ vim.o.autoindent = true
 vim.o.wrap = false
 vim.o.signcolumn = "yes"
 
-require "chris468.load-plugins"
+require("chris468.load-plugins")
