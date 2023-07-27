@@ -1,5 +1,6 @@
 return {
-  { 'rafcamlet/nvim-luapad' },
+  { 'rafcamlet/nvim-luapad' }, -- setup in chris468.config.lsp
+  { 'folke/neodev.nvim' },
   {
     "williamboman/mason.nvim",
     tag = "stable",
