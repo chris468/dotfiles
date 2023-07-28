@@ -1,14 +1,11 @@
-return function(capabilities)
-	return {
-		lua_ls = {
-			capabilities = capabilities,
-			settings = {
-				Lua = {
-					workspace = {
-						checkThirdParty = false,
-					},
+return {
+	lua_ls = {
+		settings = {
+			Lua = {
+				workspace = {
+					checkThirdParty = false,
 				},
 			},
 		},
-	}
-end
+	},
+}

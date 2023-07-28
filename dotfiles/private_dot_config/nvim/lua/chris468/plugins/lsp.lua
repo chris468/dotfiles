@@ -27,6 +27,23 @@ return {
 						"lua_ls",
 					},
 				},
+				config = function(_, opts)
+					require("mason-lspconfig").setup(opts)
+					require("mason-lspconfig").setup_handlers({
+						function(server_name)
+							local server = require("lspconfig")[server_name]
+							local server_config = require("chris468.config.lsp")[server_name]
+
+							local cmp_ok, cmp = pcall(require, "cmp-nvim-lsp")
+							if cmp_ok then
+								local capabilities = cmp.default_capabilities()
+								server_config.capabilities = cmp.default_capabilities
+							end
+
+							server.setup(server_config)
+						end,
+					})
+				end,
 			},
 		},
 	},
