@@ -28,13 +28,8 @@ local mappings = {
 	{
 		{
 			e = { ":NvimTreeToggle<CR>", "Explorer" },
-			f = {
-				name = "Find",
-				F = { ":Telescope find_files<CR>", "Files" },
-				b = { ":Telescope buffers<CR>", "Buffer" },
-				f = { find_git_files, "Git files (if in git repo)" },
-				r = { ":Telescope oldfiles<CR>", "Recent files" },
-			},
+			f = { find_git_files, "Find project files" },
+			h = { ":noh<CR>", "Clear hilight" },
 			l = {
 				name = "Language Services",
 				f = {
@@ -43,6 +38,14 @@ local mappings = {
 					end,
 					"Format",
 				},
+			},
+			r = { ":Telescope oldfiles<CR>", "Fine recent files" },
+			s = {
+				name = "Search",
+				f = { find_git_files, "Find project files" },
+				F = { ":Telescope find_files<CR>", "Files" },
+				b = { ":Telescope buffers<CR>", "Buffer" },
+				r = { ":Telescope oldfiles<CR>", "Recent files" },
 			},
 			R = { temporarily_toggle_relativenumber, "Quick toggle relative numbers" },
 		},
