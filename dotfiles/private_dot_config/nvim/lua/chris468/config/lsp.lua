@@ -5,11 +5,18 @@ local capabilities = cmp_nvim_lsp.default_capabilities()
 
 lspconfig.lua_ls.setup({
 	capabilities = capabilities,
+	settings = {
+		Lua = {
+			workspace = {
+				checkThirdParty = false,
+			},
+		},
+	},
 })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
-  buffer = buffer,
-  callback = function()
-    vim.lsp.buf.format { async = false }
-  end
+	buffer = buffer,
+	callback = function()
+		vim.lsp.buf.format({ async = false })
+	end,
 })
