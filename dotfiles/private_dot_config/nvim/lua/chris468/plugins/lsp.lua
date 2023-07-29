@@ -17,23 +17,20 @@ return {
 				dependencies = {
 					{ "hrsh7th/cmp-nvim-lsp" },
 					{ "williamboman/mason.nvim" },
+					{ "hrsh7th/cmp-nvim-lsp" },
 					{
 						"folke/neodev.nvim", -- must be initialized before lsps"
 						config = true,
 						ft = "lua",
 					},
 				},
-				opts = {
-					ensure_installed = {
-						"lua_ls",
-					},
-				},
+				opts = require("chris468.config.lsp").mason_lsp,
 				config = function(_, opts)
 					require("mason-lspconfig").setup(opts)
 					require("mason-lspconfig").setup_handlers({
 						function(server_name)
 							local server = require("lspconfig")[server_name]
-							local server_config = require("chris468.config.lsp")[server_name]
+							local server_config = require("chris468.config.lsp").servers[server_name]
 
 							local cmp_lsp = require("cmp_nvim_lsp")
 							server_config.capabilities = cmp_lsp.default_capabilities()
