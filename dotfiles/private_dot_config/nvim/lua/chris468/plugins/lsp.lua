@@ -12,10 +12,10 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{
-				{ "williamboman/mason-lspconfig.nvim" },
-				{ "hrsh7th/cmp-nvim-lsp" },
+				"williamboman/mason-lspconfig.nvim",
 				tag = "stable",
 				dependencies = {
+					{ "hrsh7th/cmp-nvim-lsp" },
 					{ "williamboman/mason.nvim" },
 					{
 						"folke/neodev.nvim", -- must be initialized before lsps"
@@ -35,7 +35,7 @@ return {
 							local server = require("lspconfig")[server_name]
 							local server_config = require("chris468.config.lsp")[server_name]
 
-							local cmp_lsp = require("cmp-nvim-lsp")
+							local cmp_lsp = require("cmp_nvim_lsp")
 							server_config.capabilities = cmp_lsp.default_capabilities()
 
 							server.setup(server_config)
