@@ -1,9 +1,9 @@
 return {
 	{
-		"hrsh7th/cmp-nvim-lsp",
-		event = { "InsertEnter" },
+		"hrsh7th/nvim-cmp",
+		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = {
-			{ "hrsh7th/nvim-cmp" },
+			{ "hrsh7th/cmp-nvim-lsp" },
 			{ "hrsh7th/cmp-buffer" },
 			{ "hrsh7th/cmp-cmdline" },
 			{ "hrsh7th/cmp-path" },
@@ -56,6 +56,13 @@ return {
 			cmp.setup.cmdline("/", opts.search)
 
 			cmp.setup.cmdline(":", opts.ex)
+
+			vim.api.nvim_create_autocmd("CmdwinEnter", {
+				group = vim.api.nvim_create_augroup("chris468_cmp", {}),
+				callback = function(_)
+					cmp.abort()
+				end,
+			})
 		end,
 	},
 }
