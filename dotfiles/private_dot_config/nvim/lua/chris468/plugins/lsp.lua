@@ -30,7 +30,7 @@ return {
 					require("mason-lspconfig").setup_handlers({
 						function(server_name)
 							local server = require("lspconfig")[server_name]
-							local server_config = require("chris468.config.lsp").servers[server_name]
+							local server_config = require("chris468.config.lsp").servers[server_name] or {}
 
 							local cmp_lsp = require("cmp_nvim_lsp")
 							server_config.capabilities = cmp_lsp.default_capabilities()
