@@ -12,5 +12,8 @@ return {
 			"MasonUninstallAll",
 			"MasonLog",
 		},
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
 	},
 }

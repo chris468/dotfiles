@@ -26,8 +26,19 @@ return {
 				},
 				opts = require("chris468.config.lsp").mason_lsp,
 				config = function(_, opts)
-					require("mason-lspconfig").setup(opts)
-					require("mason-lspconfig").setup_handlers({
+					local mason_lspconfig = require("mason-lspconfig")
+					require("mason-registry"):on("package:install:success", function(pkg)
+						local lsp_name = mason_lspconfig.get_mappings().mason_to_lspconfig[pkg.name]
+						local server_post_install = require("chris468.config.lsp").post_install[lsp_name]
+
+						if server_post_install then
+							local package_path = vim.fn.stdpath("data") .. "/mason/packages/" .. pkg.name
+							server_post_install(package_path)
+						end
+					end)
+
+					mason_lspconfig.setup(opts)
+					mason_lspconfig.setup_handlers({
 						function(server_name)
 							local server = require("lspconfig")[server_name]
 							local server_config = require("chris468.config.lsp").servers[server_name] or {}
