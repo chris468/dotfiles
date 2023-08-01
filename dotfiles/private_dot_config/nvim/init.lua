@@ -14,5 +14,6 @@ vim.o.shiftwidth = 2
 vim.o.autoindent = true
 vim.o.wrap = false
 vim.o.signcolumn = "yes"
+vim.o.pumheight = 10
 
 require("chris468.load-plugins")
