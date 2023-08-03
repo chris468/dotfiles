@@ -1,8 +1,10 @@
 return {
 	"nvim-cmp",
+	event = "CmdlineEnter",
 	opts = function(_, opts)
+		local cmp = require("cmp")
 		local mapping = opts.mapping
-		mapping["<C-j>"] = opts.mapping["<C-N>"]
-		mapping["<C-k>"] = opts.mapping["<C-P>"]
+		mapping["<C-k>"] = cmp.mapping(opts.mapping["<C-P>"], { "i", "c" })
+		mapping["<C-j>"] = cmp.mapping(opts.mapping["<C-N>"], { "i", "c" })
 	end,
 }
