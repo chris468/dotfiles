@@ -1,8 +1,8 @@
 return {
-	"rafcamlet/nvim-luapad",
-	cmd = {
-		"Luapad",
-		"LuaRun",
-		"Lua",
-	},
+  "rafcamlet/nvim-luapad",
+  cmd = {
+    "Luapad",
+    "LuaRun",
+    "Lua",
+  },
 }
