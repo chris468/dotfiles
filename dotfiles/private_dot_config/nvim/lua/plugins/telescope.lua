@@ -1,13 +1,13 @@
 return {
-	{
-		"nvim-telescope/telescope-fzf-native.nvim",
-		cmd = "Telescope",
-		dependencies = "telescope.nvim",
-		build = "make",
-		config = function(_, _)
-			require("telescope").load_extension("fzf")
-		end,
-	},
+	-- {
+	-- 	"nvim-telescope/telescope-fzf-native.nvim",
+	-- 	cmd = "Telescope",
+	-- 	dependencies = "telescope.nvim",
+	-- 	build = "make",
+	-- 	config = function(_, _)
+	-- 		require("telescope").load_extension("fzf")
+	-- 	end,
+	-- },
 	{
 		"telescope.nvim",
 		opts = function(_, opts)
