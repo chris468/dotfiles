@@ -1,4 +1,4 @@
 return {
-	"flash.nvim",
-	enabled = false,
+  "flash.nvim",
+  enabled = false,
 }
