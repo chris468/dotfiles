@@ -1,5 +1,5 @@
 function __find_editor {
-    editors=('lvim' 'vim.bat' 'gvim.bat' 'vim' 'vi' 'nvim')
+    editors=('nvim' 'vim' 'vi' 'gvim')
     for e in ${editors[@]}
     do
         if command -v "$e"
