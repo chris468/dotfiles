@@ -1,4 +1,5 @@
 local autoformat_filetype = {
+  lua = true,
   markdown = true,
 }
 
