@@ -1,0 +1,16 @@
+local M = {
+  plugins = {},
+  autocmds = function() end,
+}
+
+{{ if .profile.work -}}
+-- M.plugins = { import = "plugins.work" }
+
+for _, module in ipairs({"autocmds"}) do
+  M[module] = function()
+    require("chris468.profiles.work." .. module)
+  end
+end
+{{- end }}
+
+return M

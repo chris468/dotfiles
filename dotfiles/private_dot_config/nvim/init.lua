@@ -23,6 +23,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.yaml" },
     { import = "lazyvim.plugins.extras.util.project" },
     { import = "plugins" },
-    require("chris468.profiles.work"),
+    require("chris468.profiles.work").plugins,
   },
 })

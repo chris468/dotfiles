@@ -28,3 +28,5 @@ vim.api.nvim_create_autocmd("FileType", {
     end
   end,
 })
+
+require("chris468.profiles.work").autocmds()
