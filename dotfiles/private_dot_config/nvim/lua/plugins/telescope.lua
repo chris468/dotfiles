@@ -1,7 +1,7 @@
 return {
   {
     "nvim-telescope/telescope-fzf-native.nvim",
-    enabled = not vim.fn.has("Windows"),
+    enabled = vim.fn.has("win32") == 0,
     cmd = "Telescope",
     dependencies = "telescope.nvim",
     build = "make",
