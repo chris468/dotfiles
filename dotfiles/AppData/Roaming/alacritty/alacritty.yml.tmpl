@@ -1,0 +1,5 @@
+import:
+  - ~/.config/alacritty/alacritty.yml
+
+shell:
+  program: {{ lookPath "pwsh.exe" | default (lookPath "powershell.exe") | default (lookPath "cmd.exe") }}

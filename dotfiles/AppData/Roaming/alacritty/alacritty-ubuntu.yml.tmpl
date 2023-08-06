@@ -1,0 +1,10 @@
+import:
+  - ~/.config/alacritty/alacritty.yml
+
+shell:
+  program: {{ lookPath "wsl.exe" }}
+  args:
+    - "--cd"
+    - "~"
+    - "-d"
+    - "Ubuntu"

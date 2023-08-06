@@ -3,6 +3,8 @@ live_config_reload: true
 import:
   - {{ joinPath .paths.configHome "alacritty" "dracula.yml" }}
 
+working_directory: {{ .chezmoi.homeDir }}
+
 font:
   size: {{ .font.size }}
   normal:
