@@ -54,6 +54,11 @@ chezmoi:template:missing-key=zero
 {{-   end }}
 {{- end }}
 
+{{ .paths.relative.fzf | quote }}:
+  type: archive
+  url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
+  stripComponents: 1
+
 {{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" | quote }}:
   type: file
   url: {{ template "gitHubReleaseAsset" (dict

@@ -16,6 +16,8 @@
 {{- $_ipython := joinPath $_configHome "ipython" -}}
 {{- $_zshConfig := joinPath $_configHome "zsh" -}}
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
+{{- $_fzf := joinPath $_localInstall "fzf" -}}
+{{- $_fzfBin := joinPath $_fzf "bin" -}}
 {{- $_relativePaths := dict
       "local" $_local
       "localInstall" $_localInstall
@@ -27,6 +29,8 @@
       "ipython" $_ipython
       "zshConfig" $_zshConfig
       "zshPlugins" $_zshPlugins
+      "fzf" $_fzf
+      "fzfBin" $_fzfBin
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
@@ -115,6 +119,7 @@ data:
       persist: true
       value:
         - {{ $paths.localInstallBin }}
+        - {{ $paths.fzfBin }}
 {{- if eq "windows" .chezmoi.os }}
         - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
 {{- end }}
