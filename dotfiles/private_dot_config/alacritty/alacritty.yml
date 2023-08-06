@@ -11,4 +11,13 @@ font:
   bold_italic:
     family: "Hack Nerd Font Mono"
 
-
+key_bindings:
+  - key: L
+    mods: Control
+    action: ReceiveChar
+  - key: L
+    mods: Alt
+    action: ClearLogNotice
+  - key: Return
+    mods: Alt
+    action: ToggleFullScreen
