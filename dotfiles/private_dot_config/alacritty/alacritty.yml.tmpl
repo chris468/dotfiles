@@ -1,15 +1,9 @@
 live_config_reload: true
 
 font:
-  size: 14.0
+  size: {{ .font.size }}
   normal:
-    family: "Hack Nerd Font Mono"
-  bold:
-    family: "Hack Nerd Font Mono"
-  italic:
-    family: "Hack Nerd Font Mono"
-  bold_italic:
-    family: "Hack Nerd Font Mono"
+    family: {{ .font.family | quote }}
 
 key_bindings:
   - key: L

@@ -7,6 +7,11 @@
 {{-   $passGpgId = promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
 {{- end -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
+{{- $_defaultFont := dict 
+      "family" "Hack Nerd Font Mono"
+      "size" (eq "windows" .chezmoi.os | ternary 11 14)
+-}}
+{{- $font := $_defaultFont | merge (hasKey . "font" | ternary (index . "font") (dict)) -}}
 
 {{- $_local := ".local" -}}
 {{- $_localInstall := joinPath $_local "opt" -}}
@@ -93,6 +98,9 @@ data:
     devtools: {{ $devtools }}
 {{- end }}
     nushell: false
+  font:
+    family: {{ $font.family }}
+    size: {{ $font.size }}
   paths:
 {{ $paths | toYaml | indent 4 }}
     unix:
