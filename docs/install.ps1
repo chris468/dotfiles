@@ -55,5 +55,5 @@ function Install-Dotfiles {
 
 
 Install-Git
-#Install-Scoop
-#Install-Dotfiles
+Install-Scoop
+Install-Dotfiles
