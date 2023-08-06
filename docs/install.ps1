@@ -1,3 +1,14 @@
+function Check-SymbolicLinks {
+    $tmp = New-TemporaryFile
+    $link = New-Item -Type SymbolicLink -Target "$tmp" -Path "$tmp.link"
+    if (-not $?) {
+        Write-Error "Symbolic Link creation failed. Ensure that 'Create Symbolic Links' permission is granted for your user.
+See Local Computer Policy -> Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> User Rights Assignment
+in group policy editor."
+        exit 1
+    }
+}
+
 function Install-Git {
   function Create-Inf {
     $inf = New-TemporaryFile
@@ -54,6 +65,7 @@ function Install-Dotfiles {
 }
 
 
+Check-SymbolicLinks
 Install-Git
 Install-Scoop
 Install-Dotfiles
