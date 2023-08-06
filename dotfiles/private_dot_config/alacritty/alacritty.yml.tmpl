@@ -1,5 +1,8 @@
 live_config_reload: true
 
+import:
+  - {{ joinPath .paths.configHome "alacritty" "dracula.yml" }}
+
 font:
   size: {{ .font.size }}
   normal:
