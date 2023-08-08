@@ -1,0 +1,46 @@
+{{- if eq "windows" .chezmoi.os -}}
+
+$essentials = @{
+    buckets = @( @{
+        Name = "main";
+        Source = "https://github.com/ScoopInstaller/Main"
+    }, @{
+        Name = "extras";
+        Source = "https://github.com/ScoopInstaller/Extras"
+    }, @{
+        Name = "nerd-fonts";
+        Source = "https://github.com/matthewjberger/scoop-nerd-fonts";
+    });
+    apps = @( @{
+        Name = "psfzf";
+        Source = "extras"
+    }, @{
+        Name = "posh-git";
+        Source = "extras"
+    }, @{
+        Name = "neovim";
+        Source = "main"
+    }, @{
+        Name = "Hack-NF-Mono";
+        Source = "nerd-fonts"
+    });
+}
+
+function Install-Scoop {
+    if (!(Get-Command scoop 2>$null)) {
+        Write-Host "Installing scoop..."
+        Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+        Invoke-RestMethod https://get.scoop.sh | Invoke-Expression
+    }
+}
+
+function Install-Essentials {
+    local $spec = New-TemporaryFile
+    Set-Content -Path $spec -Value ($essentials | ConvertTo-Json)
+    scoop import $spec 6>$null
+}
+
+Install-Scoop
+Install-Essentials
+
+{{- end -}}
