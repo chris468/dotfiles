@@ -1,3 +1,6 @@
 vim.keymap.set("n", "<leader>h", "<cmd>noh<cr>", { desc = "No highlight" })
 vim.keymap.del({ "n", "i", "v" }, "<A-j>")
 vim.keymap.del({ "n", "i", "v" }, "<A-k>")
+vim.keymap.del("n", "<leader>ft")
+vim.keymap.del("n", "<leader>fT")
+vim.keymap.del("n", "<C-/>")
