@@ -1,3 +1,4 @@
+{{- if ne "windows" .chezmoi.os -}}
 #!/usr/bin/env bash
 
 function _sudo {
@@ -27,3 +28,4 @@ DEBIAN)
 	exit 1
 	;;
 esac
+{{- end -}}
