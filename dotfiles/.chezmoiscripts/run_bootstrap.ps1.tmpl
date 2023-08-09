@@ -35,7 +35,7 @@ function Install-Scoop {
 }
 
 function Install-Essentials {
-    local $spec = New-TemporaryFile
+    $local:spec = New-TemporaryFile
     Set-Content -Path $spec -Value ($essentials | ConvertTo-Json)
     scoop import $spec 6>$null
 }
