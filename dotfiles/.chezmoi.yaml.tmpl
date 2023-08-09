@@ -34,10 +34,8 @@
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
-{{-   $_scoop := joinPath $_localInstall "scoop" -}}
 {{-   $_bash := joinPath "C:\\" "Program Files" "git" "bin" "bash.exe" }}
 {{-   $_platformRelativePaths = dict
-        "scoop" $_scoop
         "bash" $_bash
 -}}
 {{- else if eq "linux" .chezmoi.os -}}
@@ -101,12 +99,6 @@ data:
       path: true
       persist: true
       value: {{ $paths.cacheHome }}
-{{- if "scoop" | hasKey $paths }}
-    - name: SCOOP
-      path: true
-      persist: true
-      value: {{ $paths.scoop }}
-{{- end }}
 {{- if "asdf" | hasKey $paths }}
     - name: ASDF_DIR
       value: {{ $paths.asdf }}
@@ -120,9 +112,6 @@ data:
       value:
         - {{ $paths.localInstallBin }}
         - {{ $paths.fzfBin }}
-{{- if eq "windows" .chezmoi.os }}
-        - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
-{{- end }}
 {{- if "homebrew" | index $paths }}
         - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
