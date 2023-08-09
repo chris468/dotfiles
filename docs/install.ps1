@@ -51,7 +51,7 @@ EnableFSMonitor=Disabled
 }
 
 function Install-Dotfiles {
-  '$params="-BinDir `"$HOME\.local\bin`" init --apply chris468 $params"', `
+  ('$params="-BinDir `"$HOME\.local\bin`" init --apply chris468 ' + $params + '"'), `
     (Invoke-RestMethod -UseBasicParsing https://get.chezmoi.io/ps1) | pwsh -c -
 }
 
