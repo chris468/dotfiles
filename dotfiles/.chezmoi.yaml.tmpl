@@ -39,11 +39,9 @@
         "bash" $_bash
 -}}
 {{- else if eq "linux" .chezmoi.os -}}
-{{-   $_asdf := joinPath $_localInstall "asdf" -}}
-{{-   $_asdfInstalls := joinPath $_asdf "installs" -}}
+{{-   $_asdf := ".asdf" -}}
 {{-   $_platformRelativePaths = dict
         "asdf" $_asdf
-        "asdfInstalls" $_asdfInstalls
 -}}
 {{- else if eq "darwin" .chezmoi.os -}}
 {{-   $_homebrew := "/opt/homebrew" -}}

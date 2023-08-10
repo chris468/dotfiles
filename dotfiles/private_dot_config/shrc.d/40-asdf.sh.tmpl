@@ -1,12 +1,12 @@
-{{- if eq "linux" .chezmoi.os }}
-ASDF_DIR="{{ .paths.asdf }}"
-ASDF_DATA_DIR="$ASDF_DIR"
-__asdf="$ASDF_DIR/asdf.sh"
+{{- if eq "linux" .chezmoi.os -}}
+__asdf_dir="$HOME/.asdf"
+__asdf="$__asdf_dir/asdf.sh"
 if [ -f "$__asdf" ]
 then
   . "$__asdf"
-  . "$ASDF_DIR/completions/asdf.bash"
+  . "$__asdf_dir/completions/asdf.bash"
 fi
 
 unset __asdf
-{{- end }}
+unset __asdf_dir
+{{- end -}}
