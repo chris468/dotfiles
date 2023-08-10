@@ -21,7 +21,7 @@ DEBIAN)
 	asdf install neovim latest
 	asdf global neovim latest
 
-	_sudo "apt update && apt install -y build-essential unzip nodejs npm ripgrep"
+	_sudo "apt update && apt install -y build-essential unzip nodejs npm ripgrep python3-venv"
 	;;
 *)
 	echo "unknown os type $ID_LIKE" >&2

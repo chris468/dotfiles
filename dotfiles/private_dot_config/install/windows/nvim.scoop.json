@@ -33,6 +33,10 @@
     {
       "name": "gcc",
       "source": "main"
+    },
+    {
+      "name": "python",
+      "source": "main"
     }
   ]
 }
