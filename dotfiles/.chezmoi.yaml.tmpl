@@ -1,11 +1,4 @@
 {{- $work := promptBoolOnce (hasKey . "profile" | ternary (index . "profile")  (dict)) "work" "Work" false -}}
-{{- $installSoftware := promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "installSoftware" "Install Software" true -}}
-{{- $devtools := false -}}
-{{- $passGpgId := "" -}}
-{{- if $installSoftware -}}
-{{-   $devtools = promptBoolOnce (hasKey . "profile" | ternary (index . "profile") (dict)) "devtools" "DevTools" true -}}
-{{-   $passGpgId = promptStringOnce . "passGpgId" "Key for pass" .chezmoi.username }}
-{{- end -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
 {{- $_defaultFont := dict 
       "family" "Hack Nerd Font Mono"
@@ -17,62 +10,38 @@
 {{- $_localInstall := joinPath $_local "opt" -}}
 {{- $_localInstallBin := joinPath $_local "bin" -}}
 {{- $_localInstallSbin := joinPath $_local "sbin" -}}
-{{- $_localInstallSrc := joinPath $_local "src" -}}
-{{- $_dotnetTools := joinPath ".dotnet" "tools" -}}
-{{- $_dotnetRoot := joinPath $_localInstall "dotnet" -}}
-{{- $_gitCredentialManager := joinPath $_localInstall "git-credential-manager" -}}
 {{- $_dataHome := joinPath $_local "share" -}}
 {{- $_configHome := ".config" -}}
 {{- $_cacheHome := ".cache" -}}
-{{- $_lunarvimRuntime := joinPath $_dataHome "lunarvim" -}}
-{{- $_lunarvimConfig := joinPath $_configHome "lvim" -}}
-{{- $_lunarvimCache := joinPath $_cacheHome "lvim" -}}
-{{- $_lunarvimBase := joinPath $_lunarvimRuntime "lvim" -}}
 {{- $_ipython := joinPath $_configHome "ipython" -}}
 {{- $_zshConfig := joinPath $_configHome "zsh" -}}
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
 {{- $_fzf := joinPath $_localInstall "fzf" -}}
 {{- $_fzfBin := joinPath $_fzf "bin" -}}
-{{- $_passwordStore := joinPath $_localInstallSrc "password-store" -}}
 {{- $_relativePaths := dict
       "local" $_local
       "localInstall" $_localInstall
       "localInstallBin" $_localInstallBin
       "localInstallSbin" $_localInstallSbin
-      "localInstallSrc" $_localInstallSrc
-      "dotnetTools" $_dotnetTools
-      "dotnetRoot" $_dotnetRoot
-      "gitCredentialManager" $_gitCredentialManager
       "dataHome" $_dataHome
       "configHome" $_configHome
       "cacheHome" $_cacheHome
-      "lunarvimRuntime" $_lunarvimRuntime
-      "lunarvimConfig" $_lunarvimConfig
-      "lunarvimCache" $_lunarvimCache
-      "lunarvimBase" $_lunarvimBase
       "ipython" $_ipython
       "zshConfig" $_zshConfig
       "zshPlugins" $_zshPlugins
       "fzf" $_fzf
       "fzfBin" $_fzfBin
-      "passwordStore" $_passwordStore
 -}}
 {{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
-{{-   $_scoop := joinPath $_localInstall "scoop" -}}
 {{-   $_bash := joinPath "C:\\" "Program Files" "git" "bin" "bash.exe" }}
 {{-   $_platformRelativePaths = dict
-        "scoop" $_scoop
         "bash" $_bash
 -}}
 {{- else if eq "linux" .chezmoi.os -}}
-{{-   $_asdf := joinPath $_localInstall "asdf" -}}
-{{-   $_asdfInstalls := joinPath $_asdf "installs" -}}
-{{-   $_rustInstall := joinPath $_asdfInstalls "rust" "stable" -}}
+{{-   $_asdf := ".asdf" -}}
 {{-   $_platformRelativePaths = dict
         "asdf" $_asdf
-        "asdfInstalls" $_asdfInstalls
-        "rustInstall" $_rustInstall
 -}}
 {{- else if eq "darwin" .chezmoi.os -}}
 {{-   $_homebrew := "/opt/homebrew" -}}
@@ -88,15 +57,8 @@
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
 data:
-{{- if $installSoftware }}
-  passGpgId: {{ $passGpgId }}
-{{- end }}
   profile:
     work: {{ $work }}
-    installSoftware: {{ $installSoftware }}
-{{- if $installSoftware }}
-    devtools: {{ $devtools }}
-{{- end }}
     nushell: false
   font:
     family: {{ $font.family }}
@@ -123,12 +85,6 @@ data:
     - name: POSH_THEME
       path: true
       value: {{ joinPath $paths.configHome "oh-my-posh" $poshTheme }}
-    - name: DOTNET_ROOT
-      path: true
-      value: {{ $paths.dotnetRoot }}
-    - name: DOTNET_INSTALL_DIR
-      path: true
-      value: {{ $paths.dotnetRoot }}
     - name: XDG_DATA_HOME
       path: true
       persist: true
@@ -141,57 +97,22 @@ data:
       path: true
       persist: true
       value: {{ $paths.cacheHome }}
-    - name: LUNARVIM_RUNTIME_DIR
-      path: true
-      persist: true
-      value: {{ $paths.lunarvimRuntime }}
-    - name: LUNARVIM_CONFIG_DIR
-      path: true
-      persist: true
-      value: {{ $paths.lunarvimConfig }}
-    - name: LUNARVIM_CACHE_DIR
-      path: true
-      persist: true
-      value: {{ $paths.lunarvimCache }}
-    - name: LUNARVIM_BASE_DIR
-      path: true
-      persist: true
-      value: {{ $paths.lunarvimBase  }}
-{{- if "scoop" | hasKey $paths }}
-    - name: SCOOP
-      path: true
-      persist: true
-      value: {{ $paths.scoop }}
-{{- end }}
 {{- if "asdf" | hasKey $paths }}
     - name: ASDF_DIR
       value: {{ $paths.asdf }}
     - name: ASDF_DATA_DIR
       value: {{ $paths.asdf }}
 {{- end }}
-{{- if "rustInstall" | hasKey $paths }}
-    - name: RUSTUP_HOME
-      value: {{ $paths.rustInstall }}
-{{- end }}
     - name: PATH
       path: true
       action: prepend
       persist: true
       value:
-        - {{ $paths.dotnetTools }}
         - {{ $paths.localInstallBin }}
         - {{ $paths.fzfBin }}
-{{- if eq "windows" .chezmoi.os }}
-        - {{ joinPath $paths.scoop "apps" "git" "current" "usr" "bin" }}
-{{- end }}
 {{- if "homebrew" | index $paths }}
         - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
-    - name: PATH
-      path: true
-      action: prepend
-      value:
-        - {{ $paths.dotnetRoot }}
 
 umask: 0o022
 

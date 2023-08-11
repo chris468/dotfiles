@@ -1,0 +1,42 @@
+{
+  "buckets": [
+    {
+      "name": "main",
+      "source": "https://github.com/ScoopInstaller/Main"
+    },
+    {
+      "name": "extras",
+      "source": "https://github.com/ScoopInstaller/Extras"
+    }
+  ],
+  "apps": [
+    {
+      "name": "neovim",
+      "source": "main"
+    },
+    {
+      "name": "vcredist2022",
+      "source": "extras"
+    },
+    {
+      "name": "nodejs-lts",
+      "source": "main"
+    },
+    {
+      "name": "ripgrep",
+      "source": "main"
+    },
+    {
+      "name": "fd",
+      "source": "main"
+    },
+    {
+      "name": "gcc",
+      "source": "main"
+    },
+    {
+      "name": "python",
+      "source": "main"
+    }
+  ]
+}

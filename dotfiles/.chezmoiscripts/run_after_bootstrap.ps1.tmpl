@@ -1,0 +1,18 @@
+{{- if eq "windows" .chezmoi.os -}}
+
+function Install-Scoop {
+    if (!(Get-Command scoop 2>$null)) {
+        Write-Host "Installing scoop..."
+        Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+        Invoke-RestMethod https://get.scoop.sh | Invoke-Expression
+    }
+}
+
+function Install-Essentials {
+    scoop import {{ .paths.configHome }}/install/windows/bootstrap.scoop.json 6>$null
+}
+
+Install-Scoop
+Install-Essentials
+
+{{- end -}}

@@ -1,3 +1,0 @@
-chezmoi:template:missing-key=zero
-git -C {{ joinPath .paths.lunarvimRuntime "lvim" }} checkout {{ .software.versions.lunarvim }}
- lvim --headless -c 'quitall'

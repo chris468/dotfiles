@@ -1,0 +1,31 @@
+{{- if ne "windows" .chezmoi.os -}}
+#!/usr/bin/env bash
+
+function _sudo {
+	local prompt="ok to 'sudo bash -c \"$1\"'? [y/N] "
+	read -p "$prompt" ok
+	if [[ "${ok^^}" == "Y" ]]; then
+		sudo bash -c "$1"
+	fi
+}
+
+source /etc/os-release
+
+if [ -z "$ID_LIKE" ]; then
+	ID_LIKE=$ID
+fi
+
+case ${ID_LIKE^^} in
+DEBIAN)
+	asdf plugin add neovim
+	asdf install neovim latest
+	asdf global neovim latest
+
+	_sudo "apt update && apt install -y build-essential unzip nodejs npm ripgrep python3-venv"
+	;;
+*)
+	echo "unknown os type $ID_LIKE" >&2
+	exit 1
+	;;
+esac
+{{- end -}}

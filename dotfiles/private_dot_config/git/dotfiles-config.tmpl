@@ -17,11 +17,3 @@
 	ff = only
 [init]
 	defaultBranch = main
-[credential]
-	helper =
-	helper = {{ .paths.unix.gitCredentialManager }}/git-credential-manager
-{{- if eq "linux" .chezmoi.os }}
-  credentialStore = gpg
-{{- end }}
-[credential "https://dev.azure.com"]
-	useHttpPath = true

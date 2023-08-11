@@ -24,7 +24,7 @@ chezmoi:template:missing-key=zero
   executable: true
   refreshPeriod: "168h"
 
-{{- if and .profile.installSoftware ("asdf" | hasKey .paths.relative) }}
+{{- if "asdf" | hasKey .paths.relative }}
 {{ .paths.relative.asdf | quote }}:
   type: git-repo
   url: "https://github.com/asdf-vm/asdf.git"
@@ -32,36 +32,6 @@ chezmoi:template:missing-key=zero
     args:
       - "--branch"
       - "{{ .software.versions.asdf }}"
-{{- end }}
-
-{{- $dotnetInstall := "dotnet-install.sh" }}
-{{- if eq .chezmoi.os "windows" }}
-{{- $dotnetInstall = "dotnet-install.ps1" }}
-{{- end }}
-{{- if and .profile.devtools }}
-{{ joinPath .paths.relative.localInstallSbin $dotnetInstall | quote }}:
-  type: file
-  url: {{ list "https://dot.net/v1" $dotnetInstall | join "/" | quote }}
-  executable: true
-  refreshPeriod: "168h"
-{{- end }}
-
-{{- if and .profile.installSoftware (ne "windows" .chezmoi.os) }}
-{{ .paths.relative.passwordStore | quote }}:
-  type: archive
-  url: https://git.zx2c4.com/password-store/snapshot/password-store-{{ .software.versions.password_store }}.tar.xz
-  stripComponents: 1
-{{- end }}
-
-{{- if .profile.installSoftware }}
-{{ .paths.relative.lunarvimBase | quote }}:
-  type: git-repo
-  url: "https://github.com/LunarVim/LunarVim"
-  refreshPeriod: "168h"
-  clone:
-    args:
-      - "--branch"
-      - "{{ .software.versions.lunarvim }}"
 {{- end }}
 
 {{- if .profile.nushell }}
@@ -88,23 +58,6 @@ chezmoi:template:missing-key=zero
   type: archive
   url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
   stripComponents: 1
-
-{{ $gcmAssetPattern := dict
-     "windows" "gcm-win-x86.*\\d\\.zip"
-     "darwin" (list "gcm-osx-" .chezmoi.arch ".*\\d\\.tar.gz" | join "")
-     "linux" (list "gcm-linux_" .chezmoi.arch ".*\\d\\.tar.gz" | join "")
--}}
-{{ .paths.relative.gitCredentialManager | quote }}:
-  type: archive
-  exact: true
-{{- if eq .chezmoi.os "darwin" }}
-  stripComponents: 1
-{{- end }}
-  url: {{ template "gitHubReleaseAsset" (dict
-    "repo" "git-ecosystem/git-credential-manager"
-    "pattern" (.chezmoi.os | index $gcmAssetPattern)
-  )
-}}
 
 {{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" | quote }}:
   type: file
