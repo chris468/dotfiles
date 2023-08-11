@@ -1,0 +1,6 @@
+{{ joinPath .paths.relative.dataHome "fonts" | quote }}:
+  type: archive
+  url: {{ template "gitHubReleaseAsset" (dict "repo" "ryanoasis/nerd-fonts" "pattern" "Hack.zip") }}
+  exact: true
+  include:
+    - "*Mono*"
