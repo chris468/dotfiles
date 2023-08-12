@@ -27,6 +27,7 @@ palette:
   textOnRed: p:draculaBlack
   textOnDarkPurple: p:draculaPurple
 
+console_title_template: "{{ if .Root }}*{{ end }}{{ .UserName }}@{{ .HostName }}/{{ .Shell }}"
 blocks:
   - type: prompt
     alignment: left
@@ -35,18 +36,18 @@ blocks:
         alias: ProjectRow
         style: plain
         foreground: p:draculaPurple
-        template: '{{ if or
-            .Segments.Git.HEAD
-            .Segments.Project.Type
-            .Segments.Python.Venv
-            .Segments.Kubectl.Context
-            .Segments.Aws.Profile
-         }}╭─{{ end }}'
+        template: "{{ if or
+          .Segments.Git.HEAD
+          .Segments.Project.Type
+          .Segments.Python.Venv
+          .Segments.Kubectl.Context
+          .Segments.Aws.Profile
+          }}╭─{{ end }}"
 
       - type: git
         style: diamond
-        leading_diamond: ''
-        trailing_diamond: ' '
+        leading_diamond: ""
+        trailing_diamond: " "
         foreground: p:textOnGreen
         background: p:draculaGreen
         foreground_templates:
@@ -59,7 +60,8 @@ blocks:
           - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:draculaOrange{{ end }}"
           - "{{ if gt .Ahead 0 }}p:draculaPink{{ end }}"
           - "{{ if gt .Behind 0 }}p:draculaPurple{{ end }}"
-        template: " {{ .UpstreamIcon }}{{ .RepoName }} {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus
+        template:
+          " {{ .UpstreamIcon }}{{ .RepoName }} {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus
           }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and
           (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} 
           {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{
@@ -71,31 +73,31 @@ blocks:
 
       - type: project
         style: diamond
-        leading_diamond: ''
-        trailing_diamond: ' '
+        leading_diamond: ""
+        trailing_diamond: " "
         foreground: p:textOnPurple
         background: p:draculaPurple
 
       - type: python
         style: diamond
-        leading_diamond: ''
-        trailing_diamond: ' '
+        leading_diamond: ""
+        trailing_diamond: " "
         foreground: p:textOnYellow
         background: p:draculaYellow
 
       - type: kubectl
         style: diamond
-        leading_diamond: ''
-        trailing_diamond: ' '
+        leading_diamond: ""
+        trailing_diamond: " "
         foreground: p:textOnCyan
         background: p:draculaCyan
-        template: '{{ if .Context
-          }}󱃾 {{ .Context }}{{ if .Namespace }}:{{ .Namespace }}{{ end }}{{ end }}'
+        template: "{{ if .Context
+          }}󱃾 {{ .Context }}{{ if .Namespace }}:{{ .Namespace }}{{ end }}{{ end }}"
 
       - type: aws
         style: diamond
-        leading_diamond: ''
-        trailing_diamond: ' '
+        leading_diamond: ""
+        trailing_diamond: " "
         foreground: p:textOnOrange
         background: p:draculaOrange
         template: '{{ if or .Profile .Region
@@ -108,56 +110,56 @@ blocks:
       - type: text
         style: plain
         foreground: p:draculaPurple
-        template: '{{ if or
-              .Segments.Git.HEAD
-              .Segments.Project.Type
-              .Segments.Python.Venv
-            .Segments.Kubectl.Context
-            .Segments.Aws.Profile
-            }}│ {{else}}╭─{{ end }}'
+        template: "{{ if or
+          .Segments.Git.HEAD
+          .Segments.Project.Type
+          .Segments.Python.Venv
+          .Segments.Kubectl.Context
+          .Segments.Aws.Profile
+          }}│ {{else}}╭─{{ end }}"
 
       - type: os
         style: diamond
-        leading_diamond: ''
+        leading_diamond: ""
         foreground: p:textOnCyan
         background: p:draculaCyan
-        template: '{{ if .WSL }} {{ end }}{{ .Icon }} '
+        template: "{{ if .WSL }} {{ end }}{{ .Icon }} "
 
       - type: shell
         style: diamond
-        trailing_diamond: ''
+        trailing_diamond: ""
         foreground: parentForeground
         background: parentBackground
-        template: '{{ .Name }}{{ if .Env.CHEZMOI }} {{ end }} '
+        template: "{{ .Name }}{{ if .Env.CHEZMOI }} {{ end }} "
         properties:
           mapped_shell_names:
-            bash: '$'
-            pwsh: ''
-            nu: 'ν'
-            zsh: '%'
-            xonsh: ''
+            bash: "$"
+            pwsh: ""
+            nu: "ν"
+            zsh: "%"
+            xonsh: ""
       - type: session
         style: diamond
-        trailing_diamond: ''
+        trailing_diamond: ""
         foreground: p:textOnPurple
         background: p:draculaPurple
 
       - type: path
         style: diamond
-        trailing_diamond: ''
+        trailing_diamond: ""
         foreground: p:draculaWhite
         background: p:draculaComment
-        template: ' {{ if not .Writable }}{{ end }}{{ .Path }} '
+        template: " {{ if not .Writable }}{{ end }}{{ .Path }} "
         properties:
           style: mixed
-          home_icon: ''
-          folder_icon: ''
-          folder_separator_icon: '/'
+          home_icon: ""
+          folder_icon: ""
+          folder_separator_icon: "/"
           mapped_locations_enabled: true
 
       - type: executiontime
         style: diamond
-        trailing_diamond: ''
+        trailing_diamond: ""
         foreground: p:textOnDarkPurple
         background: p:draculaDarkPurple
         properties:
@@ -170,7 +172,7 @@ blocks:
       - type: text
         style: plain
         foreground: p:draculaPurple
-        template: '╰─'
+        template: "╰─"
 
       - type: exit
         style: plain
@@ -180,5 +182,5 @@ blocks:
         style: plain
         foreground: p:draculaGreen
         foreground_templates:
-          - '{{ if ne 0 .Code }}p:draculaRed{{ end }}'
-        template: ' '
+          - "{{ if ne 0 .Code }}p:draculaRed{{ end }}"
+        template: " "
