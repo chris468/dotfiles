@@ -1,0 +1,8 @@
+return {
+  font = {
+    family = {{ .font.family | quote }},
+    size = {{ .font.size }}
+  },
+  homedir = {{ .chezmoi.homeDir | quote }},
+  os = {{ .chezmoi.os | quote }},
+}
