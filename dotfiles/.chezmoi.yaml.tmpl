@@ -1,10 +1,18 @@
-{{- $work := promptBoolOnce (hasKey . "profile" | ternary (index . "profile")  (dict)) "work" "Work" false -}}
+{{- $_profile := "profile" | index . | default dict -}}
+{{- $work := promptBoolOnce $_profile "work" "Work" false -}}
 {{- $poshTheme := "new-theme.omp.yaml" -}}
+
 {{- $_defaultFont := dict 
       "family" "Hack Nerd Font Mono"
       "size" (eq "windows" .chezmoi.os | ternary 11 14)
 -}}
-{{- $font := $_defaultFont | merge (hasKey . "font" | ternary (index . "font") (dict)) -}}
+{{- $font := $_defaultFont | merge ("font" | index . | default dict) -}}
+
+{{- $_defaultGitCredentialManager := dict "configure" true -}}
+{{- if eq "linux" .chezmoi.os -}}
+{{-   $_defaultGitCredentialManager = set $_defaultGitCredentialManager "store" "plaintext" -}}
+{{- end -}}
+{{- $gitCredentialManager := $_defaultGitCredentialManager | merge ("gitCredentialManager" | index . | default dict) -}}
 
 {{- $_local := ".local" -}}
 {{- $_localInstall := joinPath $_local "opt" -}}
@@ -49,6 +57,10 @@
         "homebrew" $_homebrew
 -}}
 {{- end -}}
+{{- if $gitCredentialManager.configure -}}
+{{-    $_gitCredentialManagerPath := joinPath $_localInstall "git-credential-manager" -}}
+{{-    $_platformRelativePaths = set $_platformRelativePaths "gitCredentialManager" $_gitCredentialManagerPath -}}
+{{- end -}}
 {{- $_relativePaths = merge $_relativePaths $_platformRelativePaths }}
 {{- $paths := dict -}}
 {{- range $k, $v := $_relativePaths -}}
@@ -63,6 +75,8 @@ data:
   font:
     family: {{ $font.family }}
     size: {{ $font.size }}
+  gitCredentialManager:
+{{  $gitCredentialManager | toYaml | indent 4 }}
   paths:
 {{ $paths | toYaml | indent 4 }}
     unix:

@@ -59,6 +59,25 @@ chezmoi:template:missing-key=zero
   url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
   stripComponents: 1
 
+{{ if .gitCredentialManager.configure -}}
+{{ $gcmAssetPattern := dict
+     "windows" "gcm-win-x86.*\\d\\.zip"
+     "darwin" (list "gcm-osx-" .chezmoi.arch ".*\\d\\.tar.gz" | join "")
+     "linux" (list "gcm-linux_" .chezmoi.arch ".*\\d\\.tar.gz" | join "")
+-}}
+{{ .paths.relative.gitCredentialManager | quote }}:
+  type: archive
+  exact: true
+{{- if eq .chezmoi.os "darwin" }}
+  stripComponents: 1
+{{- end }}
+  url: {{ template "gitHubReleaseAsset" (dict
+    "repo" "git-ecosystem/git-credential-manager"
+    "pattern" (.chezmoi.os | index $gcmAssetPattern)
+  )
+}}
+{{- end }}
+
 {{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" | quote }}:
   type: file
   url: {{ template "gitHubReleaseAsset" (dict

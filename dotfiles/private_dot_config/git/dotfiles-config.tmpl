@@ -17,3 +17,13 @@
 	ff = only
 [init]
 	defaultBranch = main
+{{ if .gitCredentialManager.configure -}}
+[credential]
+	helper =
+	helper = {{ joinPath .paths.gitCredentialManager "git-credential-manager" }}
+{{   if "store" | hasKey .gitCredentialManager -}}
+    credentialStore = {{ "store" | index .gitCredentialManager }}
+{{-  end }}
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+{{- end }}
