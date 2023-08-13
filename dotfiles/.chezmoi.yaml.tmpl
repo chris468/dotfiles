@@ -8,7 +8,10 @@
 -}}
 {{- $font := $_defaultFont | merge ("font" | index . | default dict) -}}
 
-{{- $_defaultGitCredentialManager := dict "configure" true -}}
+{{- $_defaultGitCredentialManager := dict
+    "configure" true
+    "install" ("linux" | eq ".chezmoi.os")
+-}}
 {{- if eq "linux" .chezmoi.os -}}
 {{-   $_defaultGitCredentialManager = set $_defaultGitCredentialManager "store" "plaintext" -}}
 {{- end -}}
@@ -57,7 +60,7 @@
         "homebrew" $_homebrew
 -}}
 {{- end -}}
-{{- if $gitCredentialManager.configure -}}
+{{- if $gitCredentialManager.install -}}
 {{-    $_gitCredentialManagerPath := joinPath $_localInstall "git-credential-manager" -}}
 {{-    $_platformRelativePaths = set $_platformRelativePaths "gitCredentialManager" $_gitCredentialManagerPath -}}
 {{- end -}}

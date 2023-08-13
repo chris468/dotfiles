@@ -20,7 +20,7 @@
 {{ if .gitCredentialManager.configure -}}
 [credential]
 	helper =
-	helper = {{ joinPath .paths.gitCredentialManager "git-credential-manager" }}
+	helper = manager
 {{   if "store" | hasKey .gitCredentialManager -}}
     credentialStore = {{ "store" | index .gitCredentialManager }}
 {{-  end }}

@@ -59,7 +59,7 @@ chezmoi:template:missing-key=zero
   url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
   stripComponents: 1
 
-{{ if .gitCredentialManager.configure -}}
+{{ if .gitCredentialManager.install -}}
 {{ $gcmAssetPattern := dict
      "windows" "gcm-win-x86.*\\d\\.zip"
      "darwin" (list "gcm-osx-" .chezmoi.arch ".*\\d\\.tar.gz" | join "")
@@ -69,7 +69,7 @@ chezmoi:template:missing-key=zero
   type: archive
   exact: true
 {{- if eq .chezmoi.os "darwin" }}
-  stripComponents: 1
+  stripComponents: 2
 {{- end }}
   url: {{ template "gitHubReleaseAsset" (dict
     "repo" "git-ecosystem/git-credential-manager"
