@@ -1,14 +1,4 @@
 chezmoi:template:missing-key=zero
-{{ joinPath .paths.relative.configHome "shrc.d" "dracula-theme.sh" | quote }}:
-  type: file
-  url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
-  refreshPeriod: "672h"
-
-{{ joinPath .paths.relative.configHome "alacritty" "dracula.yml" | quote }}:
-  type: file
-  url: https://raw.githubusercontent.com/dracula/alacritty/master/dracula.yml
-  refreshPeriod: "672h"
-
 {{- $posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
 {{- $posh_filename := (list "posh-" .chezmoi.os "-" .chezmoi.arch $posh_ext) | join "" }}
 {{- $posh_version := .software.versions.oh_my_posh | default "latest" }}
@@ -77,14 +67,6 @@ chezmoi:template:missing-key=zero
   )
 }}
 {{- end }}
-
-{{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" | quote }}:
-  type: file
-  url: {{ template "gitHubReleaseAsset" (dict
-    "repo" "dracula/xfce4-terminal"
-    "pattern" "Dracula.theme"
-    )
-  }}
 
 {{ joinPath .paths.relative.dataHome "fonts" | quote }}:
   type: archive

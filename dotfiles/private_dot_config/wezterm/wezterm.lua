@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local settings = require("chris468.settings")
 
-config.color_scheme = "Dracula"
+config.color_scheme = "nord"
 config.window_background_opacity = 0.97
 
 config.font = wezterm.font(settings.font.family)
