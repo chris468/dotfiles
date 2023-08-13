@@ -27,7 +27,6 @@ local function map_keys(map_normal)
 end
 
 local function horizontal()
-  print("there")
   return create_terminal({
     count = 2,
     direction = "horizontal",
@@ -35,12 +34,19 @@ local function horizontal()
 end
 
 local function lazygit()
-  print("hi")
   return create_terminal({
     hidden = true,
     direction = "float",
     cmd = "lazygit",
     on_create = map_keys(false),
+  })
+end
+
+local function chezmoi()
+  return create_terminal({
+    count = 3,
+    cmd = "chezmoi cd",
+    direction = "float",
   })
 end
 
@@ -60,6 +66,7 @@ return {
     { "<leader>ft", "<cmd>TermSelect<CR>", desc = { "Terminal" } },
     { "<leader>tf", "<cmd>1ToggleTerm<cr>", { "n", "t" }, desc = "Floating terminal" },
     { "<leader>tt", function() horizontal():toggle() end, { "n", "t" }, desc = "Horizontal terminal" },
+    { "<leader>td", function() chezmoi():toggle() end, { "n", "t" }, desc = "Dotfiles" },
     { "<leader>gg", function() lazygit():toggle() end, { "n", "t" }, desc = "Git" },
   },
   -- stylua: ignore end
