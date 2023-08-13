@@ -68,7 +68,14 @@ chezmoi:template:missing-key=zero
   include:
     - "*Mono*"
 
+{{ if "windows" | eq .chezmoi.os -}}
 {{ joinPath "AppData" "Local" "Microsoft" "Windows Terminal" "Fragments" "nord" "nord.json" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/thismat/nord-windows-terminal/main/nord.json
+  refreshPeriod: "168h"
+{{- end }}
+
+{{ joinPath .paths.relative.configHome "dircolors" "nord" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/nordtheme/dircolors/develop/src/dir_colors
   refreshPeriod: "168h"
