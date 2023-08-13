@@ -9,7 +9,7 @@ function! extensions#load()
         Plug 'junegunn/vim-plug'
 
         " colors
-        Plug 'dracula/vim'
+        Plug 'nordtheme/vim'
 
         " general utilities
         Plug 'tpope/vim-surround'

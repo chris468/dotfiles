@@ -8,12 +8,11 @@ an executable
 ]]
 -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
 --
-require('chris468').config()
+require("chris468").config()
 
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
-lvim.colorscheme = "dracula"
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
 
@@ -36,18 +35,18 @@ lvim.builtin.project.manual_mode = true
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
 local _, actions = pcall(require, "telescope.actions")
 lvim.builtin.telescope.defaults.mappings = {
-  -- for input mode
-  i = {
-    ["<C-j>"] = actions.move_selection_next,
-    ["<C-k>"] = actions.move_selection_previous,
-    ["<C-n>"] = actions.cycle_history_next,
-    ["<C-p>"] = actions.cycle_history_prev,
-  },
-  -- for normal mode
-  n = {
-    ["<C-j>"] = actions.move_selection_next,
-    ["<C-k>"] = actions.move_selection_previous,
-  },
+	-- for input mode
+	i = {
+		["<C-j>"] = actions.move_selection_next,
+		["<C-k>"] = actions.move_selection_previous,
+		["<C-n>"] = actions.cycle_history_next,
+		["<C-p>"] = actions.cycle_history_prev,
+	},
+	-- for normal mode
+	n = {
+		["<C-j>"] = actions.move_selection_next,
+		["<C-k>"] = actions.move_selection_previous,
+	},
 }
 
 -- Change theme settings
@@ -57,20 +56,24 @@ lvim.builtin.telescope.defaults.mappings = {
 -- Use which-key to add extra bindings with the leader-key prefix
 -- lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 lvim.builtin.which_key.mappings["t"] = {
-  name = "+Trouble",
-  r = { "<cmd>Trouble lsp_references<cr>", "References" },
-  f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
-  d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
-  q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
-  l = { "<cmd>Trouble loclist<cr>", "LocationList" },
-  w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
+	name = "+Trouble",
+	r = { "<cmd>Trouble lsp_references<cr>", "References" },
+	f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
+	d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
+	q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
+	l = { "<cmd>Trouble loclist<cr>", "LocationList" },
+	w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
 
 lvim.builtin.which_key.mappings["T"] = {
-  name = "+Neotest",
-  t = { function() require('neotest').summary.toggle() end, "Toggle Summary" }
+	name = "+Neotest",
+	t = {
+		function()
+			require("neotest").summary.toggle()
+		end,
+		"Toggle Summary",
+	},
 }
-
 
 -- TODO: User Config for predefined plugins
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
@@ -86,19 +89,19 @@ vim.list_extend(lvim.builtin.project.patterns, { "pyproject.toml", "*.sln" })
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-  "bash",
-  "c",
-  "c_sharp",
-  "javascript",
-  "json",
-  "lua",
-  "python",
-  "typescript",
-  "tsx",
-  "css",
-  "rust",
-  "java",
-  "yaml",
+	"bash",
+	"c",
+	"c_sharp",
+	"javascript",
+	"json",
+	"lua",
+	"python",
+	"typescript",
+	"tsx",
+	"css",
+	"rust",
+	"java",
+	"yaml",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell", "help" }
@@ -108,12 +111,11 @@ lvim.builtin.treesitter.highlight.disable = { "help" }
 lvim.chris468.dap.ensure_installed = { "python", "netcoredbg" }
 lvim.chris468.testrunner.adapters = { "neotest-python", "neotest-dotnet" }
 lvim.chris468.testrunner["neotest-dotnet"] = {
-  discovery_root = "solution",
-  dap = {
-    justMyCode = false
-  }
+	discovery_root = "solution",
+	dap = {
+		justMyCode = false,
+	},
 }
-
 
 -- generic LSP settings
 
@@ -146,7 +148,7 @@ lvim.chris468.testrunner["neotest-dotnet"] = {
 --   return server ~= "emmet_ls"
 -- end, lvim.lsp.automatic_configuration.skipped_servers)
 lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-  return server ~= "ansiblels"
+	return server ~= "ansiblels"
 end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
@@ -160,28 +162,30 @@ end, lvim.lsp.automatic_configuration.skipped_servers)
 -- end
 
 -- -- set a formatter, this will override the language server formatting capabilities (if it exists)
-local formatters = require "lvim.lsp.null-ls.formatters"
-formatters.setup {
-  { command = "black", filetypes = { "python" } },
-  {
-    command = "prettier",
-    filetypes = { "markdown", "yaml" },
-    args = {
-      "--print-width", "100",
-      "--prose-wrap", "always",
-    },
-  }
-  --   { command = "isort", filetypes = { "python" } },
-  --   {
-  --     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
-  --     command = "prettier",
-  --     ---@usage arguments to pass to the formatter
-  --     -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
-  --     extra_args = { "--print-with", "100" },
-  --     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
-  --     filetypes = { "typescript", "typescriptreact" },
-  --   },
-}
+local formatters = require("lvim.lsp.null-ls.formatters")
+formatters.setup({
+	{ command = "black", filetypes = { "python" } },
+	{
+		command = "prettier",
+		filetypes = { "markdown", "yaml" },
+		args = {
+			"--print-width",
+			"100",
+			"--prose-wrap",
+			"always",
+		},
+	},
+	--   { command = "isort", filetypes = { "python" } },
+	--   {
+	--     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+	--     command = "prettier",
+	--     ---@usage arguments to pass to the formatter
+	--     -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+	--     extra_args = { "--print-with", "100" },
+	--     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+	--     filetypes = { "typescript", "typescriptreact" },
+	--   },
+})
 
 -- -- set additional linters
 -- local linters = require "lvim.lsp.null-ls.linters"
@@ -217,24 +221,24 @@ formatters.setup {
 --   end,
 -- })
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "alpha",
-  callback = function()
-    vim.cmd([[
+	pattern = "alpha",
+	callback = function()
+		vim.cmd([[
         nnoremap <silent> <buffer> <Esc> :Alpha<CR>
         nnoremap <silent> <buffer> q :Alpha<CR>
       ]])
-  end
+	end,
 })
 
 local function set_ansible_filetype()
-  vim.cmd([[
+	vim.cmd([[
       setfiletype yaml.ansible
   ]])
 end
 
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-  pattern = {
-    "*/{inventory,playbooks}/*.y{,a}ml",
-  },
-  callback = set_ansible_filetype,
+	pattern = {
+		"*/{inventory,playbooks}/*.y{,a}ml",
+	},
+	callback = set_ansible_filetype,
 })

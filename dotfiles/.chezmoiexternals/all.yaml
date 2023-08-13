@@ -24,13 +24,6 @@ chezmoi:template:missing-key=zero
       - "{{ .software.versions.asdf }}"
 {{- end }}
 
-{{- if .profile.nushell }}
-{{ joinPath .paths.relative.configHome "nushell" "nu_scripts" | quote }}:
-  type: git-repo
-  url: "https://github.com/nushell/nu_scripts"
-  refreshPeriod: "168h"
-{{- end }}
-
 {{- if ne "windows" .chezmoi.os }}
 {{ joinPath .paths.relative.localInstall "oh-my-zsh" | quote }}:
   url: "https://github.com/ohmyzsh/ohmyzsh"
