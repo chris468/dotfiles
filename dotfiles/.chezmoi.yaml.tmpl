@@ -10,7 +10,7 @@
 
 {{- $_defaultGitCredentialManager := dict
     "configure" true
-    "install" ("linux" | eq ".chezmoi.os")
+    "install" ("linux" | eq .chezmoi.os)
 -}}
 {{- if eq "linux" .chezmoi.os -}}
 {{-   $_defaultGitCredentialManager = set $_defaultGitCredentialManager "store" "plaintext" -}}
