@@ -1,8 +1,10 @@
 return {
   {
     "nvim-lspconfig",
-    opts = function(_, opts)
-      opts.servers.ruff_lsp = nil
+    opts = function(p, opts)
+      if not (opts.setup and opts.setup.ruff_lsp) and p.setup and p.setup.ruff_lsp then
+        opts.setup.ruff_lsp = p.setup.ruff_lsp
+      end
     end,
   },
   {
