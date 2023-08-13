@@ -2,7 +2,14 @@ local function map_hide_highlight()
   vim.keymap.set("n", "<leader>h", "<cmd>noh<cr>", { desc = "No highlight" })
 end
 
-local function map_terminals() end
+local function map_resume_search()
+  vim.keymap.set("n", "<leader>r", "<cmd>Telescope resume<CR>", { desc = "Resume last search" })
+end
+
+local function map_dotfiles()
+  vim.keymap.set("n", "<leader>Da", "<cmd>!chezmoi apply<CR>", { desc = "Apply dotfiles" })
+  vim.keymap.set("n", "<leader>DA", "<cmd>!chezmoi add %<CR>", { desc = "Add current file to dotfiles" })
+end
 
 local function clear_line_movement()
   -- was accidentally triggering when leaving insert mode and trying to move
@@ -27,6 +34,8 @@ end
 
 local function map()
   map_hide_highlight()
+  map_resume_search()
+  map_dotfiles()
 end
 
 clear()
