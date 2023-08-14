@@ -14,6 +14,11 @@ chezmoi:template:missing-key=zero
   executable: true
   refreshPeriod: "168h"
 
+{{ joinPath .paths.relative.localInstall "oh-my-posh" "themes" | quote }}:
+  type: archive
+  url: "{{ $posh_url_base }}/{{ $posh_url_path }}/themes.zip"
+  refreshPeriod: "168h"
+
 {{- if "asdf" | hasKey .paths.relative }}
 {{ .paths.relative.asdf | quote }}:
   type: git-repo

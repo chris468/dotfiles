@@ -1,7 +1,5 @@
 {{- $_profile := "profile" | index . | default dict -}}
 {{- $work := promptBoolOnce $_profile "work" "Work" false -}}
-{{- $poshTheme := "new-theme.omp.yaml" -}}
-
 {{- $_defaultFont := dict 
       "family" "Hack Nerd Font Mono"
       "size" (eq "windows" .chezmoi.os | ternary 11 14)
@@ -71,9 +69,15 @@
 {{- end -}}
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
+{{- $defaultPoshTheme := joinPath $paths.localInstall "oh-my-posh" "themes" "nordtron.omp.json" -}}
+{{- $poshTheme := "poshTheme" | index $_profile | default $defaultPoshTheme -}}
+
 data:
   profile:
     work: {{ $work }}
+{{- if "poshTheme" | hasKey $_profile }}
+    poshTheme: {{ "poshTheme" | index $_profile }}
+{{- end }}
   font:
     family: {{ $font.family }}
     size: {{ $font.size }}
@@ -100,7 +104,7 @@ data:
       export: false
     - name: POSH_THEME
       path: true
-      value: {{ joinPath $paths.configHome "oh-my-posh" $poshTheme }}
+      value: {{ $poshTheme }}
     - name: XDG_DATA_HOME
       path: true
       persist: true
