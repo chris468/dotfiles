@@ -3,7 +3,7 @@ local config = wezterm.config_builder()
 local settings = require("chris468.settings")
 
 config.color_scheme = "nord"
-config.window_background_opacity = 0.97
+require("chris468.tab_colors")(config)
 
 config.font = wezterm.font(settings.font.family)
 config.font_size = settings.font.size
