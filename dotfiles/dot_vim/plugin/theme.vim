@@ -3,8 +3,7 @@ if &term == 'win32' && !empty($WT_SESSION)
 endif
 
 set background=dark
-let g:dracula_italic = 0
-silent! colors dracula
+silent! colors nord
 set cursorline
 
 " disiable bell completely (not audible or visual)

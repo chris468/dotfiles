@@ -1,14 +1,4 @@
 chezmoi:template:missing-key=zero
-{{ joinPath .paths.relative.configHome "shrc.d" "dracula-theme.sh" | quote }}:
-  type: file
-  url: https://raw.githubusercontent.com/dracula/tty/master/dracula-tty.sh
-  refreshPeriod: "672h"
-
-{{ joinPath .paths.relative.configHome "alacritty" "dracula.yml" | quote }}:
-  type: file
-  url: https://raw.githubusercontent.com/dracula/alacritty/master/dracula.yml
-  refreshPeriod: "672h"
-
 {{- $posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
 {{- $posh_filename := (list "posh-" .chezmoi.os "-" .chezmoi.arch $posh_ext) | join "" }}
 {{- $posh_version := .software.versions.oh_my_posh | default "latest" }}
@@ -24,6 +14,11 @@ chezmoi:template:missing-key=zero
   executable: true
   refreshPeriod: "168h"
 
+{{ joinPath .paths.relative.localInstall "oh-my-posh" "themes" | quote }}:
+  type: archive
+  url: "{{ $posh_url_base }}/{{ $posh_url_path }}/themes.zip"
+  refreshPeriod: "168h"
+
 {{- if "asdf" | hasKey .paths.relative }}
 {{ .paths.relative.asdf | quote }}:
   type: git-repo
@@ -32,13 +27,6 @@ chezmoi:template:missing-key=zero
     args:
       - "--branch"
       - "{{ .software.versions.asdf }}"
-{{- end }}
-
-{{- if .profile.nushell }}
-{{ joinPath .paths.relative.configHome "nushell" "nu_scripts" | quote }}:
-  type: git-repo
-  url: "https://github.com/nushell/nu_scripts"
-  refreshPeriod: "168h"
 {{- end }}
 
 {{- if ne "windows" .chezmoi.os }}
@@ -78,17 +66,21 @@ chezmoi:template:missing-key=zero
 }}
 {{- end }}
 
-{{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" | quote }}:
-  type: file
-  url: {{ template "gitHubReleaseAsset" (dict
-    "repo" "dracula/xfce4-terminal"
-    "pattern" "Dracula.theme"
-    )
-  }}
-
 {{ joinPath .paths.relative.dataHome "fonts" | quote }}:
   type: archive
   url: {{ template "gitHubReleaseAsset" (dict "repo" "ryanoasis/nerd-fonts" "pattern" "Hack.zip") }}
   exact: true
   include:
     - "*Mono*"
+
+{{ if "windows" | eq .chezmoi.os -}}
+{{ joinPath "AppData" "Local" "Microsoft" "Windows Terminal" "Fragments" "nord" "nord.json" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/thismat/nord-windows-terminal/main/nord.json
+  refreshPeriod: "168h"
+{{- end }}
+
+{{ joinPath .paths.relative.configHome "dircolors" "nord" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/nordtheme/dircolors/develop/src/dir_colors
+  refreshPeriod: "168h"
