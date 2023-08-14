@@ -1,3 +1,5 @@
-if command -v dircolors >/dev/null 2>&1; then
-	test -r ~/.config/dircolors/nord && eval $(dircolors ~/.config/dircolors/nord)
+eval "$(/usr/bin/env bash ~/.config/dircolors/dircolors.sh)"
+
+if command -v gls >/dev/null 2>&1; then
+	alias ls='gls --color=auto'
 fi
