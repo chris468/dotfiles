@@ -117,6 +117,11 @@ data:
       path: true
       persist: true
       value: {{ $paths.cacheHome }}
+{{- if $work }}
+    - name: CHRIS468_LAZYVIM_PROFILE
+      persist: true
+      value: work
+{{- end }}
 {{- if "asdf" | hasKey $paths }}
     - name: ASDF_DIR
       value: {{ $paths.asdf }}
