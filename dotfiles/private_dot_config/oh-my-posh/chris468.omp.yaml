@@ -1,0 +1,207 @@
+# inspired by the nord lualine theme
+# https://github.com/nvim-lualine/lualine.nvim/blob/master/lua/lualine/themes/nord.lua
+# yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+version: 2
+palettes:
+  template: nord
+  list:
+    nord:
+      nord0: "#2e3440"
+      nord1: "#3b4252"
+      nord2: "#434c5e"
+      nord3: "#4c566a"
+      nord4: "#d8dee9"
+      nord5: "#e5e9f0"
+      nord6: "#eceff4"
+      nord7: "#8fbcbb"
+      nord8: "#88c0d0"
+      nord9: "#81a1c1"
+      nord10: "#5e81ac"
+      nord11: "#bf616a"
+      nord12: "#d08770"
+      nord13: "#ebcb8b"
+      nord14: "#a3be8c"
+      nord15: "#b48ead"
+      outer-foreground: p:nord1
+      outer-background: p:nord8
+      middle-foreground: p:nord5
+      middle-background: p:nord1
+      inner-foreground: p:nord5
+      inner-background: p:nord3
+      prompt-foreground: p:nord8
+      aws-foreground: p:nord13
+      kubectl-foreground: p:nord10
+      fail: p:nord11
+      dim-foreground: p:nord3
+
+var:
+  min_width: 90
+  mapped_shells:
+    - bash
+    - pwsh
+    - nu
+    - zsh
+    - xonsh
+
+secondary_prompt:
+  template: '……{{ "…" | regexReplaceAll "." (.Var.mapped_shells | has .Shell | ternary "." .Shell)  }} '
+  foreground: p:dim-foreground
+  background: transparent
+
+blocks:
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: status
+        style: plain
+        template: ┏
+        foreground: p:prompt-foreground
+        foreground_templates:
+          - "{{ if ne .Code 0 }}p:fail{{ end }}"
+        properties:
+          always_enabled: true
+      - type: os
+        style: diamond
+        leading_diamond: 
+        foreground: p:outer-foreground
+        background: parentForeground
+        templates_logic: first_match
+        templates:
+          - '{{ if eq "1" .Env.POSH_WIDE }} {{ if .WSL }} {{ end }}{{ .Icon }} {{ end }}'
+          - "{{ if .WSL }}{{ end }}{{ .Icon }}"
+      - type: session
+        style: diamond
+        leading_diamond: <parentBackground,background></>
+        foreground: p:middle-foreground
+        background: p:middle-background
+        template: ' {{
+          $userName := .UserName }}{{
+          $hostName := regexReplaceAll "\\..*" .HostName "" }}{{
+          if ne "1" .Env.POSH_WIDE }}{{
+          $userName = regexReplaceAll "(.{4,}?)(.{2,})" $userName "${1}…" }}{{
+          $hostName = regexReplaceAll "(.{4,}?)(.{2,})" $hostName "${1}…" }}{{
+          end }}{{
+          if .SSHSession }} {{ end }}{{ $userName }}@{{ regexReplaceAll "\\..*" $hostName "" }} '
+      - type: path
+        style: diamond
+        leading_diamond: <parentBackground,background></>
+        foreground: p:inner-foreground
+        background: p:inner-background
+        template: ' {{ $path := .Path }}{{
+          if ne "1" .Env.POSH_WIDE }}{{
+          $path = regexReplaceAll "([^/]{4,}?)[^/]{2,}(/.+)" $path "${1}…${2}" }}{{
+          $path = regexReplaceAll "(.*/)([^/]{4,}?)[^/]{2,}$" $path "${1}${2}…" }}{{
+          end }}{{
+          if not .Writable }} {{ end }}{{ $path }} '
+        properties:
+          style: agnoster_short
+          max_depth: 1
+          home_icon: ""
+          folder_icon: ""
+          mapped_locations_enabled: true
+          mapped_locations:
+            "~/src": 󰅴
+            "*:/dev": 󰅴
+            "~/.config": 
+            "~/.local/share/chezmoi": 
+      - type: git
+        style: diamond
+        leading_diamond: <foreground,background></>
+        foreground: parentForeground
+        background: parentBackground
+        properties:
+          fetch_status: true
+          fetch_stash_count: true
+          fetch_upstream_icon: true
+        template: ' {{ .UpstreamIcon }}{{ if eq "1" .Env.POSH_WIDE }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} {{ end }}'
+      - type: project
+        style: diamond
+        leading_diamond: <foreground,background></>
+        foreground: p:inner-foreground
+        background: p:inner-background
+        templates_logic: first_match
+        templates:
+          - '{{ if ne "1" .Env.POSH_WIDE }}  {{ end }}'
+          - " {{ if .Error }}{{ .Error }}{{ else }}{{ if .Version }} {{.Version}}{{ end }} {{ if .Name }}{{ .Name }}{{ end }}{{ end }} "
+  - type: prompt
+    alignment: right
+    filler: "<p:inner-foreground,p:inner-background> </>"
+    segments:
+      - type: text
+        style: diamond
+        trailing_diamond: <p:inner-foreground,p:inner-background></>
+        foreground: p:inner-foreground
+        background: p:inner-background
+        template: " {{ if .Env.CHEZMOI }}{{ end }} "
+      - type: python
+        style: diamond
+        trailing_diamond: <p:inner-foreground,p:inner-background></>
+        foreground: p:inner-foreground
+        background: p:inner-background
+        template: '{{ if and .Venv .Full }}  {{ if eq "1" .Env.POSH_WIDE }}{{ .Full }} {{ end }}{{ end }}'
+      - type: kubectl
+        style: diamond
+        trailing_diamond: <p:inner-foreground,p:inner-background></>
+        foreground: p:kubectl-foreground
+        background: p:inner-background
+        template: ' {{ if .Context }}󱃾 {{ if eq "1" .Env.POSH_WIDE }}{{ .Context }}{{ if .Namespace }}:{{ .Namespace }}{{ end }} {{ end }}{{ end }}'
+      - type: aws
+        style: diamond
+        trailing_diamond: <p:inner-foreground,p:inner-background></>
+        foreground: p:aws-foreground
+        background: p:inner-background
+        template: ' {{ if or .Profile .Region }}󰸏{{ if eq "1" .Env.POSH_WIDE }} {{ .Profile }}{{ if and .Region (ne .Region "us-east-1") }}@{{ .Region }}{{ end }}{{ end }} {{ end }}'
+      - type: time
+        style: plain
+        foreground: p:inner-foreground
+        background: p:inner-background
+        templates_logic: first_match
+        templates:
+          - ' {{ if ne "1" .Env.POSH_WIDE }}{{ .CurrentDate | date "15:04" }} {{ end }}'
+          - ' {{ .CurrentDate | date "3:04:05 pm MST" }} '
+      - type: executiontime
+        style: diamond
+        leading_diamond: <background,parentBackground></>
+        foreground: p:middle-foreground
+        background: p:middle-background
+        template: '{{ if eq "1" .Env.POSH_WIDE }} {{ end }} {{ .FormattedMs }} '
+        properties:
+          style: round
+          threshold: 0
+      - type: status
+        style: diamond
+        leading_diamond: <background,parentBackground></>
+        trailing_diamond: ""
+        properties:
+          always_enabled: true
+        foreground: p:outer-foreground
+        background: p:outer-background
+        background_templates:
+          - "{{ if ne 0 .Code }}p:fail{{ end }}"
+        templates_logic: first_match
+        templates:
+          - '{{ if ne "1" .Env.POSH_WIDE }}{{ if ne 0 .Code }}{{ .Code }}{{ else }}{{ end }}{{ end }}'
+          - " {{ if ne 0 .Code }} {{ .Code }}{{ if ne (.Code | reason) (.Code | toString) }} ({{ .Code | reason | lower }}){{ end }}{{ else }}{{ end }} "
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: status
+        style: plain
+        template: ┗{{ if eq "1" .Env.POSH_WIDE }}━{{ end }}
+        foreground: p:prompt-foreground
+        foreground_templates:
+          - "{{ if ne .Code 0 }}p:fail{{ end }}"
+        properties:
+          always_enabled: true
+      - type: shell
+        style: plain
+        foreground: parentForeground
+        properties:
+          mapped_shell_names:
+            bash: "$"
+            pwsh: ""
+            nu: "ν"
+            zsh: "%"
+            xonsh: ""

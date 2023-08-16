@@ -1,11 +1,7 @@
-function __configure_oh_my_posh_prompt {
-    if command -v oh-my-posh &> /dev/null
-    then
-        local posh_theme=~/.config/oh-my-posh/current-theme
+if command -v oh-my-posh &>/dev/null; then
+	eval "$(oh-my-posh init bash)"
+fi
 
-        eval "$(oh-my-posh init bash)"
-    fi
+function set_poshcontext {
+	[ "$COLUMNS" -ge 90 ] && export POSH_WIDE=1 || export POSH_WIDE=0
 }
-
-__configure_oh_my_posh_prompt
-

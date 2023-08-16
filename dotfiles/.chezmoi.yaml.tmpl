@@ -69,7 +69,7 @@
 {{- end -}}
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
-{{- $defaultPoshTheme := joinPath $paths.localInstall "oh-my-posh" "themes" "nordtron.omp.json" -}}
+{{- $defaultPoshTheme := joinPath $paths.configHome "oh-my-posh" "chris468.omp.yaml" -}}
 {{- $poshTheme := "poshTheme" | index $_profile | default $defaultPoshTheme -}}
 
 data:
