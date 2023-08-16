@@ -3,5 +3,7 @@ if (Get-Command oh-my-posh 2>$null) {
 }
 
 function Set-PoshParameters {
-    $env:POSH_COLUMNS = $Host.UI.RawUI.WindowSize.Width
+    $env:POSH_WIDE = if ($Host.UI.RawUI.WindowSize.Width -ge 90) { 1 } else { 0 }
 }
+
+New-Alias -Name 'Set-PoshContext' -Value 'Set-PoshParameters' -Scope Global -Force
