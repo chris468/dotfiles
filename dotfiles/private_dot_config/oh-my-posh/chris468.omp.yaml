@@ -43,6 +43,7 @@ palettes:
       clean: p:nord14
       dirty: p:nord13
       diverged: p:nord11
+      ahead: p:nord10
 
 var:
   min_width: 90
@@ -123,8 +124,10 @@ blocks:
         style: diamond
         leading_diamond: <p:inner-foreground,p:inner-background></>
         foreground_templates:
+          - "{{ if or .Working.Changed .Staging.Changed }}p:dirty{{ end }}"
           - "{{ if and .Behind .Ahead }}p:diverged{{ end }}"
-          - "{{ if or .Working.Changed .Staging.Changed }}p:dirty{{ else }}p:clean{{ end }}"
+          - "{{ if .Ahead }}p:ahead{{ end }}"
+          - p:clean
         background: parentBackground
         properties:
           fetch_status: true
