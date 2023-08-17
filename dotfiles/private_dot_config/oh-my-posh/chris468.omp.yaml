@@ -33,6 +33,16 @@ palettes:
       kubectl-foreground: p:nord10
       fail: p:nord11
       dim-foreground: p:nord3
+      added: p:nord14
+      modified: p:nord15
+      deleted: p:nord12
+      untracked: p:nord10
+      unmerged: p:nord11
+      unstaged: p:nord13
+      staged: p:nord14
+      clean: p:nord14
+      dirty: p:nord13
+      diverged: p:nord11
 
 var:
   min_width: 90
@@ -90,8 +100,11 @@ blocks:
         background: p:inner-background
         template: ' {{ $path := .Path }}{{
           if ne "1" .Env.POSH_WIDE }}{{
-          $path = regexReplaceAll "([^/]{4,}?)[^/]{2,}(/.+)" $path "${1}…${2}" }}{{
-          $path = regexReplaceAll "(.*/)([^/]{4,}?)[^/]{2,}$" $path "${1}${2}…" }}{{
+          $segments := regexFindAll "[^\\\\/]+" $path -1 }}{{
+          $first := $segments | first }}{{ $last := $segments | last }}{{
+          if gt ($first | len) 5 }}{{ $segments = list ($first | trunc 5) "…" | join "" | prepend ($segments | rest) }}{{ end }}{{
+          if gt ($last | len) 5 }}{{ $segments = list ($last | trunc 5) "…" | join "" | append ($segments | initial) }}{{ end }}{{
+          $path = $segments | join "/" }}{{
           end }}{{
           if not .Writable }} {{ end }}{{ $path }} '
         properties:
@@ -102,28 +115,39 @@ blocks:
           mapped_locations_enabled: true
           mapped_locations:
             "~/src": 󰅴
-            "*:/dev": 󰅴
+            "c:/dev": 󰅴
+            "d:/dev": 󰅴
             "~/.config": 
             "~/.local/share/chezmoi": 
       - type: git
         style: diamond
-        leading_diamond: <foreground,background></>
-        foreground: parentForeground
+        leading_diamond: <p:inner-foreground,p:inner-background></>
+        foreground_templates:
+          - "{{ if and .Behind .Ahead }}p:diverged{{ end }}"
+          - "{{ if or .Working.Changed .Staging.Changed }}p:dirty{{ else }}p:clean{{ end }}"
         background: parentBackground
         properties:
           fetch_status: true
           fetch_stash_count: true
           fetch_upstream_icon: true
-        template: ' {{ .UpstreamIcon }}{{ if eq "1" .Env.POSH_WIDE }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} {{ end }}'
-      - type: project
-        style: diamond
-        leading_diamond: <foreground,background></>
-        foreground: p:inner-foreground
-        background: p:inner-background
-        templates_logic: first_match
-        templates:
-          - '{{ if ne "1" .Env.POSH_WIDE }}  {{ end }}'
-          - " {{ if .Error }}{{ .Error }}{{ else }}{{ if .Version }} {{.Version}}{{ end }} {{ if .Name }}{{ .Name }}{{ end }}{{ end }} "
+          status_formats:
+            Added: <p:added>%d</>
+            Modified: <p:modified>%d</>
+            Deleted: <p:deleted>%d</>
+            Untracked: <p:untracked>⍰%d</>
+            Unmerged: <p:unmerged> 𝘹%d</>
+        template: ' {{
+          $branch := .Ref }}{{
+          $isUser := $branch | hasPrefix "users/" }}{{
+          $userRegEx := list "^users/((" .UserName "/)?)" | join "" }}{{
+          $branch := regexReplaceAll $userRegEx $branch "" }}{{
+          $segments := regexFindAll "[^\\\\/]+" $branch -1 }}{{
+          $first := $segments | first }}{{ $last := $segments | last }}{{
+          if gt ($first | len) 6 }}{{ $segments = list ($first | trunc 6) "…" | join "" | prepend ($segments | rest) }}{{ end }}{{
+          if gt ($last | len) 6 }}{{ $segments = list ($last | trunc 6) "…" | join "" | append ($segments | initial) }}{{ end }}{{
+          if gt ($segments | len) 2 }}{{ $segments = list ($segments | first) "" ( $segments | last) }}{{ end }}{{
+          $branch = $segments | join "/" }}{{
+          .UpstreamIcon }}{{ if eq "1" .Env.POSH_WIDE }}{{ $isUser | ternary "/" "" }}{{ $branch }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }} {{ if .Working.Changed }}<p:unstaged></>{{ .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} {{ end }}{{ if .Staging.Changed }}<p:staged></>{{ .Staging.String }}{{ end }} {{ end }}'
   - type: prompt
     alignment: right
     filler: "<p:inner-foreground,p:inner-background> </>"
