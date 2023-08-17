@@ -175,7 +175,7 @@ blocks:
         trailing_diamond: <p:inner-foreground,p:inner-background></>
         foreground: p:aws-foreground
         background: p:inner-background
-        template: ' {{ if or .Profile .Region }}󰸏{{ if eq "1" .Env.POSH_WIDE }} {{ .Profile }}{{ if and .Region (ne .Region "us-east-1") }}@{{ .Region }}{{ end }}{{ end }} {{ end }}'
+        template: ' {{ if or (ne "default" (.Profile | default "default")) (ne "us-east-1" (.Region | default "us-east-1")) }}󰸏{{ if eq "1" .Env.POSH_WIDE }} {{ .Profile }}{{ if and .Region (ne .Region "us-east-1") }}@{{ .Region }}{{ end }}{{ end }} {{ end }}'
       - type: time
         style: plain
         foreground: p:inner-foreground
