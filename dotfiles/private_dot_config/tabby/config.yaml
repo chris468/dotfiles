@@ -1,5 +1,167 @@
 version: 3
-profiles: []
+hotkeys:
+  toggle-window: []
+  copy-current-path: []
+  ctrl-c:
+    - Ctrl-C
+  copy:
+    - Ctrl-Shift-C
+  paste:
+    - Ctrl-Shift-V
+    - Shift-Insert
+  select-all:
+    - Ctrl-Shift-A
+  clear: []
+  zoom-in:
+    - Ctrl-=
+    - Ctrl-Shift-=
+  zoom-out:
+    - Ctrl--
+    - Ctrl-Shift--
+  reset-zoom:
+    - Ctrl-0
+  home:
+    - Home
+  end:
+    - End
+  previous-word:
+    - Ctrl-Left
+  next-word:
+    - Ctrl-Right
+  delete-previous-word:
+    - Ctrl-Backspace
+  delete-line:
+    - Ctrl-Shift-Backspace
+  delete-next-word:
+    - Ctrl-Delete
+  search:
+    - Ctrl-Shift-F
+  pane-focus-all:
+    - Ctrl-Shift-I
+  focus-all-tabs:
+    - Ctrl-Alt-Shift-I
+  scroll-to-top:
+    - Ctrl-PageUp
+  scroll-up:
+    - Alt-PageUp
+  scroll-down:
+    - Alt-PageDown
+  scroll-to-bottom:
+    - Ctrl-PageDown
+  restart-telnet-session: []
+  restart-ssh-session: []
+  launch-winscp: []
+  settings-tab: {}
+  settings:
+    - Ctrl-,
+  serial:
+    - Alt-K
+  restart-serial-session: []
+  new-tab:
+    - Ctrl-Shift-T
+  new-window:
+    - Ctrl-Shift-N
+  profile: {}
+  profile-selectors: {}
+  toggle-fullscreen:
+    - F11
+    - Alt-Enter
+  close-tab:
+    - Ctrl-Shift-W
+  reopen-tab:
+    - Ctrl-Shift-Z
+  toggle-last-tab: []
+  rename-tab:
+    - Ctrl-Shift-R
+  next-tab:
+    - Ctrl-Shift-Right
+    - Ctrl-Tab
+  previous-tab:
+    - Ctrl-Shift-Left
+    - Ctrl-Shift-Tab
+  move-tab-left:
+    - Ctrl-Shift-PageUp
+  move-tab-right:
+    - Ctrl-Shift-PageDown
+  rearrange-panes:
+    - Ctrl-Shift
+  duplicate-tab: []
+  restart-tab: []
+  reconnect-tab: []
+  explode-tab:
+    - Ctrl-Shift-.
+  combine-tabs:
+    - Ctrl-Shift-,
+  tab-1:
+    - Alt-1
+  tab-2:
+    - Alt-2
+  tab-3:
+    - Alt-3
+  tab-4:
+    - Alt-4
+  tab-5:
+    - Alt-5
+  tab-6:
+    - Alt-6
+  tab-7:
+    - Alt-7
+  tab-8:
+    - Alt-8
+  tab-9:
+    - Alt-9
+  tab-10:
+    - Alt-0
+  tab-11: []
+  tab-12: []
+  tab-13: []
+  tab-14: []
+  tab-15: []
+  tab-16: []
+  tab-17: []
+  tab-18: []
+  tab-19: []
+  tab-20: []
+  split-right:
+    - Ctrl-Shift-S
+  split-bottom:
+    - Ctrl-Shift-D
+  split-left: []
+  split-top: []
+  pane-nav-right:
+    - Ctrl-Alt-Right
+  pane-nav-down:
+    - Ctrl-Alt-Down
+  pane-nav-up:
+    - Ctrl-Alt-Up
+  pane-nav-left:
+    - Ctrl-Alt-Left
+  pane-nav-previous:
+    - Ctrl-Alt-[
+  pane-nav-next:
+    - Ctrl-Alt-]
+  pane-nav-1: []
+  pane-nav-2: []
+  pane-nav-3: []
+  pane-nav-4: []
+  pane-nav-5: []
+  pane-nav-6: []
+  pane-nav-7: []
+  pane-nav-8: []
+  pane-nav-9: []
+  pane-maximize:
+    - Ctrl-Alt-Enter
+  close-pane: []
+  pane-increase-vertical: []
+  pane-decrease-vertical: []
+  pane-increase-horizontal: []
+  pane-decrease-horizontal: []
+  switch-profile:
+    - Ctrl-Alt-T
+  profile-selector:
+    - Ctrl-Shift-E
+  command-selector:
+    - Ctrl-Shift-P
 terminal:
   searchOptions: {}
   colorScheme:
@@ -24,17 +186,28 @@ terminal:
       - '#8c738c'
       - '#6d96a5'
       - '#aeb3bb'
-  font: Hack Nerd Font Mono
-  copyAsHTML: false
-  autoOpen: true
   customColorSchemes: []
-  cursor: beam
+  pasteOnMiddleClick: true
+  copyOnSelect: false
+  copyAsHTML: false
+  bell: visual
+  autoOpen: true
+  font: Hack Nerd Font Mono
+  profile: local:custom:PowerShell:9f479f2b-3c97-41af-b1e3-b9230794e888
+ssh: {}
+configSync:
+  parts: {}
+clickableLinks: {}
+accessibility: {}
 appearance:
   vibrancy: false
   css: |-
     terminaltab ::-webkit-scrollbar {
       display: none;
     }
+hacks: {}
+providerBlacklist: []
+commandBlacklist: []
 enableAnalytics: false
 enableWelcomeTab: false
 pluginBlacklist:
@@ -44,3 +217,15 @@ profileDefaults:
   ssh:
     disableDynamicTitle: true
 recoverTabs: false
+profiles:
+  - type: local
+    icon: >-
+      <svg viewBox="0 0 118.99 90.001" xmlns="http://www.w3.org/2000/svg"><linearGradient id="1652546342" x1="95.123" x2="26.855" y1="91.805" y2="30.825" gradientTransform="translate(-4.503 -19)" gradientUnits="userSpaceOnUse"><stop stop-color="#5391FE" offset="0"></stop><stop stop-color="#3E6DBF" offset="1"></stop></linearGradient><path d="M4.988 90c-1.62 0-3.021-.638-3.944-1.798-.944-1.185-1.268-2.814-.89-4.47L17.99 5.821C18.736 2.557 21.873 0 25.13 0h88.866c1.62 0 3.02.638 3.945 1.798.944 1.184 1.268 2.814.889 4.47l-17.834 77.911c-.747 3.264-3.884 5.822-7.143 5.822H4.988z" clip-rule="evenodd" fill="url(#1652546342)" fill-rule="evenodd"></path><linearGradient id="1652546328" x1="26.178" x2="93.748" y1="30.015" y2="90.738" gradientTransform="translate(-4.503 -19)" gradientUnits="userSpaceOnUse"><stop stop-color="#5391FE" offset="0"></stop><stop stop-color="#3E6DBF" offset="1"></stop></linearGradient><g clip-rule="evenodd" fill-rule="evenodd"><path d="M25.131 1h88.866c2.769 0 4.496 2.259 3.858 5.045l-17.834 77.911c-.638 2.786-3.399 5.045-6.168 5.045H4.988c-2.769 0-4.496-2.258-3.858-5.045L18.964 6.045C19.601 3.259 22.363 1 25.131 1z" fill="url(#1652546328)"></path><path d="M59.662 68.558h21.613c2.513 0 4.55 2.125 4.55 4.746s-2.037 4.747-4.55 4.747H59.662c-2.513 0-4.55-2.125-4.55-4.747 0-2.621 2.037-4.746 4.55-4.746zM73.681 47.455c-.372.749-1.144 1.575-2.509 2.534L31.059 78.798c-2.19 1.591-5.334 1.001-7.021-1.319s-1.28-5.49.91-7.082l36.173-26.194v-.538L38.393 19.487c-1.854-1.972-1.661-5.161.431-7.124 2.092-1.962 5.29-1.954 7.144.018l27.271 29.012c1.548 1.647 1.663 4.141.442 6.062z" fill="#2c5591"></path><path d="M72.681 46.455c-.372.749-1.144 1.575-2.509 2.534L30.059 77.798c-2.19 1.591-5.334 1.001-7.021-1.319s-1.28-5.49.91-7.082l36.173-26.194v-.538L37.393 18.487c-1.854-1.972-1.661-5.161.431-7.124 2.092-1.962 5.29-1.954 7.144.018l27.271 29.012c1.548 1.647 1.663 4.141.442 6.062zM59.047 68H80.66c2.513 0 4.55 2.015 4.55 4.5S83.173 77 80.66 77H59.047c-2.513 0-4.55-2.015-4.55-4.5s2.037-4.5 4.55-4.5z" fill="#fff"></path></g></svg>
+    options:
+      command: pwsh.exe
+      args:
+        - '-nologo'
+      env:
+        WT_SESSION: 0
+    id: local:custom:PowerShell:9f479f2b-3c97-41af-b1e3-b9230794e888
+    name: Powershell Core
