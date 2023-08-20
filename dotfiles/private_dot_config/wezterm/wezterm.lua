@@ -20,4 +20,6 @@ if settings.os == "windows" then
 	config.default_prog = { "pwsh.exe" }
 end
 
+config.ssh_domains = settings.ssh_domains
+
 return config

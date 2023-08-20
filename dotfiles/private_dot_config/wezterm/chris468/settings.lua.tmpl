@@ -5,4 +5,14 @@ return {
   },
   homedir = {{ .chezmoi.homeDir | quote }},
   os = {{ .chezmoi.os | quote }},
+  ssh_domains = {
+{{- range "ssh_hosts" | index . | default (list) }}
+    {
+      {{- $type := eq "wezterm" ("type" | index .) | ternary "WezTerm" "None" }}
+      name = "{{ .name }} ({{ eq $type "WezTerm" | ternary "Remote" "ssh" }})",
+      remote_address = "{{ "host" | index . | default .name }}",
+      multiplexing = "{{ $type }}",
+      username = "{{ "user" | index . | default $.chezmoi.username }}",
+    },{{ end }}
+  },
 }
