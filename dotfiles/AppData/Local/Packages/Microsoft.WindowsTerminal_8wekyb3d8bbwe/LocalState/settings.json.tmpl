@@ -66,6 +66,16 @@
                 "name": "Ubuntu",
                 "source": "Windows.Terminal.Wsl"
             },
+{{- range "ssh_hosts" | index . | default (list) }}
+{{-   if ne "wezterm" .type }}
+            {
+                "commandline": "ssh {{ .name }}",
+                "hidden": false,
+                "icon": "↪",
+                "name": "{{ .name }} (ssh)"
+            },
+{{-   end }}
+{{- end }}
             {
                 "colorScheme": "Dracula (Admin)",
                 "commandline": "pwsh.exe",

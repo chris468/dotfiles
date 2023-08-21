@@ -8,7 +8,7 @@ Host ssh.dev.azure.com
 {{ range "ssh_hosts" | index . | default (dict) -}}
 {{    if ne "wezterm" ("type" | index .) -}}
 {{    $hostname := "host" | index . | default .name -}}
-Host {{ .name }}{{ if ne $hostname .name }},{{ $hostname }}{{ end }}
+Host {{ .name }}{{ if ne $hostname .name }} {{ $hostname }}{{ end }}
     Hostname {{ $hostname }}
     ForwardAgent {{ if eq "trusted" ("type" | index .) }}yes{{ else }}no{{ end }}
     User {{ "user" | index . | default $.chezmoi.username }}
