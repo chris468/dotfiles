@@ -1,4 +1,5 @@
 {{- $_profile := "profile" | index . | default dict -}}
+{{- $_ssh_hosts := "ssh_hosts" | index . | default list -}}
 {{- $work := promptBoolOnce $_profile "work" "Work" false -}}
 {{- $_defaultFont := dict 
       "family" "Hack Nerd Font Mono"
@@ -83,6 +84,8 @@ data:
     size: {{ $font.size }}
   gitCredentialManager:
 {{  $gitCredentialManager | toYaml | indent 4 }}
+  ssh_hosts:
+{{ $_ssh_hosts | toYaml | indent 4}}
   paths:
 {{ $paths | toYaml | indent 4 }}
     unix:

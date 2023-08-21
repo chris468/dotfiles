@@ -6,14 +6,13 @@ Host ssh.dev.azure.com
     HostkeyAlgorithms +ssh-rsa
 
 {{ range "ssh_hosts" | index . | default (dict) -}}
-{{    if ne "wezterm" ("type" | index .) -}}
-{{    $hostname := "host" | index . | default .name -}}
+{{   if ne "wezterm" ("type" | index .) -}}
+{{     $hostname := "host" | index . | default .name -}}
 Host {{ .name }}{{ if ne $hostname .name }} {{ $hostname }}{{ end }}
     Hostname {{ $hostname }}
     ForwardAgent {{ if eq "trusted" ("type" | index .) }}yes{{ else }}no{{ end }}
     User {{ "user" | index . | default $.chezmoi.username }}
-{{-   end }}
-{{- end }}
-
+{{    end }}
+{{ end -}}
 Match all
 Include ~/.ssh/config.local
