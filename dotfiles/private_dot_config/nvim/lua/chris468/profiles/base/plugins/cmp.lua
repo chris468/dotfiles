@@ -38,6 +38,13 @@ return {
             fallback()
           end
         end, { "i", "s" }),
+        ["<Esc>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.abort()
+          else
+            fallback()
+          end
+        end),
       })
     end,
   },
