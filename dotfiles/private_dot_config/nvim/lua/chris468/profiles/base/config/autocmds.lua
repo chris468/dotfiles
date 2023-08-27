@@ -32,3 +32,32 @@ vim.api.nvim_create_autocmd("FileType", {
     end
   end,
 })
+
+-- According to hrsh7th/nvim-cmp/issues/835, cmp intentionally does not select
+-- on completion via a commit character. Adapted this based on hrsh7th/nvim-cmp/discussions/1618.
+vim.api.nvim_create_autocmd("InsertEnter", {
+  group = vim.api.nvim_create_augroup("chris468_register_complete_on_commit_char", {}),
+  callback = function()
+    local cmp = require("cmp")
+    cmp.event:on("menu_opened", function()
+      vim.api.nvim_create_autocmd("InsertCharPre", {
+        group = vim.api.nvim_create_augroup("chris468_complete_on_commit_char", {}),
+        callback = function(_)
+          local entry = cmp.get_selected_entry() or {}
+          local completion_item = entry.completion_item or {}
+          local commit_chars = completion_item.commitCharacters or {}
+          local c = vim.v.char
+          if vim.tbl_contains(commit_chars, c) then
+            vim.v.char = ""
+            vim.schedule(function()
+              cmp.confirm()
+              vim.api.nvim_feedkeys(c, "n", false)
+            end)
+          end
+        end,
+        once = true,
+      })
+    end)
+  end,
+  once = true,
+})
