@@ -15,7 +15,6 @@ return {
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
-      "hrsh7th/cmp-emoji",
       "L3MON4D3/LuaSnip",
     },
     event = "CmdlineEnter",
@@ -45,6 +44,25 @@ return {
             fallback()
           end
         end),
+        ["<CR>"] = cmp.mapping({
+          i = function(fallback)
+            if cmp.visible and cmp.get_active_entry() then
+              cmp.confirm()
+            else
+              fallback()
+            end
+          end,
+          s = cmp.mapping.confirm({ select = true }),
+          c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+        }),
+      })
+
+      opts.sources = cmp.config.sources({
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+        { name = "path" },
+      }, {
+        { name = "buffer" },
       })
     end,
   },
