@@ -11,5 +11,6 @@ return {
   { import = "lazyvim.plugins.extras.lang.typescript" },
   { import = "lazyvim.plugins.extras.lang.yaml" },
   { import = "lazyvim.plugins.extras.util.project" },
+  { import = "lazyvim.plugins.extras.dap.core" },
   { import = "chris468.profiles.base.plugins" },
 }
