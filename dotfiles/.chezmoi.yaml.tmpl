@@ -79,6 +79,7 @@ data:
 {{- if "poshTheme" | hasKey $_profile }}
     poshTheme: {{ "poshTheme" | index $_profile }}
 {{- end }}
+    swapkeys: {{ "swapkeys" | index $_profile | default false }}
   font:
     family: {{ $font.family }}
     size: {{ $font.size }}
