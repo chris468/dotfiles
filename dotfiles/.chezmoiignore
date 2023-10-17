@@ -12,3 +12,5 @@ vimfiles
 {{- if not .profile.work }}
 .vim/plugin/work.vim
 {{- end }}
+
+.local/share/fonts/.uuid
