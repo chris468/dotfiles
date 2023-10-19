@@ -5,6 +5,7 @@
 local autoformat_filetype = {
   lua = true,
   markdown = true,
+  terraform = true,
 }
 
 vim.api.nvim_create_autocmd("FileType", {
