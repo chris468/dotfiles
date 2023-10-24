@@ -27,7 +27,3 @@
 [credential "https://dev.azure.com"]
 	useHttpPath = true
 {{- end }}
-{{ if "darwin" | eq .chezmoi.os -}}
-[core]
-	pager = less -F
-{{- end }}
