@@ -37,13 +37,13 @@ return {
             fallback()
           end
         end, { "i", "s" }),
-        ["<Esc>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.abort()
-          else
-            fallback()
-          end
-        end),
+        -- ["<Esc>"] = cmp.mapping(function(fallback)
+        --   if cmp.visible() then
+        --     cmp.abort()
+        --   else
+        --     fallback()
+        --   end
+        -- end),
         ["<CR>"] = cmp.mapping({
           i = function(fallback)
             if cmp.visible and cmp.get_active_entry() then
