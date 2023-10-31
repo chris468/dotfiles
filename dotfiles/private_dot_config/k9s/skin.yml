@@ -10,7 +10,7 @@
 
 # Styles...
 background: &background default
-foreground: &foreground default
+foreground: &foreground "#5E81AC"
 brightBackground: &brightBackground "#3B4252"
 hint: &hint "#4C566A"
 key: &key "#81A1CA"
@@ -43,7 +43,7 @@ k9s:
     bgColor: *background
     buttonFgColor: *foreground
     buttonBgColor: *background
-    buttonFocusFgColor: *foreground
+    buttonFocusFgColor: *brightBackground
     buttonFocusBgColor: *accent
     labelFgColor: *key
     fieldFgColor: *foreground
