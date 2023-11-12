@@ -22,4 +22,7 @@ end
 
 config.ssh_domains = settings.ssh_domains
 
+config.initial_cols = 120
+config.initial_rows = 40
+
 return config
