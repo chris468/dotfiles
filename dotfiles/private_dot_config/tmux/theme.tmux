@@ -1,3 +1,6 @@
+set -g default-terminal xterm-256color
+set-option -sa terminal-overrides ",xterm*:Tc"
+
 set-option -g pane-border-format ""
 set -g pane-border-status bottom
 
