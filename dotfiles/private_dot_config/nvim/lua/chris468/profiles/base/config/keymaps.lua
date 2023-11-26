@@ -40,6 +40,9 @@ local function map()
   map_hide_highlight()
   map_resume_search()
   map_dotfiles()
+
+  -- Unmap increment, I never use it on purpose
+  vim.keymap.set("n", "<C-a>", "<nop>")
 end
 
 clear()
