@@ -5,7 +5,7 @@
 
 if-shell 'test -r .layout.tmux' {
     if-shell 'test -r .layout.tmux.sig' {
-        if-shell 'gpgv .layout.tmux.sig .layout.tmux >&/dev/null' {
+        if-shell 'gpgv .layout.tmux.sig .layout.tmux' {
             source-file .layout.tmux
         } {
             display-message '#[fg=##d08770]Invalid signature for .layout.tmux'
