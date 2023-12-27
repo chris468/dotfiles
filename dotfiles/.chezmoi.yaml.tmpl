@@ -107,7 +107,7 @@ data:
           value:
               - {{ $paths.localInstallBin }}
               - {{ $paths.fzfBin }}
-{{- if "homebrew" | index $paths }}
+{{- if $realConfig.packageManager.homebrew.enable }}
               - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
     defaults:
