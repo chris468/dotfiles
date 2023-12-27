@@ -1,0 +1,14 @@
+poshTheme: {{ joinPath .paths.configHome "oh-my-posh" "chris468.omp.yaml" }}
+
+font:
+    family: Hack Nerd Font Mono
+    size: {{ eq "windows" .chezmoi.os | ternary 11 14 }}
+
+gitCredentialManager:
+    configure: true
+    install: {{ eq "linux" .chezmoi.os }}
+{{- if eq "linux" .chezmoi.os }}
+    store: plaintext
+{{- end }}
+
+ssh_hosts: []

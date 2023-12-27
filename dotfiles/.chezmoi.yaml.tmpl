@@ -1,21 +1,4 @@
-{{- $_profile := "profile" | index . | default dict -}}
-{{- $_ssh_hosts := "ssh_hosts" | index . | default list -}}
-{{- $work := promptBoolOnce $_profile "work" "Work" false -}}
-{{- $_defaultFont := dict 
-      "family" "Hack Nerd Font Mono"
-      "size" (eq "windows" .chezmoi.os | ternary 11 14)
--}}
-{{- $font := $_defaultFont | merge ("font" | index . | default dict) -}}
-
-{{- $_defaultGitCredentialManager := dict
-    "configure" true
-    "install" ("linux" | eq .chezmoi.os)
--}}
-{{- if eq "linux" .chezmoi.os -}}
-{{-   $_defaultGitCredentialManager = set $_defaultGitCredentialManager "store" "plaintext" -}}
-{{- end -}}
-{{- $gitCredentialManager := $_defaultGitCredentialManager | merge ("gitCredentialManager" | index . | default dict) -}}
-
+data:
 {{- $_local := ".local" -}}
 {{- $_localInstall := joinPath $_local "opt" -}}
 {{- $_localInstallBin := joinPath $_local "bin" -}}
@@ -33,127 +16,115 @@
       "localInstall" $_localInstall
       "localInstallBin" $_localInstallBin
       "localInstallSbin" $_localInstallSbin
+      "asdf" ".asdf"
       "dataHome" $_dataHome
       "configHome" $_configHome
-      "cacheHome" $_cacheHome
-      "ipython" $_ipython
-      "zshConfig" $_zshConfig
-      "zshPlugins" $_zshPlugins
       "fzf" $_fzf
       "fzfBin" $_fzfBin
+      "homebrew" "/opt/homebrew"
+      "cacheHome" $_cacheHome
+      "ipython" $_ipython
+      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
+      "zshConfig" $_zshConfig
+      "zshPlugins" $_zshPlugins
 -}}
-{{- $_platformRelativePaths := dict }}
 {{- if eq "windows" .chezmoi.os -}}
-{{-   $_bash := joinPath "C:\\" "Program Files" "git" "bin" "bash.exe" }}
-{{-   $_platformRelativePaths = dict
-        "bash" $_bash
--}}
-{{- else if eq "linux" .chezmoi.os -}}
-{{-   $_asdf := ".asdf" -}}
-{{-   $_platformRelativePaths = dict
-        "asdf" $_asdf
--}}
-{{- else if eq "darwin" .chezmoi.os -}}
-{{-   $_homebrew := "/opt/homebrew" -}}
-{{-   $_platformRelativePaths = dict
-        "homebrew" $_homebrew
--}}
+{{-   $_relativePaths = set $_relativePaths "bash" (joinPath "C:\\" "Program Files" "git" "bin" "bash.exe") -}}
 {{- end -}}
-{{- if $gitCredentialManager.install -}}
-{{-    $_gitCredentialManagerPath := joinPath $_localInstall "git-credential-manager" -}}
-{{-    $_platformRelativePaths = set $_platformRelativePaths "gitCredentialManager" $_gitCredentialManagerPath -}}
-{{- end -}}
-{{- $_relativePaths = merge $_relativePaths $_platformRelativePaths }}
 {{- $paths := dict -}}
 {{- range $k, $v := $_relativePaths -}}
 {{-   $paths = set $paths $k ($v | osIsAbs | ternary $v (joinPath $.chezmoi.homeDir $v)) -}}
 {{- end -}}
 {{- $paths = set $paths "relative" $_relativePaths -}}
 
-{{- $defaultPoshTheme := joinPath $paths.configHome "oh-my-posh" "chris468.omp.yaml" -}}
-{{- $poshTheme := "poshTheme" | index $_profile | default $defaultPoshTheme -}}
+{{- $_defaults := includeTemplate "dotfiles/.chezmoitemplates/configDefaults" (dict "chezmoi" .chezmoi "paths" $paths) | fromYaml }}
 
-data:
-  profile:
-    work: {{ $work }}
-{{- if "poshTheme" | hasKey $_profile }}
-    poshTheme: {{ "poshTheme" | index $_profile }}
-{{- end }}
-    swapkeys: {{ "swapkeys" | index $_profile | default false }}
-  font:
-    family: {{ $font.family }}
-    size: {{ $font.size }}
-  gitCredentialManager:
-{{  $gitCredentialManager | toYaml | indent 4 }}
-  ssh_hosts:
-{{ $_ssh_hosts | toYaml | indent 4}}
-  paths:
-{{ $paths | toYaml | indent 4 }}
-    unix:
-{{ includeTemplate "dotfiles/.chezmoitemplates/buildUnixPaths" (dict "chezmoi" .chezmoi "paths" $paths) | indent 6 }}
-  environment:
-    - name: AWS_PROFILE
-      action: unset
-    - name: KUBECONFIG
-      action: unset
-    - name: GPG_TTY
-      action: command
-      value: tty
-    - name: IPYTHONDIR
-      path: true
-      value: {{ $paths.ipython }}
-    - name: LOCAL_INSTALL_DIR
-      path: true
-      value: {{ $paths.localInstall }}
-      export: false
-    - name: POSH_THEME
-      path: true
-      value: {{ $poshTheme }}
-    - name: XDG_DATA_HOME
-      path: true
-      persist: true
-      value: {{ $paths.dataHome }}
-    - name: XDG_CONFIG_HOME
-      path: true
-      persist: true
-      value: {{ $paths.configHome }}
-    - name: XDG_CACHE_HOME
-      path: true
-      persist: true
-      value: {{ $paths.cacheHome }}
+{{- $_profile := "profile" | index . | default dict -}}
+{{- $work := promptBoolOnce $_profile "work" "Work" false }}
+    profile:
+        work: {{ $work }}
+        swapkeys: {{ "swapkeys" | index $_profile | default false }}
+
+{{ $config := "config" | index . | default dict -}}
+{{ dict "config" $config | toYaml | indent 4 }}
+
+# ==============================================================================
+# ==== Everything past this point is generated, changed will be overwritten ====
+# ==============================================================================
+
+{{ $realConfig := $_defaults | merge $config -}}
+{{ dict "realConfig" $realConfig | toYaml | indent 4 }}
+
+    paths:
+{{ $paths | toYaml | indent 8 }}
+        unix:
+{{ includeTemplate "dotfiles/.chezmoitemplates/buildUnixPaths" (dict "chezmoi" .chezmoi "paths" $paths) | indent 12 }}
+    environment:
+        - name: AWS_PROFILE
+          action: unset
+        - name: KUBECONFIG
+          action: unset
+        - name: GPG_TTY
+          action: command
+          value: tty
+        - name: IPYTHONDIR
+          path: true
+          value: {{ $paths.ipython }}
+        - name: LOCAL_INSTALL_DIR
+          path: true
+          value: {{ $paths.localInstall }}
+          export: false
+        - name: POSH_THEME
+          path: true
+          value: {{ $realConfig.poshTheme }}
+        - name: XDG_DATA_HOME
+          path: true
+          persist: true
+          value: {{ $paths.dataHome }}
+        - name: XDG_CONFIG_HOME
+          path: true
+          persist: true
+          value: {{ $paths.configHome }}
+        - name: XDG_CACHE_HOME
+          path: true
+          persist: true
+          value: {{ $paths.cacheHome }}
 {{- if $work }}
-    - name: CHRIS468_LAZYVIM_PROFILE
-      persist: true
-      value: work
+        - name: CHRIS468_LAZYVIM_PROFILE
+          persist: true
+          value: work
 {{- end }}
 {{- if "asdf" | hasKey $paths }}
-    - name: ASDF_DIR
-      value: {{ $paths.asdf }}
-    - name: ASDF_DATA_DIR
-      value: {{ $paths.asdf }}
+        - name: ASDF_DIR
+          value: {{ $paths.asdf }}
+        - name: ASDF_DATA_DIR
+          value: {{ $paths.asdf }}
 {{- end }}
-    - name: PATH
-      path: true
-      action: prepend
-      persist: true
-      value:
-        - {{ $paths.localInstallBin }}
-        - {{ $paths.fzfBin }}
+        - name: PATH
+          path: true
+          action: prepend
+          persist: true
+          value:
+              - {{ $paths.localInstallBin }}
+              - {{ $paths.fzfBin }}
 {{- if "homebrew" | index $paths }}
-        - {{ "bin" | joinPath $paths.homebrew }}
+              - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
+    defaults:
+{{ $_defaults | toYaml | indent 8 }}
 
 umask: 0o022
 
 {{- if eq .chezmoi.os "windows" }}
 interpreters:
-  sh:
-    command: {{ $paths.bash }}
-  ps1:
-    command: pwsh
-    args:
-      - "-NoLogo"
+    sh:
+        command: {{ $paths.bash }}
+    ps1:
+        command: pwsh
+        args:
+            - "-NoLogo"
 
-cd:
-  command: pwsh
+    cd:
+        command: pwsh
 {{- end  }}
+# vim: set ft=none syntax=yaml ts=4 sw=4 et :

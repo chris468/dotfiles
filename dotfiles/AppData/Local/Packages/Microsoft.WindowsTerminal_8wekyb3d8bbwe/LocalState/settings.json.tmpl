@@ -41,8 +41,8 @@
             "colorScheme": "Nord",
             "font": 
             {
-                "face": {{ .font.family | quote }},
-                "size": {{ .font.size }},
+                "face": {{ .realConfig.font.family | quote }},
+                "size": {{ .realConfig.font.size }},
                 "weight": "normal"
             }
         },
@@ -66,7 +66,7 @@
                 "name": "Ubuntu",
                 "source": "Windows.Terminal.Wsl"
             },
-{{- range "ssh_hosts" | index . | default (list) }}
+{{- range .realConfig.ssh_hosts }}
 {{-   if ne "wezterm" .type }}
             {
                 "commandline": "ssh {{ .name }}",

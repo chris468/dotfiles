@@ -3,9 +3,9 @@ live_config_reload: true
 working_directory: {{ .chezmoi.homeDir }}
 
 font:
-  size: {{ .font.size }}
+  size: {{ .realConfig.font.size }}
   normal:
-    family: {{ .font.family | quote }}
+    family: {{ .realConfig.font.family | quote }}
 
 key_bindings:
   - key: L
