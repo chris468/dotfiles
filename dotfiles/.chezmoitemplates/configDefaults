@@ -12,3 +12,8 @@ gitCredentialManager:
 {{- end }}
 
 ssh_hosts: []
+
+packageManager:
+    asdf:
+        install: {{ eq "linux" .chezmoi.os }}
+        version: "v0.11.3"

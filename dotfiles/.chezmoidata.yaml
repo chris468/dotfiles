@@ -1,7 +1,3 @@
-software:
-  versions:
-    asdf: "v0.11.3"
-
 zsh:
   externalPlugins:
     - name: zsh-autosuggestions

@@ -94,7 +94,7 @@ data:
           persist: true
           value: work
 {{- end }}
-{{- if "asdf" | hasKey $paths }}
+{{- if $realConfig.packageManager.asdf.install }}
         - name: ASDF_DIR
           value: {{ $paths.asdf }}
         - name: ASDF_DATA_DIR
