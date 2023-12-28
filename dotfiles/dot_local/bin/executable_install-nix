@@ -7,9 +7,12 @@ if ! command -v nix-env >&/dev/null; then
 fi
 
 nix-channel --update
+
+echo "Installing into default profile..."
 nix-env --install --profile ~/.local/state/nix/profiles/profile --remove-all --file ~/.config/install/nix/default.nix
 
 if [ ! -e ~/.nix-profile ]; then
+	echo "No current profile, setting to default..."
 	nix-env --switch-profile ~/.local/state/nix/profiles/profile
 fi
 
