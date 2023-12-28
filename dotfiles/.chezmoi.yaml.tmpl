@@ -52,7 +52,7 @@ data:
 # ==== Everything past this point is generated, changed will be overwritten ====
 # ==============================================================================
 
-{{ $realConfig := $_defaults | merge $config -}}
+{{ $realConfig := $config | mergeOverwrite $_defaults -}}
 {{ dict "realConfig" $realConfig | toYaml | indent 4 }}
 
     paths:
