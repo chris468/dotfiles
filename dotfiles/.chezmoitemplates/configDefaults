@@ -19,3 +19,5 @@ packageManager:
         version: "v0.11.3"
     homebrew:
         enable: {{ eq "darwin" .chezmoi.os }}
+    nix:
+        enable: false

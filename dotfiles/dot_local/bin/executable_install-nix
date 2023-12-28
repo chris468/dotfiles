@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if ! command -v nix-env >&/dev/null; then
+	sh <(curl -L https://nixos.org/nix/install) --daemon --no-channel-add --yes
+	. /etc/profile.d/nix.sh
+	warn=1
+fi
+
+nix-channel --update
+nix-env --install --profile ~/.local/state/nix/profiles/profile --remove-all --file ~/.config/install/nix/default.nix
+
+if [[ "$warn" == '1' ]]; then
+	echo "nix installed, restart shells."
+fi
