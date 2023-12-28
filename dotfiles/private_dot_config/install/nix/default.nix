@@ -1,5 +1,4 @@
 with import <nixpkgs> {} ; [
-  fzf
   gcc
   gnumake
   neovim
