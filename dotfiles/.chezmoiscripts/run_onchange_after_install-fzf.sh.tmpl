@@ -1,5 +1,3 @@
-{{- if not .realConfig.packageManager.nix.enable -}}
 #!/usr/bin/env bash
 # fzf version: {{ (gitHubLatestRelease "junegunn/fzf").TagName }}
-{{ .paths.unix.fzf }}/install --xdg --no-update-rc --no-fish --no-bash --no-zsh
-{{- end -}}
+{{ .paths.unix.fzf }}/install --xdg --no-update-rc --key-bindings --completion

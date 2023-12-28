@@ -1,6 +1,4 @@
-{{- if not .config.packageManager.nix.enable -}}
 {{ .paths.relative.fzf | quote }}:
   type: archive
   url: {{ (gitHubLatestRelease "junegunn/fzf").TarballURL }}
   stripComponents: 1
-{{- end -}}
