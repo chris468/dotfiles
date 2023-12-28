@@ -120,6 +120,9 @@ data:
           value:
               - {{ $paths.localInstallBin }}
               - {{ $paths.fzfBin }}
+{{- if not $realConfig.packageManager.nix.enable }}
+              - {{ $paths.fzfBin }}
+{{- end }}
 {{- if $realConfig.packageManager.homebrew.enable }}
               - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
