@@ -9,6 +9,10 @@ fi
 nix-channel --update
 nix-env --install --profile ~/.local/state/nix/profiles/profile --remove-all --file ~/.config/install/nix/default.nix
 
+if [ ! -e ~/.nix-profile ]; then
+	nix-env --switch-profile ~/.local/state/nix/profiles/profile
+fi
+
 if [[ "$warn" == '1' ]]; then
 	echo "nix installed, restart shells."
 fi
