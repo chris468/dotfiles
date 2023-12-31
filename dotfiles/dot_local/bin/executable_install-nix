@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if ! command -v nix-env >&/dev/null; then
-	sh <(curl -L https://nixos.org/nix/install) --daemon --no-channel-add --yes
+	sh <(curl -L https://nixos.org/nix/install) --daemon --no-channel-add --yes --no-modify-profile
 	. /etc/profile.d/nix.sh
 	warn=1
 fi
