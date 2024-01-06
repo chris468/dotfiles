@@ -3,7 +3,6 @@ return {
     "neovim/nvim-lspconfig",
     opts = function(_, opts)
       local root_pattern = require("lspconfig.util").root_pattern
-      print("configing")
       return vim.tbl_deep_extend("force", opts, {
         servers = {
           ansiblels = {
