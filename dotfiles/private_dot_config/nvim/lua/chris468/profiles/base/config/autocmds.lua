@@ -38,15 +38,11 @@ local autoformat_filename = {
 }
 
 local group = vim.api.nvim_create_augroup("chris468_base_autoformat_filename", {})
-vim.notify("adding")
 for pattern, autoformat in pairs(autoformat_filename) do
-  vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     group = group,
     pattern = pattern,
     callback = function(args)
-      if args.file and args.file ~= "" then
-        print("autoformat: " .. tostring(autoformat) .. "," .. vim.inspect(args))
-      end
       vim.b[args.buf].autoformat = autoformat
     end,
   })
