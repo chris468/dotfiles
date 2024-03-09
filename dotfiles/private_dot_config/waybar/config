@@ -47,6 +47,16 @@
     //         "default": ""
     //     }
     // },
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "default": "",
+            "active": "██"
+        },
+        "persistent-workspaces": {
+            "*": 4
+        }
+    },
     "hyprland/submap": {
         "format": "✌️ {}",
         "max-length": 8,
