@@ -1,0 +1,30 @@
+live_config_reload = true
+working_directory = "{{ .chezmoi.homeDir }}"
+
+[colors.primary]
+background = "#2e3440"
+
+[window.padding]
+x = 8
+y = 8
+
+[font]
+size = {{ .realConfig.font.size }}
+
+[font.normal]
+family = {{ .realConfig.font.family | quote }}
+
+[[keyboard.bindings]]
+action = "ReceiveChar"
+key = "L"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ClearLogNotice"
+key = "L"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "ToggleFullScreen"
+key = "Return"
+mods = "Alt"
