@@ -15,6 +15,7 @@
       "hyprland/window"
     ],
     "modules-right": [
+      "bluetooth",
       // "mpd",
       "idle_inhibitor",
       "pulseaudio",
