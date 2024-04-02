@@ -1,6 +1,7 @@
+local profile = os.getenv("CHRIS468_LAZYVIM_PROFILE")
+
 local function get_profiles()
   local os = require("os")
-  local profile = os.getenv("CHRIS468_LAZYVIM_PROFILE")
 
   if profile == "defaults" then
     return {}
@@ -29,7 +30,10 @@ local function foreach_profile(action)
   end
 end
 
-local M = {}
+local M = {
+  lockfile = "lazy-lock." .. (profile or "base") .. ".json",
+}
+
 function M.append_specs(specs)
   foreach_profile(function(profile)
     specs[#specs + 1] = load_module(profile)

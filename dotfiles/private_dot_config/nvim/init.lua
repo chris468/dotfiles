@@ -18,4 +18,7 @@ local spec = {
 }
 profiles.append_specs(spec)
 
-require("lazy").setup({ spec = spec })
+require("lazy").setup({
+  spec = spec,
+  lockfile = vim.fn.stdpath("config") .. "/" .. profiles.lockfile,
+})
