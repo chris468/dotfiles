@@ -1,7 +1,7 @@
 $env.config = ($env.config | upsert render_right_prompt_on_last_line true)
 
 $env.POWERLINE_COMMAND = 'oh-my-posh'
-$env.POSH_THEME = "/home/chris/.config/oh-my-posh/chris468.omp.yaml"
+$env.POSH_THEME = "~/.config/oh-my-posh/chris468.omp.yaml"
 $env.PROMPT_INDICATOR = ""
 $env.POSH_PID = (random uuid)
 $env.POSH_SHELL_VERSION = (version | get version)
@@ -18,23 +18,23 @@ def posh_width [] {
 }
 
 # PROMPTS
-$env.PROMPT_MULTILINE_INDICATOR = (^"/home/chris/.local/bin/oh-my-posh" print secondary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)")
+$env.PROMPT_MULTILINE_INDICATOR = (^"~/.local/bin/oh-my-posh" print secondary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)")
 
 $env.PROMPT_COMMAND = { ||
     # hack to set the cursor line to 1 when the user clears the screen
     # this obviously isn't bulletproof, but it's a start
     let clear = (history | is-empty) or ((history | last 1 | get 0.command) == "clear")
 
-    ^"/home/chris/.local/bin/oh-my-posh" print primary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=(posh_cmd_duration)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=(posh_width)" $"--cleared=($clear)"
+    ^"~/.local/bin/oh-my-posh" print primary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=(posh_cmd_duration)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=(posh_width)" $"--cleared=($clear)"
 }
 
 $env.PROMPT_COMMAND_RIGHT = { ||    
-    ^"/home/chris/.local/bin/oh-my-posh" print right $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=(posh_cmd_duration)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=(posh_width)"
+    ^"~/.local/bin/oh-my-posh" print right $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=(posh_cmd_duration)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=(posh_width)"
 }
 
 if "false" == "true" {
     $env.TRANSIENT_PROMPT_COMMAND = { ||
-        ^"/home/chris/.local/bin/oh-my-posh" print transient $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=(posh_cmd_duration)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=(posh_width)"
+        ^"~/.local/bin/oh-my-posh" print transient $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=(posh_cmd_duration)" $"--status=($env.LAST_EXIT_CODE)" $"--terminal-width=(posh_width)"
     }
 }
 
