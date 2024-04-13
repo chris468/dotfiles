@@ -10,6 +10,16 @@ $env.config = {
 
     edit_mode: vi
 
+    hooks: {
+        pre_prompt: []
+        pre_execution: []
+        env_change: {}
+        display_output: [
+            "if (term size).columns >= 100 { table -e } else { table }"
+        ]
+        command_not_found: []
+    }
+
     keybindings: [
         {
             name: fzf_history
