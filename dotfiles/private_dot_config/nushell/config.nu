@@ -1,9 +1,13 @@
 $env.config = {
+    color_config: ( use config theme default ; default )
+
     cursor_shape: {
         vi_insert: line
         vi_normal: block
     }
-    edit_mode: vi # emacs, vi
+
+    edit_mode: vi
+
     keybindings: [
         {
             name: fzf_history

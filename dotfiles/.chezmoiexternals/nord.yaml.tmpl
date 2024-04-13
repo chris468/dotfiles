@@ -16,3 +16,8 @@
   stripComponents: 1
   include:
     - "*/skins/*"
+
+{{ joinPath .paths.relative.configHome "nushell" "lib" "config" "theme" "nord.nu" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/nushell/nu_scripts/main/themes/nu-themes/nord.nu
+  refreshPeriod: "168h"

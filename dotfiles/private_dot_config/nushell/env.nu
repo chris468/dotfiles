@@ -5,4 +5,5 @@ $env.PROMPT_MULTILINE_INDICATOR = ""
 
 $env.NU_LIB_DIRS = [
     $"($nu.default-config-dir)/scripts"
+    $"($nu.default-config-dir)/lib"
 ]
