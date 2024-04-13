@@ -1,5 +1,7 @@
 use chris468
 
+chris468 config env
+
 $env.config = {
     color_config: (chris468 config theme default)
 
@@ -14,9 +16,7 @@ $env.config = {
         pre_prompt: []
         pre_execution: []
         env_change: {}
-        display_output: [
-            "if (term size).columns >= 100 { table -e } else { table }"
-        ]
+        display_output: "if (term size).columns >= 100 { table -e } else { table }"
         command_not_found: []
     }
 
