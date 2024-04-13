@@ -1,5 +1,7 @@
+use chris468
+
 $env.config = {
-    color_config: ( use config theme default ; default )
+    color_config: (chris468 config theme default)
 
     cursor_shape: {
         vi_insert: line
