@@ -1,3 +1,3 @@
-export module env.nu
+export module env/
 export module prompt/
 export module theme/

@@ -8,7 +8,7 @@ def prepend_environment [name: string, values: list] -> list {
     }
 }
 
-export def main [] {
+export def --env main [] {
 {{- range $i, $e := .environment }}
 {{-   $value := .value }}
 {{-   if .value | kindIs "slice" }}
