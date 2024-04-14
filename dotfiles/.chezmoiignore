@@ -9,6 +9,10 @@ _vimrc
 vimfiles
 {{- end }}
 
+{{- if ne .chezmoi.os "darwin" }}
+Library/
+{{- end }}
+
 {{- if not .profile.work }}
 .vim/plugin/work.vim
 {{- end }}
