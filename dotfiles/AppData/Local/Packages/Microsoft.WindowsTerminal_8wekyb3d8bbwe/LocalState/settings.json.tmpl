@@ -66,6 +66,14 @@
                 "name": "Ubuntu",
                 "source": "Windows.Terminal.Wsl"
             },
+            {
+                "commandline": "C:/Program Files/nu/bin/nu.exe -i -l",
+                "guid": "{f8c9eeb0-9e07-4841-bb8e-a51aba0bd64a}",
+                "hidden": false,
+                "icon": "C:\\Program Files\\nu\\nu.ico",
+                "name": "nushell",
+                "startingDirectory": "%USERPROFILE%"
+            },
 {{- range .realConfig.ssh_hosts }}
 {{-   if ne "wezterm" .type }}
             {
