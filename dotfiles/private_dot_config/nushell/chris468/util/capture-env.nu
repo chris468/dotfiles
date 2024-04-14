@@ -6,8 +6,17 @@ def parse-env [] {
         | reject -i PWD
     )
 }
+
+def default_shell [] {
+    if (sys).host.name == "Windows" {
+        'C:\Program Files\Git\bin\sh.exe'
+    } else {
+            "/bin/sh"
+    }
+}
+
 export def --env main [
-    --shell (-s): string = "/bin/sh"
+    --shell (-s): string = ""
     # Shell to use.
     --arguments (-a): list<string> = []
     # Additional arguments to shell.
@@ -18,7 +27,7 @@ export def --env main [
     let result = (with-env  {
             SCRIPT: $script
         } {
-            ^$shell ...$arguments -c `
+            ^(if $shell == "" { default_shell } else { $shell }) ...$arguments -c `
                 env -0
                 echo "<CAPTURE_ENV>"
                 eval "$SCRIPT"
