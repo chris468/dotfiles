@@ -1,11 +1,14 @@
 use set-environment.nu
 use ../../util/
 
+const profilescripts = [
+    'test -f /etc/profile && source /etc/profile'
+    'eval "$(bash ~/.config/dircolors/dircolors.sh)"'
+]
+
 export def --env main [] {
     set-environment
 
-    if ('/etc/profile' | path exists) {
-        'source /etc/profile' | util capture-env
-    }
+    $profilescripts | str join ' ; ' | util capture-env
 }
 
