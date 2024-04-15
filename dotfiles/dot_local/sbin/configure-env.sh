@@ -45,7 +45,6 @@ function prepend-environment() {
 
 	if [[ -n "$update" ]]; then
 		cmd="$cmd$update$current\""
-        echo $cmd
 		eval "$cmd"
 	fi
 }
