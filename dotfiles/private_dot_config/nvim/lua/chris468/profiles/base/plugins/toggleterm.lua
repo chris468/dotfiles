@@ -64,9 +64,9 @@ return {
   keys = {
     { "<C-\\>" },
     { "<leader>ft", "<cmd>TermSelect<CR>", desc = { "Terminal" } },
-    { "<leader>tf", "<cmd>1ToggleTerm<cr>", { "n", "t" }, desc = "Floating terminal" },
-    { "<leader>tt", function() horizontal():toggle() end, { "n", "t" }, desc = "Horizontal terminal" },
-    { "<leader>td", function() chezmoi():toggle() end, { "n", "t" }, desc = "Dotfiles" },
+    { "<leader>Tf", "<cmd>1ToggleTerm<cr>", { "n", "t" }, desc = "Floating terminal" },
+    { "<leader>Tt", function() horizontal():toggle() end, { "n", "t" }, desc = "Horizontal terminal" },
+    { "<leader>Td", function() chezmoi():toggle() end, { "n", "t" }, desc = "Dotfiles" },
     { "<leader>gg", function() lazygit():toggle() end, { "n", "t" }, desc = "Git" },
   },
   -- stylua: ignore end

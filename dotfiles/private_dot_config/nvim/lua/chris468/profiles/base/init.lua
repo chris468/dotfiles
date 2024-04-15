@@ -3,6 +3,7 @@ return {
     "LazyVim/LazyVim",
     opts = { colorscheme = "nord" },
   },
+  { import = "lazyvim.plugins.extras.dap.core" },
   { import = "lazyvim.plugins.extras.formatting.black" },
   { import = "lazyvim.plugins.extras.formatting.prettier" },
   { import = "lazyvim.plugins.extras.lang.omnisharp" },
@@ -14,6 +15,6 @@ return {
   { import = "lazyvim.plugins.extras.lang.typescript" },
   { import = "lazyvim.plugins.extras.lang.yaml" },
   { import = "lazyvim.plugins.extras.util.project" },
-  { import = "lazyvim.plugins.extras.dap.core" },
+  { import = "lazyvim.plugins.extras.test.core" },
   { import = "chris468.profiles.base.plugins" },
 }
