@@ -32,7 +32,7 @@ function prepend-environment() {
 	local name="$1"
 	shift
 
-	cmd="$cmd$name="
+	cmd="$cmd$name=\""
 
 	local current="$(eval "echo \$$name")"
 	local i
@@ -44,7 +44,8 @@ function prepend-environment() {
 	done
 
 	if [[ -n "$update" ]]; then
-		cmd="$cmd$update$current"
+		cmd="$cmd$update$current\""
+        echo $cmd
 		eval "$cmd"
 	fi
 }
