@@ -1,2 +1,7 @@
 chezmoi:template:missing-key=zero
-{{- template "set-pwsh-environment" . -}}
+{{- template "set-environment" (dict
+        "environment" .environment
+        "persist" "-persist"
+        "command" (joinPath .paths.localInstallSbin "configure-env.ps1" | quote)
+    )
+-}}
