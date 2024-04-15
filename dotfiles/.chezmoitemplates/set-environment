@@ -1,9 +1,9 @@
 {{- range $v := .environment -}}
 {{-   $cmd := list ("command" | get $) -}}
 {{-   $cmd = "action" | get . | default "set" | append $cmd -}}
-{{-   range (list "export" "persist") -}}
-{{-     if and (. | hasKey $v) (. | get $v | default false) -}}
-{{-       $cmd = (. | get $) | append $cmd -}}
+{{-   range $k, $d := (dict "export" true "persist" false) -}}
+{{-     if and ($k | hasKey $) ($k | get $v | default $d) -}}
+{{-       $cmd = ($k | get $) | append $cmd -}}
 {{-     end -}}
 {{-   end -}}
 {{-   $cmd = .name | append $cmd -}}
