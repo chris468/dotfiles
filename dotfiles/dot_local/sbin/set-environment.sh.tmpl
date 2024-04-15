@@ -1,0 +1,7 @@
+chezmoi:template:missing-key=zero
+{{- template "set-environment" (dict
+        "environment" .environment
+        "export" "--export"
+        "command" (print "source " (joinPath .paths.localInstallSbin "configure-env.sh" | quote))
+    )
+-}}

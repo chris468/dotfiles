@@ -77,9 +77,6 @@ data:
           action: unset
         - name: KUBECONFIG
           action: unset
-        - name: GPG_TTY
-          action: command
-          value: tty
         - name: IPYTHONDIR
           path: true
           value: {{ $paths.ipython }}
