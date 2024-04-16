@@ -3,5 +3,6 @@ chezmoi:template:missing-key=zero
         "environment" .environment
         "export" "--export"
         "command" (print "source " (joinPath .paths.localInstallSbin "configure-env.sh" | quote))
+        "convertPathsToUnix" ("windows" | eq .chezmoi.os)
     )
 -}}
