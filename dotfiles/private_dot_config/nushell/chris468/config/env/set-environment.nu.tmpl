@@ -2,10 +2,9 @@ chezmoi:template:missing-key=zero
 use configure-env.nu
 
 export def --env main [] {
-
 {{ (includeTemplate "set-environment" (dict
         "environment" .environment
         "command" "configure-env"
-    )) | indent 4
+    )) | trim | indent 4
 }}
 }
