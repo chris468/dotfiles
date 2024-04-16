@@ -19,9 +19,9 @@
 {{-     $value = $value | kindIs "slice" | ternary $value (list $value) -}}
 
 {{-     range $value -}}
-{{-       " \"" -}}
+{{-       " '" -}}
 {{-       (and ("path" | get $e | default false) ("convertPathsToUnix" | get $ | default false))
-              | ternary (includeTemplate "asUnixPath" .) . -}}"
+              | ternary (includeTemplate "asUnixPath" .) . -}}'
 {{-     end }}
 
 {{-   end }}
