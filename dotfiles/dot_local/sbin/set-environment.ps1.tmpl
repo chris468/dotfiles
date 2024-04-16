@@ -2,6 +2,6 @@ chezmoi:template:missing-key=zero
 {{- template "set-environment" (dict
         "environment" .environment
         "persist" "-persist"
-        "command" (print "& " (joinPath .paths.localInstallSbin "configure-env.ps1" | quote))
+        "command" (print "& \"" (joinPath .paths.localInstallSbin "configure-env.ps1") "\"")
     )
 -}}
