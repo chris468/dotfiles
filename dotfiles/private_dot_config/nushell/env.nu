@@ -10,7 +10,7 @@ $env.ENV_CONVERSIONS = {
 }
 
 $env.NU_LIB_DIRS = [
-    $nu.default-config-dir
+    ($nu.default-config-dir | path join scripts)
 ]
 
 $env.PROMPT_INDICATOR = ""
