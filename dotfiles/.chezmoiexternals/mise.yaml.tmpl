@@ -1,0 +1,9 @@
+{{- if .defaults.packageManager.mise.install -}}
+{{- $version := .defaults.packageManager.mise.version }}
+{{ joinPath .paths.relative.localInstallBin "mise" }}:
+  type: file
+  url: https://github.com/jdx/mise/releases/download/{{ $version }}/mise-{{ $version }}-{{ .chezmoi.os }}-{{ "amd64" | eq .chezmoi.arch | ternary "x64" .chezmoi.arch }}
+  executable: true
+  checksum:
+    sha512: 0a7fe521dedfeae95a3f7fc8255b8e4f175ed4d07bb99ff57c22d8b1f501576d49e5fe479f30a0cbdc3ad66559d02c76d0a2d4aeb5acd4c7a91dce71a228b0c1
+{{- end -}}

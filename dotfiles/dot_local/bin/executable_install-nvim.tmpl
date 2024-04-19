@@ -17,9 +17,7 @@ fi
 
 case ${ID_LIKE^^} in
 DEBIAN)
-	asdf plugin add neovim
-	asdf install neovim latest
-	asdf global neovim latest
+    mise use --global neovim
 
 	_sudo "apt update && apt install -y build-essential unzip nodejs npm ripgrep python3-venv"
 	;;
