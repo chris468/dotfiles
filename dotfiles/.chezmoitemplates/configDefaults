@@ -16,7 +16,7 @@ ssh_hosts: []
 packageManager:
     mise:
         install: {{ eq "linux" .chezmoi.os }}
-        version: "v0.11.3"
+        version: "v2024.4.5"
     homebrew:
         enable: {{ eq "darwin" .chezmoi.os }}
     nix:

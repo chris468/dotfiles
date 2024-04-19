@@ -104,12 +104,6 @@ data:
           persist: true
           value: work
 {{- end }}
-{{- if $realConfig.packageManager.asdf.install }}
-        - name: ASDF_DIR
-          value: {{ $paths.asdf }}
-        - name: ASDF_DATA_DIR
-          value: {{ $paths.asdf }}
-{{- end }}
         - name: PATH
           path: true
           action: prepend
