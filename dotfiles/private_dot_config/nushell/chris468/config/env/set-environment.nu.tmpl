@@ -1,48 +1,10 @@
 chezmoi:template:missing-key=zero
-def prepend_environment [name: string, values: list] -> list {
-    let original = $env | get -i $name
-    if $original == null {
-        $values
-    } else {
-        $original | prepend ($values | where { |it| $it not-in $original })
-    }
-}
+use configure-env.nu
 
 export def --env main [] {
-{{- range $i, $e := .environment }}
-{{-   $value := .value }}
-{{-   if .value | kindIs "slice" }}
-{{-     if .path }}
-{{-       $value = list }}
-{{-       range .value }}
-{{-          $value = append $value (includeTemplate "toUnixPath" (dict
-               "chezmoi" $.chezmoi
-               "path" .
-             )) }}
-{{-       end }}
-{{-     else }}
-{{-       $value = .value }}
-{{      end }}
-{{-   else if .path }}
-{{-     $value = includeTemplate "toUnixPath" (dict
-          "chezmoi" $.chezmoi
-          "path" .value
-        ) }}
-{{-   else }}
-{{      $value = .value }}
-{{-   end }}
-{{-   $valueList := eq $value nil | ternary nil ($value | kindIs "slice" | ternary $value (list $value)) }}
-
-{{-   if not .name }}
-{{-     fail (list "environment[" $i "] is missing required key `name`." | join "") }}
-{{-   end }}
-
-{{-   if eq "set" (.action | default "set") }}
-    $env.{{ .name }} = "{{ $value }}"
-{{-   else if eq "unset" .action }}
-    try { hide-env {{ .name }} }
-{{-   else if eq "prepend" .action }}
-    $env.{{ $e.name }} = (prepend_environment {{ $e.name }} [ {{ range $valueList | reverse }} "{{ . }}"{{ end }} ])
-{{-   end }}
-{{ end }}
+{{ (includeTemplate "set-environment" (dict
+        "environment" .environment
+        "command" "configure-env"
+    )) | trim | indent 4
+}}
 }
