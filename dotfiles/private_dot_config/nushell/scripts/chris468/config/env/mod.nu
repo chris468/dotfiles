@@ -27,7 +27,7 @@ def --env libvirt [] {
 
 def --env ssh-agent [] {
     if "SSH_AUTH_SOCK" not-in $env {
-        $env.SSH_AUTH_SOCK = $"/tmp/($env.USER)-ssh.sock"
+        $env.SSH_AUTH_SOCK = ($nu.temp-path | path join $"($env.USER? | default $env.USERNAME)-ssh.sock")
         if (ssh-add -l | complete).exit_code >= 2 {
             if ($env.SSH_AUTH_SOCK | path exists) {
                 rm --permanent $env.SSH_AUTH_SOCK
@@ -46,6 +46,7 @@ export def --env main [] {
     dircolors
     less
     libvirt
-    ssh-agent
+
+    if $nu.os-info.name != "windows" { ssh-agent }
 }
 
