@@ -32,8 +32,8 @@ $env.config = {
                     cmd: "commandline edit (
                         history
                             | each { |it| $it.command }
-                            | uniq
                             | reverse
+                            | uniq
                             | str join (char -i 0)
                             | fzf --read0 --layout=reverse --height=40% +s -q (commandline)
                             | decode utf-8
