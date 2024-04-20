@@ -53,3 +53,6 @@ if $nu.os-info.name == "linux" {
 }
 
 chris468 config hook-fix-env-path
+chris468 config hook-update-tmux-environment
+
+chris468 config upgrade-chezmoi

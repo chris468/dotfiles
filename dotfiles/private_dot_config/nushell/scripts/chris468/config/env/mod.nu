@@ -38,12 +38,19 @@ def --env ssh-agent [] {
     }
 }
 
+def --env gpg [] {
+    if (which tty | is-not-empty) {
+        $env.GPG_TTY = (tty)
+    }
+}
+
 export def --env main [] {
     import-system-profile
 
     set-environment
 
     dircolors
+    gpg
     less
     libvirt
 

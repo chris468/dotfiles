@@ -1,11 +1,4 @@
-def parse-env [] {
-    $in | (
-        split row "\u{0}"
-        | parse "{name}={value}"
-        | transpose --header-row --as-record
-        | reject -i PWD
-    )
-}
+use parse-env.nu
 
 def default_shell [] {
     if (sys).host.name == "Windows" {
@@ -36,8 +29,8 @@ export def --env main [
             `
         } | split row "<CAPTURE_ENV>"
         | {
-            original: ($in | first | str trim | parse-env)
-            updated: ($in | last | str trim | parse-env)
+            original: ($in | first | str trim | split row "\u{0}" | parse-env)
+            updated: ($in | last | str trim | split row "\u{0}" | parse-env)
         }
     )
     let updates = ($result.updated
