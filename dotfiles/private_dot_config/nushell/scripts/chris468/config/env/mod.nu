@@ -27,7 +27,9 @@ def --env libvirt [] {
 
 def --env ssh-agent [] {
     if "SSH_AUTH_SOCK" not-in $env {
-        $env.SSH_AUTH_SOCK = ($nu.temp-path | path join $"($env.USER? | default $env.USERNAME)-ssh.sock")
+        let $user = $env.USER? | default $env.USERNAME?
+        if $user == null { error make { msg: "could not determine username" } }
+        $env.SSH_AUTH_SOCK = ($nu.temp-path | path join $"($user)-ssh.sock")
         if (ssh-add -l | complete).exit_code >= 2 {
             if ($env.SSH_AUTH_SOCK | path exists) {
                 rm --permanent $env.SSH_AUTH_SOCK
