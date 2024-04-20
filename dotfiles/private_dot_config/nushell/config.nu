@@ -35,7 +35,7 @@ $env.config = {
                             | uniq
                             | reverse
                             | str join (char -i 0)
-                            | fzf --read0 --layout=reverse --height=40% -q (commandline)
+                            | fzf --read0 --layout=reverse --height=40% +s -q (commandline)
                             | decode utf-8
                             | str trim
                     )"
