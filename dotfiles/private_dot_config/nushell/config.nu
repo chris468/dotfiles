@@ -48,4 +48,8 @@ $env.config = {
 
 chris468 config prompt setup
 
-if $nu.os-info.name == "linux" { use mise.nu }
+if $nu.os-info.name == "linux" {
+    use mise.nu
+}
+
+chris468 config hook-fix-env-path

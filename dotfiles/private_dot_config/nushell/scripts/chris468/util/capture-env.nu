@@ -9,9 +9,9 @@ def parse-env [] {
 
 def default_shell [] {
     if (sys).host.name == "Windows" {
-        'C:\Program Files\Git\bin\sh.exe'
+        'C:\Program Files\Git\bin\bash.exe'
     } else {
-            "/bin/sh"
+        (which bash).path | first
     }
 }
 

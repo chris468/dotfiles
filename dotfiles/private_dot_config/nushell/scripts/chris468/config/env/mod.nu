@@ -2,10 +2,13 @@ use set-environment.nu
 use ../../util/
 
 export def --env main [] {
+    if $nu.os-info.name != "windows" {
+        'test -f /etc/profile && source /etc/profile' | util capture-env
+    }
+
     set-environment
 
     let profilescripts = [
-        (if $nu.os-info.name != "windows" { ['test -f /etc/profile && source /etc/profile'] } else [])
         'test -f ~/.config/shrc.d/51-delta.sh && source ~/.config/shrc.d/51-delta.sh'
         'eval "$(SHELL=nu bash ~/.config/dircolors/dircolors.sh)"'
         'test -f ~/.config/shrc.d/less.sh && source ~/.config/shrc.d/less.sh'
