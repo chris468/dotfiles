@@ -1,5 +1,5 @@
 use ../util/add-hook.nu
-use ../util/parse-env.nu
+use ../util/env
 
 export def --env main [] {
     let hook = {
@@ -14,7 +14,7 @@ export def --env main [] {
             | lines
             | {
                 remove: ($in | where { str starts-with "-" } | str substring 1..)
-                add: ($in | where { not ($in | str starts-with "-") } | parse-env)
+                add: ($in | where { not ($in | str starts-with "-") } | env parse)
         }
 
         for r in $updates.remove { hide-env -i $r }
