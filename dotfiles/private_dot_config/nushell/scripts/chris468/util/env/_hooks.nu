@@ -1,4 +1,4 @@
-export def --env main [ hook: cell-path, callback: any ] {
+export def --env "hook add" [ hook: cell-path, callback: any ] {
     $env.config = (
         $env.config | upsert $hook { |config|
             $config
