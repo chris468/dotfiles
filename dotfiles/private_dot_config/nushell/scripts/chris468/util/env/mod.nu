@@ -1,3 +1,3 @@
-export module apply.nu
-export module capture.nu
-export module parse.nu
+export use _capture.nu *
+export use _hooks.nu *
+

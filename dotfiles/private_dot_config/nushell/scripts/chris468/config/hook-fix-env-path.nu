@@ -1,4 +1,4 @@
-use ../util/add-hook.nu
+use ../util/env "hook add"
 
 export def --env main [] {
     let hook = {
@@ -6,6 +6,6 @@ export def --env main [] {
         code: { $env.PATH = (do $env.ENV_CONVERSIONS.PATH.from_string $env.PATH) }
     }
 
-    add-hook hooks.pre_prompt $hook
-    add-hook hooks.env_change.PWD $hook
+    hook add hooks.pre_prompt $hook
+    hook add hooks.env_change.PWD $hook
 }
