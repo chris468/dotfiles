@@ -52,10 +52,8 @@ def --env profile [] {
 }
 
 export def --env main [] {
+    set-environment
     profile
-
-    # set-environment
-
     dircolors
     gpg
     less

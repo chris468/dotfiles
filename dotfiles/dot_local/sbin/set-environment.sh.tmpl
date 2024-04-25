@@ -1,8 +1,0 @@
-chezmoi:template:missing-key=zero
-{{- template "set-environment" (dict
-        "environment" .environment
-        "export" "--export"
-        "command" (print "source \"" .paths.unix.localInstallSbin "/configure-env.sh\"")
-        "convertPathsToUnix" ("windows" | eq .chezmoi.os)
-    )
--}}

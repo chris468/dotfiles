@@ -1,4 +1,1 @@
-for f in $(find ~/.config/profile.d -maxdepth 1 -type f \( -name '*.sh' -o -name '*.zsh' \))
-do
-    source $f
-done
+emulate sh -c 'source ~/.profile'

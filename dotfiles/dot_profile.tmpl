@@ -1,0 +1,23 @@
+chezmoi:template:missing-key=zero
+{{- template "set-environment" (dict
+        "environment" .environment
+        "command" (dict
+          "unset" "unset {NAME}"
+          "set" "export {NAME}=\"{VALUE}\""
+          "prepend" "[[ \"${NAME}\" == *\"{VALUE}\"* ]] || export {NAME}=\"{VALUE}:${NAME}\""
+        )
+        "convertPathsToUnix" ("windows" | eq .chezmoi.os)
+    )
+-}}
+{{ "" }}
+for f in $(find ~/.config/profile.d -maxdepth 1 -type f \( -name '*.sh' -o -name '*.bash' \))
+do
+    . $f
+done
+unset f
+
+if [ -n "$BASH_VERSION" ]; then
+    if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+    fi
+fi

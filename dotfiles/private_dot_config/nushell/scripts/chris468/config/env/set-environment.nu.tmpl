@@ -1,10 +1,12 @@
 chezmoi:template:missing-key=zero
-use configure-env.nu
-
 export def --env main [] {
 {{ (includeTemplate "set-environment" (dict
         "environment" .environment
-        "command" "configure-env"
+        "command" (dict
+            "unset" "hide-env -i {NAME}"
+            "set" "load-env { {NAME}: \"{VALUE}\" }"
+            "prepend" "if \"{VALUE}\" not-in $env.{NAME} { $env.{NAME} = ($env.{NAME} | prepend \"{VALUE}\") }"
+        )
     )) | trim | indent 4
 }}
 }
