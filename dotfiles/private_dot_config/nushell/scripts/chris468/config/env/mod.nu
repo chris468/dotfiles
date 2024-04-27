@@ -1,5 +1,4 @@
 use ../../util/
-use import-system-profile.nu
 use set-environment.nu
 
 def --env dircolors [] {
@@ -46,11 +45,15 @@ def --env gpg [] {
     }
 }
 
+def --env profile [] {
+    if $nu.os-info.name != "windows" {
+        'for p in /etc/profile ~/.profile ; do test -f $p && source $p ; done' | util env capture
+    }
+}
+
 export def --env main [] {
-    import-system-profile
-
     set-environment
-
+    profile
     dircolors
     gpg
     less

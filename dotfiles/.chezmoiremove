@@ -6,6 +6,5 @@
 .local/bin/update-tools
 .local/bin/update-tools.ps1
 
-{{ joinPath .paths.relative.configHome "shrc.d" "dracula-theme.sh" }}
 {{ joinPath .paths.relative.configHome "alacritty" "dracula.yml" }}
 {{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" }}

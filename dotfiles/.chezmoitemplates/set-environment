@@ -1,28 +1,18 @@
-{{- range $e := .environment -}}
-{{-   $.command -}}
-{{-   $cmd := list -}}
-{{-   " " -}}
-{{-   "action" | get $e | default "set" -}}
-
-{{-   range $k, $d := (dict "export" true "persist" false) -}}
-{{-     if and ($k | hasKey $) ($k | get $e | default $d) -}}
-{{-       " " -}}
-{{-       $k | get $ -}}
-{{-     end -}}
-{{-   end -}}
-
-{{-   " " -}}
-{{-   $e.name -}}
-
-{{-   if "value" | get $e -}}
-{{-     $value := "value" | get $e -}}
-{{-     $value = $value | kindIs "slice" | ternary $value (list $value) -}}
-
-{{-     range $value -}}
-{{-       " '" -}}
-{{-       (and ("path" | get $e | default false) ("convertPathsToUnix" | get $ | default false))
-              | ternary (includeTemplate "asUnixPath" .) . -}}'
+{{- range $e := .environment }}
+{{-   $cmd := "action" | get $e | default "set" | get $.command }}
+{{-   $needsValue := $cmd | contains "{VALUE}" }}
+{{-   $value := list "" }}
+{{-   if $needsValue }}
+{{-     if "value" | hasKey $e }}
+{{-       $value = "value" | get $e }}
+{{-     else }}
+{{-       fail (printf "Missing value for " $e.name) }}
 {{-     end }}
-
 {{-   end }}
+{{-   $value = $value | kindIs "slice" | ternary $value (list $value) }}
+{{-   range $v := $value }}
+{{-     $v = (and ("path" | get $e | default false) ("convertPathsToUnix" | get $ | default false))
+            | ternary (includeTemplate "asUnixPath" $v) $v }}
+{{-     $cmd | replace "{NAME}" $e.name | replace "{VALUE}" $v }}
+{{    end -}}
 {{  end -}}

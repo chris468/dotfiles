@@ -1,10 +1,25 @@
 chezmoi:template:missing-key=zero
-use configure-env.nu
-
 export def --env main [] {
+{{- $environment := .environment -}}
+{{- if "windows" | eq .chezmoi.os -}}
+{{-   $fixed := list -}}
+{{-   range $e := $environment -}}
+{{-     if "PATH" | eq $e.name -}}
+{{-       $e = $e | merge (dict "name" "Path") -}}
+{{-     end -}}
+# {{ $e | toJson }}
+{{ "" }}
+{{-     $fixed = $e | append $fixed -}}
+{{-   end -}}
+{{-   $environment = $fixed }}
+{{- end -}}
 {{ (includeTemplate "set-environment" (dict
-        "environment" .environment
-        "command" "configure-env"
+        "environment" $environment
+        "command" (dict
+            "unset" "hide-env -i {NAME}"
+            "set" "load-env { {NAME}: '{VALUE}' }"
+            "prepend" "if '{VALUE}' not-in $env.{NAME} { $env.{NAME} = ($env.{NAME} | prepend '{VALUE}') }"
+        )
     )) | trim | indent 4
 }}
 }
