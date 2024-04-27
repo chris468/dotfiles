@@ -1,5 +1,5 @@
 export def default [] {
-    use nord.nu
+    use _lib nord
     nord
 }
 

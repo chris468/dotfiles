@@ -1,4 +1,4 @@
-use oh-my-posh.nu
+use _lib oh-my-posh
 
 export def --env setup [] {
     oh-my-posh setup

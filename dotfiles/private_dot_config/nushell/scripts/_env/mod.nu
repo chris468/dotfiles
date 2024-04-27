@@ -1,4 +1,4 @@
-use ../../util/
+use ../chris468/util/
 use set-environment.nu
 
 def --env dircolors [] {

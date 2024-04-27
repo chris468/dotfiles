@@ -1,4 +1,4 @@
-use ../util/env "hook add"
+use chris468 util env "hook add"
 
 export def --env main [] {
     let hooks = [{
