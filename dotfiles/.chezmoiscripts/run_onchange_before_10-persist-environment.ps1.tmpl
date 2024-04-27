@@ -1,4 +1,18 @@
 chezmoi:template:missing-key=zero
 {{- if eq "windows" .chezmoi.os -}}
-{{- template "set-pwsh-environment" . -}}
+{{-   $persisted := list -}}
+{{-   range .environment -}}
+{{-     if "persist" | get . | default false -}}
+{{-       $persisted = . | append $persisted -}}
+{{-     end -}}
+{{-   end -}}
+{{-   includeTemplate "set-environment" (dict
+        "environment" $persisted
+        "command" (dict
+          "unset" "[Environment]::SetEnvironmentVariable('{NAME}', $null, 'User')"
+          "set" "[Environment]::SetEnvironmentVariable('{NAME}', '{VALUE}', 'User')"
+          "prepend" "& { $v = [Environment]::GetEnvironmentVariable('{NAME}', 'User') ; if (\"$v\" -NotLike '*{VALUE}*') { [Environment]::SetEnvironmentVariable('{NAME}', \"{VALUE};$v\", 'User') } }"
+        )
+      )
+-}}
 {{- end -}}

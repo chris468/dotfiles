@@ -4,7 +4,7 @@ chezmoi:template:missing-key=zero
         "command" (dict
             "unset" "Remove-Item -ErrorAction Ignore env:{NAME}"
             "set" "$env:{NAME} = \"{VALUE}\""
-            "prepend" "if (\"$env:{NAME}\" -NotLike \"*{VALUE}*\") { $env:{NAME} = \"{VALUE};$env:{NAME}\" }"
+            "prepend" "if (\"$env:{NAME}\" -NotLike '*{VALUE}*') { $env:{NAME} = \"{VALUE};$env:{NAME}\" }"
         )
     )
 -}}
