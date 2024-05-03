@@ -1,7 +1,9 @@
+local config = require("chris468.profiles.config")
+
 return {
   {
     "LazyVim/LazyVim",
-    opts = { colorscheme = "nord" },
+    opts = { colorscheme = config.theme },
   },
   { import = "lazyvim.plugins.extras.dap.core" },
   { import = "lazyvim.plugins.extras.formatting.black" },

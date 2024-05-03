@@ -1,0 +1,11 @@
+{{ joinPath .paths.relative.configHome "k9s" "skins" | quote }}:
+  type: archive
+  url: https://github.com/catppuccin/k9s/archive/main.tar.gz
+  stripComponents: 2
+  include:
+    - "k9s-main/dist/catppuccin-mocha.yaml"
+
+{{ joinPath .paths.relative.configHome "nushell" "scripts" "_lib" "catppuccin-mocha.nu" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/nushell/nu_scripts/main/themes/nu-themes/catppuccin-mocha.nu
+  refreshPeriod: "168h"

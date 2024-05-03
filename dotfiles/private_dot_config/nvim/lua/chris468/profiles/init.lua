@@ -1,4 +1,5 @@
-local profile = os.getenv("CHRIS468_LAZYVIM_PROFILE")
+local config = require("chris468.profiles.config")
+local profile = os.getenv("CHRIS468_LAZYVIM_PROFILE") or config.profile
 
 local function get_profiles()
   local os = require("os")

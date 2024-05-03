@@ -10,13 +10,6 @@
   url: https://raw.githubusercontent.com/nordtheme/dircolors/develop/src/dir_colors
   refreshPeriod: "168h"
 
-{{ joinPath .paths.relative.localInstall "k9s" | quote }}:
-  type: archive
-  url: {{ (gitHubLatestRelease "derailed/k9s").TarballURL }}
-  stripComponents: 1
-  include:
-    - "*/skins/*"
-
 {{ joinPath .paths.relative.configHome "nushell" "scripts" "_lib" "nord.nu" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/nushell/nu_scripts/main/themes/nu-themes/nord.nu

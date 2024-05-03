@@ -73,6 +73,9 @@ data:
         unix:
 {{ includeTemplate "dotfiles/.chezmoitemplates/buildUnixPaths" (dict "chezmoi" .chezmoi "paths" $paths) | indent 12 }}
     environment:
+        - name: CHRIS468_LAZYVIM_PROFILE
+          action: unset
+          persist: true
         - name: AWS_PROFILE
           action: unset
         - name: KUBECONFIG
@@ -98,11 +101,6 @@ data:
           path: true
           persist: true
           value: {{ $paths.cacheHome }}
-{{- if $work }}
-        - name: CHRIS468_LAZYVIM_PROFILE
-          persist: true
-          value: work
-{{- end }}
         - name: PATH
           path: true
           action: prepend
