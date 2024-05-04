@@ -9,3 +9,10 @@
   type: file
   url: https://raw.githubusercontent.com/nushell/nu_scripts/main/themes/nu-themes/catppuccin-mocha.nu
   refreshPeriod: "168h"
+
+{{ joinPath .paths.relative.configHome "alacritty" "themes" "catppuccin-mocha.toml" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/catppuccin/alacritty/main/catppuccin-mocha.toml
+  refreshPeriod: "168h"
+
+

@@ -1,18 +1,10 @@
 live_config_reload = true
-working_directory = "{{ .chezmoi.homeDir }}"
 
-[colors.primary]
-background = "#2e3440"
+import = [ "~/.config/alacritty/config.toml" ]
 
 [window.padding]
 x = 8
 y = 8
-
-[font]
-size = {{ .realConfig.font.size }}
-
-[font.normal]
-family = {{ .realConfig.font.family | quote }}
 
 [[keyboard.bindings]]
 action = "ReceiveChar"

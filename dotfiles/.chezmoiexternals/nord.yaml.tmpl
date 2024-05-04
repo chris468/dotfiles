@@ -14,3 +14,10 @@
   type: file
   url: https://raw.githubusercontent.com/nushell/nu_scripts/main/themes/nu-themes/nord.nu
   refreshPeriod: "168h"
+
+
+{{ joinPath .paths.relative.configHome "alacritty" "themes" "nord.yaml" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/nordtheme/alacritty/main/src/nord.yaml
+  refreshPeriod: "168h"
+
