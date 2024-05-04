@@ -18,8 +18,6 @@ $env.PROMPT_INDICATOR_VI_INSERT = ""
 $env.PROMPT_INDICATOR_VI_NORMAL = ""
 $env.PROMPT_MULTILINE_INDICATOR = ""
 
-try { $env.CHEZMOI_GITHUB_ACCESS_TOKEN = (gh auth token) }
-
 export-env {
     use $"($nu.default-config-dir)/scripts/_env"
     _env
