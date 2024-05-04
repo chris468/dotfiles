@@ -1,9 +1,11 @@
+local config = require("chris468.profiles.config")
+
 return {
   "nvim-lualine/lualine.nvim",
   opts = function(_, opts)
     return {
       options = {
-        theme = "nord",
+        theme = config.theme,
         globalstatus = true,
       },
       extensions = {
