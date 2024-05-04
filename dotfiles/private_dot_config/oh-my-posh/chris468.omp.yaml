@@ -3,7 +3,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 version: 2
 palettes:
-  template: catppuccin-mocha
+  template: '{{ .Env.CHRIS468_THEME | default "nord" }}'
   list:
     nord:
       nord0: "#2e3440"
