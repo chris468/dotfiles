@@ -65,7 +65,22 @@ data:
 # ==== Everything past this point is generated, changed will be overwritten ====
 # ==============================================================================
 
+
 {{ $realConfig := $config | mergeOverwrite $_defaults -}}
+
+{{ $availableThemes := dict
+    "nord" nil
+    "catppuccin-mocha" nil
+    "catppuccin" "catppuccin-mocha"
+-}}
+
+{{ if $realConfig.theme | hasKey $availableThemes -}}
+{{   $realConfig := set $realConfig "theme" (
+       $realConfig.theme | get $availableThemes | default $realConfig.theme)
+-}}
+{{ else -}}
+{{   fail (printf "Invalid theme '%s'. Available themes: %s." ($realConfig.theme) ($availableThemes | keys | join ", ")) -}}
+{{ end -}}
 {{ dict "realConfig" $realConfig | toYaml | indent 4 }}
 
     paths:
