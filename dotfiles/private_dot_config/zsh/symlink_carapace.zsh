@@ -1,0 +1,1 @@
+../bashrc.d/carapace.bash
