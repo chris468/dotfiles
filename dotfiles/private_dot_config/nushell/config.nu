@@ -55,4 +55,5 @@ export-env {
     hook-update-tmux-environment
 
     upgrade-chezmoi
+    init-carapace
 }

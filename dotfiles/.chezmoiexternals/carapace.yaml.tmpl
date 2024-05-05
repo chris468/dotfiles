@@ -1,0 +1,9 @@
+{{- $archive_ext := ("windows" | eq .chezmoi.os) | ternary "zip" "tar.gz" -}}
+{{- $tag := (gitHubLatestRelease "carapace-sh/carapace-bin").TagName -}}
+{{- $base := "https://github.com/carapace-sh/carapace-bin/releases/download" }}
+{{ joinPath .paths.relative.localInstallBin | quote }}:
+  type: archive
+  url: {{ $base }}/{{ $tag }}/carapace-bin_{{ .chezmoi.os }}_{{ .chezmoi.arch }}.{{ $archive_ext }}
+  include:
+    - carapace*
+  refreshPeriod: "168h"

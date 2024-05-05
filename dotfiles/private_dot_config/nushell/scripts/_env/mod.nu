@@ -51,6 +51,14 @@ def --env profile [] {
     }
 }
 
+def --env configure-carapace [] {
+    if (which carapace | is-not-empty) {
+        $env.CARAPACE_BRIDGES = 'zsh,fish,bash,powershell'
+        mkdir ~/.cache/carapace
+        carapace _carapace nushell | save --force ~/.cache/carapace/init.nu
+    }
+}
+
 export def --env main [] {
     set-environment
     profile
@@ -58,6 +66,7 @@ export def --env main [] {
     gpg
     less
     libvirt
+    configure-carapace
 
     if $nu.os-info.name != "windows" { ssh-agent }
 }
