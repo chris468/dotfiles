@@ -92,10 +92,10 @@ function theme_segment {
 	local right="${3+$(tmux show-option -gvq $3)}"
 	local fallback_id="$4"
 	local content="$(get_option "$id" "$fallback_id")"
-	local icon="$(get_option "$id-icon" "${fallback_id+$fallback_id-icon}")"
-	local fg="$(get_option "$id-foreground" "${fallback_id+$fallback_id-foreground}")"
-	local bg="$(get_option "$id-background" "${fallback_id+$fallback_id-background}")"
-	local attr="$(get_option "$id-attr" "${fallback_id+$fallback_id-attr}")"
+	local icon="$(get_option "$id-icon" "${fallback_id:+$fallback_id-icon}")"
+	local fg="$(get_option "$id-foreground" "${fallback_id:+$fallback_id-foreground}")"
+	local bg="$(get_option "$id-background" "${fallback_id:+$fallback_id-background}")"
+	local attr="$(get_option "$id-attr" "${fallback_id:+$fallback_id-attr}")"
 
 	segment -l "$left" -r "$right" -f "$fg" -b "$bg" -i "$icon" -a "$attr" -- "$content"
 }
