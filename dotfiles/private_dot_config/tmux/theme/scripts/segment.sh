@@ -95,13 +95,15 @@ function theme_segment {
 	local icon="$(tmux show-option -gvq "$id-icon")"
 	local fg="$(tmux show-option -gvq "$id-foreground")"
 	local bg="$(tmux show-option -gvq "$id-background")"
+	local attr="$(tmux show-option -gvq "$id-attr")"
 
 	if [[ -n "$fallback_id" ]]; then
 		[[ -n "$content" ]] || content="$(tmux show-option -gvq "$fallback_id")"
 		[[ -n "$icon" ]] || icon="$(tmux show-option -gvq "$fallback_id-icon")"
 		[[ -n "$fg" ]] || fg="$(tmux show-option -gvq "$fallback_id-foreground")"
 		[[ -n "$bg" ]] || bg="$(tmux show-option -gvq "$fallback_id-background")"
+		[[ -n "$attr" ]] || attr="$(tmux show-option -gvq "$fallback_id-attr")"
 	fi
 
-	segment -l "$left" -r "$right" -f "$fg" -b "$bg" -i "$icon" -- "$content"
+	segment -l "$left" -r "$right" -f "$fg" -b "$bg" -i "$icon" -a "$attr" -- "$content"
 }
