@@ -14,17 +14,6 @@ source "$scripts_path/render.sh"
 source "$scripts_path/status.sh"
 source "$scripts_path/window.sh"
 
-status_left_separator_outer="█"
-status_left_separator_left=""
-status_left_separator_right=""
-
-status_right_separator_outer=""
-status_right_separator_left=""
-status_right_separator_right=""
-
-window_separator_left=""
-window_separator_right=""
-
 tmux set -g @status_outer_background "$status_outer_background"
 tmux set -g @window_current_background "$window_current_background"
 
