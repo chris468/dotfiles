@@ -18,19 +18,3 @@ function window_status_icon {
 
 	echo $icon
 }
-
-function configure_window_status {
-	local content="#I#W$(window_status_icon)"
-
-	tmux set -g window-status-format "$(render_content \
-		"$content" \
-		"$window_foreground" \
-		"$window_background" \
-		"$window_separator_left" \
-		"$window_separator_right")"
-	tmux set -g window-status-current-format "$(render_content "$content" \
-		"$window_current_foreground" \
-		"#{E:@window_current_background}" \
-		"$window_separator_left" \
-		"$window_separator_right")"
-}

@@ -10,8 +10,6 @@ theme=$(get_option @chris468-theme)
 source "$colors_path/$theme.sh"
 
 source "$scripts_path/segment.sh"
-source "$scripts_path/render.sh"
-source "$scripts_path/status.sh"
 source "$scripts_path/window.sh"
 
 tmux set -g @status_outer_background "$status_outer_background"
