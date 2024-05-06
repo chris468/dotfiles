@@ -21,20 +21,22 @@ function window_status_icon {
 
 function configure_window_status {
 	tmux set -g window-status-format "$(segment \
-		-l "$(get_option @theme468-window-separator-left)" \
-		-r "$(get_option @theme468-window-separator-right)" \
-		-f "$(get_option @theme468-window-foreground)" \
-		-b "$(get_option @theme468-window-background)" \
-		-i "$(window_status_icon) " \
-		-- \
+		"$(get_option @theme468-window-foreground)" \
+		"$(get_option @theme468-window-background)" \
+		"$(get_option @theme468-window-attr)" \
+		"$(get_option @theme468-window-separator-left)" \
+		"$(get_option @theme468-window-separator-right)" \
+		"$(window_status_icon) " \
 		"$(get_option @theme468-window)")"
 
-	tmux set -g window-status-current-format "$(segment \
-		-l "$(get_option @theme468-window-separator-left)" \
-		-r "$(get_option @theme468-window-separator-right)" \
-		-f "$(get_option @theme468-window-current-foreground @theme468-window-foreground)" \
-		-b "$(get_option @theme468-window-current-background @theme468-window-background)" \
-		-i "$(window_status_icon) " \
-		-- \
-		"$(get_option @theme468-window-current @theme468-window)")"
+	tmux set -g window-status-current-format "$(
+		segment \
+			"$(get_option @theme468-window-current-foreground @theme468-window-foreground)" \
+			"$(get_option @theme468-window-current-background @theme468-window-background)" \
+			"$(get_option @theme468-window-current-attr @theme468-window-attr)" \
+			"$(get_option @theme468-window-separator-left)" \
+			"$(get_option @theme468-window-separator-right)" \
+			"$(window_status_icon) " \
+			"$(get_option @theme468-window-current @theme468-window)"
+	)"
 }

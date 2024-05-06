@@ -16,63 +16,13 @@ function _style {
 }
 
 function segment {
-	local left=
-	local right=
-	local fg=
-	local bg=
-	local icon=
-	local attr=
-
-	while [[ $# > 0 ]]; do
-		local arg="$1"
-		local opt="$2"
-
-		case $arg in
-		--)
-			shift
-			break
-			;;
-		-l | --left)
-			check_arg "$arg" "$opt" || return 1
-			left="$opt"
-			shift
-			;;
-		-r | --right)
-			check_arg "$arg" "$opt" || return 1
-			right="$opt"
-			shift
-			;;
-		-f | --fg | --foreground)
-			check_arg "$arg" "$opt" || return 1
-			fg="$opt"
-			shift
-			;;
-		-b | --bg | --background)
-			check_arg "$arg" "$opt" || return 1
-			bg="$opt"
-			shift
-			;;
-		-i | --icon)
-			check_arg "$arg" "$opt" || return 1
-			icon="$opt"
-			shift
-			;;
-		-a | --attr)
-			check_arg "$arg" "$opt" || return 1
-			attr="$opt"
-			shift
-			;;
-		-*)
-			echo "Unknown option: $arg" >&2
-			eturn 1
-			;;
-		*) break ;;
-		esac
-
-		shift
-	done
-
-	local content="$@"
+	local fg="$1"
+	local bg="$2"
+	local attr="$3"
+	local left="$4"
+	local right="$5"
+	local icon="$6"
+	local content="$7"
 
 	local pl_style="$(_style "$bg" "$status_background")"
 
@@ -97,5 +47,5 @@ function theme_segment {
 	local bg="$(get_option "$id-background" "${fallback_id:+$fallback_id-background}")"
 	local attr="$(get_option "$id-attr" "${fallback_id:+$fallback_id-attr}")"
 
-	segment -l "$left" -r "$right" -f "$fg" -b "$bg" -i "$icon" -a "$attr" -- "$content"
+	segment "$fg" "$bg" "$attr" "$left" "$right" "$icon" "$content"
 }
