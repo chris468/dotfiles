@@ -80,8 +80,8 @@ function segment {
 	[[ -z "$left" ]] || format="$pl_style$left"
 	format="$format$(_style "$fg" "$bg" "$attr")"
 	[[ -z "$icon" ]] || format="$format$icon"
-	[[ -z "$content" ]] || format="$format $content"
-	[[ -z "$right" ]] || format="$format $pl_style$right"
+	[[ -z "$content" ]] || format="$format$content"
+	[[ -z "$right" ]] || format="$format$pl_style$right"
 
 	echo "$format"
 }
