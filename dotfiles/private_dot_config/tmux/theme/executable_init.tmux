@@ -50,12 +50,12 @@ tmux set -g @theme468-window-current-background "#{E:@window_current_background}
 tmux set -g @theme468-segment-session "#S"
 tmux set -g @theme468-segment-session-icon ""
 tmux set -g @theme468-segment-session-foreground "#{?client_prefix,$status_outer_prefix_foreground,$status_outer_foreground}"
-tmux set -g @theme468-segment-session-background "#{?client_prefix,$status_outer_prefix_background,$status_outer_background}"
+tmux set -g @theme468-segment-session-background "#{?client_prefix,$status_outer_prefix_background,#{E:@status_outer_background}}"
 
 tmux set -g @theme468-segment-host "#H"
 tmux set -g @theme468-segment-host-icon "󰒋"
 tmux set -g @theme468-segment-host-foreground "#{?client_prefix,$status_outer_prefix_foreground,$status_outer_foreground}"
-tmux set -g @theme468-segment-host-background "#{?client_prefix,$status_outer_prefix_background,$status_outer_background}"
+tmux set -g @theme468-segment-host-background "#{?client_prefix,$status_outer_prefix_background,#{E:@status_outer_background}}"
 
 tmux set -g @theme468-segment-date "#($modules_path/date.tmux)"
 tmux set -g @theme468-segment-date-icon "󰃰"
