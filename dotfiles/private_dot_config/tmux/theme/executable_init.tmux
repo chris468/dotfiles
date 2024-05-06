@@ -28,8 +28,10 @@ window_separator_right=""
 tmux set -g @status_outer_background "$status_outer_background"
 tmux set -g @window_current_background "$window_current_background"
 
+tmux set -g @theme468-status-left-separator-outer "█"
 tmux set -g @theme468-status-left-separator-left ""
 tmux set -g @theme468-status-left-separator-right ""
+tmux set -g @theme468-status-right-separator-outer "█"
 tmux set -g @theme468-status-right-separator-left ""
 tmux set -g @theme468-status-right-separator-right ""
 tmux set -g @theme468-window-separator-left ""
@@ -93,23 +95,45 @@ tmux set -g @suspend_on_suspend_command "tmux \
   set-option -q '@window_current_background' '$window_current_suspended_background' \\; \
   set-option -q '@status_outer_background' '$status_outer_suspended_background'"
 
-status_left=
-for i in $(tmux show-option -gv @theme468-status-left-modules); do
+function configure_left_status {
 	status_left="$status_left$(theme_segment \
-		"@theme468-segment-$i" \
-		"@theme468-status-left-separator-left" \
+		"@theme468-segment-$1" \
+		"@theme468-status-left-separator-outer" \
 		"@theme468-status-left-separator-right")"
-done
-tmux set -g status-left "$status_left"
 
-status_right=
-for i in $(tmux show-option -gv @theme468-status-right-modules); do
+	shift
+
+	while [[ $# != 0 ]]; do
+		status_left="$status_left$(theme_segment \
+			"@theme468-segment-$1" \
+			"@theme468-status-left-separator-left" \
+			"@theme468-status-left-separator-right")"
+		shift
+	done
+
+	tmux set -g status-left "$status_left"
+}
+configure_left_status $(tmux show-option -gv @theme468-status-left-modules)
+
+function configure_right_status {
+	status_right=
+	while [[ $# != 1 ]]; do
+		status_right="$status_right$(theme_segment \
+			"@theme468-segment-$1" \
+			"@theme468-status-right-separator-left" \
+			"@theme468-status-right-separator-right")"
+		shift
+	done
+
 	status_right="$status_right$(theme_segment \
-		"@theme468-segment-$i" \
+		"@theme468-segment-$1" \
 		"@theme468-status-right-separator-left" \
-		"@theme468-status-right-separator-right")"
-done
-tmux set -g status-right "$status_right"
+		"@theme468-status-right-separator-outer")"
+
+	tmux set -g status-right "$status_right"
+}
+
+configure_right_status $(tmux show-option -gv @theme468-status-right-modules)
 
 tmux set -g window-status-format "$(theme_segment \
 	"@theme468-window" \
