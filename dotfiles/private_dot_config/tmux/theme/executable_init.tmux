@@ -6,7 +6,6 @@ colors_path="$theme_path/colors"
 
 theme=$(tmux show-option -gv @chris468-theme)
 source "$colors_path/$theme.sh"
-source "$theme_path/scripts/window.sh"
 
 tmux set -g @status_outer_background "$status_outer_background"
 tmux set -g @window_current_background "$window_current_background"
@@ -24,7 +23,6 @@ tmux set -g @theme468-status-foreground "$status_foreground"
 tmux set -g @theme468-status-background "$status_background"
 
 tmux set -g @theme468-window "#I#W "
-tmux set -g @theme468-window-icon "$(window_status_icon) "
 tmux set -g @theme468-window-foreground "$window_foreground"
 tmux set -g @theme468-window-background "$window_background"
 tmux set -g @theme468-window-current-foreground "$window_current_foreground"
