@@ -4,11 +4,11 @@ theme_path="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
 modules_path="$theme_path/modules"
 colors_path="$theme_path/colors"
 scripts_path="$theme_path/scripts"
-
-theme=$(tmux show-option -gv @chris468-theme)
-
-source "$colors_path/$theme.sh"
 source "$scripts_path/util.sh"
+
+theme=$(get_option @chris468-theme)
+source "$colors_path/$theme.sh"
+
 source "$scripts_path/segment.sh"
 source "$scripts_path/render.sh"
 source "$scripts_path/status.sh"
@@ -77,7 +77,7 @@ tmux set -g status-right-length 60
 tmux set -g pane-border-format ""
 tmux set -g pane-border-status bottom
 
-tmux set -g status-style "fg=$status_foreground,bg=$status_background"
+tmux set -g status-style "fg=#{E:@theme468-status-foreground},bg=#{E:@theme468-status-background}"
 tmux set -g message-style "fg=$message_style_foreground,bg=$message_style_background"
 tmux set -g message-command-style "fg=$message_command_style_foreground,bg=$message_command_style_background"
 tmux set -g copy-mode-match-style "fg=$copy_mode_match_style_foreground,bg=$copy_mode_match_style_background"
@@ -115,7 +115,7 @@ function configure_left_status {
 
 	tmux set -g status-left "$status_left"
 }
-configure_left_status $(tmux show-option -gv @theme468-status-left-modules)
+configure_left_status $(get_option @theme468-status-left-modules)
 
 function configure_right_status {
 	status_right=
@@ -135,7 +135,7 @@ function configure_right_status {
 	tmux set -g status-right "$status_right"
 }
 
-configure_right_status $(tmux show-option -gv @theme468-status-right-modules)
+configure_right_status $(get_option @theme468-status-right-modules)
 
 tmux set -g window-status-format "$(theme_segment \
 	"@theme468-window" \

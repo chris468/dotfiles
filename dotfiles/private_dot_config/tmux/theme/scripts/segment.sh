@@ -91,19 +91,11 @@ function theme_segment {
 	local left="${2+$(tmux show-option -gvq $2)}"
 	local right="${3+$(tmux show-option -gvq $3)}"
 	local fallback_id="$4"
-	local content="$(tmux show-option -gvq "$id")"
-	local icon="$(tmux show-option -gvq "$id-icon")"
-	local fg="$(tmux show-option -gvq "$id-foreground")"
-	local bg="$(tmux show-option -gvq "$id-background")"
-	local attr="$(tmux show-option -gvq "$id-attr")"
-
-	if [[ -n "$fallback_id" ]]; then
-		[[ -n "$content" ]] || content="$(tmux show-option -gvq "$fallback_id")"
-		[[ -n "$icon" ]] || icon="$(tmux show-option -gvq "$fallback_id-icon")"
-		[[ -n "$fg" ]] || fg="$(tmux show-option -gvq "$fallback_id-foreground")"
-		[[ -n "$bg" ]] || bg="$(tmux show-option -gvq "$fallback_id-background")"
-		[[ -n "$attr" ]] || attr="$(tmux show-option -gvq "$fallback_id-attr")"
-	fi
+	local content="$(get_option "$id" "$fallback_id")"
+	local icon="$(get_option "$id-icon" "${fallback_id+$fallback_id-icon}")"
+	local fg="$(get_option "$id-foreground" "${fallback_id+$fallback_id-foreground}")"
+	local bg="$(get_option "$id-background" "${fallback_id+$fallback_id-background}")"
+	local attr="$(get_option "$id-attr" "${fallback_id+$fallback_id-attr}")"
 
 	segment -l "$left" -r "$right" -f "$fg" -b "$bg" -i "$icon" -a "$attr" -- "$content"
 }
