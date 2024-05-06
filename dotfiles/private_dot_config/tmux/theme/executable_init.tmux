@@ -66,7 +66,7 @@ tmux set -g status-right-length 60
 tmux set -g pane-border-format ""
 tmux set -g pane-border-status bottom
 
-tmux set -g status-style "fg=#{E:@theme468-status-foreground},bg=#{E:@theme468-status-background}"
+tmux set -g status-style "fg=$(get_option @theme468-status-foreground),bg=$(get_option @theme468-status-background)"
 tmux set -g message-style "fg=$message_style_foreground,bg=$message_style_background"
 tmux set -g message-command-style "fg=$message_command_style_foreground,bg=$message_command_style_background"
 tmux set -g copy-mode-match-style "fg=$copy_mode_match_style_foreground,bg=$copy_mode_match_style_background"
