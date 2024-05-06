@@ -18,3 +18,15 @@ function window_status_icon {
 
 	echo $icon
 }
+
+function configure_window_status {
+	tmux set -g window-status-format "$(theme_segment \
+		"@theme468-window" \
+		"@theme468-window-separator-left" \
+		"@theme468-window-separator-right")"
+	tmux set -g window-status-current-format "$(theme_segment \
+		"@theme468-window-current" \
+		"@theme468-window-separator-left" \
+		"@theme468-window-separator-right" \
+		"@theme468-window")"
+}
