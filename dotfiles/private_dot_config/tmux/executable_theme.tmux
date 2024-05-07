@@ -7,8 +7,12 @@ colors_path="$script_path/colors"
 theme=$(tmux show-option -gv @chris468-theme)
 source "$colors_path/$theme.sh"
 
-tmux set -g @status_outer_background "$status_outer_background"
-tmux set -g @window_current_background "$window_current_background"
+function dim_when_suspended() {
+	default="$1"
+	suspended="$2"
+
+	echo "#{?@theme468-suspended,$suspended,$default}"
+}
 
 tmux set -g @theme468-status-left-separator-outer "█"
 tmux set -g @theme468-status-left-separator-left ""
@@ -26,18 +30,22 @@ tmux set -g @theme468-window "#I#W "
 tmux set -g @theme468-window-foreground "$window_foreground"
 tmux set -g @theme468-window-background "$window_background"
 tmux set -g @theme468-window-current-foreground "$window_current_foreground"
-tmux set -g @theme468-window-current-background "#{E:@window_current_background}"
+tmux set -g @theme468-window-current-background \
+	"$(dim_when_suspended $window_current_background $window_current_suspended_background)"
 
 tmux set -g @theme468-segment-session "#S"
 tmux set -g @theme468-segment-session-icon " "
 tmux set -g @theme468-segment-session-foreground "#{?client_prefix,$status_outer_prefix_foreground,$status_outer_foreground}"
-tmux set -g @theme468-segment-session-background "#{?client_prefix,$status_outer_prefix_background,#{E:@status_outer_background}}"
+tmux set -g @theme468-segment-session-background \
+	"#{?client_prefix,$status_outer_prefix_background,$(dim_when_suspended $status_outer_background $status_outer_suspended_background)}"
 tmux set -g @theme468-segment-session-attr "bold"
 
 tmux set -g @theme468-segment-host "#H"
 tmux set -g @theme468-segment-host-icon " 󰒋 "
 tmux set -g @theme468-segment-host-foreground "#{?client_prefix,$status_outer_prefix_foreground,$status_outer_foreground}"
-tmux set -g @theme468-segment-host-background "#{?client_prefix,$status_outer_prefix_background,#{E:@status_outer_background}}"
+tmux set -g @theme468-segment-host-background \
+	"#{?client_prefix,$status_outer_prefix_background,$(dim_when_suspended $status_outer_background $status_outer_suspended_background)}"
+
 tmux set -g @theme468-segment-host-attr "bold"
 
 tmux set -g @theme468-segment-date "#($modules_path/date.tmux) "
@@ -67,12 +75,5 @@ tmux set -g mode-style "fg=$mode_style_foreground,bg=$mode_style_background"
 tmux set -g display-panes-colour "$display_panes_color"
 tmux set -g display-panes-active-colour "$display_panes_active_color"
 tmux set -g pane-border-style "fg=$window_background,bg=default"
-tmux set -g pane-active-border-style "fg=#{E:@window_current_background},bg=default"
-
-tmux set -g @suspend_on_resume_command "tmux \
-  set-option -q '@window_current_background' '$window_current_background' \\; \
-  set-option -q '@status_outer_background' '$status_outer_background'"
-
-tmux set -g @suspend_on_suspend_command "tmux \
-  set-option -q '@window_current_background' '$window_current_suspended_background' \\; \
-  set-option -q '@status_outer_background' '$status_outer_suspended_background'"
+tmux set -g pane-active-border-style \
+	"fg=$(dim_when_suspended $window_current_background $window_current_suspended_background),bg=default"

@@ -16,3 +16,6 @@ tmux set -g status-style "fg=$(
 configure_left_status
 configure_right_status
 configure_window_status
+
+tmux set -g @theme468-suspended 0
+tmux set -g @suspend_suspended_options "@theme468-suspended:g:1"
