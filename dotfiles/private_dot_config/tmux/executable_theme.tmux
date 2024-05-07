@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-theme_path="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
-modules_path="$theme_path/modules"
-colors_path="$theme_path/colors"
+script_path="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
+modules_path="$script_path/modules"
+colors_path="$script_path/colors"
 
 theme=$(tmux show-option -gv @chris468-theme)
 source "$colors_path/$theme.sh"
