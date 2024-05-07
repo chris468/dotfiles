@@ -76,5 +76,3 @@ tmux set -g @suspend_on_resume_command "tmux \
 tmux set -g @suspend_on_suspend_command "tmux \
   set-option -q '@window_current_background' '$window_current_suspended_background' \\; \
   set-option -q '@status_outer_background' '$status_outer_suspended_background'"
-
-source "$theme_path/scripts/theme.sh"

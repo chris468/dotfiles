@@ -21,22 +21,28 @@ function window_status_icon {
 
 function configure_window_status {
 	tmux set -g window-status-format "$(segment \
-		"$(get_option @theme468-window-foreground)" \
-		"$(get_option @theme468-window-background)" \
-		"$(get_option @theme468-window-attr)" \
-		"$(get_option @theme468-window-separator-left)" \
-		"$(get_option @theme468-window-separator-right)" \
+		"$(get_option @theme468-window-foreground "$default_window_foreground")" \
+		"$(get_option @theme468-window-background "$default_window_background")" \
+		"$(get_option @theme468-window-attr "$default_attr")" \
+		"$(get_option @theme468-window-separator-left "$default_window_separator_left")" \
+		"$(get_option @theme468-window-separator-right "$default_window_separator_right")" \
 		"$(window_status_icon) " \
-		"$(get_option @theme468-window)")"
+		"$(get_option @theme468-window "$default_theme_window")")"
 
-	tmux set -g window-status-current-format "$(
-		segment \
-			"$(get_option @theme468-window-current-foreground @theme468-window-foreground)" \
-			"$(get_option @theme468-window-current-background @theme468-window-background)" \
-			"$(get_option @theme468-window-current-attr @theme468-window-attr)" \
-			"$(get_option @theme468-window-separator-left)" \
-			"$(get_option @theme468-window-separator-right)" \
-			"$(window_status_icon) " \
-			"$(get_option @theme468-window-current @theme468-window)"
-	)"
+	tmux set -g window-status-current-format "$(segment \
+		"$(get_option \
+			@theme468-window-current-foreground \
+			@theme468-window-foreground \
+			"$default_window_current_foreground" \
+			"$default_window_foreground")" \
+		"$(get_option \
+			@theme468-window-current-background \
+			@theme468-window-background \
+			"$default_window_current_background" \
+			"$default_window_background")" \
+		"$(get_option @theme468-window-current-attr @theme468-window-attr "$default_attr")" \
+		"$(get_option @theme468-window-current-separator-left @theme468-window-separator-left "$default_window_separator_left")" \
+		"$(get_option @theme468-window-current-separator-right @theme468-window-separator-right "$default_window_separator_right")" \
+		"$(window_status_icon) " \
+		"$(get_option @theme468-window "$default_theme_window")")"
 }

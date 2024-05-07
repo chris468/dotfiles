@@ -24,7 +24,7 @@ function segment {
 	local icon="$6"
 	local content="$7"
 
-	local pl_style="$(_style "$bg" "$status_background")"
+	local pl_style="$(_style "$bg" "$(get_option @theme468-status-background "$default_status_background")")"
 
 	local format=
 	[[ -z "$left" ]] || format="$pl_style$left"
@@ -34,18 +34,4 @@ function segment {
 	[[ -z "$right" ]] || format="$format$pl_style$right"
 
 	echo "$format"
-}
-
-function theme_segment {
-	local id="$1"
-	local left="${2+$(tmux show-option -gvq $2)}"
-	local right="${3+$(tmux show-option -gvq $3)}"
-	local fallback_id="$4"
-	local content="$(get_option "$id" "$fallback_id")"
-	local icon="$(get_option "$id-icon" "${fallback_id:+$fallback_id-icon}")"
-	local fg="$(get_option "$id-foreground" "${fallback_id:+$fallback_id-foreground}")"
-	local bg="$(get_option "$id-background" "${fallback_id:+$fallback_id-background}")"
-	local attr="$(get_option "$id-attr" "${fallback_id:+$fallback_id-attr}")"
-
-	segment "$fg" "$bg" "$attr" "$left" "$right" "$icon" "$content"
 }

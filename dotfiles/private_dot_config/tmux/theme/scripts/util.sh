@@ -5,12 +5,13 @@ function get_option {
 	local result
 	if [[ "$option" == @* ]]; then
 		result=$(tmux show-option -gqv "$option")
-		if [[ -z "$result" ]]; then
-			result=$(get_option "$@")
+		if [[ -n "$result" ]]; then
+			echo "$result"
+		else
+			get_option "$@"
 		fi
 	else
-		result="$option"
+		echo "$option"
 	fi
 
-	echo "$result"
 }
