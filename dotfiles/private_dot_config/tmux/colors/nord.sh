@@ -49,9 +49,11 @@ function nord_colors {
 	copy_mode_mark_style_foreground=$nord0
 	copy_mode_mark_style_background=$nord8
 
-	mode_style_foreground=$nord0
-	mode_style_background=$nord10
+	mode_foreground=$nord0
+	mode_background=$nord10
 
+	tmux set -g @theme468-mode-foreground "$mode_foreground"
+	tmux set -g @theme468-mode-background "$mode_background"
 	tmux set -g @theme468-status-foreground "$status_foreground"
 	tmux set -g @theme468-status-background "$status_background"
 	tmux set -g @theme468-mode-foreground "$mode_foreground"
