@@ -15,3 +15,22 @@ function get_option {
 	fi
 
 }
+
+function condition {
+	local condition="$1"
+	local positive="$2"
+	local negative="$3"
+
+	local format=
+	if [[ -n "$positive" ]]; then
+		format="#{?$condition,$positive,"
+	fi
+
+	format="$format$negative"
+
+	if [[ -n "$positive" ]]; then
+		format="$format}"
+	fi
+
+	echo "$format"
+}

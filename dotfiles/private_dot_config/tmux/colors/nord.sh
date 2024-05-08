@@ -65,13 +65,17 @@ function nord_colors {
 	tmux set -g @theme468-window-current-background \
 		"$(dim_when_suspended $window_current_background $window_current_suspended_background)"
 
-	tmux set -g @theme468-segment-session-foreground "#{?client_prefix,$status_outer_prefix_foreground,$status_outer_foreground}"
-	tmux set -g @theme468-segment-session-background \
-		"#{?client_prefix,$status_outer_prefix_background,$(dim_when_suspended $status_outer_background $status_outer_suspended_background)}"
+	tmux set -g @theme468-segment-session-foreground "$status_outer_prefix_foreground"
+	tmux set -g @theme468-segment-session-foreground-prefix "$status_outer_foreground"
+	tmux set -g @theme468-segment-session-background "$status_outer_background"
+	tmux set -g @theme468-segment-session-background-suspended "$status_outer_suspended_background"
+	tmux set -g @theme468-segment-session-background-prefix "$status_outer_prefix_background"
 
-	tmux set -g @theme468-segment-host-foreground "#{?client_prefix,$status_outer_prefix_foreground,$status_outer_foreground}"
-	tmux set -g @theme468-segment-host-background \
-		"#{?client_prefix,$status_outer_prefix_background,$(dim_when_suspended $status_outer_background $status_outer_suspended_background)}"
+	tmux set -g @theme468-segment-host-foreground "$status_outer_foreground"
+	tmux set -g @theme468-segment-host-foreground-prefix "$status_outer_prefix_foreground"
+	tmux set -g @theme468-segment-host-background "$status_outer_background"
+	tmux set -g @theme468-segment-host-background-suspended "$status_outer_suspended_background"
+	tmux set -g @theme468-segment-host-background-prefix "$status_outer_prefix_background"
 
 	tmux set -g @theme468-segment-date "#($modules_path/date.tmux) "
 	tmux set -g @theme468-segment-date-icon " 󰃰 "

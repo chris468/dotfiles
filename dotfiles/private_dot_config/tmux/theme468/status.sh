@@ -12,9 +12,34 @@ function _configure_status {
 	local status=
 	while [[ $# != 0 ]]; do
 		[[ $# != 1 ]] || right="$final_right"
+
+		local fg="$(
+			condition \
+				client_prefix \
+				"$(get_option @theme468-segment-$1-foreground-prefix)" \
+				"$(
+					condition \
+						@theme468-suspended \
+						"$(get_option @theme468-segment-$1-foreground-suspended)" \
+						"$(get_option @theme468-segment-$1-foreground "$default_segment_foreground")"
+				)"
+		)"
+
+		local bg="$(
+			condition \
+				client_prefix \
+				"$(get_option @theme468-segment-$1-background-prefix)" \
+				"$(
+					condition \
+						@theme468-suspended \
+						"$(get_option @theme468-segment-$1-background-suspended)" \
+						"$(get_option @theme468-segment-$1-background "$default_segment_background")"
+				)"
+		)"
+
 		status="$status$(segment \
-			"$(get_option @theme468-segment-$1-foreground "$default_segment_foreground")" \
-			"$(get_option @theme468-segment-$1-background "$default_segment_background")" \
+			"$fg" \
+			"$bg" \
 			"$(get_option @theme468-segment-$1-attr "$default_attr")" \
 			"$left" \
 			"$right" \
