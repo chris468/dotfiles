@@ -62,8 +62,8 @@ function nord_colors {
 	tmux set -g @theme468-window-foreground "$window_foreground"
 	tmux set -g @theme468-window-background "$window_background"
 	tmux set -g @theme468-window-current-foreground "$window_current_foreground"
-	tmux set -g @theme468-window-current-background \
-		"$(dim_when_suspended $window_current_background $window_current_suspended_background)"
+	tmux set -g @theme468-window-current-background "$window_current_background"
+	tmux set -g @theme468-window-current-background-suspended "$window_current_suspended_background"
 
 	tmux set -g @theme468-segment-session-foreground "$status_outer_prefix_foreground"
 	tmux set -g @theme468-segment-session-foreground-prefix "$status_outer_foreground"
@@ -97,8 +97,8 @@ function nord_colors {
 	tmux set -g @theme468-display-panes-active-color "$display_panes_active_color"
 	tmux set -g @theme468-pane-border-foreground "$window_background"
 	tmux set -g @theme468-pane-border-background "default"
-	tmux set -g @theme468-pane-active-border-foreground \
-		"$(dim_when_suspended $window_current_background $window_current_suspended_background)"
+	tmux set -g @theme468-pane-active-border-foreground "$window_current_background"
+	tmux set -g @theme468-pane-active-border-foreground-suspended "$window_current_suspended_background"
 	tmux set -g @theme468-pane-active-border-background "default"
 
 	unset -f nord_colors

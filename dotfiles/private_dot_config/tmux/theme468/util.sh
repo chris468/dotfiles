@@ -34,3 +34,11 @@ function condition {
 
 	echo "$format"
 }
+
+function dynamic_color {
+	local normal="$1"
+	local prefix="$2"
+	local suspended="$3"
+
+	condition client_prefix "$prefix" "$(condition @theme468-suspended "$suspended" "$normal")"
+}

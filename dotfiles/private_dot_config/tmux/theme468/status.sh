@@ -13,29 +13,15 @@ function _configure_status {
 	while [[ $# != 0 ]]; do
 		[[ $# != 1 ]] || right="$final_right"
 
-		local fg="$(
-			condition \
-				client_prefix \
-				"$(get_option @theme468-segment-$1-foreground-prefix)" \
-				"$(
-					condition \
-						@theme468-suspended \
-						"$(get_option @theme468-segment-$1-foreground-suspended)" \
-						"$(get_option @theme468-segment-$1-foreground "$default_segment_foreground")"
-				)"
-		)"
+		local fg="$(dynamic_color \
+			"$(get_option @theme468-segment-$1-foreground "$default_segment_foreground")" \
+			"$(get_option @theme468-segment-$1-foreground-prefix)" \
+			"$(get_option @theme468-segment-$1-foreground-suspended)")"
 
-		local bg="$(
-			condition \
-				client_prefix \
-				"$(get_option @theme468-segment-$1-background-prefix)" \
-				"$(
-					condition \
-						@theme468-suspended \
-						"$(get_option @theme468-segment-$1-background-suspended)" \
-						"$(get_option @theme468-segment-$1-background "$default_segment_background")"
-				)"
-		)"
+		local bg="$(dynamic_color \
+			"$(get_option @theme468-segment-$1-background "$default_segment_background")" \
+			"$(get_option @theme468-segment-$1-background-prefix)" \
+			"$(get_option @theme468-segment-$1-background-suspended)")"
 
 		status="$status$(segment \
 			"$fg" \
