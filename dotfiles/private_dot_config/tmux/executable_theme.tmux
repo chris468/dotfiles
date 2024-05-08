@@ -14,6 +14,11 @@ function dim_when_suspended() {
 	echo "#{?@theme468-suspended,$suspended,$default}"
 }
 
+tmux set -g status-interval 1
+tmux set -g default-terminal xterm-256color
+tmux set -sa terminal-overrides ",xterm*:Tc"
+tmux set -g display-time 4000
+
 tmux set -g @theme468-status-left-separator-outer "█"
 tmux set -g @theme468-status-left-separator-left ""
 tmux set -g @theme468-status-left-separator-right ""
@@ -25,6 +30,8 @@ tmux set -g @theme468-window-separator-right ""
 
 tmux set -g @theme468-status-foreground "$status_foreground"
 tmux set -g @theme468-status-background "$status_background"
+tmux set -g @theme468-mode-foreground "$mode_foreground"
+tmux set -g @theme468-mode-background "$mode_background"
 
 tmux set -g @theme468-window "#I#W "
 tmux set -g @theme468-window-foreground "$window_foreground"
@@ -56,24 +63,21 @@ tmux set -g @theme468-segment-date-background "$status_segment_background"
 tmux set -g @theme468-status-left-modules "session"
 tmux set -g @theme468-status-right-modules "date host"
 
-tmux set -g status-interval 1
-tmux set -g default-terminal xterm-256color
-tmux set -sa terminal-overrides ",xterm*:Tc"
-tmux set -g display-time 4000
+tmux set -g @theme468-message-style-foreground "$message_style_foreground"
+tmux set -g @theme468-message-style-background "$message_style_background"
+tmux set -g @theme468-message-command-style-foreground "$message_command_style_foreground"
+tmux set -g @theme468-message-command-style-background "$message_command_style_background"
+tmux set -g @theme468-copy-mode-match-style-foreground "$copy_mode_match_style_foreground"
+tmux set -g @theme468-copy-mode-match-style-background "$copy_mode_match_style_background"
+tmux set -g @theme468-copy-mode-current-match-style-foreground "$copy_mode_current_match_style_foreground"
+tmux set -g @theme468-copy-mode-current-match-style-background "$copy_mode_current_match_style_background"
+tmux set -g @theme468-copy-mode-mark-style-foreground "$copy_mode_mark_style_foreground"
+tmux set -g @theme468-copy-mode-mark-style-background "$copy_mode_mark_style_background"
 
-tmux set -g window-status-separator ""
-tmux set -g status-right-length 60
-tmux set -g pane-border-format ""
-tmux set -g pane-border-status bottom
-
-tmux set -g message-style "fg=$message_style_foreground,bg=$message_style_background"
-tmux set -g message-command-style "fg=$message_command_style_foreground,bg=$message_command_style_background"
-tmux set -g copy-mode-match-style "fg=$copy_mode_match_style_foreground,bg=$copy_mode_match_style_background"
-tmux set -g copy-mode-current-match-style "fg=$copy_mode_current_match_style_foreground,bg=$copy_mode_current_match_style_background"
-tmux set -g copy-mode-mark-style "fg=$copy_mode_mark_style_foreground,bg=$copy_mode_mark_style_background"
-tmux set -g mode-style "fg=$mode_style_foreground,bg=$mode_style_background"
-tmux set -g display-panes-colour "$display_panes_color"
-tmux set -g display-panes-active-colour "$display_panes_active_color"
-tmux set -g pane-border-style "fg=$window_background,bg=default"
-tmux set -g pane-active-border-style \
-	"fg=$(dim_when_suspended $window_current_background $window_current_suspended_background),bg=default"
+tmux set -g @theme468-display-panes-color "$display_panes_color"
+tmux set -g @theme468-display-panes-active-color "$display_panes_active_color"
+tmux set -g @theme468-pane-border-foreground "$window_background"
+tmux set -g @theme468-pane-border-background "default"
+tmux set -g @theme468-pane-active-border-foreground \
+	"$(dim_when_suspended $window_current_background $window_current_suspended_background)"
+tmux set -g @theme468-pane-active-border-background "default"

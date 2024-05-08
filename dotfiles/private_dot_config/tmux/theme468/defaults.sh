@@ -1,3 +1,6 @@
+default_foreground=white
+default_background=black
+
 default_status_foreground=white
 default_status_background=black
 
