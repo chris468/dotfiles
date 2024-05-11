@@ -55,16 +55,19 @@ tmux set -g copy-mode-mark-style "fg=$(
 )"
 
 tmux set -g display-panes-colour "$(get_option @theme468-display-panes-color "$default_background")"
-tmux set -g display-panes-active-colour "$(get_option @theme468-display-panes-active-colour "$default_background_color")"
+tmux set -g display-panes-active-colour "$(get_option @theme468-display-panes-active-color "$default_background_color")"
 
+bfg="$(get_option @theme468-pane-border-foreground "$default_foreground")"
 tmux set -g pane-border-style "fg=$(
-	get_option @theme468-pane-border-foreground "$default_foreground"
+	dynamic_color "$bfg" "$bfg" "$(get_option @theme468-pane-border-foreground-suspended "$bfg" "$default_foreground")"
 ),bg=$(
 	get_option @theme468-pane-border-background "$default_background"
 )"
 
+abfg="$(get_option @theme468-pane-active-border-foreground "$default_foreground")"
+
 tmux set -g pane-active-border-style "fg=$(
-	get_option @theme468-pane-active-border-foreground "$default_foreground"
+	dynamic_color "$abfg" "$abfg" "$(get_option @theme468-pane-active-border-foreground-suspended "$abfg" "$default_foreground")"
 ),bg=$(
 	get_option @theme468-pane-active-border-background "$default_background"
 )"
