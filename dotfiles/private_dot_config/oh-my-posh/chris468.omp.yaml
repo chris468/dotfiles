@@ -78,7 +78,7 @@ palettes:
       middle-foreground: p:blue
       middle-background: p:surface0
       inner-foreground: p:blue
-      inner-background: p:crust
+      inner-background: p:mantle
       prompt-foreground: p:blue
       aws-foreground: p:peach
       kubectl-foreground: p:blue
