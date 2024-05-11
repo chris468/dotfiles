@@ -3,7 +3,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 version: 2
 palettes:
-  template: nord
+  template: '{{ .Env.CHRIS468_THEME | default "nord" }}'
   list:
     nord:
       nord0: "#2e3440"
@@ -44,6 +44,57 @@ palettes:
       dirty: p:nord13
       diverged: p:nord11
       ahead: p:nord10
+
+    catppuccin-mocha:
+      rosewater: "#f5e0dc"
+      flamingo: "#f2cdcd"
+      pink: "#f5c2e7"
+      mauve: "#cba6f7"
+      red: "#f38ba8"
+      maroon: "#eba0ac"
+      peach: "#fab387"
+      yellow: "#f9e2af"
+      green: "#a6e3a1"
+      teal: "#94e2d5"
+      sky: "#89dceb"
+      sapphire: "#74c7ec"
+      blue: "#89b4fa"
+      lavender: "#b4befe"
+      text: "#cdd6f4"
+      subtext1: "#bac2de"
+      subtext0: "#a6adc8"
+      overlay2: "#9399b2"
+      overlay1: "#7f849c"
+      overlay0: "#6c7086"
+      surface2: "#585b70"
+      surface1: "#45475a"
+      surface0: "#313244"
+      base: "#1e1e2e"
+      mantle: "#181825"
+      crust: "#11111b"
+
+      outer-foreground: p:crust
+      outer-background: p:blue
+      middle-foreground: p:blue
+      middle-background: p:surface0
+      inner-foreground: p:blue
+      inner-background: p:crust
+      prompt-foreground: p:blue
+      aws-foreground: p:peach
+      kubectl-foreground: p:blue
+      fail: p:red
+      dim-foreground: p:crust
+      added: p:green
+      modified: p:yellow
+      deleted: p:red
+      untracked: p:blue
+      unmerged: p:orange
+      unstaged: p:yellow
+      staged: p:green
+      clean: p:green
+      dirty: p:yellow
+      diverged: p:red
+      ahead: p:red
 
 var:
   min_width: 90

@@ -38,7 +38,7 @@
                 "window",
                 "taskbar"
             ],
-            "colorScheme": "Nord",
+            "colorScheme": "{{ .realConfig.theme }}",
             "font": 
             {
                 "face": {{ .realConfig.font.family | quote }},
@@ -85,7 +85,6 @@
 {{-   end }}
 {{- end }}
             {
-                "colorScheme": "Dracula (Admin)",
                 "commandline": "pwsh.exe",
                 "elevate": true,
                 "guid": "{705c5402-658e-42d8-8cc7-691ce68addf8}",
@@ -117,29 +116,6 @@
     "schemes": 
     [
         {
-            "background": "#802809",
-            "black": "#21222C",
-            "blue": "#BD93F9",
-            "brightBlack": "#6272A4",
-            "brightBlue": "#D6ACFF",
-            "brightCyan": "#A4FFFF",
-            "brightGreen": "#69FF94",
-            "brightPurple": "#FF92DF",
-            "brightRed": "#FF6E6E",
-            "brightWhite": "#F8F8F2",
-            "brightYellow": "#FFFFA5",
-            "cursorColor": "#FFFFFF",
-            "cyan": "#8BE9FD",
-            "foreground": "#F8F8F2",
-            "green": "#50FA7B",
-            "name": "Dracula (Admin)",
-            "purple": "#FF79C6",
-            "red": "#FF5555",
-            "selectionBackground": "#FFFFFF",
-            "white": "#F8F8F2",
-            "yellow": "#FFB86C"
-        },
-        {
             "background": "#2E3440",
             "black": "#3B4252",
             "blue": "#81A1C1",
@@ -155,13 +131,52 @@
             "cyan": "#88C0D0",
             "foreground": "#D8DEE9",
             "green": "#A3BE8C",
-            "name": "Nord",
+            "name": "nord",
             "purple": "#B48EAD",
             "red": "#BF616A",
             "selectionBackground": "#434C5E",
             "white": "#E5E9F0",
-            "yellow": "#EBCB8B"
+            "yellow": "#EBCB8B",
         },
+        {
+            "background": "#1E1E2E",
+            "black": "#45475A",
+            "blue": "#89B4FA",
+            "brightBlack": "#585B70",
+            "brightBlue": "#89B4FA",
+            "brightCyan": "#94E2D5",
+            "brightGreen": "#A6E3A1",
+            "brightPurple": "#F5C2E7",
+            "brightRed": "#F38BA8",
+            "brightWhite": "#A6ADC8",
+            "brightYellow": "#F9E2AF",
+            "cursorColor": "#F5E0DC",
+            "cyan": "#94E2D5",
+            "foreground": "#CDD6F4",
+            "green": "#A6E3A1",
+            "name": "catppuccin-mocha",
+            "purple": "#F5C2E7",
+            "red": "#F38BA8",
+            "selectionBackground": "#585B70",
+            "white": "#BAC2DE",
+            "yellow": "#F9E2AF"
+        }
     ],
-    "themes": []
+    "themes": [
+        {
+            "name": "catppuccin-mocha",
+            "tab": {
+                "background": "#1E1E2EFF",
+                "showCloseButton": "always",
+                "unfocusedBackground": null
+            },
+            "tabRow": {
+                "background": "#181825FF",
+                "unfocusedBackground": "#11111BFF"
+            },
+            "window": {
+                "applicationTheme": "dark"
+            }
+        }
+    ]
 }

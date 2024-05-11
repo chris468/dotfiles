@@ -1,0 +1,9 @@
+working_directory = "{{ .chezmoi.homeDir }}"
+
+import = [ "~/.config/alacritty/themes/{{ .realConfig.theme }}.toml" ]
+
+[font]
+size = {{ .realConfig.font.size }}
+
+[font.normal]
+family = {{ .realConfig.font.family | quote }}
