@@ -22,6 +22,9 @@ tmux set -g @theme468-segment-host "#H"
 tmux set -g @theme468-segment-host-icon " 󰒋 "
 tmux set -g @theme468-segment-host-attr "bold"
 
+tmux set -g @theme468-segment-date "#($modules_path/date.tmux) "
+tmux set -g @theme468-segment-date-icon " 󰃰 "
+
 tmux set -g status-interval 1
 tmux set -g default-terminal xterm-256color
 tmux set -sa terminal-overrides ",xterm*:Tc"

@@ -52,8 +52,6 @@ function nord_colors {
 	mode_foreground=$nord0
 	mode_background=$nord10
 
-	tmux set -g @theme468-mode-foreground "$mode_foreground"
-	tmux set -g @theme468-mode-background "$mode_background"
 	tmux set -g @theme468-status-foreground "$status_foreground"
 	tmux set -g @theme468-status-background "$status_background"
 	tmux set -g @theme468-mode-foreground "$mode_foreground"
@@ -77,8 +75,6 @@ function nord_colors {
 	tmux set -g @theme468-segment-host-background-suspended "$status_outer_suspended_background"
 	tmux set -g @theme468-segment-host-background-prefix "$status_outer_prefix_background"
 
-	tmux set -g @theme468-segment-date "#($modules_path/date.tmux) "
-	tmux set -g @theme468-segment-date-icon " 󰃰 "
 	tmux set -g @theme468-segment-date-foreground "$status_segment_foreground"
 	tmux set -g @theme468-segment-date-background "$status_segment_background"
 
