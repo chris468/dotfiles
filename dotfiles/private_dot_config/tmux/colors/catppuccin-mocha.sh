@@ -31,10 +31,10 @@ function catppuccin_mocha_colors {
 	tmux set -g @theme468-mode-foreground "$cpm_text"
 	tmux set -g @theme468-mode-background "$cpm_mantle"
 
-	tmux set -g @theme468-window-foreground "$cpm_overlay0"
-	tmux set -g @theme468-window-background "$cpm_mantle"
-	tmux set -g @theme468-window-current-foreground "$cpm_text"
-	tmux set -g @theme468-window-current-background "$cpm_base"
+	tmux set -g @theme468-window-foreground "$cpm_sky"
+	tmux set -g @theme468-window-background "$cpm_surface0"
+	tmux set -g @theme468-window-current-foreground "$cpm_surface0"
+	tmux set -g @theme468-window-current-background "$cpm_sky"
 	tmux set -g @theme468-window-current-background-suspended "$cpm_mantle"
 
 	tmux set -g @theme468-segment-session-foreground "$cpm_mantle"
@@ -66,11 +66,11 @@ function catppuccin_mocha_colors {
 	tmux set -g @theme468-copy-mode-mark-style-background "$cpm_blue"
 
 	tmux set -g @theme468-display-panes-color "$cpm_surface0"
-	tmux set -g @theme468-display-panes-active-color "$cpm_blue"
+	tmux set -g @theme468-display-panes-active-color "$cpm_sky"
 	tmux set -g @theme468-pane-border-foreground "$cpm_surface0"
 	tmux set -g @theme468-pane-border-foreground-suspended "$cpm_mantle"
 	tmux set -g @theme468-pane-border-background "default"
-	tmux set -g @theme468-pane-active-border-foreground "$cpm_blue"
+	tmux set -g @theme468-pane-active-border-foreground "$cpm_sky"
 	tmux set -g @theme468-pane-active-border-foreground-suspended "$cpm_surface0"
 	tmux set -g @theme468-pane-active-border-background "default"
 
