@@ -1,12 +1,21 @@
+local is_default_theme = require("chris468.config.settings").theme == "nord"
+
+local priority = nil
+if is_default_theme then
+  priority = 1000
+end
+
 return {
   "nordtheme/vim",
   config = function()
-    vim.cmd([[colorscheme nord]])
+    if is_default_theme then
+      vim.cmd([[colorscheme nord]])
+    end
   end,
-  lazy = false,
   init = function()
     vim.g.nord_cursor_line_number_background = 1
   end,
+  lazy = not is_default_theme,
   name = "nord",
-  priority = 1000,
+  priority = priority,
 }
