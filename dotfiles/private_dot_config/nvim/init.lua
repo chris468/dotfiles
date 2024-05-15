@@ -11,14 +11,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local profiles = require("chris468.profiles")
+local config = require("chris468.profiles.config")
 
 local spec = {
   { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+  { import = "chris468.profiles.base", enabled = config.profiles.base or false },
+  { import = "chris468.profiles.work", enabled = config.profiles.work or false },
 }
-profiles.append_specs(spec)
 
 require("lazy").setup({
   spec = spec,
-  lockfile = vim.fn.stdpath("config") .. "/" .. profiles.lockfile,
+  lockfile = vim.fn.stdpath("config") .. "/" .. config.lockfile,
 })

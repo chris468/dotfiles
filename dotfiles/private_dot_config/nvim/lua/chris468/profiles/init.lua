@@ -1,20 +1,4 @@
 local config = require("chris468.profiles.config")
-local profile = os.getenv("CHRIS468_LAZYVIM_PROFILE") or config.profile
-
-local function get_profiles()
-  local os = require("os")
-
-  if profile == "defaults" then
-    return {}
-  end
-
-  local profiles = { "base" }
-  if profile and profile ~= "base" then
-    profiles[#profiles + 1] = profile
-  end
-
-  return profiles
-end
 
 local function load_module(profile, config_module)
   local module = "chris468.profiles." .. profile
@@ -23,23 +7,16 @@ local function load_module(profile, config_module)
   end
   return require(module)
 end
-local profiles = get_profiles()
 
 local function foreach_profile(action)
-  for _, profile in ipairs(profiles) do
-    action(profile)
+  for profile, enabled in ipairs(config.profiles) do
+    if enabled then
+      action(profile)
+    end
   end
 end
 
-local M = {
-  lockfile = "lazy-lock." .. (profile or "base") .. ".json",
-}
-
-function M.append_specs(specs)
-  foreach_profile(function(profile)
-    specs[#specs + 1] = load_module(profile)
-  end)
-end
+local M = {}
 
 function M.load_configs(config_module)
   foreach_profile(function(profile)

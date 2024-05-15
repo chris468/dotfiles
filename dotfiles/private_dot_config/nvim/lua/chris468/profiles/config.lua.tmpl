@@ -1,6 +1,28 @@
+local os = require("os")
+local env_profiles = os.getenv("CHRIS468_LAZYVIM_PROFILE")
+local profiles
+
+if env_profiles then
+  profiles = {}
+  for profile, _ in env_profiles:gmatch("[^:]+") do
+    profiles[profile] = true
+  end
+else
+  profiles = {
+    base = true,
+    work = {{ .profile.work }},
+  }
+end
+
+local lockfile
+if profiles.work then
+  lockfile = "lazy-lock.work.json"
+else
+  lockfile = "lazy-lock.base.json"
+end
+
 return {
-{{- if .profile.work }}
-  profile = "work",
-{{- end }}
+  profiles = profiles,
   theme = "{{ .realConfig.theme }}",
+  lockfile = lockfile,
 }
