@@ -1,0 +1,43 @@
+function Script:lvim {
+  try {
+    $XDG_DATA_HOME = $env:XDG_DATA_HOME
+    $XDG_CONFIG_HOME = $env:XDG_CONFIG_HOME
+    $XDG_CACHE_HOME = $env:XDG_CACHE_HOME
+    $LUNARVIM_RUNTIME_DIR = $env:LUNARVIM_RUNTIME_DIR
+    $LUNARVIM_CONFIG_DIR = $env:LUNARVIM_CONFIG_DIR
+    $LUNARVIM_CACHE_DIR = $env:LUNARVIM_CACHE_DIR
+    $LUNARVIM_BASE_DIR = $env:LUNARVIM_BASE_DIR
+    $NVIM_APPNAME = $env:NVIM_APPNAME
+  }
+  catch {
+    Write-Error -ErrorAction Stop "$PSItem"
+  }
+
+  try {
+
+    $env:XDG_DATA_HOME = $env:XDG_DATA_HOME ?? $env:APPDATA
+    $env:XDG_CONFIG_HOME = $env:XDG_CONFIG_HOME ?? $env:LOCALAPPDATA
+    $env:XDG_CACHE_HOME = $env:XDG_CACHE_HOME ?? $env:TEMP
+
+    $env:LUNARVIM_RUNTIME_DIR = $env:LUNARVIM_RUNTIME_DIR ?? "$env:XDG_DATA_HOME\lunarvim"
+    $env:LUNARVIM_CONFIG_DIR = $env:LUNARVIM_CONFIG_DIR ?? "$env:XDG_CONFIG_HOME\lvim"
+    $env:LUNARVIM_CACHE_DIR = $env:LUNARVIM_CACHE_DIR ?? "$env:XDG_CACHE_HOME\lvim"
+    $env:LUNARVIM_BASE_DIR = $env:LUNARVIM_BASE_DIR ?? "$env:LUNARVIM_RUNTIME_DIR\lvim"
+
+    $env:NVIM_APPNAME = "lvim"
+
+    nvim -u "$env:LUNARVIM_BASE_DIR\init.lua" @args
+  }
+  finally {
+    $env:XDG_DATA_HOME = $XDG_DATA_HOME
+    $env:XDG_CONFIG_HOME = $XDG_CONFIG_HOME
+    $env:XDG_CACHE_HOME = $XDG_CACHE_HOME
+    $env:LUNARVIM_RUNTIME_DIR = $LUNARVIM_RUNTIME_DIR
+    $env:LUNARVIM_CONFIG_DIR = $LUNARVIM_CONFIG_DIR
+    $env:LUNARVIM_CACHE_DIR = $LUNARVIM_CACHE_DIR
+    $env:LUNARVIM_BASE_DIR = $LUNARVIM_BASE_DIR
+    $env:NVIM_APPNAME = $NVIM_APPNAME
+  }
+}
+
+lvim @args
