@@ -81,6 +81,22 @@ data:
 {{ else -}}
 {{   fail (printf "Invalid theme '%s'. Available themes: %s." ($realConfig.theme) ($availableThemes | keys | join ", ")) -}}
 {{ end -}}
+
+{{ $nvimFlavors := dict
+    "lunarvim" "lvim"
+    "lazyvim" nil
+    "astrovim" nil
+-}}
+
+{{ $nvimAppName := false -}}
+{{ if $realConfig.nvim.flavor -}}
+{{   if $realConfig.nvim.flavor | hasKey $nvimFlavors -}}
+{{     $nvimAppName = $realConfig.nvim.flavor | get $nvimFlavors | default $realConfig.nvim.flavor  -}}
+{{   else -}}
+{{     fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($realConfig.nvim.flavor) ($nvimFlavors | keys | join ", ")) -}}
+{{   end -}}
+{{ end -}}
+
 {{ dict "realConfig" $realConfig | toYaml | indent 4 }}
 
     paths:
@@ -91,6 +107,13 @@ data:
         - name: CHRIS468_LAZYVIM_PROFILE
           action: unset
           persist: true
+        - name: NVIM_APPNAME
+          persist: true
+{{- if $nvimAppName }}
+          value: {{ $nvimAppName }}
+{{- else }}
+          action: unset
+{{- end }}
         - name: CHRIS468_THEME
           value: {{ $realConfig.theme }}
         - name: AWS_PROFILE
@@ -123,10 +146,10 @@ data:
           action: prepend
           persist: true
           value:
-              - {{ $paths.localInstallBin }}
-              - {{ $paths.fzfBin }}
+            - {{ $paths.localInstallBin }}
+            - {{ $paths.fzfBin }}
 {{- if $realConfig.packageManager.homebrew.enable }}
-              - {{ "bin" | joinPath $paths.homebrew }}
+            - {{ "bin" | joinPath $paths.homebrew }}
 {{- end }}
     defaults:
 {{ $_defaults | toYaml | indent 8 }}
