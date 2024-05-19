@@ -4,8 +4,8 @@
 [ ]   treesitter-autotag
 [x] illuminate
 [ ] improved illuminate hilighting
-[ ] language server
-[ ] lsp icons
+[x] language server
+[x] lsp icons
 [ ] lsp keymaps
 [ ] trouble
 [ ] linter
