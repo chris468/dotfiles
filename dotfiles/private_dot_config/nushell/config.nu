@@ -57,3 +57,5 @@ export-env {
     upgrade-chezmoi
     init-carapace
 }
+
+export use _config nvim-flavors *

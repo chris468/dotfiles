@@ -9,7 +9,7 @@ local function load_module(profile, config_module)
 end
 
 local function foreach_profile(action)
-  for profile, enabled in ipairs(config.profiles) do
+  for profile, enabled in pairs(config.profiles) do
     if enabled then
       action(profile)
     end
