@@ -1,5 +1,5 @@
 [ ] treesitter
-[ ]   context
+[x]   context
 [ ]   treesitter-textobjects
 [ ]   treesitter-autotag
 [x] illuminate
