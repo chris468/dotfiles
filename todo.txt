@@ -1,0 +1,30 @@
+[ ] treesitter
+[ ]   context
+[ ]   treesitter-textobjects
+[ ]   treesitter-autotag
+[ ] illuminate
+[ ] improved illuminate hilighting
+[ ] language server
+[ ] lsp icons
+[ ] lsp keymaps
+[ ] trouble
+[ ] linter
+[ ] formatter
+[ ] centralize on-demand mason installs
+[ ] testing
+[ ] debugging
+[ ] buffer commands / :q behavior
+[ ] mini?
+[ ] indent guides
+[ ] comment
+[ ] gitsigns
+[ ] toggleterm
+[ ] project
+[ ] completion
+[ ] scrub laziness of lsp, conform, and lint
+[ ] configure pgup/pgdn keystroke in modals
+    [ ] lazy
+    [ ] mason
+    [ ] others?
+[ ] rethink cmp (completion and snippet) keymaps
+[ ] lazygit
