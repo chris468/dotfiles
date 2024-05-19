@@ -10,7 +10,7 @@
 [ ] trouble
 [ ] linter
 [ ] formatter
-[ ] centralize on-demand mason installs
+[x] centralize on-demand mason installs
 [ ] testing
 [ ] debugging
 [ ] buffer commands / :q behavior
