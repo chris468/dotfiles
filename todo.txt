@@ -20,7 +20,7 @@
 [x] gitsigns
 [ ] toggleterm
 [x] project
-[ ] completion
+[x] completion
 [ ] scrub laziness of lsp, conform, and lint
 [ ] configure pgup/pgdn keystroke in modals
     [ ] lazy
