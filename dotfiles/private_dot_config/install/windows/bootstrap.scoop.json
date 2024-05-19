@@ -19,10 +19,6 @@
       "source": "extras"
     },
     {
-      "name": "posh-git",
-      "source": "extras"
-    },
-    {
       "name": "Hack-NF-Mono",
       "source": "nerd-fonts"
     }
