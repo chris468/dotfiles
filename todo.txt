@@ -2,7 +2,7 @@
 [ ]   context
 [ ]   treesitter-textobjects
 [ ]   treesitter-autotag
-[ ] illuminate
+[x] illuminate
 [ ] improved illuminate hilighting
 [ ] language server
 [ ] lsp icons
@@ -16,10 +16,10 @@
 [ ] buffer commands / :q behavior
 [ ] mini?
 [x] indent guides
-[ ] comment
-[ ] gitsigns
+[x] comment
+[x] gitsigns
 [ ] toggleterm
-[ ] project
+[x] project
 [ ] completion
 [ ] scrub laziness of lsp, conform, and lint
 [ ] configure pgup/pgdn keystroke in modals
