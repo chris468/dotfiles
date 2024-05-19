@@ -8,8 +8,8 @@
 [x] lsp icons
 [ ] lsp keymaps
 [ ] trouble
-[ ] linter
-[ ] formatter
+[x] linter
+[x] formatter
 [x] centralize on-demand mason installs
 [ ] testing
 [ ] debugging
