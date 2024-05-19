@@ -15,7 +15,7 @@
 [ ] debugging
 [ ] buffer commands / :q behavior
 [ ] mini?
-[ ] indent guides
+[x] indent guides
 [ ] comment
 [ ] gitsigns
 [ ] toggleterm
