@@ -1,3 +1,7 @@
+local id = {
+  default = 1,
+}
+
 local function size(term)
   if term.direction == "horizontal" then
     return vim.o.lines * 0.25
@@ -8,8 +12,12 @@ end
 
 local function default(direction)
   local function toggle()
-    local tt = require("toggleterm")
-    tt.toggle(1, nil, nil, direction, "Terminal")
+    local Terminal = require("toggleterm.terminal").Terminal
+    local term = Terminal:new({
+      id = id.default,
+      display_name = "Terminal",
+    })
+    term:toggle(nil, direction)
   end
 
   return toggle
