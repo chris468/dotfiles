@@ -15,6 +15,28 @@ local function default(direction)
   return toggle
 end
 
+local function on_open(term)
+  local has_tmux_navigation = vim.fn.exists(":TmuxNavigateLeft") ~= 0
+  if has_tmux_navigation then
+    local keys = {
+      ["<esc><C-h>"] = "<cmd>TmuxNavigateLeft<cr>",
+      ["<esc><C-j>"] = "<cmd>TmuxNavigateDown<cr>",
+      ["<esc><C-k>"] = "<cmd>TmuxNavigateUp<cr>",
+      ["<esc><C-l>"] = "<cmd>TmuxNavigateRight<cr>",
+    }
+
+    if term:is_split() then
+      for key, cmd in pairs(keys) do
+        vim.api.nvim_buf_set_keymap(term.bufnr, "t", key, cmd, {})
+      end
+    else
+      for key, _ in pairs(keys) do
+        pcall(vim.api.nvim_buf_del_keymap, term.bufnr, "t", key)
+      end
+    end
+  end
+end
+
 return {
   "akinsho/toggleterm.nvim",
   cmd = {
@@ -42,6 +64,7 @@ return {
       border = "rounded",
       title_pos = "center",
     },
+    on_open = on_open,
     size = size,
   },
 }
