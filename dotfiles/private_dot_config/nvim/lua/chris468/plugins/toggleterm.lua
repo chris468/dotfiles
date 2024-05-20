@@ -80,6 +80,16 @@ local function lazygit()
   return toggle
 end
 
+local function toggle()
+  local tt = require("toggleterm")
+  local terms = require("toggleterm.terminal").get_all(true)
+  if not terms or #terms == 0 then
+    default()()
+  else
+    tt.toggle()
+  end
+end
+
 return {
   "akinsho/toggleterm.nvim",
   cmd = {
@@ -93,12 +103,12 @@ return {
     "ToggleTermSetName",
   },
   keys = {
-    { "<C-\\>", default(), mode = { "n", "t" }, desc = "Toggle terminal" },
+    { "<C-\\>", toggle, mode = { "n", "t" }, desc = "Toggle last terminal" },
     { "<leader>ft", "<cmd>TermSelect<CR>", desc = "Terminal" },
-    { "<leader>mf", default("float"), desc = "Float" },
-    { "<leader>mh", default("horizontal"), desc = "Horizontal" },
-    { "<leader>mm", default(), desc = "Toggle" },
-    { "<leader>mv", default("vertical"), desc = "Vertical" },
+    { "<leader>mf", default("float"), desc = "Float deafult terminal" },
+    { "<leader>mh", default("horizontal"), desc = "Horizontal deafult terminal" },
+    { "<leader>mm", default(), desc = "Toggle default terminal" },
+    { "<leader>mv", default("vertical"), desc = "Vertical deafult terminal" },
     { "<leader>gg", lazygit(), desc = "Lazygit" },
   },
   opts = {
