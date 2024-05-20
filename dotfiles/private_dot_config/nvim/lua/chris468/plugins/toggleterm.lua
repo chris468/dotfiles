@@ -34,6 +34,7 @@ return {
     { "<leader>mh", default("horizontal"), desc = "Horizontal" },
     { "<leader>mm", default(), desc = "Toggle" },
     { "<leader>mv", default("vertical"), desc = "Vertical" },
+    { "<esc><esc>", "<C-\\><C-N>", mode = "t", desc = "Normal mode" },
   },
   opts = {
     direction = "float",
