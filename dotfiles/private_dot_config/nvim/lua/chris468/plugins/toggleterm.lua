@@ -10,15 +10,57 @@ local function size(term)
   end
 end
 
+--- @param allow_normal boolean?
+local function map_keys(term, allow_normal)
+  allow_normal = allow_normal == nil or allow_normal
+
+  local has_tmux_navigation = vim.fn.exists(":TmuxNavigateLeft") ~= 0
+  local is_split = term:is_split()
+  local map_navigation = has_tmux_navigation and is_split
+
+  local keys = {
+    ["<esc><C-h>"] = { "<cmd>TmuxNavigateLeft<cr>", set = map_navigation },
+    ["<esc><C-j>"] = { "<cmd>TmuxNavigateDown<cr>", set = map_navigation },
+    ["<esc><C-k>"] = { "<cmd>TmuxNavigateUp<cr>", set = map_navigation },
+    ["<esc><C-l>"] = { "<cmd>TmuxNavigateRight<cr>", set = map_navigation },
+    ["<esc><esc>"] = { "<C-\\><C-N>", set = allow_normal, opts = { desc = "Normal mode", noremap = true } },
+  }
+
+  for key, spec in pairs(keys) do
+    local cmd, set, opts = spec[1], spec.set, spec.opts or {}
+    if set then
+      vim.api.nvim_buf_set_keymap(term.bufnr, "t", key, cmd, opts)
+    else
+      pcall(vim.api.nvim_buf_del_keymap, term.bufnr, "t", key)
+    end
+  end
+end
+
 --- @param id number
 --- @param display_name string
-local function create(id, display_name)
+--- @param cmd string?
+--- @param map_keys_once boolean?
+--- @param allow_normal boolean?
+local function create(id, display_name, cmd, map_keys_once, allow_normal)
   local Terminal = require("toggleterm.terminal").Terminal
+
+  map_keys_once = map_keys_once or false
+  allow_normal = allow_normal == nil or allow_normal
+
+  local on_map_keys = function(term)
+    map_keys(term, allow_normal)
+  end
+
+  local create_keys_when = map_keys_once and "on_create" or "on_open"
+
   return Terminal:new({
     id = id,
     display_name = display_name,
+    cmd = cmd,
+    [create_keys_when] = on_map_keys,
   })
 end
+
 local function default(direction)
   local function toggle()
     local term = create(terminal_id.default, "Terminal")
@@ -26,28 +68,6 @@ local function default(direction)
   end
 
   return toggle
-end
-
-local function on_open(term)
-  local has_tmux_navigation = vim.fn.exists(":TmuxNavigateLeft") ~= 0
-  if has_tmux_navigation then
-    local keys = {
-      ["<esc><C-h>"] = "<cmd>TmuxNavigateLeft<cr>",
-      ["<esc><C-j>"] = "<cmd>TmuxNavigateDown<cr>",
-      ["<esc><C-k>"] = "<cmd>TmuxNavigateUp<cr>",
-      ["<esc><C-l>"] = "<cmd>TmuxNavigateRight<cr>",
-    }
-
-    if term:is_split() then
-      for key, cmd in pairs(keys) do
-        vim.api.nvim_buf_set_keymap(term.bufnr, "t", key, cmd, {})
-      end
-    else
-      for key, _ in pairs(keys) do
-        pcall(vim.api.nvim_buf_del_keymap, term.bufnr, "t", key)
-      end
-    end
-  end
 end
 
 return {
@@ -69,7 +89,6 @@ return {
     { "<leader>mh", default("horizontal"), desc = "Horizontal" },
     { "<leader>mm", default(), desc = "Toggle" },
     { "<leader>mv", default("vertical"), desc = "Vertical" },
-    { "<esc><esc>", "<C-\\><C-N>", mode = "t", desc = "Normal mode" },
   },
   opts = {
     direction = "float",
@@ -77,7 +96,6 @@ return {
       border = "rounded",
       title_pos = "center",
     },
-    on_open = on_open,
     size = size,
   },
 }
