@@ -71,10 +71,24 @@ local function default(direction)
   return toggle
 end
 
+local function any_modified_buffers()
+  local buffers = vim.api.nvim_list_bufs()
+  for _, buffer in ipairs(buffers) do
+    if vim.bo[buffer].modified then
+      return true
+    end
+  end
+
+  return false
+end
+
 local function lazygit()
   local function toggle()
     local term = create(terminal_id.lazygit, "Lazygit", "lazygit", true, false)
     term:toggle(nil, "float")
+    if any_modified_buffers() then
+      vim.notify("Some files have unsaved changes", vim.log.levels.WARN)
+    end
   end
 
   return toggle

@@ -28,4 +28,4 @@
     [ ] others?
 [ ] rethink cmp (completion and snippet) keymaps
 [x] lazygit
-    [ ] warn on any unsaved buffers when opening lazygit
+    [x] warn on any unsaved buffers when opening lazygit
