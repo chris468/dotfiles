@@ -40,6 +40,7 @@ return {
     direction = "float",
     float_opts = {
       border = "rounded",
+      title_pos = "center",
     },
     size = size,
   },
