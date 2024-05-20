@@ -1,4 +1,4 @@
-local id = {
+local terminal_id = {
   default = 1,
 }
 
@@ -10,13 +10,18 @@ local function size(term)
   end
 end
 
+--- @param id number
+--- @param display_name string
+local function create(id, display_name)
+  local Terminal = require("toggleterm.terminal").Terminal
+  return Terminal:new({
+    id = id,
+    display_name = display_name,
+  })
+end
 local function default(direction)
   local function toggle()
-    local Terminal = require("toggleterm.terminal").Terminal
-    local term = Terminal:new({
-      id = id.default,
-      display_name = "Terminal",
-    })
+    local term = create(terminal_id.default, "Terminal")
     term:toggle(nil, direction)
   end
 
