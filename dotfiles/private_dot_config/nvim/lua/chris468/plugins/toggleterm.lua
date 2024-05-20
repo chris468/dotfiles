@@ -1,5 +1,6 @@
 local terminal_id = {
   default = 1,
+  lazygit = 2,
 }
 
 local function size(term)
@@ -70,6 +71,15 @@ local function default(direction)
   return toggle
 end
 
+local function lazygit()
+  local function toggle()
+    local term = create(terminal_id.lazygit, "Lazygit", "lazygit", true, false)
+    term:toggle(nil, "float")
+  end
+
+  return toggle
+end
+
 return {
   "akinsho/toggleterm.nvim",
   cmd = {
@@ -89,6 +99,7 @@ return {
     { "<leader>mh", default("horizontal"), desc = "Horizontal" },
     { "<leader>mm", default(), desc = "Toggle" },
     { "<leader>mv", default("vertical"), desc = "Vertical" },
+    { "<leader>gg", lazygit(), desc = "Lazygit" },
   },
   opts = {
     direction = "float",
