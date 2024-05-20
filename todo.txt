@@ -18,7 +18,7 @@
 [x] indent guides
 [x] comment
 [x] gitsigns
-[ ] toggleterm
+[x] toggleterm
 [x] project
 [x] completion
 [ ] scrub laziness of lsp, conform, and lint
@@ -27,5 +27,5 @@
     [ ] mason
     [ ] others?
 [ ] rethink cmp (completion and snippet) keymaps
-[ ] lazygit
+[x] lazygit
     [ ] warn on any unsaved buffers when opening lazygit
