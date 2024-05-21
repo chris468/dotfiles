@@ -58,7 +58,7 @@ return {
   dependencies = {
     { "folke/noice.nvim" },
   },
-  keys = { { "<leader>m", "<cmd>Mason<cr>", desc = "Mason" } },
+  keys = { { "<leader>pm", "<cmd>Mason<cr>", desc = "Mason" } },
   lazy = false,
   opts = {
     -- map of category to (string | string, callback = function?)[]
