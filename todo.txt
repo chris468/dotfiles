@@ -1,20 +1,19 @@
+[ ] lsp keymaps
+[ ] trouble
+[ ] rethink cmp (completion and snippet) keymaps
+[ ] buffer commands / :q behavior
+[ ] testing
+[ ] debugging
 [ ] treesitter
 [x]   context
 [ ]   treesitter-textobjects
 [ ]   treesitter-autotag
 [x] illuminate
-[ ] improved illuminate hilighting
 [x] language server
 [x] lsp icons
-[ ] lsp keymaps
-[ ] trouble
 [x] linter
 [x] formatter
 [x] centralize on-demand mason installs
-[ ] testing
-[ ] debugging
-[ ] buffer commands / :q behavior
-[ ] mini?
 [x] indent guides
 [x] comment
 [x] gitsigns
@@ -27,10 +26,11 @@
     [ ] lazy
     [ ] mason
     [ ] others?
-[ ] rethink cmp (completion and snippet) keymaps
 [x] lazygit
     [x] warn on any unsaved buffers when opening lazygit
 [ ] gitlinker.nvim?
 [ ] goto-preview?
 [ ] scrub plugin versions
-
+[ ] improved illuminate hilighting
+[ ] mini?
+    [ ] mini.surround instead of vim-surround?
