@@ -1,3 +1,4 @@
+[ ] completion in cmd mode is not completing commands (only buffer, snippet)
 [ ] lsp keymaps
 [ ] trouble
 [ ] rethink cmp (completion and snippet) keymaps
@@ -5,6 +6,12 @@
 [ ] testing
 [ ] debugging
 [ ] treesitter
+[ ] scrub plugin versions
+[ ] bufline shows all bufs, navigation between all bufs, even when multiple tabs.
+    can it be limited to the ones in the current tab?
+[ ] improved illuminate hilighting
+[ ] mini?
+    [ ] mini.surround instead of vim-surround?
 [x]   context
 [ ]   treesitter-textobjects
 [ ]   treesitter-autotag
@@ -30,7 +37,3 @@
     [x] warn on any unsaved buffers when opening lazygit
 [ ] gitlinker.nvim?
 [ ] goto-preview?
-[ ] scrub plugin versions
-[ ] improved illuminate hilighting
-[ ] mini?
-    [ ] mini.surround instead of vim-surround?
