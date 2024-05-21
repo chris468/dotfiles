@@ -20,6 +20,7 @@
 [x] gitsigns
 [x] toggleterm
 [x] project
+[ ] improved project directory detection / changing
 [x] completion
 [ ] scrub laziness of lsp, conform, and lint
 [ ] configure pgup/pgdn keystroke in modals
@@ -29,3 +30,7 @@
 [ ] rethink cmp (completion and snippet) keymaps
 [x] lazygit
     [x] warn on any unsaved buffers when opening lazygit
+[ ] gitlinker.nvim?
+[ ] goto-preview?
+[ ] scrub plugin versions
+
