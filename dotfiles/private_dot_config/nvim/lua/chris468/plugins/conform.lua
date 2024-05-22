@@ -19,6 +19,7 @@ return {
       },
     },
   },
+  event = "BufWritePre",
   keys = {
     { "<leader>cf", format, desc = "Format" },
     { "<leader>cif", "<cmd>ConformInfo<cr>", desc = "Formatter" },
