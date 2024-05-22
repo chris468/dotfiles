@@ -1,3 +1,3 @@
 return {
-  enable_noice = false,
+  enable_noice = true,
 }
