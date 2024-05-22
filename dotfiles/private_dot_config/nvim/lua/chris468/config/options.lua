@@ -5,11 +5,13 @@ return {
     vim.opt.confirm = true
     vim.opt.conceallevel = 0
     vim.opt.expandtab = true
+    vim.opt.ignorecase = true
     vim.opt.number = true
     vim.opt.relativenumber = true
     vim.opt.showmode = false
     vim.opt.shiftwidth = 4
     vim.opt.signcolumn = "yes"
+    vim.opt.smartcase = true
     vim.opt.splitbelow = true
     vim.opt.splitkeep = "screen"
     vim.opt.splitright = true
