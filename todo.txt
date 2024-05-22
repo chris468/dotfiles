@@ -1,4 +1,4 @@
-[ ] completion in cmd mode is not completing commands (only buffer, snippet)
+[x] completion in cmd mode is not completing commands (only buffer, snippet)
 [ ] lsp keymaps
 [ ] trouble
 [ ] rethink cmp (completion and snippet) keymaps
