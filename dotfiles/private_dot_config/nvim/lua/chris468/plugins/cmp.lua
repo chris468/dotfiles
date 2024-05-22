@@ -45,7 +45,7 @@ return {
 
     cmp.setup.cmdline(":", {
       mapping = cmp.mapping.preset.cmdline(),
-      source = cmp.config.sources({
+      sources = cmp.config.sources({
         { name = "path " },
       }, {
         { name = "cmdline" },
