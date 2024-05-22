@@ -11,6 +11,7 @@ return {
       },
     },
   },
+  cond = require("chris468.config").enable_noice,
   keys = {
     { "<leader>nl", "<cmd>NoiceLast<cr>", desc = "Last" },
     { "<leader>nh", "<cmd>NoiceTelescope<cr>", desc = "History" },
