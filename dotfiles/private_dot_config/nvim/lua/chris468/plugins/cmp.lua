@@ -86,6 +86,6 @@ return {
       end,
     },
   },
-  event = "InsertEnter",
+  event = { "InsertEnter", "CmdLineEnter" },
   opts = {},
 }
