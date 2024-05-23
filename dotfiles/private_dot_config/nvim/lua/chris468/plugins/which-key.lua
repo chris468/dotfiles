@@ -34,6 +34,7 @@ return {
             "Git",
             t = { "Toggle" },
           },
+          h = { "<cmd>nohlsearch<cr>", "Hide search highlight" },
           i = { "Icons" },
           m = { "Ter[m]inal" },
           n = { "Notifications" },
