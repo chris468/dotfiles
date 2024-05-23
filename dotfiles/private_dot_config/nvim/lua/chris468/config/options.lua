@@ -4,10 +4,13 @@ return {
 
     vim.opt.confirm = true
     vim.opt.conceallevel = 0
+    vim.opt.cursorline = true
     vim.opt.expandtab = true
     vim.opt.ignorecase = true
     vim.opt.number = true
     vim.opt.relativenumber = true
+    vim.opt.sidescrolloff = 10
+    vim.opt.scrolloff = 5
     vim.opt.showmode = false
     vim.opt.shiftwidth = 4
     vim.opt.signcolumn = "yes"
