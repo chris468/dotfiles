@@ -21,9 +21,7 @@ local servers = {
   lua_ls = {},
   mesonlsp = {},
   nil_ls = {}, -- nix
-  omnisharp = {
-    cmd = { "omnisharp" },
-  },
+  omnisharp = require("chris468.plugins.config.lsp.omnisharp"),
   powershell_es = {},
   pyright = {},
   ruff = {}, -- python
@@ -82,8 +80,6 @@ return {
   config = function(_, opts)
     local lspconfig = require("lspconfig")
 
-    -- lspconfig.util.on_setup = lspconfig.util.add_hook_before(lspconfig.util.on_setup, hook_install_lsp)
-
     for k, v in pairs(opts.servers) do
       local server, config = to_server_config(k, v, opts.capabilities)
       if server and config then
@@ -117,6 +113,7 @@ return {
         end,
       },
     },
+    { "smjonas/inc-rename.nvim", opts = {} },
   },
   keys = {
     { "<leader>cil", "<cmd>LspInfo<cr>", desc = "Language server" },
