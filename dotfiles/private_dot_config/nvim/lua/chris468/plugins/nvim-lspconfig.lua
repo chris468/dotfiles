@@ -82,8 +82,6 @@ return {
   config = function(_, opts)
     local lspconfig = require("lspconfig")
 
-    -- lspconfig.util.on_setup = lspconfig.util.add_hook_before(lspconfig.util.on_setup, hook_install_lsp)
-
     for k, v in pairs(opts.servers) do
       local server, config = to_server_config(k, v, opts.capabilities)
       if server and config then
@@ -117,6 +115,7 @@ return {
         end,
       },
     },
+    { "smjonas/inc-rename.nvim", opts = {} },
   },
   keys = {
     { "<leader>cil", "<cmd>LspInfo<cr>", desc = "Language server" },
