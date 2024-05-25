@@ -9,6 +9,7 @@ return {
         local telescope = require("telescope")
         telescope.extensions.projects.projects({})
       end,
+      desc = "Project",
     },
   },
   main = "project_nvim",
