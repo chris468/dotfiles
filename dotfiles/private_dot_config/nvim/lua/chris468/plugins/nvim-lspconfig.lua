@@ -21,9 +21,7 @@ local servers = {
   lua_ls = {},
   mesonlsp = {},
   nil_ls = {}, -- nix
-  omnisharp = {
-    cmd = { "omnisharp" },
-  },
+  omnisharp = require("chris468.plugins.config.lsp.omnisharp"),
   powershell_es = {},
   pyright = {},
   ruff = {}, -- python
