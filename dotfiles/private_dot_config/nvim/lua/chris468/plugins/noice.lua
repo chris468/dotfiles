@@ -37,12 +37,12 @@ return {
       lsp_doc_border = false, -- add a border to hover docs and signature help
     },
     messages = {
-      view = "mini",
-      view_error = "mini",
-      view_warn = "mini",
+      view = "notify",
+      view_error = "notify",
+      view_warn = "notify",
     },
     notify = {
-      view = "mini",
+      view = "notify",
     },
     views = {
       mini = {
