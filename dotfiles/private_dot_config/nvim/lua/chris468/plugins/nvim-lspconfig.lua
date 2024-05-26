@@ -90,6 +90,13 @@ return {
     for severity, sign in pairs(opts.signs) do
       vim.fn.sign_define("DiagnosticSign" .. severity, { text = sign, texthl = "Diagnostic" .. severity, numhl = "" })
     end
+
+    vim.diagnostic.config({
+      float = {
+        severity_sort = true,
+      },
+      severity_sort = true,
+    })
   end,
   dependencies = {
     { "williamboman/mason-lspconfig.nvim" },
