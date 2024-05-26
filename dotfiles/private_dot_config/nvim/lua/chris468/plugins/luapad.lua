@@ -53,10 +53,16 @@ local function attach_luapad(buffer)
   })
   evaluator:start()
 
-  vim.api.nvim_create_autocmd({ "InsertLeave", "CursorHoldI" }, {
+  local last_changed_tick = vim.api.nvim_buf_get_changedtick(buffer)
+
+  vim.api.nvim_create_autocmd({ "InsertLeave", "CursorHoldI", "CursorHold" }, {
     buffer = buffer,
     callback = function(_)
-      evaluator:eval()
+      local current_changed_tick = vim.api.nvim_buf_get_changedtick(buffer)
+      if current_changed_tick ~= last_changed_tick then
+        evaluator:eval()
+        last_changed_tick = current_changed_tick
+      end
     end,
   })
 end
