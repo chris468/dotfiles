@@ -48,12 +48,17 @@ end
 
 --- @param buffer integer
 local function attach_luapad(buffer)
-  local evaluator = require("luapad.evaluator")
-  evaluator
-    :new({
-      buf = buffer,
-    })
-    :start()
+  local evaluator = require("luapad.evaluator"):new({
+    buf = buffer,
+  })
+  evaluator:start()
+
+  vim.api.nvim_create_autocmd({ "InsertLeave", "CursorHoldI" }, {
+    buffer = buffer,
+    callback = function(_)
+      evaluator:eval()
+    end,
+  })
 end
 
 local function luapad_split()
@@ -78,5 +83,9 @@ return {
   keys = {
     { "<leader>tL", "<cmd>Luapad<CR>", desc = "Lua REPL (builtin)" },
     { "<leader>tl", luapad_split, desc = "Lua REPL" },
+  },
+  opts = {
+    eval_on_change = false,
+    eval_on_move = false,
   },
 }
