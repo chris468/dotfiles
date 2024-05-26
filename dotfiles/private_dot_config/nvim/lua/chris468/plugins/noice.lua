@@ -1,6 +1,11 @@
 local function redirect_cmdline()
   require("cmp").close()
-  require("noice").redirect(vim.fn.getcmdline())
+  require("noice").redirect(vim.fn.getcmdline(), {
+    {
+      view = "split",
+      filter = { event = "msg_show" },
+    },
+  })
 end
 
 return {
