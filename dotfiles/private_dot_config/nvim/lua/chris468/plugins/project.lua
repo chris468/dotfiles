@@ -4,11 +4,12 @@ return {
   event = "VeryLazy",
   keys = {
     {
-      "<leader>fp",
+      "<leader>p",
       function()
         local telescope = require("telescope")
         telescope.extensions.projects.projects({})
       end,
+      desc = "Project",
     },
   },
   main = "project_nvim",

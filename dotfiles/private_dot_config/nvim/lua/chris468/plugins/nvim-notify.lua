@@ -1,9 +1,7 @@
-if require("chris468.config").enable_noice then
-  return { "rcarriga/nvim-notify" }
-else
-  return {
-    "rcarriga/nvim-notify",
-    dependencies = {
+local enable_noice = require("chris468.config").enable_noice
+
+local dependencies = enable_noice
+    and {
       {
         "nvim-telescope/telescope.nvim",
         optional = true,
@@ -12,11 +10,11 @@ else
           { "<leader>nh", "<cmd>Telescope notify<cr>", desc = "Notification history" },
         },
       },
-    },
-    init = function()
-      vim.notify = require("notify")
-    end,
-    keys = {
+    }
+  or nil
+
+local keys = enable_noice
+    and {
       {
         "<leader>nd",
         function()
@@ -26,15 +24,25 @@ else
       },
       "<leader>fn",
       "<leader>nh",
-    },
-    opts = {
-      max_width = function()
-        return vim.o.columns * 0.8
-      end,
-      render = "wrapped-compact",
-      stages = "fade",
-      timeout = 3000,
-      top_down = false,
-    },
-  }
-end
+    }
+  or nil
+
+return {
+  "rcarriga/nvim-notify",
+  dependencies = dependencies,
+  init = function()
+    if enable_noice then
+      vim.notify = require("notify")
+    end
+  end,
+  keys = keys,
+  opts = {
+    max_width = function()
+      return vim.o.columns * 0.8
+    end,
+    render = "wrapped-compact",
+    stages = "fade",
+    timeout = 3000,
+    top_down = false,
+  },
+}

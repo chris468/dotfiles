@@ -1,11 +1,13 @@
 [x] completion in cmd mode is not completing commands (only buffer, snippet)
-[ ] lsp keymaps
+[x] lsp keymaps
 [ ] trouble
 [ ] rethink cmp (completion and snippet) keymaps
-[ ] buffer commands / :q behavior
+[x] buffer commands / :q behavior
 [ ] testing
 [ ] debugging
 [ ] treesitter
+    [ ]   treesitter-textobjects
+    [ ]   treesitter-autotag
 [ ] scrub plugin versions
 [ ] bufline shows all bufs, navigation between all bufs, even when multiple tabs.
     can it be limited to the ones in the current tab?
@@ -13,8 +15,6 @@
 [ ] mini?
     [ ] mini.surround instead of vim-surround?
 [x]   context
-[ ]   treesitter-textobjects
-[ ]   treesitter-autotag
 [x] illuminate
 [x] language server
 [x] lsp icons

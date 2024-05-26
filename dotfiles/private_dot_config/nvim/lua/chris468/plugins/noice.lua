@@ -1,3 +1,8 @@
+local function redirect_cmdline()
+  require("cmp").close()
+  require("noice").redirect(vim.fn.getcmdline())
+end
+
 return {
   "folke/noice.nvim",
   dependencies = {
@@ -13,10 +18,11 @@ return {
   },
   cond = require("chris468.config").enable_noice,
   keys = {
+    "<leader>fn",
     { "<leader>nl", "<cmd>NoiceLast<cr>", desc = "Last" },
     { "<leader>nh", "<cmd>NoiceTelescope<cr>", desc = "History" },
     { "<leader>nd", "<cmd>NoiceDismiss<cr>", desc = "Dismiss" },
-    "<leader>fn",
+    { "<S-CR>", redirect_cmdline, mode = "c", desc = "Redirect command line" },
   },
   lazy = false, -- not lazy to try and get set up before any notifcations can be raised
   opts = {
@@ -37,12 +43,12 @@ return {
       lsp_doc_border = false, -- add a border to hover docs and signature help
     },
     messages = {
-      view = "mini",
-      view_error = "mini",
-      view_warn = "mini",
+      view = "notify",
+      view_error = "notify",
+      view_warn = "notify",
     },
     notify = {
-      view = "mini",
+      view = "notify",
     },
     views = {
       mini = {
