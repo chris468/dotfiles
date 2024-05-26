@@ -36,12 +36,9 @@ return {
           },
           h = { "<cmd>nohlsearch<cr>", "Hide search highlight" },
           i = { "Icons" },
+          L = { "<cmd>Lazy<cr>", "Lazy" },
           m = { "Ter[m]inal" },
           n = { "Notifications" },
-          p = {
-            "Packages",
-            l = { "<cmd>Lazy<cr>", "Lazy" },
-          },
           D = {
             "Dotfiles",
             a = { "<cmd>!chezmoi apply<CR>", "Apply dotfiles" },

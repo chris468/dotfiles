@@ -4,7 +4,7 @@ return {
   event = "VeryLazy",
   keys = {
     {
-      "<leader>fp",
+      "<leader>p",
       function()
         local telescope = require("telescope")
         telescope.extensions.projects.projects({})
