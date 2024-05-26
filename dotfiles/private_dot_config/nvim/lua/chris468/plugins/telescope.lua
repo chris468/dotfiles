@@ -16,6 +16,7 @@ return {
     { "<leader>fb", telescope_builtin("buffers"), desc = "Buffers" },
     { "<leader>fg", telescope_builtin("git_files"), desc = "Git files" },
     { "<leader>fh", telescope_builtin("help_tags"), desc = "Help" },
+    { "<leader>fo", telescope_builtin("vim_options"), desc = "Options" },
     { "<leader>fr", telescope_builtin("oldfiles"), desc = "Recent files" },
     { "<leader>fT", "<cmd>Telescope<cr>", desc = "Search" },
     { "<leader>f/", telescope_builtin("current_buffer_fuzzy_find"), desc = "Search current buffer" },
