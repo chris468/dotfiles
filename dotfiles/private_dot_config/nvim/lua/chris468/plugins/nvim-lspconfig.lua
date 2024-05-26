@@ -115,7 +115,7 @@ return {
       "folke/neodev.nvim",
       opts = {
         override = function(root_dir, library)
-          if root_dir:find("config/nvim") then
+          if root_dir:find("config/*vim") or root_dir:find("/tmp/luapad.") then
             library.enabled = true
           end
         end,
