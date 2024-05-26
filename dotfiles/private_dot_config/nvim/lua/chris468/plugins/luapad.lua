@@ -46,6 +46,16 @@ local function create_buffer(path)
   return buf
 end
 
+--- @param buffer integer
+local function attach_luapad(buffer)
+  local evaluator = require("luapad.evaluator")
+  evaluator
+    :new({
+      buf = buffer,
+    })
+    :start()
+end
+
 local function luapad_split()
   local luapad_path, error = create_project()
   if not luapad_path then
@@ -53,8 +63,11 @@ local function luapad_split()
     return
   end
 
-  create_buffer(luapad_path)
+  local buffer = create_buffer(luapad_path)
+
+  attach_luapad(buffer)
 end
+
 return {
   "rafcamlet/nvim-luapad",
   cmd = {
