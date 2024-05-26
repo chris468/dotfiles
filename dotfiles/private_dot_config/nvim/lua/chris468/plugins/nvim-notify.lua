@@ -38,7 +38,7 @@ return {
   keys = keys,
   opts = {
     max_width = function()
-      return vim.o.columns * 0.8
+      return math.floor(vim.o.columns * 0.8)
     end,
     render = "wrapped-compact",
     stages = "fade",
