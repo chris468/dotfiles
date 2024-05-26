@@ -20,6 +20,7 @@ return {
     vim.opt.splitright = true
     vim.opt.tabstop = 4
     vim.opt.termguicolors = true
+    vim.opt.updatetime = 2000
 
     if vim.fn.has("win32") == 1 then
       vim.opt.shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell"
