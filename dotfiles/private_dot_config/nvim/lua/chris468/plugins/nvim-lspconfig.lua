@@ -95,6 +95,7 @@ return {
       float = {
         severity_sort = true,
       },
+      update_in_insert = true,
       severity_sort = true,
     })
   end,
