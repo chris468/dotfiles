@@ -42,11 +42,7 @@ return {
           L = { "<cmd>Lazy<cr>", "Lazy" },
           m = { "Ter[m]inal" },
           n = { "Notifications" },
-          D = {
-            "Dotfiles",
-            a = { "<cmd>!chezmoi apply<CR>", "Apply dotfiles" },
-            A = { "<cmd>!chezmoi add %<CR>", "Add current file to dotfiles" },
-          },
+          D = { "Dotfiles" },
         },
       },
       {
