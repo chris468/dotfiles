@@ -9,8 +9,9 @@ return {
         local telescope = require("telescope")
         telescope.extensions.projects.projects({})
       end,
-      desc = "Project",
+      desc = "Select project",
     },
+    { "<leader>P", "<cmd>ProjectRoot<cr>", desc = "Set project for current file" },
   },
   main = "project_nvim",
   opts = {
