@@ -40,11 +40,13 @@ end
 --- @class TermOpts
 --- @field map_keys_once boolean?
 --- @field allow_normal boolean?
+--- @field remain_on_error boolean?
 
 --- @type TermOpts
 local term_defaults = {
   map_keys_once = false,
   allow_normal = true,
+  remain_on_error = false,
 }
 
 --- @param id number
@@ -61,13 +63,23 @@ local function create(id, display_name, cmd, opts)
   end
 
   local create_keys_when = opts.map_keys_once and "on_create" or "on_open"
-
-  return Terminal:new({
+  local term_opts = {
     id = id,
     display_name = display_name,
     cmd = cmd,
     [create_keys_when] = on_map_keys,
-  })
+  }
+
+  if opts.remain_on_error then
+    term_opts.on_exit = function(t, _, exit_code, _)
+      if exit_code ~= 0 then
+        t.close_on_exit = false
+        vim.notify("`" .. t.cmd .. "` failed with exit code " .. exit_code, vim.log.levels.ERROR)
+      end
+    end
+  end
+
+  return Terminal:new(term_opts)
 end
 
 local function default(direction)
