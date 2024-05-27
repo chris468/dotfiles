@@ -11,6 +11,17 @@ local function size(term)
   end
 end
 
+local function any_modified_buffers()
+  local buffers = vim.api.nvim_list_bufs()
+  for _, buffer in ipairs(buffers) do
+    if vim.bo[buffer].modified then
+      return true
+    end
+  end
+
+  return false
+end
+
 --- @param allow_normal boolean?
 local function map_keys(term, allow_normal)
   allow_normal = allow_normal == nil or allow_normal
@@ -41,12 +52,14 @@ end
 --- @field map_keys_once boolean?
 --- @field allow_normal boolean?
 --- @field remain_on_error boolean?
+--- @field warn_on_unsaved boolean?
 
 --- @type TermOpts
 local term_defaults = {
   map_keys_once = false,
   allow_normal = true,
   remain_on_error = false,
+  warn_on_unsaved = false,
 }
 
 --- @param id number
@@ -70,6 +83,14 @@ local function create(id, display_name, cmd, opts)
     [create_keys_when] = on_map_keys,
   }
 
+  if opts.warn_on_unsaved then
+    term_opts.on_create = function()
+      if any_modified_buffers() then
+        vim.notify("Some files have unsaved changes", vim.log.levels.WARN)
+      end
+    end
+  end
+
   if opts.remain_on_error then
     term_opts.on_exit = function(t, _, exit_code, _)
       if exit_code ~= 0 then
@@ -91,27 +112,15 @@ local function default(direction)
   return toggle
 end
 
-local function any_modified_buffers()
-  local buffers = vim.api.nvim_list_bufs()
-  for _, buffer in ipairs(buffers) do
-    if vim.bo[buffer].modified then
-      return true
-    end
-  end
-
-  return false
-end
 
 local function lazygit()
   local function toggle()
     local term = create(terminal_id.lazygit, "Lazygit", "lazygit", {
       map_keys_once = true,
       allow_normal = false,
+      warn_on_unsaved = true,
     })
     term:toggle(nil, "float")
-    if any_modified_buffers() then
-      vim.notify("Some files have unsaved changes", vim.log.levels.WARN)
-    end
   end
 
   return toggle
