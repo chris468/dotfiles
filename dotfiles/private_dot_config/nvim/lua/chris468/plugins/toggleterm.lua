@@ -3,6 +3,18 @@ local terminal_id = {
   lazygit = 2,
 }
 
+local terminals = {
+  default = { id = terminal_id.default, display_name = "Terminal" },
+  lazygit = {
+    id = terminal_id.lazygit,
+    display_name = "Lazygit",
+    cmd = "lazygit",
+    map_keys_once = true,
+    allow_normal = false,
+    warn_on_unsaved = true,
+  },
+}
+
 local function size(term)
   if term.direction == "horizontal" then
     return vim.o.lines * 0.25
@@ -116,18 +128,11 @@ local function toggle(opts, direction)
 end
 
 local function default(direction)
-  return toggle({ id = terminal_id.default, display_name = "Terminal" }, direction)
+  return toggle(terminals.default, direction)
 end
 
 local function lazygit()
-  return toggle({
-    id = terminal_id.lazygit,
-    display_name = "Lazygit",
-    cmd = "lazygit",
-    map_keys_once = true,
-    allow_normal = false,
-    warn_on_unsaved = true,
-  }, "float")
+  return toggle(terminals.lazygit, "float")
 end
 
 local function create_default_if_necessary()
