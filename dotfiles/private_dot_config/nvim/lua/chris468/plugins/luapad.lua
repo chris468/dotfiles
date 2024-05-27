@@ -86,6 +86,10 @@ return {
     "LuaRun",
     "Lua",
   },
+  config = function(_, opts)
+    require("luapad").setup(opts)
+    vim.api.nvim_create_user_command("Luapad", luapad_split, { force = true })
+  end,
   keys = {
     { "<leader>tL", "<cmd>Luapad<CR>", desc = "Lua REPL (builtin)" },
     { "<leader>tl", luapad_split, desc = "Lua REPL" },
