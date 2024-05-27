@@ -63,7 +63,7 @@ end
 --- @class TermOpts
 --- @field id number
 --- @field display_name string
---- @field cmd string?
+--- @field cmd (string | fun() : string?)?
 --- @field map_keys_once boolean?
 --- @field allow_normal boolean?
 --- @field remain_on_error boolean?
@@ -81,6 +81,9 @@ local function create(opts)
   local Terminal = require("toggleterm.terminal").Terminal
 
   opts = vim.tbl_extend("keep", opts or {}, term_defaults)
+  if type(opts.cmd) == "function" then
+    opts.cmd = opts.cmd()
+  end
 
   local on_map_keys = function(term)
     map_keys(term, opts.allow_normal)
