@@ -49,12 +49,14 @@ local function map_keys(term, allow_normal)
 end
 
 --- @class TermOpts
+--- @field id number
+--- @field display_name string
+--- @field cmd string?
 --- @field map_keys_once boolean?
 --- @field allow_normal boolean?
 --- @field remain_on_error boolean?
 --- @field warn_on_unsaved boolean?
 
---- @type TermOpts
 local term_defaults = {
   map_keys_once = false,
   allow_normal = true,
@@ -62,11 +64,8 @@ local term_defaults = {
   warn_on_unsaved = false,
 }
 
---- @param id number
---- @param display_name string
---- @param cmd string?
 --- @param opts TermOpts?
-local function create(id, display_name, cmd, opts)
+local function create(opts)
   local Terminal = require("toggleterm.terminal").Terminal
 
   opts = vim.tbl_extend("keep", opts or {}, term_defaults)
@@ -77,9 +76,9 @@ local function create(id, display_name, cmd, opts)
 
   local create_keys_when = opts.map_keys_once and "on_create" or "on_open"
   local term_opts = {
-    id = id,
-    display_name = display_name,
-    cmd = cmd,
+    id = opts.id,
+    display_name = opts.display_name,
+    cmd = opts.cmd,
     [create_keys_when] = on_map_keys,
   }
 
@@ -105,7 +104,7 @@ end
 
 local function default(direction)
   local function toggle()
-    local term = create(terminal_id.default, "Terminal")
+    local term = create({ id = terminal_id.default, display_name = "Terminal" })
     term:toggle(nil, direction)
   end
 
@@ -115,7 +114,10 @@ end
 
 local function lazygit()
   local function toggle()
-    local term = create(terminal_id.lazygit, "Lazygit", "lazygit", {
+    local term = create({
+      id = terminal_id.lazygit,
+      display_name = "Lazygit",
+      cmd = "lazygit",
       map_keys_once = true,
       allow_normal = false,
       warn_on_unsaved = true,
