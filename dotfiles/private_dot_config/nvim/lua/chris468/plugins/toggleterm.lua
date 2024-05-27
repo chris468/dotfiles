@@ -127,14 +127,6 @@ local function toggle(opts, direction)
   end
 end
 
-local function default(direction)
-  return toggle(terminals.default, direction)
-end
-
-local function lazygit()
-  return toggle(terminals.lazygit, "float")
-end
-
 local function default_toggle(default_opts)
   return function()
     local tt = require("toggleterm")
@@ -159,11 +151,11 @@ return {
   keys = {
     { "<C-\\>", default_toggle(terminals.default), mode = { "n", "t" }, desc = "Toggle last terminal" },
     { "<leader>ft", "<cmd>TermSelect<CR>", desc = "Terminal" },
-    { "<leader>gg", lazygit(), desc = "Lazygit" },
-    { "<leader>mf", default("float"), desc = "Float deafult terminal" },
-    { "<leader>mh", default("horizontal"), desc = "Horizontal deafult terminal" },
-    { "<leader>mm", default(), desc = "Toggle default terminal" },
-    { "<leader>mv", default("vertical"), desc = "Vertical deafult terminal" },
+    { "<leader>gg", toggle(terminals.lazygit, "float"), desc = "Lazygit" },
+    { "<leader>mf", toggle(terminals.default, "float"), desc = "Float deafult terminal" },
+    { "<leader>mh", toggle(terminals.default, "horizontal"), desc = "Horizontal deafult terminal" },
+    { "<leader>mm", toggle(terminals.default), desc = "Toggle default terminal" },
+    { "<leader>mv", toggle(terminals.default, "vertical"), desc = "Vertical deafult terminal" },
   },
   opts = {
     direction = "float",
