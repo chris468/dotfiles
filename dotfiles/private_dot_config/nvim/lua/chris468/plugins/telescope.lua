@@ -36,6 +36,9 @@ local function oldfiles_opts()
   }
 end
 
+local config_path = vim.fn.stdpath("config")
+local chezmoi_path = vim.fn.expand("~/.local/share/chezmoi")
+
 return {
   "nvim-telescope/telescope.nvim",
   cmd = { "Telescope" },
@@ -46,12 +49,27 @@ return {
     { "<leader>/", telescope_builtin("live_grep"), desc = "Grep" },
     { '<leader>f"', telescope_builtin("registers"), desc = "Registers" },
     { "<leader>fb", telescope_builtin("buffers"), desc = "Buffers" },
+    { "<leader>fc", telescope_builtin("find_files", { cwd = config_path }), desc = "Configuration" },
+    {
+      "<leader>fd",
+      telescope_builtin("find_files", { cwd = chezmoi_path, hidden = true, file_ignore_patterns = { ".git/" } }),
+      desc = "Chezmoi dotfiles",
+    },
     { "<leader>fg", telescope_builtin("git_files"), desc = "Git files" },
     { "<leader>fh", telescope_builtin("help_tags"), desc = "Help" },
     { "<leader>fo", telescope_builtin("vim_options"), desc = "Options" },
     { "<leader>fr", telescope_builtin("oldfiles", oldfiles_opts), desc = "Recent files" },
     { "<leader>fT", "<cmd>Telescope<cr>", desc = "Search" },
     { "<leader>f/", telescope_builtin("current_buffer_fuzzy_find"), desc = "Search current buffer" },
+    { "<leader>f?c", telescope_builtin("live_grep", { cwd = config_path }), desc = "Configuration" },
+    {
+      "<leader>f?d",
+      telescope_builtin(
+        "live_grep",
+        { cwd = chezmoi_path, additional_args = { "--hidden" }, file_ignore_patterns = { ".git/" } }
+      ),
+      desc = "Chezmoi dotfiles",
+    },
     { "<leader>f:", telescope_builtin("command_history"), desc = "Recent commands" },
   },
   lazy = true,

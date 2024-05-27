@@ -29,7 +29,10 @@ return {
             "Code",
             i = { "Info" },
           },
-          f = { "Find" },
+          f = {
+            "Find",
+            ["?"] = "Grep",
+          },
           g = {
             "Git",
             t = { "Toggle" },
