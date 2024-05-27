@@ -111,7 +111,6 @@ local function default(direction)
   return toggle
 end
 
-
 local function lazygit()
   local function toggle()
     local term = create({
@@ -128,7 +127,7 @@ local function lazygit()
   return toggle
 end
 
-local function toggle()
+local function create_default_if_necessary()
   local tt = require("toggleterm")
   local terms = require("toggleterm.terminal").get_all(true)
   if not terms or #terms == 0 then
@@ -151,7 +150,7 @@ return {
     "ToggleTermSetName",
   },
   keys = {
-    { "<C-\\>", toggle, mode = { "n", "t" }, desc = "Toggle last terminal" },
+    { "<C-\\>", create_default_if_necessary, mode = { "n", "t" }, desc = "Toggle last terminal" },
     { "<leader>ft", "<cmd>TermSelect<CR>", desc = "Terminal" },
     { "<leader>gg", lazygit(), desc = "Lazygit" },
     { "<leader>mf", default("float"), desc = "Float deafult terminal" },
