@@ -102,29 +102,32 @@ local function create(opts)
   return Terminal:new(term_opts)
 end
 
-local function default(direction)
-  local function toggle()
-    local term = create({ id = terminal_id.default, display_name = "Terminal" })
+--- @param opts TermOpts
+--- @param direction string?
+--- | "'horizontal'"
+--- | "'vertical'"
+--- | "'float'"
+--- @return function toggle
+local function toggle(opts, direction)
+  return function()
+    local term = create(opts)
     term:toggle(nil, direction)
   end
+end
 
-  return toggle
+local function default(direction)
+  return toggle({ id = terminal_id.default, display_name = "Terminal" }, direction)
 end
 
 local function lazygit()
-  local function toggle()
-    local term = create({
-      id = terminal_id.lazygit,
-      display_name = "Lazygit",
-      cmd = "lazygit",
-      map_keys_once = true,
-      allow_normal = false,
-      warn_on_unsaved = true,
-    })
-    term:toggle(nil, "float")
-  end
-
-  return toggle
+  return toggle({
+    id = terminal_id.lazygit,
+    display_name = "Lazygit",
+    cmd = "lazygit",
+    map_keys_once = true,
+    allow_normal = false,
+    warn_on_unsaved = true,
+  }, "float")
 end
 
 local function create_default_if_necessary()
