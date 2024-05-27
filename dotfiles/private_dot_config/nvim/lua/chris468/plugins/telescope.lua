@@ -1,7 +1,39 @@
-local function telescope_builtin(builtin)
+--- @param builtin string
+--- @param opts table|function|nil
+local function telescope_builtin(builtin, opts)
   return function()
-    require("telescope.builtin")[builtin]()
+    if type(opts) == "function" then
+      opts = opts()
+    end
+    require("telescope.builtin")[builtin](opts or {})
   end
+end
+
+local last_rtp = nil
+local ignore_docs_patterns = {}
+
+local function get_ignore_docs_patterns()
+  local path_separator = require("plenary.path").path.sep
+
+  local current_rtp = vim.o.rtp
+  if last_rtp ~= vim.o.rtp then
+    local patterns, count = {}, 0
+    for _, rtp in ipairs(vim.opt.rtp:get()) do
+      count = count + 1
+      patterns[count] = table.concat({ rtp, "doc", "" }, path_separator)
+    end
+
+    ignore_docs_patterns = patterns
+    last_rtp = current_rtp
+  end
+
+  return ignore_docs_patterns
+end
+
+local function oldfiles_opts()
+  return {
+    file_ignore_patterns = get_ignore_docs_patterns(),
+  }
 end
 
 return {
@@ -17,7 +49,7 @@ return {
     { "<leader>fg", telescope_builtin("git_files"), desc = "Git files" },
     { "<leader>fh", telescope_builtin("help_tags"), desc = "Help" },
     { "<leader>fo", telescope_builtin("vim_options"), desc = "Options" },
-    { "<leader>fr", telescope_builtin("oldfiles"), desc = "Recent files" },
+    { "<leader>fr", telescope_builtin("oldfiles", oldfiles_opts), desc = "Recent files" },
     { "<leader>fT", "<cmd>Telescope<cr>", desc = "Search" },
     { "<leader>f/", telescope_builtin("current_buffer_fuzzy_find"), desc = "Search current buffer" },
     { "<leader>f:", telescope_builtin("command_history"), desc = "Recent commands" },
