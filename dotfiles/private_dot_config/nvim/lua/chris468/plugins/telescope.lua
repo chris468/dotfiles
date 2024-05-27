@@ -12,12 +12,13 @@ end
 local last_rtp = nil
 local ignore_docs_patterns = {}
 
-local function get_ignore_docs_patterns()
+local function get_oldfiles_ignore_patterns()
   local path_separator = require("plenary.path").path.sep
 
   local current_rtp = vim.o.rtp
   if last_rtp ~= vim.o.rtp then
-    local patterns, count = {}, 0
+    local patterns = { ".git/" }
+    local count = #patterns
     for _, rtp in ipairs(vim.opt.rtp:get()) do
       count = count + 1
       patterns[count] = table.concat({ rtp, "doc", "" }, path_separator)
@@ -32,7 +33,7 @@ end
 
 local function oldfiles_opts()
   return {
-    file_ignore_patterns = get_ignore_docs_patterns(),
+    file_ignore_patterns = get_oldfiles_ignore_patterns(),
   }
 end
 
