@@ -57,6 +57,7 @@ return {
             { event = "msg_show", find = "%d+L, %d+B" },
             { event = "msg_show", find = "; after #%d+" },
             { event = "msg_show", find = "; before #%d+" },
+            { event = "msg_show", find = "^Already at oldest change" },
             { event = "msg_show", find = "^search hit .+, continuing at .+$" },
             { event = "msg_show", find = "^E486" },
           },
