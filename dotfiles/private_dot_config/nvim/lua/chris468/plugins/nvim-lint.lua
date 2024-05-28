@@ -10,7 +10,9 @@ return {
 
     vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
       callback = function()
-        lint.try_lint()
+        if vim.bo.buftype ~= "help" then
+          lint.try_lint()
+        end
       end,
       desc = "Lint on save",
     })
