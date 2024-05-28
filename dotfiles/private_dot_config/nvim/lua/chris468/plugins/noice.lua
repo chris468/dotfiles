@@ -10,6 +10,7 @@ end
 
 return {
   "folke/noice.nvim",
+  cond = require("chris468.config").enable_noice,
   dependencies = {
     "MunifTanjim/nui.nvim",
     "rcarriga/nvim-notify",
@@ -21,7 +22,6 @@ return {
       },
     },
   },
-  cond = require("chris468.config").enable_noice,
   keys = {
     "<leader>fn",
     { "<leader>nl", "<cmd>NoiceLast<cr>", desc = "Last" },
@@ -31,6 +31,9 @@ return {
   },
   lazy = false, -- not lazy to try and get set up before any notifcations can be raised
   opts = {
+    cmdline = {
+      view = "cmdline",
+    },
     lsp = {
       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
       override = {
@@ -43,12 +46,23 @@ return {
     presets = {
       bottom_search = true, -- use a classic bottom cmdline for search
       command_palette = false, -- position the cmdline and popupmenu together
-      long_message_to_split = true, -- long messages will be sent to a split
       inc_rename = true, -- enables an input dialog for inc-rename.nvim
+      long_message_to_split = true, -- long messages will be sent to a split
       lsp_doc_border = false, -- add a border to hover docs and signature help
     },
-    cmdline = {
-      view = "cmdline",
+    routes = {
+      {
+        filter = {
+          any = {
+            { event = "msg_show", find = "%d+L, %d+B" },
+            { event = "msg_show", find = "; after #%d+" },
+            { event = "msg_show", find = "; before #%d+" },
+            { event = "msg_show", find = "^search hit .+, continuing at .+$" },
+            { event = "msg_show", find = "^E486" },
+          },
+        },
+        view = "mini",
+      },
     },
   },
 }
