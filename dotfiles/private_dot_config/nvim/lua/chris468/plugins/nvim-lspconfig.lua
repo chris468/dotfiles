@@ -1,4 +1,5 @@
 local icons = require("chris468.config.icons")
+local util = require("chris468.util")
 
 local servers = {
   angularls = {},
@@ -122,9 +123,30 @@ return {
       },
     },
     { "smjonas/inc-rename.nvim", opts = {} },
+    {
+      "folke/trouble.nvim",
+      cmd = { "Trouble", "TroubleClose", "TroubleRefresh", "TroubleToggle" },
+      keys = {
+        { "<leader>cd", util.trouble.open("document_diagnostics"), desc = "Document diagnostics" },
+        { "<leader>cD", util.trouble.open("workspace_diagnostics"), desc = "Workspace diagnostics" },
+        { "<leader>ct", util.trouble.toggle(), desc = "Toggle trouble" },
+      },
+      lazy = true,
+      opts = {
+        padding = false,
+        signs = {
+          error = icons.error,
+          warning = icons.warning,
+          hint = icons.hint,
+          information = icons.info,
+          other = icons.info,
+        },
+      },
+    },
   },
   keys = {
     { "<leader>cil", "<cmd>LspInfo<cr>", desc = "Language server" },
+    { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostics" },
   },
   lazy = false,
   opts = {

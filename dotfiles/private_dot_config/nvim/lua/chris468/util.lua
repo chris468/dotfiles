@@ -29,4 +29,6 @@ function M.regisiter_highlights(augroupname, highlights)
   })
 end
 
+M.trouble = require("chris468.util.trouble")
+
 return M

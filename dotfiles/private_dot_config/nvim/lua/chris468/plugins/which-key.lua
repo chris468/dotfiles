@@ -32,6 +32,7 @@ return {
           f = {
             "Find",
             ["?"] = "Grep",
+            l = "LSP",
           },
           g = {
             "Git",
