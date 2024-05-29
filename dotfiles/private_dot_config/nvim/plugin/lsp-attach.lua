@@ -48,7 +48,7 @@ end
 
 local function refresh_codelens(buf)
   vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "CursorHold" }, {
-    group = "Configure LSP",
+    group = vim.api.nvim_create_augroup("Refresh codelens", { clear = true }),
     buffer = buf,
     callback = function()
       for _, client in ipairs(vim.lsp.get_active_clients({ buf = buf })) do
@@ -63,7 +63,6 @@ end
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("Configure LSP", { clear = true }),
-  once = true,
   callback = function(args)
     local buf = args.buf
     set_keymaps(buf)
