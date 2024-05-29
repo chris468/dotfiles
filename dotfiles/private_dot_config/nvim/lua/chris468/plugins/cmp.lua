@@ -9,7 +9,87 @@ return {
   "hrsh7th/nvim-cmp",
   config = function(_, _)
     local cmp = require("cmp")
+    local luasnip = require("luasnip")
+
+    local function select_prev_item()
+      return cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+    end
+
+    local function select_next_item()
+      return cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
+    end
+
+    local function confirm(behavior)
+      return cmp.mapping.confirm({ select = true, behavior = behavior })
+    end
+
+    local function safe_confirm(behavior)
+      return function(fallback)
+        if cmp.get_active_entry() then
+          return cmp.confirm({ select = false, behavior = behavior })
+        else
+          fallback()
+        end
+      end
+    end
+
+    local function scroll_docs_down()
+      return cmp.mapping.scroll_docs(4)
+    end
+
+    local function scroll_docs_up()
+      return cmp.mapping.scroll_docs(-4)
+    end
+
+    local function confirm_expand_or_forward_jump()
+      return function(fallback)
+        if not cmp.confirm({ select = true }) then
+          if luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
+          else
+            fallback()
+          end
+        end
+      end
+    end
+
+    local function backward_jump()
+      return function(fallback)
+        if luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end
+    end
+
     cmp.setup({
+      mapping = {
+        ["<C-P>"] = cmp.mapping(select_prev_item(), { "c", "i" }),
+        ["<C-K>"] = cmp.mapping(select_prev_item(), { "c", "i" }),
+        ["<C-N>"] = cmp.mapping(select_next_item(), { "c", "i" }),
+        ["<C-J>"] = cmp.mapping(select_next_item(), { "c", "i" }),
+        ["<CR>"] = cmp.mapping({
+          i = safe_confirm(),
+          s = confirm(),
+          c = safe_confirm(cmp.ConfirmBehavior.Replace),
+        }),
+        ["<S-CR>"] = cmp.mapping({
+          i = safe_confirm(cmp.ConfirmBehavior.Replace),
+          s = confirm(),
+          c = safe_confirm(cmp.ConfirmBehavior.Replace),
+        }),
+        ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "c", "i" }),
+        ["<C-E>"] = cmp.mapping(cmp.mapping.abort(), { "c", "i" }),
+        ["<C-B>"] = cmp.mapping(scroll_docs_up(), { "c", "i" }),
+        ["<C-F>"] = cmp.mapping(scroll_docs_down(), { "c", "i" }),
+        ["<Tab>"] = cmp.mapping({
+          i = confirm_expand_or_forward_jump(),
+          s = confirm_expand_or_forward_jump(),
+          c = cmp.mapping.confirm({ select = true }),
+        }),
+        ["<S-Tab>"] = cmp.mapping(backward_jump(), { "i", "s" }),
+      },
       snippet = {
         expand = function(args)
           require("luasnip").lsp_expand(args.body)
@@ -20,17 +100,6 @@ return {
         { name = "luasnip" },
       }, {
         { name = "buffer" },
-      }),
-      mapping = cmp.mapping.preset.insert({
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }),
-        ["<S-CR>"] = cmp.mapping.confirm({
-          select = true,
-          behavior = cmp.ConfirmBehavior.Replace,
-        }),
       }),
     })
 
@@ -44,7 +113,6 @@ return {
     )
 
     cmp.setup.cmdline(":", {
-      mapping = cmp.mapping.preset.cmdline(),
       sources = cmp.config.sources({
         { name = "path " },
       }, {
@@ -54,7 +122,6 @@ return {
     })
 
     cmp.setup.cmdline({ "/", "?" }, {
-      mapping = cmp.mapping.preset.cmdline(),
       sources = {
         { name = "buffer" },
       },
