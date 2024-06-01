@@ -63,7 +63,7 @@ return {
   -- stylua: ignore
   keys = {
     { "<C-\\>" },
-    { "<leader>ft", "<cmd>TermSelect<CR>", desc = { "Terminal" } },
+    { "<leader>ft", "<cmd>TermSelect<CR>", desc = "Terminal" },
     { "<leader>Tf", "<cmd>1ToggleTerm<cr>", mode = { "n", "t" }, desc = "Floating terminal" },
     { "<leader>Tt", function() horizontal():toggle() end, mode = { "n", "t" }, desc = "Horizontal terminal" },
     { "<leader>Td", function() chezmoi():toggle() end, mode = { "n", "t" }, desc = "Dotfiles" },
