@@ -31,7 +31,7 @@ local function configure_omnisharp_commands()
 end
 
 return {
-  cmd = { "omnisharp" },
+  cmd = { "omnisharp", "--languageserver", "--hostpid", tostring(vim.fn.getpid()) },
   on_attach = function(_, _)
     -- Ideally this would just set up the command in the comands table, but in lspconfig
     -- that currently sets up autocmds. see neovim/nvim-lspconfig/issues/2632.
