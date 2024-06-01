@@ -64,6 +64,16 @@ return {
     end
 
     cmp.setup({
+      formatting = {
+        fields = { "kind", "abbr", "menu" },
+        format = function(entry, vim_item)
+          local icons = require("chris468.config.icons")
+          local icon = (vim_item.kind and icons[string.lower(vim_item.kind)]) or " "
+          vim_item.kind = icon
+
+          return vim_item
+        end,
+      },
       mapping = {
         ["<C-P>"] = cmp.mapping(select_prev_item(), { "c", "i" }),
         ["<C-K>"] = cmp.mapping(select_prev_item(), { "c", "i" }),
