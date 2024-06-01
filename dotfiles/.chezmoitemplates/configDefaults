@@ -24,7 +24,7 @@ packageManager:
         enable: false
 
 windowsTerminal:
-    defaultProfile: "{574e775e-4f2a-5b96-ac1e-a2962a402336}"
+    defaultProfile: "{47302f9c-1ac4-566c-aa3e-8cf29889d6ab}"
 
 nvim:
   flavor: lazyvim
