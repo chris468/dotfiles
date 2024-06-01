@@ -34,7 +34,7 @@ export def --env capture [
     }
 
     def default_shell [] {
-        if (sys).host.name == "Windows" {
+        if (sys host).name == "Windows" {
             'C:\Program Files\Git\bin\bash.exe'
         } else {
             (which bash).path | first
