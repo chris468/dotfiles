@@ -64,16 +64,20 @@ local function servers_for_filetypes()
   return install_for_filetype
 end
 
-local function to_server_config(server, opts, capabilities)
+local function to_server_config(server, config, capabilities)
   if type(server) == "string" then
-    if type(opts) == "table" then
-      return server, vim.tbl_deep_extend("force", opts, capabilities)
-    elseif type(opts) == "function" then
-      return server, opts(capabilities)
+    if type(config) == "table" then
+      if config.capabilities or capabilities then
+        config = vim.deepcopy(config)
+        config.capabilities = vim.tbl_deep_extend("force", config.capabilities or {}, capabilities or {})
+      end
+      return server, config
+    elseif type(config) == "function" then
+      return server, config(capabilities)
     end
   end
 
-  vim.notify("Invalid lsp server configuration: " .. vim.inspect({ [server] = opts }), vim.log.levels.ERROR)
+  vim.notify("Invalid lsp server configuration: " .. vim.inspect({ [server] = config }), vim.log.levels.ERROR)
 end
 
 return {
