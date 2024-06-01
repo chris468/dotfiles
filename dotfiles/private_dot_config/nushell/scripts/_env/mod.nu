@@ -59,6 +59,12 @@ def --env configure-carapace [] {
     }
 }
 
+def generate-oh-my-posh-config [] {
+    if (which oh-my-posh | is-not-empty) {
+        oh-my-posh init nu --print | save --force ~/.config/nushell/scripts/_lib/.oh-my-posh.nu
+    }
+}
+
 export def --env main [] {
     set-environment
     profile
@@ -67,6 +73,7 @@ export def --env main [] {
     less
     libvirt
     configure-carapace
+    generate-oh-my-posh-config
 
     if $nu.os-info.name != "windows" { ssh-agent }
 }
