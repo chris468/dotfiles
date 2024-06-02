@@ -22,6 +22,7 @@ return {
   opts = {
     register = {
       {
+        gp = { "Preview" },
         ["<C-A>"] = { "<nop>", "which_key_ignore" }, -- Disable increment, I never use it on purpose
         ["<leader>"] = {
           b = { "Buffer" },
