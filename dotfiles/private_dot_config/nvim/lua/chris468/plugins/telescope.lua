@@ -74,5 +74,10 @@ return {
     { "<leader>f:", telescope_builtin("command_history"), desc = "Recent commands" },
   },
   lazy = true,
+  opts = {
+    defaults = {
+      layout_strategy = "vertical",
+    },
+  },
   version = "0.1.x",
 }
