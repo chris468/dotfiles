@@ -16,6 +16,7 @@ return {
       "quickfix",
       "trouble",
       "chris468.toggleterm",
+      "chris468.telescope",
     },
     sections = {
       lualine_a = {
