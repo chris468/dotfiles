@@ -1,19 +1,27 @@
 [x] completion in cmd mode is not completing commands (only buffer, snippet)
 [x] lsp keymaps
-[ ] trouble
+[x] trouble
 [x] rethink cmp (completion and snippet) keymaps
 [x] buffer commands / :q behavior
+[ ] vim-exchange
+[ ] inc-rename prompt
+[ ] project default behavior to chdir
+[ ] telescope improvements
+    [ ] c-k/c-j for up/down
+    [ ] improve long path readability, either through path display config or re-layout
+    [ ] shortcut for keymaps
+[ ] use vscode icons for signs and cmp (they're in nerdfonts)
 [ ] testing
 [ ] debugging
 [ ] treesitter
     [ ]   treesitter-textobjects
     [ ]   treesitter-autotag
 [ ] scrub plugin versions
-[ ] bufline shows all bufs, navigation between all bufs, even when multiple tabs.
+[-] bufline shows all bufs, navigation between all bufs, even when multiple tabs.
     can it be limited to the ones in the current tab?
-[ ] improved illuminate hilighting
-[ ] mini?
-    [ ] mini.surround instead of vim-surround?
+[-] improved illuminate hilighting
+[-] mini?
+    [-] mini.surround instead of vim-surround?
 [x]   context
 [x] illuminate
 [x] language server
@@ -26,7 +34,7 @@
 [x] gitsigns
 [x] toggleterm
 [x] project
-[ ] improved project directory detection / changing
+[x] improved project directory detection / changing
 [x] completion
 [ ] scrub laziness of lsp, conform, and lint
 [ ] configure pgup/pgdn keystroke in modals
