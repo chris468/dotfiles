@@ -42,6 +42,7 @@ local function create_buffer(path)
   vim.bo[buf].filetype = "lua"
   vim.bo[buf].bufhidden = "wipe"
   vim.bo[buf].buftype = "nofile"
+  vim.bo[buf].bufhidden = "hide"
 
   return buf
 end
