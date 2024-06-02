@@ -4,7 +4,7 @@
 [x] rethink cmp (completion and snippet) keymaps
 [x] buffer commands / :q behavior
 [x] vim-exchange
-[ ] inc-rename prompt
+[x] inc-rename prompt
 [ ] project default behavior to chdir
 [ ] telescope improvements
     [ ] c-k/c-j for up/down
