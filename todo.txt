@@ -1,7 +1,7 @@
 [x] completion in cmd mode is not completing commands (only buffer, snippet)
 [x] lsp keymaps
 [ ] trouble
-[ ] rethink cmp (completion and snippet) keymaps
+[x] rethink cmp (completion and snippet) keymaps
 [x] buffer commands / :q behavior
 [ ] testing
 [ ] debugging
