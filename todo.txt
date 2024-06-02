@@ -35,5 +35,5 @@
     [ ] others?
 [x] lazygit
     [x] warn on any unsaved buffers when opening lazygit
-[ ] gitlinker.nvim?
+[x] gitlinker.nvim?
 [ ] goto-preview?
