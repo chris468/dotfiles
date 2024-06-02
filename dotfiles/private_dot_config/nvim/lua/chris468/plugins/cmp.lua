@@ -109,6 +109,8 @@ return {
         { name = "luasnip" },
         { name = "nvim_lsp" },
       }, {
+        { name = "nerdfont" },
+      }, {
         { name = "buffer" },
       }),
     })
@@ -124,9 +126,10 @@ return {
 
     cmp.setup.cmdline(":", {
       sources = cmp.config.sources({
-        { name = "path " },
+        { name = "path" },
       }, {
         { name = "cmdline" },
+        { name = "cmdline_history" },
       }),
       matching = { disallow_symbol_nonprefix_matching = false },
     })
@@ -134,6 +137,7 @@ return {
     cmp.setup.cmdline({ "/", "?" }, {
       sources = {
         { name = "buffer" },
+        { name = "cmdline_history", opts = { history_type = ":" } },
       },
     })
   end,
@@ -153,6 +157,8 @@ return {
     { "hrsh7th/cmp-path" },
     { "hrsh7th/cmp-cmdline" },
     { "saadparwaiz1/cmp_luasnip" },
+    { "dmitmel/cmp-cmdline-history" },
+    { "chrisgrieser/cmp-nerdfont" },
     { "petertriho/cmp-git", config = true },
     {
       "nvim-lspconfig",
