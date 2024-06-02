@@ -3,7 +3,7 @@
 [x] trouble
 [x] rethink cmp (completion and snippet) keymaps
 [x] buffer commands / :q behavior
-[ ] vim-exchange
+[x] vim-exchange
 [ ] inc-rename prompt
 [ ] project default behavior to chdir
 [ ] telescope improvements
