@@ -109,6 +109,8 @@ return {
         { name = "luasnip" },
         { name = "nvim_lsp" },
       }, {
+        { name = "nerdfont" },
+      }, {
         { name = "buffer" },
       }),
     })
@@ -156,6 +158,7 @@ return {
     { "hrsh7th/cmp-cmdline" },
     { "saadparwaiz1/cmp_luasnip" },
     { "dmitmel/cmp-cmdline-history" },
+    { "chrisgrieser/cmp-nerdfont" },
     { "petertriho/cmp-git", config = true },
     {
       "nvim-lspconfig",
