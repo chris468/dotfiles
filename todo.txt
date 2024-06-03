@@ -8,7 +8,7 @@
 [ ] project default behavior to chdir
 [ ] telescope improvements
     [ ] c-k/c-j for up/down
-    [ ] improve long path readability, either through path display config or re-layout
+    [x] improve long path readability, either through path display config or re-layout
     [ ] shortcut for keymaps
 [ ] use vscode icons for signs and cmp (they're in nerdfonts)
 [ ] testing
@@ -17,6 +17,12 @@
     [ ]   treesitter-textobjects
     [ ]   treesitter-autotag
 [ ] scrub plugin versions
+[ ] explorer
+    [ ] configure diagnostic signs
+    [ ] focus root on cd
+[ ] j/k => gj/gk
+[ ] clipboard behavior
+[ ] copilot
 [-] bufline shows all bufs, navigation between all bufs, even when multiple tabs.
     can it be limited to the ones in the current tab?
 [-] improved illuminate hilighting
