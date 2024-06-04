@@ -28,11 +28,13 @@ return {
       follow_current_file = { enabled = false },
     },
     default_component_configs = {
-      symbols = {
-        error = icons.error .. " ",
-        warn = icons.warn .. " ",
-        hint = icons.hint .. " ",
-        info = icons.info .. " ",
+      diagnostics = {
+        symbols = {
+          error = icons.error .. " ",
+          warn = icons.warn .. " ",
+          hint = icons.hint .. " ",
+          info = icons.info .. " ",
+        },
       },
     },
     window = {
