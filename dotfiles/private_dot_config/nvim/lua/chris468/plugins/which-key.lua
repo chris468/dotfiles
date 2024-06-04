@@ -13,6 +13,12 @@ return {
       local m, o = r[1] or r.mappings or r, r.opts
       wk.register(m, o)
     end
+
+    local fkeys = {}
+    for k = 13, 48 do
+      fkeys["<F" .. k .. ">"] = { "which_key_ignore" }
+    end
+    wk.register(fkeys, { mode = "" })
   end,
   event = "VeryLazy",
   init = function()
