@@ -19,7 +19,7 @@ for k = 1, 12 do
   -- c-f10: <F34>
   -- c-s-f10: <F46>
 
-  vim.api.nvim_set_keymap("", Wrap(F(k + 12)), Wrap(Shift(F(k))), {})
-  vim.api.nvim_set_keymap("", Wrap(F(k + 24)), Wrap(Control(F(k))), {})
-  vim.api.nvim_set_keymap("", Wrap(F(k + 36)), Wrap(Control(Shift(F(k)))), {})
+  vim.api.nvim_set_keymap("", Wrap(F(k + 12)), Wrap(Shift(F(k))), { desc = "which_key_ignore" })
+  vim.api.nvim_set_keymap("", Wrap(F(k + 24)), Wrap(Control(F(k))), { desc = "which_key_ignore" })
+  vim.api.nvim_set_keymap("", Wrap(F(k + 36)), Wrap(Control(Shift(F(k)))), { desc = "which_key_ignore" })
 end
