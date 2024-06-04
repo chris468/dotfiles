@@ -12,7 +12,10 @@
     [ ] shortcut for keymaps
 [ ] use vscode icons for signs and cmp (they're in nerdfonts)
 [ ] testing
-[ ] debugging
+[x] debugging
+[ ] more dap providers
+    [ ] dotnet
+    [ ] js/ts
 [ ] treesitter
     [ ]   treesitter-textobjects
     [ ]   treesitter-autotag
