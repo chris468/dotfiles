@@ -68,7 +68,7 @@ return {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
           local icons = require("chris468.config.icons")
-          local icon = (vim_item.kind and icons[string.lower(vim_item.kind)]) or " "
+          local icon = (vim_item.kind and icons.symbols[string.lower(vim_item.kind)]) or " "
           vim_item.kind = icon
 
           return vim_item

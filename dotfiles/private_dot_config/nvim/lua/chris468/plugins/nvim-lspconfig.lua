@@ -1,4 +1,4 @@
-local icons = require("chris468.config.icons")
+local icons = require("chris468.config.icons").diagnostic
 local util = require("chris468.util")
 
 local servers = {
@@ -139,11 +139,11 @@ return {
       opts = {
         padding = false,
         signs = {
-          error = icons.error,
-          warning = icons.warning,
-          hint = icons.hint,
-          information = icons.info,
-          other = icons.info,
+          error = icons.error .. " ",
+          warning = icons.warn .. " ",
+          hint = icons.hint .. " ",
+          information = icons.info .. " ",
+          other = icons.info .. " ",
         },
       },
       version = "^2",
@@ -158,10 +158,10 @@ return {
     capabilities = {},
     servers = servers,
     signs = {
-      Error = icons.error,
-      Warn = icons.warn,
-      Hint = icons.hint,
-      Info = icons.info,
+      Error = icons.error .. " ",
+      Warn = icons.warn .. " ",
+      Hint = icons.hint .. " ",
+      Info = icons.info .. " ",
     },
   },
 }

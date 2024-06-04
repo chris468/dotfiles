@@ -1,4 +1,4 @@
-local icons = require("chris468.config.icons")
+local icons = require("chris468.config.icons").diagnostic
 
 local function reveal()
   local buf = vim.bo.filetype == "neo-tree" and "#" or "%"
@@ -29,10 +29,10 @@ return {
     },
     default_component_configs = {
       symbols = {
-        error = icons.error,
-        warn = icons.warn,
-        hint = icons.hint,
-        info = icons.info,
+        error = icons.error .. " ",
+        warn = icons.warn .. " ",
+        hint = icons.hint .. " ",
+        info = icons.info .. " ",
       },
     },
     window = {
