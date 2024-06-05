@@ -32,8 +32,8 @@ return {
         symbols = {
           error = icons.error .. " ",
           warn = icons.warn .. " ",
-          hint = icons.hint .. " ",
-          info = icons.info .. " ",
+          info = "",
+          hint = "",
         },
       },
     },

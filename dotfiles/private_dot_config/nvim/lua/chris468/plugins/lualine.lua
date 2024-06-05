@@ -36,6 +36,7 @@ return {
         "diff",
         {
           "diagnostics",
+          sections = { "error", "warning" },
           symbols = {
             error = icons.diagnostic.error,
             warn = icons.diagnostic.warn,

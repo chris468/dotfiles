@@ -102,6 +102,7 @@ return {
       },
       update_in_insert = true,
       severity_sort = true,
+      virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
     })
   end,
   dependencies = {
@@ -141,9 +142,9 @@ return {
         signs = {
           error = icons.error .. " ",
           warning = icons.warn .. " ",
-          hint = icons.hint .. " ",
           information = icons.info .. " ",
-          other = icons.info .. " ",
+          hint = icons.hint .. " ",
+          other = icons.hint .. " ",
         },
       },
       version = "^2",
@@ -160,8 +161,8 @@ return {
     signs = {
       Error = icons.error .. " ",
       Warn = icons.warn .. " ",
-      Hint = icons.hint .. " ",
       Info = icons.info .. " ",
+      Hint = " ",
     },
   },
 }

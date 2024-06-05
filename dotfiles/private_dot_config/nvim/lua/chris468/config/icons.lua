@@ -2,8 +2,8 @@ return {
   diagnostic = {
     error = "",
     warn = "",
-    info = "", -- todo: should hide?
-    hint = "", -- todo: should hide?
+    info = "", -- suggestion :nf-cod-inf
+    hint = "", -- silent
   },
   file = {
     unnamed = "󰡯", -- nf-md-file_question
