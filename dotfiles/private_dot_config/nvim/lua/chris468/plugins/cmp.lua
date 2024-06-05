@@ -5,6 +5,16 @@ local function build()
   return "make install_jsregexp"
 end
 
+local format = {}
+
+function format.nvim_lsp(_, vim_item)
+  local icons = require("chris468.config.icons")
+  local icon = (vim_item.kind and icons.symbols[string.lower(vim_item.kind)]) or " "
+  vim_item.kind = icon
+
+  return vim_item
+end
+
 return {
   "hrsh7th/nvim-cmp",
   config = function(_, _)
@@ -67,11 +77,7 @@ return {
       formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-          local icons = require("chris468.config.icons")
-          local icon = (vim_item.kind and icons.symbols[string.lower(vim_item.kind)]) or " "
-          vim_item.kind = icon
-
-          return vim_item
+          return format[entry.source.name] and format[entry.source.name](entry, vim_item) or vim_item
         end,
       },
       mapping = {
