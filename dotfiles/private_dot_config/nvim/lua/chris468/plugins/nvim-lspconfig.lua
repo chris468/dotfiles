@@ -146,6 +146,7 @@ return {
           other = icons.info,
         },
       },
+      version = "^2",
     },
   },
   keys = {
