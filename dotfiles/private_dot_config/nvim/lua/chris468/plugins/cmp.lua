@@ -21,6 +21,8 @@ function format.nvim_lsp(_, vim_item)
   return vim_item
 end
 
+format.luasnip = format.nvim_lsp
+
 function format.path(_, vim_item)
   local wda = require("nvim-web-devicons")
   local icon, hl
@@ -159,14 +161,13 @@ return {
       }),
     })
 
-    cmp.setup.filetype(
-      "gitcommit",
-      cmp.config.sources({
+    cmp.setup.filetype("gitcommit", {
+      sources = cmp.config.sources({
         { name = "git" },
       }, {
         { name = "buffer" },
-      })
-    )
+      }),
+    })
 
     cmp.setup.cmdline(":", {
       sources = cmp.config.sources({
