@@ -15,6 +15,21 @@ function format.nvim_lsp(_, vim_item)
   return vim_item
 end
 
+function format.path(_, vim_item)
+  local wda = require("nvim-web-devicons")
+  local icon, hl
+  if vim_item.abbr and string.sub(vim_item.abbr, -1) == "/" then
+    icon, hl = "", "NeoTreeDirectoryIcon"
+  else
+    local filename = vim_item.word
+    local extension = vim.fn.fnamemodify(filename, ":e")
+    icon, hl = wda.get_icon(filename, extension, { default = true })
+  end
+  vim_item.kind = icon
+  vim_item.kind_hl_group = hl
+  return vim_item
+end
+
 return {
   "hrsh7th/nvim-cmp",
   config = function(_, _)
