@@ -170,7 +170,7 @@ return {
     cmp.setup.cmdline({ "/", "?" }, {
       sources = {
         { name = "buffer" },
-        { name = "cmdline_history", opts = { history_type = ":" } },
+        { name = "cmdline_history", opts = { history_type = "/" } },
       },
     })
   end,
