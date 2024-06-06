@@ -38,4 +38,6 @@ return {
     operator = "",
     typeParameter = "",
   },
+  history = "",
+  command = ">",
 }

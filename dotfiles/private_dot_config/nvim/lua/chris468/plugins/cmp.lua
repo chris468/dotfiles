@@ -46,6 +46,12 @@ function format.cmdline_history(_, vim_item)
   return vim_item
 end
 
+function format.cmdline(_, vim_item)
+  vim_item.kind = icons.command
+  vim_item.kind_hl_group = "NoiceCmdlineIcon"
+  return vim_item
+end
+
 return {
   "hrsh7th/nvim-cmp",
   config = function(_, _)
