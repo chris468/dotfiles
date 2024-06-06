@@ -1,3 +1,5 @@
+local icons = require("chris468.config.icons")
+
 local function build()
   if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
     return
@@ -8,7 +10,6 @@ end
 local format = {}
 
 function format.nvim_lsp(_, vim_item)
-  local icons = require("chris468.config.icons")
   local icon = (vim_item.kind and icons.symbols[string.lower(vim_item.kind)]) or " "
   vim_item.kind = icon
 
@@ -27,6 +28,11 @@ function format.path(_, vim_item)
   end
   vim_item.kind = icon
   vim_item.kind_hl_group = hl
+  return vim_item
+end
+
+function format.buffer(_, vim_item)
+  vim_item.kind = icons.symbols.text
   return vim_item
 end
 
