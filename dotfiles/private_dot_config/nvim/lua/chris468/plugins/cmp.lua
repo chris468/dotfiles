@@ -10,7 +10,7 @@ end
 local format = {}
 
 function format.default(entry, vim_item)
-  vim_item.menu = "(" .. entry.source.name .. ")"
+  vim_item.kind = vim_item.kind .. " (" .. entry.source.name .. ")"
   return vim_item
 end
 
