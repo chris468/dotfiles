@@ -21,12 +21,15 @@ function format.nvim_lsp(_, vim_item)
   return vim_item
 end
 
+format.dap = format.nvim_lsp
 format.luasnip = format.nvim_lsp
 
 format.git = function(_, vim_item)
   vim_item.kind = nil
   return vim_item
 end
+
+format.nerdfont = format.git
 
 function format.path(_, vim_item)
   local wda = require("nvim-web-devicons")
