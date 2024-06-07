@@ -164,6 +164,16 @@ return {
       }, {
         { name = "buffer" },
       }),
+      window = {
+        completion = {
+          border = "rounded",
+          winhighlight = "FloatBorder:NoiceCmdlinePopupBorder",
+        },
+        documentation = {
+          border = "rounded",
+          winhighlight = "FloatBorder:NoiceCmdlinePopupBorder",
+        },
+      },
     })
 
     cmp.setup.filetype({ "gitcommit", "octo" }, {
