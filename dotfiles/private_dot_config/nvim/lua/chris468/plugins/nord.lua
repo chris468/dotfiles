@@ -26,6 +26,18 @@ return {
         force = true,
         fg = nord[9].gui,
       })
+      vim.api.nvim_set_hl(0, "chris468.BreakpointLine", {
+        force = true,
+        bg = "#120708", -- nord[11] w/ lightness decreased to 5%
+      })
+      vim.api.nvim_set_hl(0, "chris468.StoppedLine", {
+        force = true,
+        bg = "#231906", -- nord[13] w/ lightness decreased to 8%
+      })
+      vim.api.nvim_set_hl(0, "chris468.StoppedIcon", {
+        force = true,
+        fg = nord[13].gui,
+      })
     end
 
     if is_default_theme then

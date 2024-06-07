@@ -1,4 +1,10 @@
 return {
+  debugging = {
+    breakpoint = "",
+    conditional_breakpoint = "",
+    logpoint = "",
+    stopped = "",
+  },
   diagnostic = {
     error = "",
     warn = "",

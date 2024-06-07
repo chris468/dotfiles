@@ -125,11 +125,28 @@ return {
   "mfussenegger/nvim-dap",
   config = function()
     local dap = require("dap")
+    local icons = require("chris468.config.icons")
 
     dap.listeners.before.attach.dapui_config = attach
     dap.listeners.before.launch.dapui_config = attach
     dap.listeners.before.event_terminated.dapui_config = detach
     dap.listeners.before.event_exited.dapui_config = detach
+
+    vim.fn.sign_define("DapBreakpoint", {
+      text = icons.debugging.breakpoint,
+      texthl = "DapBreakpoint",
+      linehl = "chris468.BreakpointLine",
+    })
+    vim.fn.sign_define(
+      "DapBreakpointCondition",
+      { text = icons.debugging.conditional_breakpoint, texthl = "DapBreakpoint" }
+    )
+    vim.fn.sign_define("DapLogPoint", { text = icons.debugging.logpoint, texthl = "DapLogPoint" })
+    vim.fn.sign_define(
+      "DapStopped",
+      { text = icons.debugging.stopped, texthl = "chris468.StoppedIcon", linehl = "chris468.StoppedLine" }
+    )
+    vim.fn.sign_define("DapBreakpointRejected", { text = icons.debugging.breakpoint, texthl = "Comment" })
   end,
   dependencies = {
     {

@@ -20,6 +20,18 @@ return {
         force = true,
         fg = catppuccin.lavender,
       })
+      vim.api.nvim_set_hl(0, "chris468.BreakpointLine", {
+        force = true,
+        bg = "#170208", -- catppuccin.red w/ lightness decreased to 5%
+      })
+      vim.api.nvim_set_hl(0, "chris468.StoppedLine", {
+        force = true,
+        bg = "#261b03", -- catppuccin.yellow w/ lightness decreased to 8%
+      })
+      vim.api.nvim_set_hl(0, "chris468.StoppedIcon", {
+        force = true,
+        fg = catppuccin.yellow,
+      })
     end
 
     if is_default_theme then
