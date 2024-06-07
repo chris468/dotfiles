@@ -1,4 +1,4 @@
-local icons = require("chris468.config.icons")
+local icons = require("chris468.config.icons").diagnostic
 local util = require("chris468.util")
 
 local servers = {
@@ -102,6 +102,7 @@ return {
       },
       update_in_insert = true,
       severity_sort = true,
+      virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
     })
   end,
   dependencies = {
@@ -139,11 +140,11 @@ return {
       opts = {
         padding = false,
         signs = {
-          error = icons.error,
-          warning = icons.warning,
-          hint = icons.hint,
-          information = icons.info,
-          other = icons.info,
+          error = icons.error .. " ",
+          warning = icons.warn .. " ",
+          information = icons.info .. " ",
+          hint = icons.hint .. " ",
+          other = icons.hint .. " ",
         },
       },
       version = "^2",
@@ -158,10 +159,10 @@ return {
     capabilities = {},
     servers = servers,
     signs = {
-      Error = icons.error,
-      Warn = icons.warn,
-      Hint = icons.hint,
-      Info = icons.info,
+      Error = icons.error .. " ",
+      Warn = icons.warn .. " ",
+      Info = icons.info .. " ",
+      Hint = " ",
     },
   },
 }

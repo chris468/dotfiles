@@ -1,8 +1,65 @@
+local icons = require("chris468.config.icons")
+
 local function build()
   if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
     return
   end
   return "make install_jsregexp"
+end
+
+local format = {}
+
+function format.default(entry, vim_item)
+  vim_item.kind = vim_item.kind .. " (" .. entry.source.name .. ")"
+  return vim_item
+end
+
+function format.nvim_lsp(_, vim_item)
+  local icon = (vim_item.kind and icons.symbols[string.lower(vim_item.kind)]) or " "
+  vim_item.kind = icon
+
+  return vim_item
+end
+
+format.dap = format.nvim_lsp
+format.luasnip = format.nvim_lsp
+
+format.git = function(_, vim_item)
+  vim_item.kind = nil
+  return vim_item
+end
+
+format.nerdfont = format.git
+
+function format.path(_, vim_item)
+  local wda = require("nvim-web-devicons")
+  local icon, hl
+  if vim_item.abbr and string.sub(vim_item.abbr, -1) == "/" then
+    icon, hl = "", "NeoTreeDirectoryIcon"
+  else
+    local filename = vim_item.word
+    local extension = vim.fn.fnamemodify(filename, ":e")
+    icon, hl = wda.get_icon(filename, extension, { default = true })
+  end
+  vim_item.kind = icon
+  vim_item.kind_hl_group = hl
+  return vim_item
+end
+
+function format.buffer(_, vim_item)
+  vim_item.kind = icons.symbols.text
+  return vim_item
+end
+
+function format.cmdline_history(_, vim_item)
+  vim_item.kind = icons.history
+  return vim_item
+end
+
+function format.cmdline(_, vim_item)
+  vim_item.kind = icons.command
+  vim_item.kind_hl_group = "NoiceCmdlineIcon"
+  return vim_item
 end
 
 return {
@@ -67,11 +124,8 @@ return {
       formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-          local icons = require("chris468.config.icons")
-          local icon = (vim_item.kind and icons[string.lower(vim_item.kind)]) or " "
-          vim_item.kind = icon
-
-          return vim_item
+          local f = format[entry.source.name] and entry.source.name or "default"
+          return format[f](entry, vim_item)
         end,
       },
       mapping = {
@@ -113,16 +167,29 @@ return {
       }, {
         { name = "buffer" },
       }),
+      window = {
+        completion = {
+          border = "rounded",
+          winhighlight = "FloatBorder:NoiceCmdlinePopupBorder",
+        },
+        documentation = {
+          border = "rounded",
+          winhighlight = "FloatBorder:NoiceCmdlinePopupBorder",
+        },
+      },
     })
 
-    cmp.setup.filetype(
-      "gitcommit",
-      cmp.config.sources({
+    cmp.setup.filetype({ "gitcommit", "octo" }, {
+      formatting = {
+        fields = { "abbr", "menu" },
+        format = format.git,
+      },
+      sources = cmp.config.sources({
         { name = "git" },
       }, {
         { name = "buffer" },
-      })
-    )
+      }),
+    })
 
     cmp.setup.cmdline(":", {
       sources = cmp.config.sources({
@@ -137,7 +204,7 @@ return {
     cmp.setup.cmdline({ "/", "?" }, {
       sources = {
         { name = "buffer" },
-        { name = "cmdline_history", opts = { history_type = ":" } },
+        { name = "cmdline_history", opts = { history_type = "/" } },
       },
     })
   end,
