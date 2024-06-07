@@ -25,7 +25,12 @@
     [x] configure diagnostic signs
     [ ] focus root on cd
     [ ] hijack netrw
-    [ ] last buffer behavior
+    [ ] last buffer behavior [faq]
+    [ ] telescope for file/dir search [recipes]
+    [ ] nesting rules saifulapm/neotree-file-nesting-config [recipes]
+    [ ] hide cursor [visual customization]
+    [ ] source selecter / merged in tab line [recipes]
+    [ ] h/l for dir expansion [tips]
 [ ] j/k => gj/gk
 [ ] clipboard behavior
 [ ] copilot
