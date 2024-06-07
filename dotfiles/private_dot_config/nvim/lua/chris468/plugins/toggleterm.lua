@@ -65,6 +65,10 @@ local function map_keys(term, allow_normal)
   local map_navigation = has_tmux_navigation and is_split
 
   local keys = {
+    ["<C-h>"] = { "<C-h>", set = not map_navigation, mode = "n", opts = { noremap = true } },
+    ["<C-j>"] = { "<C-j>", set = not map_navigation, mode = "n", opts = { noremap = true } },
+    ["<C-k>"] = { "<C-k>", set = not map_navigation, mode = "n", opts = { noremap = true } },
+    ["<C-l>"] = { "<C-l>", set = not map_navigation, mode = "n", opts = { noremap = true } },
     ["<esc><C-h>"] = { "<cmd>TmuxNavigateLeft<cr>", set = map_navigation },
     ["<esc><C-j>"] = { "<cmd>TmuxNavigateDown<cr>", set = map_navigation },
     ["<esc><C-k>"] = { "<cmd>TmuxNavigateUp<cr>", set = map_navigation },
@@ -73,11 +77,11 @@ local function map_keys(term, allow_normal)
   }
 
   for key, spec in pairs(keys) do
-    local cmd, set, opts = spec[1], spec.set, spec.opts or {}
+    local cmd, set, mode, opts = spec[1], spec.set, spec.mode or "t", spec.opts or {}
     if set then
-      vim.api.nvim_buf_set_keymap(term.bufnr, "t", key, cmd, opts)
+      vim.api.nvim_buf_set_keymap(term.bufnr, mode, key, cmd, opts)
     else
-      pcall(vim.api.nvim_buf_del_keymap, term.bufnr, "t", key)
+      pcall(vim.api.nvim_buf_del_keymap, term.bufnr, mode, key)
     end
   end
 end
