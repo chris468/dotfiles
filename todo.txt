@@ -11,7 +11,7 @@
     [ ] c-k/c-j for up/down
     [x] improve long path readability, either through path display config or re-layout
     [ ] shortcut for keymaps
-[ ] use vscode icons for signs and cmp (they're in nerdfonts)
+[x] use vscode icons for signs and cmp (they're in nerdfonts)
 [ ] testing
 [x] debugging
 [ ] more dap providers
@@ -22,8 +22,10 @@
     [ ]   treesitter-autotag
 [ ] scrub plugin versions
 [ ] explorer
-    [ ] configure diagnostic signs
+    [x] configure diagnostic signs
     [ ] focus root on cd
+    [ ] hijack netrw
+    [ ] last buffer behavior
 [ ] j/k => gj/gk
 [ ] clipboard behavior
 [ ] copilot
@@ -50,6 +52,7 @@
 [ ] configure pgup/pgdn keystroke in modals
     [ ] lazy
     [ ] mason
+    [ ] neo-tree
     [ ] others?
 [x] lazygit
     [x] warn on any unsaved buffers when opening lazygit
