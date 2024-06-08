@@ -92,6 +92,15 @@ return {
         },
       },
     },
+    sources = { "filesystem", "buffers", "git_status", "document_symbols" },
+    source_selector = {
+      sources = {
+        { source = "filesystem" },
+        { source = "buffers" },
+        { source = "git_status" },
+        { source = "document_symbols" },
+      },
+    },
     window = {
       mappings = {
         ["<space>"] = "nop",
