@@ -23,7 +23,7 @@
 [ ] scrub plugin versions
 [ ] explorer
     [x] configure diagnostic signs
-    [ ] focus root on cd
+    [x] focus root on cd
     [ ] hijack netrw
     [ ] last buffer behavior [faq]
     [ ] telescope for file/dir search [recipes]

@@ -24,9 +24,6 @@ return {
     { "<leader>be", "<cmd>Neotree toggle source=buffers<cr>", desc = "Explorer" },
   },
   opts = {
-    filesystem = {
-      follow_current_file = { enabled = false },
-    },
     default_component_configs = {
       diagnostics = {
         symbols = {
@@ -34,6 +31,19 @@ return {
           warn = icons.warn .. " ",
           info = "",
           hint = "",
+        },
+      },
+    },
+    filesystem = {
+      follow_current_file = { enabled = false },
+      window = {
+        mappings = {
+          ["."] = function(state)
+            local fs = require("neo-tree.sources.filesystem")
+            local id = state.tree:get_node():get_id()
+            state.commands.set_root(state)
+            fs.navigate(state, nil, id, nil, false)
+          end,
         },
       },
     },
