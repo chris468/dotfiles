@@ -18,6 +18,18 @@ return {
     { "nvim-tree/nvim-web-devicons", optional = true },
     { "MunifTanjim/nui.nvim" },
   },
+  init = function()
+    vim.api.nvim_create_autocmd("BufEnter", {
+      group = vim.api.nvim_create_augroup("let neo-tree hijack netrw", {}),
+      callback = function(args)
+        local stat = vim.uv.fs_stat(vim.api.nvim_buf_get_name(args.buf))
+        if stat and stat.type == "directory" then
+          require("neo-tree")
+          return true
+        end
+      end,
+    })
+  end,
   keys = {
     { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Explorer" },
     { "<leader>E", reveal, desc = "Explorer (reveal current file)" },
