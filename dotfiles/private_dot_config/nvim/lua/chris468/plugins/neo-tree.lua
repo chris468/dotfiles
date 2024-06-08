@@ -63,6 +63,26 @@ return {
     window = {
       mappings = {
         ["<space>"] = "nop",
+        ["h"] = function(state)
+          local node, line = state.tree:get_node()
+          if (node.type == "directory" or node:has_children()) and node:is_expanded() then
+            state.commands.toggle_node(state, function()
+              state.commands.toggle_directory(state)
+            end)
+          else
+            require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+          end
+        end,
+        ["l"] = function(state)
+          local node, line = state.tree:get_node()
+          if (node.type == "directory" or node:has_children()) and not node:is_expanded() then
+            state.commands.toggle_node(state, function()
+              state.commands.toggle_directory(state)
+            end)
+          else
+            vim.api.nvim_win_set_cursor(state.winid, { line + 1, 0 })
+          end
+        end,
       },
     },
   },
