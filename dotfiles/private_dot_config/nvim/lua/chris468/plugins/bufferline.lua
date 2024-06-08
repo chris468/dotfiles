@@ -1,6 +1,7 @@
 return {
   "akinsho/bufferline.nvim",
   cmd = { "BufferLineDeleteOthers", "BufferLineCycleNext", "BufferLineCyclePrev" },
+  config = true,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   event = "VeryLazy",
   keys = {
@@ -8,17 +9,6 @@ return {
     { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", desc = "Delete others" },
     { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer" },
     { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
-  },
-  opts = {
-    options = {
-      always_show_bufferline = false,
-      offsets = {
-        {
-          filetype = "neo-tree",
-          text = "Explorer",
-        },
-      },
-    },
   },
   version = "*",
 }

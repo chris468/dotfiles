@@ -49,6 +49,19 @@ return {
       "chris468/neotree-file-nesting-config",
       branch = "glob-files",
     },
+    {
+      "akinsho/bufferline.nvim",
+      optional = true,
+      opts = function(_, opts)
+        opts = opts or {}
+        opts.options = opts.options or {}
+        opts.options.offsets = opts.options.offsets or {}
+        table.insert(opts.options.offsets, {
+          filetype = "neo-tree",
+          text = "Explorer",
+        })
+      end,
+    },
   },
   init = function()
     vim.api.nvim_create_autocmd("BufEnter", {
