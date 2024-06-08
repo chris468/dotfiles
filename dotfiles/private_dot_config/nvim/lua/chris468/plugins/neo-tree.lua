@@ -12,11 +12,43 @@ end
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
+  config = function(_, opts)
+    local nesting_rules = require("neotree-file-nesting-config").nesting_rules
+
+    nesting_rules.Dockerfile = {
+      pattern = "^Dockerfile$",
+      files = {
+        "Dockerfile.*",
+        ".dockerignore",
+      },
+    }
+    nesting_rules.docker_compose = {
+      pattern = "^docker%-compose%.ya?ml",
+      files = {
+        "docker-compose.*.yml",
+        "docker-compose.*.yaml",
+      },
+    }
+    nesting_rules.helm = {
+      pattern = "^Chart.yaml$",
+      files = {
+        "Chart.lock",
+        ".helmignore",
+      },
+    }
+
+    opts.nesting_rules = nesting_rules
+    require("neo-tree").setup(opts)
+  end,
   cmd = { "Neotree" },
   dependencies = {
     { "nvim-lua/plenary.nvim" },
     { "nvim-tree/nvim-web-devicons", optional = true },
     { "MunifTanjim/nui.nvim" },
+    {
+      "chris468/neotree-file-nesting-config",
+      branch = "glob-files",
+    },
   },
   init = function()
     vim.api.nvim_create_autocmd("BufEnter", {

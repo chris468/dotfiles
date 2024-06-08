@@ -27,7 +27,7 @@
     [x] hijack netrw
     [x] last buffer behavior [faq]
     [-] telescope for file/dir search [recipes] (use `/` to filter instead)
-    [ ] nesting rules saifulapm/neotree-file-nesting-config [recipes]
+    [x] nesting rules saifulapm/neotree-file-nesting-config [recipes]
     [ ] hide cursor [visual customization]
     [ ] source selecter / merged in tab line [recipes]
     [x] h/l for dir expansion [tips]
