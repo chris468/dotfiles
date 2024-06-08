@@ -36,6 +36,7 @@ return {
     { "<leader>be", "<cmd>Neotree toggle source=buffers<cr>", desc = "Explorer" },
   },
   opts = {
+    close_if_last_window = true,
     default_component_configs = {
       diagnostics = {
         symbols = {
