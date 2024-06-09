@@ -21,11 +21,16 @@
     [ ]   treesitter-textobjects
     [ ]   treesitter-autotag
 [ ] scrub plugin versions
-[ ] explorer
+[x] explorer
     [x] configure diagnostic signs
-    [ ] focus root on cd
-    [ ] hijack netrw
-    [ ] last buffer behavior
+    [x] focus root on cd
+    [x] hijack netrw
+    [x] last buffer behavior [faq]
+    [-] telescope for file/dir search [recipes] (use `/` to filter instead)
+    [x] nesting rules saifulapm/neotree-file-nesting-config [recipes]
+    [-] hide cursor [visual customization]
+    [~] source selecter / merged in tab line [recipes] (support not in bufferline, but show current selector in header)
+    [x] h/l for dir expansion [tips]
 [ ] j/k => gj/gk
 [ ] clipboard behavior
 [ ] copilot
