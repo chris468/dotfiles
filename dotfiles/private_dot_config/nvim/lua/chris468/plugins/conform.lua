@@ -22,7 +22,7 @@ return {
   event = "BufWritePre",
   keys = {
     { "<leader>cf", format, desc = "Format" },
-    { "<leader>cif", "<cmd>ConformInfo<cr>", desc = "Formatter" },
+    { "<leader>cIf", "<cmd>ConformInfo<cr>", desc = "Formatter" },
   },
   opts = {
     formatters_by_ft = formatters_by_ft,

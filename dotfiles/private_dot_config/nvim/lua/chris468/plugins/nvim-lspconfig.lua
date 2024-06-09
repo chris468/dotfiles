@@ -208,7 +208,7 @@ return {
     },
   },
   keys = {
-    { "<leader>cil", "<cmd>LspInfo<cr>", desc = "Language server" },
+    { "<leader>cIl", "<cmd>LspInfo<cr>", desc = "Language server" },
     { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostics" },
   },
   opts = {

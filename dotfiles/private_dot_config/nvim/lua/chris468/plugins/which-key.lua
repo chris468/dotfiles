@@ -28,7 +28,7 @@ return {
           b = { "Buffer" },
           c = {
             "Code",
-            i = { "Info" },
+            I = { "Info" },
           },
           f = {
             "Find",
