@@ -182,7 +182,6 @@ return {
         { "<leader>ct", util.trouble.toggle(), desc = "Toggle trouble" },
       },
       lazy = true,
-      version = "^2",
     },
   },
   keys = {
