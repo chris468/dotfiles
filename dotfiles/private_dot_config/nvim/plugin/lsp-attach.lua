@@ -43,6 +43,8 @@ local function set_keymaps(buf)
   set_keymap("n", "gK", vim.lsp.buf.signature_help, "Signature help")
   set_keymap("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
   set_keymap("n", "<leader>cc", vim.lsp.codelens.run, "Run codelens")
+  set_keymap("n", "<leader>ci", open("lsp_incoming_calls"), "Incoming calls")
+  set_keymap("n", "<leader>co", open("lsp_outgoing_calls"), "Outgoing calls")
   set_keymap("n", "<leader>cr", function()
     return ":IncRename "
   end, "Rename", { expr = true })
