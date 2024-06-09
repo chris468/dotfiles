@@ -53,4 +53,5 @@ return {
   lazy = not is_default_theme,
   name = "nord",
   priority = priority,
+  version = false,
 }

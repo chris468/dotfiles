@@ -20,7 +20,7 @@
 [ ] treesitter
     [ ]   treesitter-textobjects
     [ ]   treesitter-autotag
-[ ] scrub plugin versions
+[x] scrub plugin versions
 [x] explorer
     [x] configure diagnostic signs
     [x] focus root on cd

@@ -98,4 +98,5 @@ return {
     eval_on_change = false,
     eval_on_move = false,
   },
+  version = false,
 }

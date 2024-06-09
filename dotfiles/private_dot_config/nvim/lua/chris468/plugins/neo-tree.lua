@@ -13,7 +13,6 @@ local current_source = ""
 
 return {
   "nvim-neo-tree/neo-tree.nvim",
-  branch = "v3.x",
   config = function(_, opts)
     local nesting_rules = require("neotree-file-nesting-config").nesting_rules
 
@@ -47,10 +46,7 @@ return {
     { "nvim-lua/plenary.nvim" },
     { "nvim-tree/nvim-web-devicons", optional = true },
     { "MunifTanjim/nui.nvim" },
-    {
-      "chris468/neotree-file-nesting-config",
-      branch = "glob-files",
-    },
+    { "saifulapm/neotree-file-nesting-config" },
     {
       "akinsho/bufferline.nvim",
       optional = true,

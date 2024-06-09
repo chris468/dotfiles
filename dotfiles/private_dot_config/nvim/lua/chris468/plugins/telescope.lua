@@ -79,5 +79,4 @@ return {
       layout_strategy = "vertical",
     },
   },
-  version = "0.1.x",
 }
