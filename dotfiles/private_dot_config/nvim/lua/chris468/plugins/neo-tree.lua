@@ -9,6 +9,8 @@ local function reveal()
   })
 end
 
+local current_source = ""
+
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
@@ -58,7 +60,10 @@ return {
         opts.options.offsets = opts.options.offsets or {}
         table.insert(opts.options.offsets, {
           filetype = "neo-tree",
-          text = "Explorer",
+          text = function()
+            return current_source
+          end,
+          text_align = "left",
         })
       end,
     },
@@ -90,6 +95,14 @@ return {
           info = "",
           hint = "",
         },
+      },
+    },
+    event_handlers = {
+      {
+        event = "after_render",
+        handler = function(state)
+          current_source = (state.display_name or state.name):match("^%s*(.-)%s*$")
+        end,
       },
     },
     filesystem = {
