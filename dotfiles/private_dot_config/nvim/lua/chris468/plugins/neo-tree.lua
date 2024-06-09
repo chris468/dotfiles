@@ -46,10 +46,7 @@ return {
     { "nvim-lua/plenary.nvim" },
     { "nvim-tree/nvim-web-devicons", optional = true },
     { "MunifTanjim/nui.nvim" },
-    {
-      "chris468/neotree-file-nesting-config",
-      branch = "glob-files",
-    },
+    { "saifulapm/neotree-file-nesting-config" },
     {
       "akinsho/bufferline.nvim",
       optional = true,
