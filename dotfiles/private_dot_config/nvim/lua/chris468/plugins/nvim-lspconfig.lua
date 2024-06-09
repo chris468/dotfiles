@@ -105,6 +105,7 @@ return {
       virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
     })
   end,
+  event = "FileType",
   dependencies = {
     { "williamboman/mason-lspconfig.nvim" },
     {
