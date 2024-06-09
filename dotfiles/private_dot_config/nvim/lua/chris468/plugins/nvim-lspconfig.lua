@@ -1,5 +1,4 @@
 local icons = require("chris468.config.icons").diagnostic
-local util = require("chris468.util")
 
 local servers = {
   angularls = {},

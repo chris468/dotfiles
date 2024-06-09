@@ -1,6 +1,12 @@
+function open(mode)
+  return function()
+    local trouble = require("trouble")
+    trouble.open(mode)
+  end
+end
+
 local function set_keymaps(buf)
   local telescope_builtin = require("telescope.builtin")
-  local util = require("chris468.util")
 
   --- @param modes string|table: mode(s) to bind keymap
   --- @param key string: key to map
@@ -27,12 +33,12 @@ local function set_keymaps(buf)
   end
 
   -- trouble lsp_definitions isn't working w/ omnisharp. there's usually only one definition anyway
-  -- set_keymap("n", "gd", util.trouble.open("lsp_definitions"), "Go to definition")
+  -- set_keymap("n", "gd", open("lsp_definitions"), "Go to definition")
   set_keymap("n", "gd", telescope_builtin.lsp_definitions, "Go to definition")
   set_keymap("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
-  set_keymap("n", "gI", util.trouble.open("lsp_implementations"), "Go to implementation")
-  set_keymap("n", "gr", util.trouble.open("lsp_references"), "Find references")
-  set_keymap("n", "gy", util.trouble.open("lsp_type_definitions"), "Go to type definition")
+  set_keymap("n", "gI", open("lsp_implementations"), "Go to implementation")
+  set_keymap("n", "gr", open("lsp_references"), "Find references")
+  set_keymap("n", "gy", open("lsp_type_definitions"), "Go to type definition")
   set_keymap("n", "K", vim.lsp.buf.hover, "Hover help")
   set_keymap("n", "gK", vim.lsp.buf.signature_help, "Signature help")
   set_keymap("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
