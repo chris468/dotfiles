@@ -59,11 +59,9 @@ return {
     { "folke/noice.nvim" },
   },
   keys = { { "<leader>M", "<cmd>Mason<cr>", desc = "Mason" } },
-  lazy = false,
   opts = {
     -- map of category to (string | string, callback = function?)[]
     -- name of the mason package, callback after installation.
     install_for_filetype = {},
   },
-  priority = 1100,
 }

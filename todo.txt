@@ -53,7 +53,7 @@
 [x] project
 [x] improved project directory detection / changing
 [x] completion
-[ ] scrub laziness of lsp, conform, and lint
+[x] scrub laziness of lsp, conform, and lint
 [ ] configure pgup/pgdn keystroke in modals
     [ ] lazy
     [ ] mason

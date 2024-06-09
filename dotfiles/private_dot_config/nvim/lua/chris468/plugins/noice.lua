@@ -11,6 +11,7 @@ end
 return {
   "folke/noice.nvim",
   cond = require("chris468.config").enable_noice,
+  event = "VeryLazy",
   dependencies = {
     "MunifTanjim/nui.nvim",
     "rcarriga/nvim-notify",
@@ -29,7 +30,6 @@ return {
     { "<leader>nd", "<cmd>NoiceDismiss<cr>", desc = "Dismiss" },
     { "<S-CR>", redirect_cmdline, mode = "c", desc = "Redirect command line" },
   },
-  lazy = false, -- not lazy to try and get set up before any notifcations can be raised
   opts = {
     cmdline = {
       view = "cmdline",

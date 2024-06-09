@@ -237,6 +237,5 @@ return {
     },
   },
   event = { "InsertEnter", "CmdLineEnter" },
-  opts = {},
   version = false,
 }

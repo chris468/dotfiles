@@ -154,7 +154,6 @@ return {
     { "<leader>cil", "<cmd>LspInfo<cr>", desc = "Language server" },
     { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostics" },
   },
-  lazy = false,
   opts = {
     capabilities = {},
     servers = servers,

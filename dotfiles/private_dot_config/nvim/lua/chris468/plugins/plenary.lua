@@ -1,1 +1,5 @@
-return { "nvim-lua/plenary.nvim", version = false }
+return {
+  "nvim-lua/plenary.nvim",
+  lazy = true,
+  version = false,
+}

@@ -17,6 +17,7 @@ return {
       desc = "Lint on save",
     })
   end,
+  event = { "BufReadPost", "BufWritePost" },
   dependencies = {
     {
       "williamboman/mason.nvim",
