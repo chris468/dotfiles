@@ -18,6 +18,7 @@ require("lazy").setup({
     { import = "chris468.plugins" },
   },
   defaults = {
+    lazy = true,
     version = "*",
   },
 })
