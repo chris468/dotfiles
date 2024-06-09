@@ -10,5 +10,4 @@ return {
       desc = "Delete current",
     },
   },
-  version = "*",
 }

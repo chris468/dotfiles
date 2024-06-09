@@ -16,4 +16,5 @@ return {
     { "<C-k>", "<cmd>TmuxNavigateUp<cr>" },
     { "<C-l>", "<cmd>TmuxNavigateRight<cr>" },
   },
+  version = false,
 }

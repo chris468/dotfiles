@@ -15,5 +15,6 @@ return {
       { "S", mode = "x" },
       { "gS", mode = "x" },
     },
+    version = false,
   },
 }

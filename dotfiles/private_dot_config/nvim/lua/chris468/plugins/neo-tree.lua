@@ -13,7 +13,6 @@ local current_source = ""
 
 return {
   "nvim-neo-tree/neo-tree.nvim",
-  branch = "v3.x",
   config = function(_, opts)
     local nesting_rules = require("neotree-file-nesting-config").nesting_rules
 

@@ -12,4 +12,5 @@ return {
       enable = true,
     },
   },
+  version = false,
 }
