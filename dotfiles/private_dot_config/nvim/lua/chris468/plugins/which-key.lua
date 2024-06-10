@@ -22,6 +22,8 @@ return {
   opts = {
     register = {
       {
+        j = { "gj", "Down", opts = { noremap = true } },
+        k = { "gk", "Up", opts = { noremap = true } },
         gp = { "Preview" },
         ["<C-A>"] = { "<nop>", "which_key_ignore" }, -- Disable increment, I never use it on purpose
         ["<leader>"] = {

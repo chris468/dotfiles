@@ -31,7 +31,7 @@
     [-] hide cursor [visual customization]
     [~] source selecter / merged in tab line [recipes] (support not in bufferline, but show current selector in header)
     [x] h/l for dir expansion [tips]
-[ ] j/k => gj/gk
+[x] j/k => gj/gk
 [ ] clipboard behavior
 [ ] copilot
 [-] bufline shows all bufs, navigation between all bufs, even when multiple tabs.
