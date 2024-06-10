@@ -54,11 +54,11 @@
 [x] improved project directory detection / changing
 [x] completion
 [x] scrub laziness of lsp, conform, and lint
-[ ] configure pgup/pgdn keystroke in modals
-    [ ] lazy
-    [ ] mason
-    [ ] neo-tree
-    [ ] others?
+[-] configure pgup/pgdn keystroke in modals
+    [-] lazy (c-d/u works)
+    [-] mason (c-d/u works)
+    [-] neo-tree (c-d/u works)
+    [-] others?
 [x] lazygit
     [x] warn on any unsaved buffers when opening lazygit
 [x] gitlinker.nvim?
