@@ -1,5 +1,4 @@
 local icons = require("chris468.config.icons").diagnostic
-local util = require("chris468.util")
 
 local servers = {
   angularls = {},
@@ -99,6 +98,33 @@ local function to_server_config(server, config, capabilities)
   vim.notify("Invalid lsp server configuration: " .. vim.inspect({ [server] = config }), vim.log.levels.ERROR)
 end
 
+local function _open_diagnotics(for_document)
+  local trouble = require("trouble")
+  local opts = {
+    mode = "diagnostics",
+    filter = {
+      severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN },
+    },
+  }
+  if for_document then
+    opts.filter.buf = 0
+  end
+
+  if trouble.is_open(opts) then
+    trouble.close(opts)
+  end
+
+  trouble.open(opts)
+end
+
+local function open_workspace_diagnostics()
+  _open_diagnotics()
+end
+
+local function open_document_diagnostics()
+  _open_diagnotics(true)
+end
+
 return {
   "neovim/nvim-lspconfig",
   config = function(_, opts)
@@ -174,19 +200,18 @@ return {
     { "smjonas/inc-rename.nvim", opts = {} },
     {
       "folke/trouble.nvim",
-      cmd = { "Trouble", "TroubleClose", "TroubleRefresh", "TroubleToggle" },
+      cmd = { "Trouble" },
       config = true,
       keys = {
-        { "<leader>cd", util.trouble.open("document_diagnostics"), desc = "Document diagnostics" },
-        { "<leader>cD", util.trouble.open("workspace_diagnostics"), desc = "Workspace diagnostics" },
-        { "<leader>ct", util.trouble.toggle(), desc = "Toggle trouble" },
+        { "<leader>cd", open_document_diagnostics, desc = "Document diagnostics" },
+        { "<leader>cD", open_workspace_diagnostics, desc = "Workspace diagnostics" },
+        { "<leader>cx", "<cmd>Trouble close<cr>", desc = "Close trouble" },
       },
       lazy = true,
-      version = "^2",
     },
   },
   keys = {
-    { "<leader>cil", "<cmd>LspInfo<cr>", desc = "Language server" },
+    { "<leader>cIl", "<cmd>LspInfo<cr>", desc = "Language server" },
     { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostics" },
   },
   opts = {

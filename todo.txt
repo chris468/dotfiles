@@ -1,7 +1,7 @@
 [x] completion in cmd mode is not completing commands (only buffer, snippet)
 [x] lsp keymaps
 [x] trouble
-[ ] upgrade to trouble v3
+[x] upgrade to trouble v3
 [x] rethink cmp (completion and snippet) keymaps
 [x] buffer commands / :q behavior
 [x] vim-exchange
