@@ -40,7 +40,6 @@ return {
             t = { "Toggle" },
           },
           h = { "<cmd>nohlsearch<cr>", "Hide search highlight" },
-          i = { "Icons" },
           L = { "<cmd>Lazy<cr>", "Lazy" },
           m = { "Ter[m]inal" },
           n = { "Notifications" },
