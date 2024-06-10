@@ -7,7 +7,7 @@ return {
   keys = {
     { "<leader>bb", "<cmd>e #<cr>", desc = "Last" },
     { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", desc = "Delete others" },
-    { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer" },
-    { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
+    { "<leader>h", "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer" },
+    { "<leader>l", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
   },
 }
