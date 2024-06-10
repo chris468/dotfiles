@@ -197,7 +197,7 @@ return {
     { "smjonas/inc-rename.nvim", opts = {} },
     {
       "folke/trouble.nvim",
-      cmd = { "Trouble", "TroubleClose", "TroubleRefresh", "TroubleToggle" },
+      cmd = { "Trouble" },
       config = true,
       keys = {
         { "<leader>cd", open_document_diagnostics, desc = "Document diagnostics" },
