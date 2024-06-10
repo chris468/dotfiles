@@ -36,6 +36,25 @@ local servers = {
   codeqlls = {},
 }
 
+local signs = {
+  [vim.diagnostic.severity.ERROR] = {
+    icon = icons.error,
+    hl = "DiagnosticError",
+  },
+  [vim.diagnostic.severity.WARN] = {
+    icon = icons.warn,
+    hl = "DiagnosticWarn",
+  },
+  [vim.diagnostic.severity.INFO] = {
+    icon = icons.info,
+    hl = "DiagnosticInfo",
+  },
+  [vim.diagnostic.severity.HINT] = {
+    icon = icons.hint,
+    hl = "DiagnosticHint",
+  },
+}
+
 local function servers_for_filetypes()
   local server_to_package = require("mason-lspconfig").get_mappings().lspconfig_to_mason
   local filetype_to_servers = require("mason-lspconfig.mappings.filetype")
@@ -92,17 +111,41 @@ return {
       end
     end
 
-    for severity, sign in pairs(opts.signs) do
-      vim.fn.sign_define("DiagnosticSign" .. severity, { text = sign, texthl = "Diagnostic" .. severity, numhl = "" })
-    end
-
     vim.diagnostic.config({
+      signs = {
+        severity = { min = vim.diagnostic.severity.WARN },
+        text = {
+          [vim.diagnostic.severity.ERROR] = icons.error,
+          [vim.diagnostic.severity.WARN] = icons.warn,
+          [vim.diagnostic.severity.INFO] = icons.info,
+          [vim.diagnostic.severity.HINT] = icons.hint,
+        },
+        numhl = {
+          [vim.diagnostic.severity.INFO] = "DiagnosticInfo",
+          [vim.diagnostic.severity.HINT] = "DiagnosticHint",
+        },
+      },
       float = {
+        border = "rounded",
+        header = "",
+        prefix = function(diagnostic, _, _)
+          local sign = signs[diagnostic.severity]
+          return " " .. sign.icon .. " ", sign.hl
+        end,
+        source = true,
+        suffix = function(diagnostic, _, _)
+          local suffix = ""
+          if diagnostic.code then
+            suffix = " [" .. diagnostic.code .. "]"
+          end
+
+          return suffix, signs[diagnostic.severity].hl
+        end,
         severity_sort = true,
       },
       update_in_insert = true,
       severity_sort = true,
-      virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
+      virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
     })
   end,
   event = "FileType",
@@ -132,22 +175,13 @@ return {
     {
       "folke/trouble.nvim",
       cmd = { "Trouble", "TroubleClose", "TroubleRefresh", "TroubleToggle" },
+      config = true,
       keys = {
         { "<leader>cd", util.trouble.open("document_diagnostics"), desc = "Document diagnostics" },
         { "<leader>cD", util.trouble.open("workspace_diagnostics"), desc = "Workspace diagnostics" },
         { "<leader>ct", util.trouble.toggle(), desc = "Toggle trouble" },
       },
       lazy = true,
-      opts = {
-        padding = false,
-        signs = {
-          error = icons.error .. " ",
-          warning = icons.warn .. " ",
-          information = icons.info .. " ",
-          hint = icons.hint .. " ",
-          other = icons.hint .. " ",
-        },
-      },
       version = "^2",
     },
   },
@@ -158,11 +192,5 @@ return {
   opts = {
     capabilities = {},
     servers = servers,
-    signs = {
-      Error = icons.error .. " ",
-      Warn = icons.warn .. " ",
-      Info = icons.info .. " ",
-      Hint = " ",
-    },
   },
 }
