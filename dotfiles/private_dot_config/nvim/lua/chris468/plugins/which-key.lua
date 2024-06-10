@@ -23,7 +23,6 @@ return {
     register = {
       {
         gp = { "Preview" },
-        ["<C-A>"] = { "<nop>", "which_key_ignore" }, -- Disable increment, I never use it on purpose
         ["<leader>"] = {
           b = { "Buffer" },
           c = {
@@ -39,8 +38,6 @@ return {
             "Git",
             t = { "Toggle" },
           },
-          h = { "<cmd>nohlsearch<cr>", "Hide search highlight" },
-          i = { "Icons" },
           L = { "<cmd>Lazy<cr>", "Lazy" },
           m = { "Ter[m]inal" },
           n = { "Notifications" },

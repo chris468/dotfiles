@@ -1,4 +1,5 @@
 require("chris468.config.options").setup()
+require("chris468.config.mappings").setup()
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

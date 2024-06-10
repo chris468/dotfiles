@@ -57,7 +57,9 @@ return {
       desc = "Chezmoi dotfiles",
     },
     { "<leader>fg", telescope_builtin("git_files"), desc = "Git files" },
-    { "<leader>fh", telescope_builtin("help_tags"), desc = "Help" },
+    { "<leader>fh", telescope_builtin("highlights"), desc = "Highlights" },
+    { "<leader>fH", telescope_builtin("help_tags"), desc = "Help" },
+    { "<leader>fk", telescope_builtin("keymaps"), desc = "Key mappings" },
     { "<leader>fo", telescope_builtin("vim_options"), desc = "Options" },
     { "<leader>fr", telescope_builtin("oldfiles", oldfiles_opts), desc = "Recent files" },
     { "<leader>fT", "<cmd>Telescope<cr>", desc = "Search" },
@@ -77,6 +79,20 @@ return {
   opts = {
     defaults = {
       layout_strategy = "vertical",
+      mappings = {
+        i = {
+          ["<C-j>"] = "move_selection_next",
+          ["<C-k>"] = "move_selection_previous",
+          ["<C-b>"] = "results_scrolling_up",
+          ["<C-f>"] = "results_scrolling_down",
+        },
+        n = {
+          ["<C-j>"] = "move_selection_next",
+          ["<C-k>"] = "move_selection_previous",
+          ["<C-b>"] = "results_scrolling_up",
+          ["<C-f>"] = "results_scrolling_down",
+        },
+      },
     },
   },
 }

@@ -8,9 +8,9 @@
 [x] inc-rename prompt
 [ ] project default behavior to chdir
 [ ] telescope improvements
-    [ ] c-k/c-j for up/down
+    [x] c-k/c-j for up/down
     [x] improve long path readability, either through path display config or re-layout
-    [ ] shortcut for keymaps
+    [x] shortcut for keymaps
 [x] use vscode icons for signs and cmp (they're in nerdfonts)
 [ ] testing
 [x] debugging
@@ -31,7 +31,7 @@
     [-] hide cursor [visual customization]
     [~] source selecter / merged in tab line [recipes] (support not in bufferline, but show current selector in header)
     [x] h/l for dir expansion [tips]
-[ ] j/k => gj/gk
+[x] j/k => gj/gk
 [ ] clipboard behavior
 [ ] copilot
 [-] bufline shows all bufs, navigation between all bufs, even when multiple tabs.
@@ -54,11 +54,11 @@
 [x] improved project directory detection / changing
 [x] completion
 [x] scrub laziness of lsp, conform, and lint
-[ ] configure pgup/pgdn keystroke in modals
-    [ ] lazy
-    [ ] mason
-    [ ] neo-tree
-    [ ] others?
+[-] configure pgup/pgdn keystroke in modals
+    [-] lazy (c-d/u works)
+    [-] mason (c-d/u works)
+    [-] neo-tree (c-d/u works)
+    [-] others?
 [x] lazygit
     [x] warn on any unsaved buffers when opening lazygit
 [x] gitlinker.nvim?
