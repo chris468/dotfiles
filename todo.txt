@@ -8,7 +8,7 @@
 [x] inc-rename prompt
 [ ] project default behavior to chdir
 [ ] telescope improvements
-    [ ] c-k/c-j for up/down
+    [x] c-k/c-j for up/down
     [x] improve long path readability, either through path display config or re-layout
     [ ] shortcut for keymaps
 [x] use vscode icons for signs and cmp (they're in nerdfonts)
