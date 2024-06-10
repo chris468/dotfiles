@@ -10,7 +10,7 @@
 [ ] telescope improvements
     [x] c-k/c-j for up/down
     [x] improve long path readability, either through path display config or re-layout
-    [ ] shortcut for keymaps
+    [x] shortcut for keymaps
 [x] use vscode icons for signs and cmp (they're in nerdfonts)
 [ ] testing
 [x] debugging
