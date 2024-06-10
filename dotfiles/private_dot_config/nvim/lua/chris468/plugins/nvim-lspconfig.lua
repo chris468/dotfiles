@@ -100,11 +100,14 @@ end
 
 local function _open_diagnotics(for_document)
   local trouble = require("trouble")
-  local opts = { mode = "diagnostics" }
+  local opts = {
+    mode = "diagnostics",
+    filter = {
+      severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN },
+    },
+  }
   if for_document then
-    opts.filter = {
-      buf = 0,
-    }
+    opts.filter.buf = 0
   end
 
   if trouble.is_open(opts) then
