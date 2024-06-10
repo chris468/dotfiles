@@ -25,6 +25,13 @@ return {
         gp = { "Preview" },
         ["<C-A>"] = { "<nop>", "which_key_ignore" }, -- Disable increment, I never use it on purpose
         ["<leader>"] = {
+          ["<Esc>"] = {
+            function()
+              vim.cmd("noh")
+              vim.cmd("silent! Noice dismiss")
+            end,
+            "Clear",
+          },
           b = { "Buffer" },
           c = {
             "Code",
@@ -39,7 +46,6 @@ return {
             "Git",
             t = { "Toggle" },
           },
-          h = { "<cmd>nohlsearch<cr>", "Hide search highlight" },
           L = { "<cmd>Lazy<cr>", "Lazy" },
           m = { "Ter[m]inal" },
           n = { "Notifications" },
