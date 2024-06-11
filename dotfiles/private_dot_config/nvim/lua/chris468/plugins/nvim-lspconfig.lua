@@ -24,6 +24,7 @@ local servers = {
   omnisharp = require("chris468.plugins.config.lsp.omnisharp"),
   powershell_es = {},
   pyright = {},
+  rust_analyzer = {},
   ruff = {}, -- python
   spectral = {}, -- OpenAPI
   taplo = {}, -- toml
