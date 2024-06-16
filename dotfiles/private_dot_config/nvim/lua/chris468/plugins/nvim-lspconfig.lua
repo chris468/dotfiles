@@ -1,4 +1,6 @@
 local icons = require("chris468.config.icons").diagnostic
+local config = require("chris468.config")
+local util = require("chris468.util")
 
 local function detect_venv(root_dir)
   local Job = require("plenary.job")
@@ -26,53 +28,60 @@ local function detect_venv(root_dir)
   return false
 end
 
-local servers = {
-  angularls = {},
-  ansiblels = {},
-  autotools_ls = {},
-  bashls = {},
-  clangd = {},
-  cmake = {},
-  cssls = {},
-  docker_compose_language_service = {},
-  dockerls = {},
-  elixirls = {},
-  erlangls = {},
-  gopls = {},
-  helm_ls = {},
-  html = {},
-  java_language_server = {},
-  jsonls = {},
-  lemminx = {}, -- xml
-  lua_ls = {},
-  mesonlsp = {},
-  nil_ls = {}, -- nix
-  omnisharp = require("chris468.plugins.config.lsp.omnisharp"),
-  powershell_es = {},
-  pyright = {
-    on_new_config = function(new_config, new_root_dir)
-      local defaults = require("lspconfig.server_configurations.pyright")
-      if defaults.on_new_config then
-        defaults.on_new_config(new_config, new_root_dir)
-      end
+local servers = (function()
+  local s = {
+    angularls = {},
+    ansiblels = {},
+    autotools_ls = {},
+    bashls = {},
+    clangd = {},
+    cmake = {},
+    cssls = {},
+    docker_compose_language_service = {},
+    dockerls = {},
+    elixirls = {},
+    erlangls = {},
+    gopls = {},
+    helm_ls = {},
+    html = {},
+    java_language_server = {},
+    jsonls = {},
+    lemminx = {}, -- xml
+    lua_ls = {},
+    mesonlsp = {},
+    nil_ls = {}, -- nix
+    powershell_es = {},
+    pyright = {
+      on_new_config = function(new_config, new_root_dir)
+        local defaults = require("lspconfig.server_configurations.pyright")
+        if defaults.on_new_config then
+          defaults.on_new_config(new_config, new_root_dir)
+        end
 
-      local venv_python = detect_venv(new_root_dir)
-      if venv_python then
-        new_config.settings.python.pythonPath = venv_python
-      end
-    end,
-  },
-  rust_analyzer = {},
-  ruff = {}, -- python
-  spectral = {}, -- OpenAPI
-  taplo = {}, -- toml
-  terraformls = {},
-  tflint = {},
-  tsserver = {},
-  vimls = {},
-  yamlls = {},
-  codeqlls = {},
-}
+        local venv_python = detect_venv(new_root_dir)
+        if venv_python then
+          new_config.settings.python.pythonPath = venv_python
+        end
+      end,
+    },
+    rust_analyzer = {},
+    ruff = {}, -- python
+    spectral = {}, -- OpenAPI
+    taplo = {}, -- toml
+    terraformls = {},
+    tflint = {},
+    tsserver = {},
+    vimls = {},
+    yamlls = {},
+    codeqlls = {},
+  }
+
+  if util.contains(config.csharp_lsp, "omnisharp") then
+    s.omnisharp = require("chris468.plugins.config.lsp.omnisharp")
+  end
+
+  return s
+end)()
 
 local signs = {
   [vim.diagnostic.severity.ERROR] = {
