@@ -33,6 +33,11 @@ return {
         vim.fn.stdpath("state"),
       },
       filetypes = { "cs" },
+      handlers = {
+        ["workspace/projectInitializationComplete"] = function()
+          vim.notify("Project initialization complete.")
+        end,
+      },
       on_attach = function(client, _)
         -- Ideally this would just set up the command in the comands table, but in lspconfig
         -- that currently sets up autocmds. see neovim/nvim-lspconfig/issues/2632.
