@@ -79,6 +79,11 @@ local servers = (function()
   if util.contains(config.csharp_lsp, "omnisharp") then
     s.omnisharp = require("chris468.plugins.config.lsp.omnisharp")
   end
+  if util.contains(config.csharp_lsp, "roslyn") then
+    local roslyn = require("chris468.plugins.config.lsp.roslyn")
+    require("lspconfig.configs").roslyn_lsp = roslyn.server
+    s.roslyn_lsp = roslyn.lspconfig
+  end
 
   return s
 end)()
