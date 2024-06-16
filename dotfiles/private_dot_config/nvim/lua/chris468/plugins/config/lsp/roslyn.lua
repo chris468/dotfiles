@@ -1,6 +1,6 @@
 local util = require("lspconfig.util")
 
-local function configure_roslyn_commands()
+local function configure_client_commands()
   vim.lsp.commands["roslyn.client.peekReferences"] = function(command, context)
     local window = vim.fn.bufwinid(context.bufnr)
     local pos = { command.arguments[2].line + 1, command.arguments[2].character }
@@ -11,15 +11,42 @@ local function configure_roslyn_commands()
   end
 end
 
-local function find_and_open_solution(client)
+local function open_solution(client, sln)
+  vim.notify("Opening " .. sln .. "...")
+  client.notify("solution/open", { solution = vim.uri_from_fname(sln) })
+end
+
+local function get_solutions(client)
   local root = client.config.root_dir
   local slns = vim.fn.glob(root .. "/*.sln", nil, true)
+  return slns
+end
+
+local function find_and_open_solution(client)
+  local slns = get_solutions(client)
   vim.notify(tostring(#slns) .. " solution found.")
   if #slns == 0 then
     return
   end
-  local sln = slns[1]
-  client.notify("solution/open", { solution = vim.uri_from_fname(sln) })
+  open_solution(client, slns[1])
+end
+
+local function prompt_for_solution(client)
+  local slns = get_solutions(client)
+  vim.ui.select(slns, { prompt = "Choose solution" }, function(selected)
+    if selected then
+      open_solution(client, selected)
+    end
+  end)
+end
+
+local function register_user_commands(client, bufnr)
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "gos", "", {
+    callback = function()
+      prompt_for_solution(client)
+    end,
+    desc = "Open solution",
+  })
 end
 
 return {
@@ -38,11 +65,14 @@ return {
           vim.notify("Project initialization complete.")
         end,
       },
-      on_attach = function(client, _)
+      on_attach = function(client, bufnr)
+        find_and_open_solution(client)
+        register_user_commands(client, bufnr)
+      end,
+      on_init = function()
         -- Ideally this would just set up the command in the comands table, but in lspconfig
         -- that currently sets up autocmds. see neovim/nvim-lspconfig/issues/2632.
-        configure_roslyn_commands()
-        find_and_open_solution(client)
+        configure_client_commands()
       end,
       on_new_config = function(new_config, _)
         if vim.g.debug_roslyn_lsp == 1 then
