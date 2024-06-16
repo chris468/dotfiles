@@ -11,6 +11,17 @@ local function configure_roslyn_commands()
   end
 end
 
+local function find_and_open_solution(client)
+  local root = client.config.root_dir
+  local slns = vim.fn.glob(root .. "/*.sln", nil, true)
+  vim.notify(tostring(#slns) .. " solution found.")
+  if #slns == 0 then
+    return
+  end
+  local sln = slns[1]
+  client.notify("solution/open", { solution = vim.uri_from_fname(sln) })
+end
+
 return {
   server = {
     default_config = {
@@ -22,12 +33,13 @@ return {
         vim.fn.stdpath("state"),
       },
       filetypes = { "cs" },
-      on_attach = function(_, _)
+      on_attach = function(client, _)
         -- Ideally this would just set up the command in the comands table, but in lspconfig
         -- that currently sets up autocmds. see neovim/nvim-lspconfig/issues/2632.
         configure_roslyn_commands()
+        find_and_open_solution(client)
       end,
-      on_new_config = function(new_config, new_root_dir)
+      on_new_config = function(new_config, _)
         if vim.g.debug_roslyn_lsp == 1 then
           new_config.cmd = {
             "lsp-devtools",
