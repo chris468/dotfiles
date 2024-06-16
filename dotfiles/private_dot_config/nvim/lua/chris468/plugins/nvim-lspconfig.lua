@@ -132,6 +132,11 @@ local function servers_for_filetypes()
     end
   end
 
+  if util.contains(config.csharp_lsp, "roslyn") then
+    install_for_filetype.cs = install_for_filetype.cs or {}
+    install_for_filetype.cs[#install_for_filetype.cs + 1] = "chris468_roslyn_lsp"
+  end
+
   return install_for_filetype
 end
 
