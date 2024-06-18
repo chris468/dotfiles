@@ -44,7 +44,9 @@
                 "face": {{ .realConfig.font.family | quote }},
                 "size": {{ .realConfig.font.size }},
                 "weight": "normal"
-            }
+            },
+            "opacity": 95,
+            "useAcrylic": true
         },
         "list": 
         [
@@ -160,21 +162,31 @@
             "yellow": "#F9E2AF"
         }
     ],
-    "themes": [
+    "themes":
+    [
         {
             "name": "catppuccin-mocha",
-            "tab": {
+            "tab":
+            {
                 "background": "#1E1E2EFF",
+                "iconStyle": "default",
                 "showCloseButton": "always",
                 "unfocusedBackground": null
             },
-            "tabRow": {
+            "tabRow":
+            {
                 "background": "#181825FF",
                 "unfocusedBackground": "#11111BFF"
             },
-            "window": {
-                "applicationTheme": "dark"
+            "window":
+            {
+                "applicationTheme": "dark",
+                "experimental.rainbowFrame": false,
+                "frame": null,
+                "unfocusedFrame": null,
+                "useMica": false
             }
         }
-    ]
+    ],
+    "useAcrylicInTabRow": true
 }
