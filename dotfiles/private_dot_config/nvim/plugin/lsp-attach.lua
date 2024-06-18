@@ -5,53 +5,6 @@ function open(mode)
   end
 end
 
-local WorkspaceSymbolFinder = {
-  close = function() end,
-  __call = function(self, prompt, process_result, process_complete)
-    self:find(prompt, process_result, process_complete)
-  end,
-}
-
-function WorkspaceSymbolFinder:new(bufnr)
-  local finder = { bufnr = bufnr }
-  setmetatable(finder, self)
-  self.__index = self
-  return finder
-end
-
-function WorkspaceSymbolFinder:find(prompt, process_result, process_complete)
-  if self.cancel then
-    self.cancel()
-  end
-
-  if prompt == "" then
-    process_complete()
-    return
-  end
-
-  local cancel = vim.lsp.buf_request_all(self.bufnr, "workspace/symbol", { query = prompt }, function(results)
-    local entry_maker = require("telescope.make_entry").gen_from_lsp_symbols({})
-    self.cancel = nil
-    for client_id, client_results in pairs(results) do
-      local err, result = client_results.error, client_results.result
-      if err then
-        vim.notify("Error requesting workspace symbols from client_id " .. client_id .. ": " .. err.message)
-      else
-        local locations = vim.lsp.util.symbols_to_items(result or {}, self.bufnr) or {}
-        for _, location in ipairs(locations) do
-          process_result(entry_maker(location))
-        end
-      end
-    end
-    process_complete()
-  end)
-  self.cancel = function()
-    self.cancel = nil
-    cancel()
-  end
-  WorkspaceSymbolFinder.current = self
-end
-
 local function set_keymaps(buf)
   local telescope_builtin = require("telescope.builtin")
 
@@ -100,24 +53,7 @@ local function set_keymaps(buf)
   end, "Rename (edit)", { expr = true })
   set_keymap("n", "<leader>flI", telescope_builtin.lsp_implementations, "Implementations")
   set_keymap("n", "<leader>flr", telescope_builtin.lsp_references, "References")
-  set_keymap("n", "<leader>fls", function()
-    local pickers = require("telescope.pickers")
-    local conf = require("telescope.config").values
-
-    local bufnr = vim.api.nvim_get_current_buf()
-
-    pickers
-      .new({
-        prompt_title = "Workspace Symbols",
-        finder = WorkspaceSymbolFinder:new(bufnr),
-        previewer = conf.qflist_previewer({}),
-        sorter = conf.prefilter_sorter({
-          tag = "symbol_type",
-          sorter = conf.generic_sorter({}),
-        }),
-      }, {})
-      :find()
-  end, "Symbols")
+  set_keymap("n", "<leader>fls", telescope_builtin.lsp_dynamic_workspace_symbols, "Symbols")
   set_keymap("n", "<leader>fly", telescope_builtin.lsp_type_definitions, "Type definitions")
 end
 
