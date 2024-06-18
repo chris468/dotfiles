@@ -63,5 +63,10 @@ return {
     -- map of category to (string | string, callback = function?)[]
     -- name of the mason package, callback after installation.
     install_for_filetype = {},
+    log_level = vim.log.levels.TRACE,
+    registries = {
+      "lua:chris468.mason.registry",
+      "github:mason-org/mason-registry",
+    },
   },
 }

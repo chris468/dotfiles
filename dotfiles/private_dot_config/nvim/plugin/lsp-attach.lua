@@ -53,7 +53,7 @@ local function set_keymaps(buf)
   end, "Rename (edit)", { expr = true })
   set_keymap("n", "<leader>flI", telescope_builtin.lsp_implementations, "Implementations")
   set_keymap("n", "<leader>flr", telescope_builtin.lsp_references, "References")
-  set_keymap("n", "<leader>fls", telescope_builtin.lsp_workspace_symbols, "Symbols")
+  set_keymap("n", "<leader>fls", telescope_builtin.lsp_dynamic_workspace_symbols, "Symbols")
   set_keymap("n", "<leader>fly", telescope_builtin.lsp_type_definitions, "Type definitions")
 end
 
