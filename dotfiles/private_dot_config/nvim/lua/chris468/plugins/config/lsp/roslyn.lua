@@ -66,10 +66,11 @@ return {
         end,
       },
       on_attach = function(client, bufnr)
-        find_and_open_solution(client)
         register_user_commands(client, bufnr)
       end,
-      on_init = function()
+      on_init = function(client)
+        find_and_open_solution(client)
+
         -- Ideally this would just set up the command in the comands table, but in lspconfig
         -- that currently sets up autocmds. see neovim/nvim-lspconfig/issues/2632.
         configure_client_commands()
