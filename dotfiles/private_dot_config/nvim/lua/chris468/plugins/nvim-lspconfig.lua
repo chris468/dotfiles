@@ -1,4 +1,4 @@
-local icons = require("chris468.config.icons").diagnostic
+local icons = require("chris468.config.icons")
 local config = require("chris468.config")
 local util = require("chris468.util")
 
@@ -90,19 +90,19 @@ end)()
 
 local signs = {
   [vim.diagnostic.severity.ERROR] = {
-    icon = icons.error,
+    icon = icons.diagnostic.error,
     hl = "DiagnosticError",
   },
   [vim.diagnostic.severity.WARN] = {
-    icon = icons.warn,
+    icon = icons.diagnostic.warn,
     hl = "DiagnosticWarn",
   },
   [vim.diagnostic.severity.INFO] = {
-    icon = icons.info,
+    icon = icons.diagnostic.info,
     hl = "DiagnosticInfo",
   },
   [vim.diagnostic.severity.HINT] = {
-    icon = icons.hint,
+    icon = icons.diagnostic.hint,
     hl = "DiagnosticHint",
   },
 }
@@ -199,10 +199,10 @@ return {
       signs = {
         severity = { min = vim.diagnostic.severity.WARN },
         text = {
-          [vim.diagnostic.severity.ERROR] = icons.error,
-          [vim.diagnostic.severity.WARN] = icons.warn,
-          [vim.diagnostic.severity.INFO] = icons.info,
-          [vim.diagnostic.severity.HINT] = icons.hint,
+          [vim.diagnostic.severity.ERROR] = icons.diagnostic.error,
+          [vim.diagnostic.severity.WARN] = icons.diagnostic.warn,
+          [vim.diagnostic.severity.INFO] = icons.diagnostic.info,
+          [vim.diagnostic.severity.HINT] = icons.diagnostic.hint,
         },
         numhl = {
           [vim.diagnostic.severity.INFO] = "DiagnosticInfo",
@@ -260,13 +260,22 @@ return {
     {
       "folke/trouble.nvim",
       cmd = { "Trouble" },
-      config = true,
       keys = {
         { "<leader>cd", open_document_diagnostics, desc = "Document diagnostics" },
         { "<leader>cD", open_workspace_diagnostics, desc = "Workspace diagnostics" },
         { "<leader>cx", "<cmd>Trouble close<cr>", desc = "Close trouble" },
       },
       lazy = true,
+      opts = {
+        auto_jump = true,
+        focus = true,
+        follow = false,
+        icons = {
+          folder_closed = icons.file.folder_closed,
+          folder_open = icons.file.folder_open,
+          kinds = icons.kinds,
+        },
+      },
     },
   },
   keys = {

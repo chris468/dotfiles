@@ -15,7 +15,7 @@ function format.default(entry, vim_item)
 end
 
 function format.nvim_lsp(_, vim_item)
-  local icon = (vim_item.kind and icons.symbols[string.lower(vim_item.kind)]) or " "
+  local icon = (vim_item.kind and icons.kinds[vim_item.kind]) or " "
   vim_item.kind = icon
 
   return vim_item
@@ -47,7 +47,7 @@ function format.path(_, vim_item)
 end
 
 function format.buffer(_, vim_item)
-  vim_item.kind = icons.symbols.text
+  vim_item.kind = icons.kinds.text
   return vim_item
 end
 
