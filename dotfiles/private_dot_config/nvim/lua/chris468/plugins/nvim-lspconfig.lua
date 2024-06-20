@@ -30,27 +30,27 @@ end
 
 local servers = (function()
   local s = {
-    angularls = {},
-    ansiblels = {},
-    autotools_ls = {},
+    -- angularls = {},
+    -- ansiblels = {},
+    -- autotools_ls = {},
     bashls = {},
-    clangd = {},
-    cmake = {},
-    cssls = {},
-    docker_compose_language_service = {},
-    dockerls = {},
-    elixirls = {},
-    erlangls = {},
-    gopls = {},
-    helm_ls = {},
-    html = {},
-    java_language_server = {},
+    -- clangd = {},
+    -- cmake = {},
+    -- cssls = {},
+    -- docker_compose_language_service = {},
+    -- dockerls = {},
+    -- elixirls = {},
+    -- erlangls = {},
+    -- gopls = {},
+    -- helm_ls = {},
+    -- html = {},
+    -- java_language_server = {},
     jsonls = {},
-    lemminx = {}, -- xml
+    -- lemminx = {}, -- xml
     lua_ls = {},
-    mesonlsp = {},
-    nil_ls = {}, -- nix
-    powershell_es = {},
+    -- mesonlsp = {},
+    -- nil_ls = {}, -- nix
+    -- powershell_es = {},
     pyright = {
       on_new_config = function(new_config, new_root_dir)
         local defaults = require("lspconfig.server_configurations.pyright")
@@ -64,16 +64,15 @@ local servers = (function()
         end
       end,
     },
-    rust_analyzer = {},
+    -- rust_analyzer = {},
     ruff = {}, -- python
-    spectral = {}, -- OpenAPI
-    taplo = {}, -- toml
-    terraformls = {},
-    tflint = {},
-    tsserver = {},
-    vimls = {},
+    -- spectral = {}, -- OpenAPI
+    -- taplo = {}, -- toml
+    -- terraformls = {},
+    -- tflint = {},
+    -- tsserver = {},
+    -- vimls = {},
     yamlls = {},
-    codeqlls = {},
   }
 
   if util.contains(config.csharp_lsp, "omnisharp") then
