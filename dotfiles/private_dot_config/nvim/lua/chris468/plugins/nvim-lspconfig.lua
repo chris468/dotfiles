@@ -182,9 +182,49 @@ local function open_document_diagnostics()
   _open_diagnotics(true)
 end
 
+local function configure_diagnostics()
+  vim.diagnostic.config({
+    signs = {
+      severity = { min = vim.diagnostic.severity.WARN },
+      text = {
+        [vim.diagnostic.severity.ERROR] = icons.diagnostic.error,
+        [vim.diagnostic.severity.WARN] = icons.diagnostic.warn,
+        [vim.diagnostic.severity.INFO] = icons.diagnostic.info,
+        [vim.diagnostic.severity.HINT] = icons.diagnostic.hint,
+      },
+      numhl = {
+        [vim.diagnostic.severity.INFO] = "DiagnosticInfo",
+        [vim.diagnostic.severity.HINT] = "DiagnosticHint",
+      },
+    },
+    float = {
+      border = "rounded",
+      header = "",
+      prefix = function(diagnostic, _, _)
+        local sign = signs[diagnostic.severity]
+        return " " .. sign.icon .. " ", sign.hl
+      end,
+      source = true,
+      suffix = function(diagnostic, _, _)
+        local suffix = ""
+        if diagnostic.code then
+          suffix = " [" .. diagnostic.code .. "]"
+        end
+
+        return suffix, signs[diagnostic.severity].hl
+      end,
+      severity_sort = true,
+    },
+    update_in_insert = true,
+    severity_sort = true,
+    virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+  })
+end
+
 return {
   "neovim/nvim-lspconfig",
   config = function(_, opts)
+    configure_diagnostics()
     local lspconfig = require("lspconfig")
 
     for k, v in pairs(opts.servers) do
