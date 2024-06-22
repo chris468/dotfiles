@@ -3,6 +3,7 @@ local function format()
   conform.format({ lsp_fallback = true, timeout_ms = 1500 })
 end
 
+--- @type { [string]: chris468.util.mason.Tool}
 local formatters_by_ft = {
   lua = { "stylua" },
   python = { "black" },

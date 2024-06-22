@@ -1,6 +1,16 @@
-local linters_by_ft = {
-  markdown = { "markdownlint" },
-}
+local tools = require("chris468.config.lang").tools
+
+--- @return chris468.util.mason.ToolsForFiletype
+function get_linters()
+  local result = {}
+  for ft, t in pairs(tools) do
+    result[ft] = t.lint
+  end
+
+  return result
+end
+
+local linters_by_ft = get_linters()
 
 return {
   "mfussenegger/nvim-lint",
@@ -36,8 +46,9 @@ return {
           end
         end
 
-        opts.install_for_filetype = opts.install_for_filetype or {}
-        opts.install_for_filetype.linter = linters_to_install
+        opts.install_for_filetype = vim.tbl_extend("error", opts.install_for_filetype or {}, {
+          linter = linters_to_install,
+        })
       end,
     },
   },

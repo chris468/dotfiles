@@ -11,4 +11,6 @@ function M.contains(list, val)
   end
 end
 
+M.mason = require("chris468.util.mason")
+
 return M
