@@ -245,16 +245,7 @@ return {
       end,
     },
     { "folke/noice.nvim" },
-    {
-      "folke/neodev.nvim",
-      opts = {
-        override = function(root_dir, library)
-          if root_dir:find("config/*vim") or root_dir:find("/tmp/luapad.") then
-            library.enabled = true
-          end
-        end,
-      },
-    },
+    { "folke/lazydev.nvim" },
     { "smjonas/inc-rename.nvim", opts = {} },
     {
       "folke/trouble.nvim",
