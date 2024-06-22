@@ -1,91 +1,6 @@
 local icons = require("chris468.config.icons")
-local config = require("chris468.config")
+local lang = require("chris468.config.lang")
 local util = require("chris468.util")
-
-local function detect_venv(root_dir)
-  local Job = require("plenary.job")
-  local python = vim.loop.os_uname().sysname == "Windows_NT" and "python.exe" or "python"
-  local dot_venv_python = root_dir .. "/.venv/bin/" .. python
-  if vim.fn.filereadable(dot_venv_python) == 1 then
-    return dot_venv_python
-  end
-
-  local pyproject = root_dir .. "/pyproject.toml"
-  if vim.fn.executable("poetry") == 1 and vim.fn.filereadable(pyproject) == 1 then
-    local ok, venv = pcall(function()
-      return Job:new({
-        command = "poetry",
-        cwd = root_dir,
-        args = { "env", "info", "-p" },
-      })
-        :sync()[1]
-    end)
-    if ok then
-      return venv .. "/bin/" .. python
-    end
-  end
-
-  return false
-end
-
-local servers = (function()
-  local s = {
-    -- angularls = {},
-    -- ansiblels = {},
-    -- autotools_ls = {},
-    bashls = {},
-    -- clangd = {},
-    -- cmake = {},
-    -- cssls = {},
-    -- docker_compose_language_service = {},
-    -- dockerls = {},
-    -- elixirls = {},
-    -- erlangls = {},
-    -- gopls = {},
-    -- helm_ls = {},
-    -- html = {},
-    -- java_language_server = {},
-    jsonls = {},
-    -- lemminx = {}, -- xml
-    lua_ls = {},
-    -- mesonlsp = {},
-    -- nil_ls = {}, -- nix
-    -- powershell_es = {},
-    pyright = {
-      on_new_config = function(new_config, new_root_dir)
-        local defaults = require("lspconfig.server_configurations.pyright")
-        if defaults.on_new_config then
-          defaults.on_new_config(new_config, new_root_dir)
-        end
-
-        local venv_python = detect_venv(new_root_dir)
-        if venv_python then
-          new_config.settings.python.pythonPath = venv_python
-        end
-      end,
-    },
-    -- rust_analyzer = {},
-    ruff = {}, -- python
-    -- spectral = {}, -- OpenAPI
-    -- taplo = {}, -- toml
-    -- terraformls = {},
-    -- tflint = {},
-    -- tsserver = {},
-    -- vimls = {},
-    yamlls = {},
-  }
-
-  if util.contains(config.csharp_lsp, "omnisharp") then
-    s.omnisharp = require("chris468.plugins.config.lsp.omnisharp")
-  end
-  if util.contains(config.csharp_lsp, "roslyn") then
-    local roslyn = require("chris468.plugins.config.lsp.roslyn")
-    require("lspconfig.configs").roslyn_lsp = roslyn.server
-    s.roslyn_lsp = roslyn.lspconfig
-  end
-
-  return s
-end)()
 
 local signs = {
   [vim.diagnostic.severity.ERROR] = {
@@ -106,53 +21,22 @@ local signs = {
   },
 }
 
-local function servers_for_filetypes()
-  local server_to_package = require("mason-lspconfig").get_mappings().lspconfig_to_mason
-  local filetype_to_servers = require("mason-lspconfig.mappings.filetype")
+--- @param capabilities table
+local function register_lsp(capabilities)
+  --- @param tool chris468.util.mason.Tool
+  return function(tool)
+    local name = tool.data.name
+    local lsp = tool.data.lsp --[[ @type chris468.config.lang.Lsp ]]
 
-  local install_for_filetype = {}
-
-  for filetype, filetype_servers in pairs(filetype_to_servers) do
-    local s = {}
-    for _, server in ipairs(filetype_servers) do
-      local p = servers[server] and server_to_package[server] or false
-      if p then
-        s[#s + 1] = {
-          p,
-          callback = function()
-            require("lspconfig")[server].setup(servers[server])
-          end,
-        }
-      end
+    if lsp.register_server then
+      require("lspconfig.configs")[name] = util.value_or_result(lsp.register_server)
     end
 
-    if #s > 0 then
-      install_for_filetype[filetype] = s
-    end
+    local config = util.value_or_result(lsp.config, {}) --[[ @as table ]]
+    config = vim.tbl_deep_extend("error", config, { capabilities = capabilities })
+    require("lspconfig")[name].setup(config)
+    vim.cmd("LspStart " .. name)
   end
-
-  if util.contains(config.csharp_lsp, "roslyn") then
-    install_for_filetype.cs = install_for_filetype.cs or {}
-    install_for_filetype.cs[#install_for_filetype.cs + 1] = "chris468_roslyn_lsp"
-  end
-
-  return install_for_filetype
-end
-
-local function to_server_config(server, config, capabilities)
-  if type(server) == "string" then
-    if type(config) == "table" then
-      if config.capabilities or capabilities then
-        config = vim.deepcopy(config)
-        config.capabilities = vim.tbl_deep_extend("force", config.capabilities or {}, capabilities or {})
-      end
-      return server, config
-    elseif type(config) == "function" then
-      return server, config(capabilities)
-    end
-  end
-
-  vim.notify("Invalid lsp server configuration: " .. vim.inspect({ [server] = config }), vim.log.levels.ERROR)
 end
 
 local function _open_diagnotics(for_document)
@@ -182,68 +66,122 @@ local function open_document_diagnostics()
   _open_diagnotics(true)
 end
 
+local function configure_diagnostics()
+  vim.diagnostic.config({
+    signs = {
+      severity = { min = vim.diagnostic.severity.WARN },
+      text = {
+        [vim.diagnostic.severity.ERROR] = icons.diagnostic.error,
+        [vim.diagnostic.severity.WARN] = icons.diagnostic.warn,
+        [vim.diagnostic.severity.INFO] = icons.diagnostic.info,
+        [vim.diagnostic.severity.HINT] = icons.diagnostic.hint,
+      },
+      numhl = {
+        [vim.diagnostic.severity.INFO] = "DiagnosticInfo",
+        [vim.diagnostic.severity.HINT] = "DiagnosticHint",
+      },
+    },
+    float = {
+      border = "rounded",
+      header = "",
+      prefix = function(diagnostic, _, _)
+        local sign = signs[diagnostic.severity]
+        return " " .. sign.icon .. " ", sign.hl
+      end,
+      source = true,
+      suffix = function(diagnostic, _, _)
+        local suffix = ""
+        if diagnostic.code then
+          suffix = " [" .. diagnostic.code .. "]"
+        end
+
+        return suffix, signs[diagnostic.severity].hl
+      end,
+      severity_sort = true,
+    },
+    update_in_insert = true,
+    severity_sort = true,
+    virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+  })
+end
+
 return {
   "neovim/nvim-lspconfig",
   config = function(_, opts)
-    local lspconfig = require("lspconfig")
+    configure_diagnostics()
 
-    for k, v in pairs(opts.servers) do
-      local server, config = to_server_config(k, v, opts.capabilities)
-      if server and config then
-        lspconfig[server].setup(config)
-      end
+    --- @param server string
+    --- @return chris468.config.lang.Lsp?
+    local function to_lsp(server)
+      return lang.lsp[server] or nil
     end
 
-    vim.diagnostic.config({
-      signs = {
-        severity = { min = vim.diagnostic.severity.WARN },
-        text = {
-          [vim.diagnostic.severity.ERROR] = icons.diagnostic.error,
-          [vim.diagnostic.severity.WARN] = icons.diagnostic.warn,
-          [vim.diagnostic.severity.INFO] = icons.diagnostic.info,
-          [vim.diagnostic.severity.HINT] = icons.diagnostic.hint,
-        },
-        numhl = {
-          [vim.diagnostic.severity.INFO] = "DiagnosticInfo",
-          [vim.diagnostic.severity.HINT] = "DiagnosticHint",
-        },
-      },
-      float = {
-        border = "rounded",
-        header = "",
-        prefix = function(diagnostic, _, _)
-          local sign = signs[diagnostic.severity]
-          return " " .. sign.icon .. " ", sign.hl
-        end,
-        source = true,
-        suffix = function(diagnostic, _, _)
-          local suffix = ""
-          if diagnostic.code then
-            suffix = " [" .. diagnostic.code .. "]"
-          end
+    --- @param server string
+    --- @return chris468.util.mason.Tool?
+    local function to_tool(server)
+      local lsp = to_lsp(server)
+      if not lsp then
+        return nil
+      end
 
-          return suffix, signs[diagnostic.severity].hl
-        end,
-        severity_sort = true,
-      },
-      update_in_insert = true,
-      severity_sort = true,
-      virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
-    })
+      local mappings = require("mason-lspconfig.mappings.server").lspconfig_to_package
+      local tool = {
+        package_name = lsp.package_name or mappings[server] or server,
+        on_complete = register_lsp(opts.capabilities),
+        data = {
+          name = server,
+          lsp = lsp,
+        },
+      }
+
+      return tool
+    end
+
+    --- @param servers string[]
+    --- @return (chris468.util.mason.Tool[])?
+    local function to_tools(servers)
+      local tools = nil
+      for _, server in ipairs(servers) do
+        local tool = to_tool(server)
+        if tool then
+          tools = tools or {}
+          tools[#tools + 1] = tool
+        end
+      end
+
+      return tools
+    end
+
+    --- @return { [string]: string[] }
+    local function filetypes_from_lang_config()
+      --- @type { [string]: string[] }
+      local result = {}
+      for server, lsp in pairs(lang.lsp) do
+        if lsp then
+          local filetypes = util.value_or_result(lsp.config, {}).filetypes
+            or util.value_or_result(lsp.register_server, { default_config = {} }).default_config.filetypes
+            or {}
+
+          for _, filetype in ipairs(filetypes) do
+            result[filetype] = result[filetype] or {}
+            table.insert(result[filetype], server)
+          end
+        end
+      end
+
+      return result
+    end
+
+    local filetype_to_servers =
+      util.merge_flatten(require("mason-lspconfig.mappings.filetype"), filetypes_from_lang_config())
+    local filetype_to_tools = vim.tbl_map(to_tools, filetype_to_servers)
+    util.mason.lazy_install_for_filetype(filetype_to_tools, "install and configure lsp")
   end,
   event = "FileType",
   dependencies = {
     { "nvim-lua/plenary.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
-    {
-      "williamboman/mason.nvim",
-      dependencies = { "williamboman/mason-lspconfig.nvim" },
-      opts = function(_, opts)
-        local r = opts.install_for_filetype or {}
-        r.lsp = servers_for_filetypes()
-        opts.install_for_filetype = r
-      end,
-    },
+    { "williamboman/mason.nvim" },
     { "folke/noice.nvim" },
     { "folke/lazydev.nvim" },
     { "smjonas/inc-rename.nvim", opts = {} },
@@ -274,6 +212,5 @@ return {
   },
   opts = {
     capabilities = {},
-    servers = servers,
   },
 }

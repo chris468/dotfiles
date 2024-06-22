@@ -1,4 +1,4 @@
-function open(mode)
+local function open(mode)
   return function()
     local trouble = require("trouble")
     trouble.open(mode)
