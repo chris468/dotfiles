@@ -43,6 +43,6 @@ return {
     render = "wrapped-compact",
     stages = "fade",
     timeout = 3000,
-    top_down = false,
+    top_down = true,
   },
 }

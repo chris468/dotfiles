@@ -49,7 +49,18 @@ return {
         ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
       },
     },
-    -- you can enable a preset for easier configuration
+    messages = {
+      enabled = true,
+      view = "mini",
+      view_error = "notify",
+      view_warn = "mini",
+      view_history = "messages",
+      view_search = "virtualtext",
+    },
+    notify = {
+      enabled = true,
+      view = "mini",
+    },
     presets = {
       bottom_search = true, -- use a classic bottom cmdline for search
       command_palette = false, -- position the cmdline and popupmenu together
@@ -70,6 +81,10 @@ return {
           },
         },
         view = "mini",
+      },
+      {
+        filter = { event = "notify.warn" },
+        view = "notify",
       },
     },
   },
