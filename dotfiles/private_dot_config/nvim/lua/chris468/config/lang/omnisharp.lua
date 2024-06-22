@@ -1,3 +1,10 @@
+local util = require("chris468.util")
+local config = require("chris468.config")
+
+if not util.contains(config.csharp_lsp, "omnnisharp") then
+  return false
+end
+
 local function between(current, range)
   return range.start.row == range["end"].row
     and current.row == range.start.row
@@ -30,20 +37,23 @@ local function configure_omnisharp_commands()
   end
 end
 
+--- @type chris468.config.lang.Lsp
 return {
-  cmd = { "omnisharp", "--languageserver", "--hostpid", tostring(vim.fn.getpid()) },
-  on_attach = function(_, _)
-    -- Ideally this would just set up the command in the comands table, but in lspconfig
-    -- that currently sets up autocmds. see neovim/nvim-lspconfig/issues/2632.
-    configure_omnisharp_commands()
-  end,
-  settings = {
-    FormattingOptions = {
-      OrganizeImports = true,
-    },
-    RoslynExtensionsOptions = {
-      EnableAnalyzersSupport = true,
-      EnableImportCompletion = true,
+  config = {
+    cmd = { "omnisharp", "--languageserver", "--hostpid", tostring(vim.fn.getpid()) },
+    on_attach = function(_, _)
+      -- Ideally this would just set up the command in the comands table, but in lspconfig
+      -- that currently sets up autocmds. see neovim/nvim-lspconfig/issues/2632.
+      configure_omnisharp_commands()
+    end,
+    settings = {
+      FormattingOptions = {
+        OrganizeImports = true,
+      },
+      RoslynExtensionsOptions = {
+        EnableAnalyzersSupport = true,
+        EnableImportCompletion = true,
+      },
     },
   },
 }
