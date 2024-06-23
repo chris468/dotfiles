@@ -19,7 +19,7 @@ tmux set -g @theme468-status-right-modules "date host"
 
 tmux set -g @theme468-window "#I#W "
 
-tmux set -g @theme468-segment-session "#{=/15/…:session_name}"
+tmux set -g @theme468-segment-session "#{=/15/…:session_name} "
 tmux set -g @theme468-segment-session-icon " "
 tmux set -g @theme468-segment-session-attr "bold"
 
