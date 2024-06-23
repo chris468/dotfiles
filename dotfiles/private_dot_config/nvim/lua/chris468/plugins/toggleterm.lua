@@ -4,8 +4,20 @@ local terminal_id = {
   chezmoi = 3,
 }
 
+local function nu_or_default()
+  local nu_path = vim.fn.exepath("nu")
+  if nu_path == "" then
+    return nil
+  end
+  return nu_path .. " -i"
+end
+
 local terminals = {
-  default = { id = terminal_id.default, display_name = "Terminal" },
+  default = {
+    id = terminal_id.default,
+    cmd = nu_or_default(),
+    display_name = "Terminal",
+  },
   lazygit = {
     id = terminal_id.lazygit,
     display_name = "Lazygit",
