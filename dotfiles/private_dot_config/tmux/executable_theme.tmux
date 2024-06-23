@@ -13,8 +13,13 @@ function dim_when_suspended() {
 	echo "#{?@theme468-suspended,$suspended,$default}"
 }
 
+tmux set -g status-left-length 0
+tmux set -g @theme468-status-left-modules "session"
+tmux set -g @theme468-status-right-modules "date host"
+
 tmux set -g @theme468-window "#I#W "
-tmux set -g @theme468-segment-session "#S"
+
+tmux set -g @theme468-segment-session "#{=/15/…:session_name}"
 tmux set -g @theme468-segment-session-icon " "
 tmux set -g @theme468-segment-session-attr "bold"
 
@@ -29,9 +34,6 @@ tmux set -g status-interval 1
 tmux set -g default-terminal xterm-256color
 tmux set -sa terminal-overrides ",xterm*:Tc"
 tmux set -g display-time 4000
-
-tmux set -g @theme468-status-left-modules "session"
-tmux set -g @theme468-status-right-modules "date host"
 
 tmux set -g @theme468-status-left-separator-outer "█"
 tmux set -g @theme468-status-left-separator-left ""
