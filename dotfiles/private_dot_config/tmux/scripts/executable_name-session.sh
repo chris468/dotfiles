@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+tmux display -p '#S' | grep -qE '^[0-9]+$' || exit 0
+
 name="$(basename $(pwd))"
 suffix=
 
