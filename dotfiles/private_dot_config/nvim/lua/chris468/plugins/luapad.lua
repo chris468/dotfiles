@@ -17,7 +17,7 @@ end
 
 --- @return string|nil path, string|nil error
 local function create_project()
-  local tmpdir, err_name, err_message = vim.loop.fs_mkdtemp("/tmp/luapad.XXXX")
+  local tmpdir, err_name, err_message = vim.loop.fs_mkdtemp("/tmp/luapad.XXXXXX")
   if not tmpdir then
     return nil, build_error("failed to create tempdir for luapad", err_name, err_message)
   end
