@@ -43,7 +43,10 @@ local chezmoi_path = vim.fn.expand("~/.local/share/chezmoi")
 return {
   "nvim-telescope/telescope.nvim",
   cmd = { "Telescope" },
-  dependencies = { "nvim-lua/plenary.nvim" },
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    { "tsakirist/telescope-lazy.nvim", config = true },
+  },
   keys = {
     { "<leader><leader>", telescope_builtin("find_files"), desc = "Find files" },
     { "<leader>r", telescope_builtin("resume"), desc = "Resume last search " },
@@ -60,6 +63,7 @@ return {
     { "<leader>fh", telescope_builtin("highlights"), desc = "Highlights" },
     { "<leader>fH", telescope_builtin("help_tags"), desc = "Help" },
     { "<leader>fk", telescope_builtin("keymaps"), desc = "Key mappings" },
+    { "<leader>fL", "<cmd>Telescope lazy<CR>", desc = "Lazy plugins" },
     { "<leader>fo", telescope_builtin("vim_options"), desc = "Options" },
     { "<leader>fr", telescope_builtin("oldfiles", oldfiles_opts), desc = "Recent files" },
     { "<leader>fT", "<cmd>Telescope<cr>", desc = "Search" },
@@ -91,6 +95,19 @@ return {
           ["<C-k>"] = "move_selection_previous",
           ["<C-b>"] = "results_scrolling_up",
           ["<C-f>"] = "results_scrolling_down",
+        },
+      },
+    },
+    extensions = {
+      lazy = {
+        mappings = {
+          change_cwd_to_plugin = "<C-w>",
+          open_plugins_picker = "<C-o>",
+        },
+        actions_opts = {
+          change_cwd_to_plugin = {
+            auto_close = true,
+          },
         },
       },
     },
