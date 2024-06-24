@@ -1,7 +1,7 @@
 local tools = require("chris468.config.lang").tools
 
 --- @return chris468.util.mason.ToolsForFiletype
-function get_linters()
+local function get_linters()
   local result = {}
   for ft, t in pairs(tools) do
     result[ft] = t.lint
@@ -32,19 +32,21 @@ return {
     {
       "williamboman/mason.nvim",
       opts = function(_, opts)
-        local linters_to_install = {}
-        for ft, linters in pairs(linters_by_ft) do
-          linters_to_install[ft] = {}
-          for _, l in ipairs(linters) do
-            linters_to_install[ft][#linters_to_install[ft] + 1] = {
-              l,
-              callback = function()
-                local lint = require("lint")
-                lint.try_lint()
-              end,
-            }
-          end
+        local function try_lint()
+          local lint = require("lint")
+          lint.try_lint()
         end
+
+        --- @type chris468.util.mason.ToolsForFiletype
+        local linters_to_install = vim.tbl_map(function(linters)
+          return vim.tbl_map(function(linter)
+            --- @type chris468.util.mason.Tool
+            return {
+              package_name = linter,
+              callback = try_lint,
+            }
+          end, linters)
+        end, linters_by_ft)
 
         opts.install_for_filetype = vim.tbl_extend("error", opts.install_for_filetype or {}, {
           linter = linters_to_install,
