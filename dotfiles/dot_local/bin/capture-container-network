@@ -5,10 +5,18 @@ tmpdir=$(mktemp -d)
 docker build -t tcpdump - <<EOF
 FROM ubuntu
 RUN apt-get update && apt-get install -y tcpdump
-ENTRYPOINT ["tcpdump", "-i", "any"]
+VOLUME ["/data"]
+ENTRYPOINT ["tcpdump", "-U", "-i", "any", "-A", "-w", "/data/packets.pcap"]
 EOF
 
-docker run -d --rm --net container:$1 -v $tmpdir:/data tcpdump -i any -A -w /data/packets.pcap
+docker run -d --rm --net container:$1 --name tcpdump -v $tmpdir:/data tcpdump
 
-tail -c+0 -f $tmpdir/packets.pcap | wireshark -i -
+while [ ! -e $tmpdir/packets.pcap ] ; do
+	sleep 1
+done
+
+echo "$tmpdir/packets.pcap"
+tail -c+0 -f "$tmpdir/packets.pcap" | wireshark -k -i -
+
+docker stop tcpdump
 
