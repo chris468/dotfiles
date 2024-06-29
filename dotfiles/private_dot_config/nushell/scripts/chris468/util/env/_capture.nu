@@ -63,13 +63,8 @@ export def --env capture [
     let captured_env = (with-env  {
             SCRIPT: $script
         } {
-            ^(if $shell == "" { default_shell } else { $shell }) ...$arguments -c `
-                env -0
-                echo "<CAPTURE_ENV>"
-                eval "$SCRIPT"
-                echo "<CAPTURE_ENV>"
-                env -0
-            `
+            (^(if $shell == "" { default_shell } else { $shell }) ...$arguments -c
+                'env -0 ; echo "<CAPTURE_ENV>" ; eval "$SCRIPT" ; echo "<CAPTURE_ENV>" ; env -0')
         } | split row "<CAPTURE_ENV>"
         | {
             original: ($in | first | str trim | split row "\u{0}" | parse-env)
