@@ -108,6 +108,23 @@ return {
       },
     },
     filesystem = {
+      filtered_items = {
+        always_show = {
+          ".chezmoiexternals",
+          ".chezmoiscripts",
+          ".chezmoitemplates",
+          ".chezmoi.yaml.tmpl",
+          ".chezmoi.tmpl",
+          ".chezmoiignore",
+          ".chezmoiremove",
+          ".chezmoiroot",
+          ".chezmoiversion",
+        },
+        -- always_show_by_pattern = { will be introduced in next release after 3.26
+        --   ".chezmoi*",
+        --   ".chezmoi*/*",
+        -- },
+      },
       follow_current_file = { enabled = false },
       window = {
         mappings = {
