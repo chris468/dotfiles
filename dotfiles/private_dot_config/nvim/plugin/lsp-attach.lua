@@ -62,11 +62,12 @@ local function refresh_codelens(buf)
     group = vim.api.nvim_create_augroup("Refresh codelens", { clear = true }),
     buffer = buf,
     callback = function()
-      for _, client in ipairs(vim.lsp.get_clients({ bufnr = buf })) do
-        if client.supports_method("textDocument/codeLens") then
-          vim.lsp.codelens.refresh()
-          return
-        end
+      local codelens_clients = vim.lsp.get_clients({
+        bufnr = buf,
+        method = "textDocument/codeLens",
+      })
+      if #codelens_clients > 0 then
+        vim.lsp.codelens.refresh()
       end
     end,
   })
