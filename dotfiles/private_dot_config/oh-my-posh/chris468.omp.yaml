@@ -44,6 +44,7 @@ palettes:
       dirty: p:nord13
       diverged: p:nord11
       ahead: p:nord10
+      remote: p:nord8
 
     catppuccin-mocha:
       rosewater: "#f5e0dc"
@@ -95,6 +96,7 @@ palettes:
       dirty: p:yellow
       diverged: p:red
       ahead: p:red
+      remote: p:sky
 
 var:
   min_width: 90
@@ -136,6 +138,8 @@ blocks:
         style: diamond
         leading_diamond: <parentBackground,background></>
         foreground: p:middle-foreground
+        foreground_templates:
+          - "{{ if .SSHSession }}p:remote{{ end }}"
         background: p:middle-background
         template: ' {{
           $userName := .UserName }}{{
