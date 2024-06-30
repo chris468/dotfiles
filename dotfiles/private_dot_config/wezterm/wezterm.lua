@@ -35,14 +35,18 @@ config.keys = {
 	{ key = ")", mods = "SHIFT|CTRL", action = wezterm.action.ResetFontSize },
 	{ key = "c", mods = "SHIFT|CTRL", action = wezterm.action.CopyTo("Clipboard") },
 	{ key = "c", mods = "SUPER", action = wezterm.action.CopyTo("Clipboard") },
+	{ key = "n", mods = "SHIFT|CTRL", action = wezterm.action.SpawnWindow },
+	{ key = "n", mods = "SUPER", action = wezterm.action.SpawnWindow },
+	{ key = "t", mods = "SHIFT|CTRL", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
+	{ key = "t", mods = "SUPER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
 	{ key = "v", mods = "SHIFT|CTRL", action = wezterm.action.PasteFrom("Clipboard") },
 	{ key = "v", mods = "SUPER", action = wezterm.action.PasteFrom("Clipboard") },
 	{ key = "w", mods = "SHIFT|CTRL", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
 	{ key = "w", mods = "SUPER", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
-	{ key = "P", mods = "SUPER|SHIFT", action = wezterm.action.ActivateCommandPalette },
-	{ key = "P", mods = "SHIFT|CTRL", action = wezterm.action.ActivateCommandPalette },
-	{ key = "D", mods = "SUPER|SHIFT", action = wezterm.action.ShowDebugOverlay },
-	{ key = "D", mods = "SHIFT|CTRL", action = wezterm.action.ShowDebugOverlay },
+	{ key = "p", mods = "SUPER|SHIFT", action = wezterm.action.ActivateCommandPalette },
+	{ key = "p", mods = "SHIFT|CTRL", action = wezterm.action.ActivateCommandPalette },
+	{ key = "d", mods = "SUPER|SHIFT", action = wezterm.action.ShowDebugOverlay },
+	{ key = "d", mods = "SHIFT|CTRL", action = wezterm.action.ShowDebugOverlay },
 }
 
 return config
