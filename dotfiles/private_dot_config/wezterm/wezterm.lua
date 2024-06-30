@@ -24,8 +24,25 @@ config.ssh_domains = settings.ssh_domains
 config.initial_cols = 120
 config.initial_rows = 40
 
+config.disable_default_key_bindings = true
 config.keys = {
 	{ key = "Enter", mods = "SHIFT", action = wezterm.action({ SendString = "\x1b[13;2u" }) },
+	{ key = "Tab", mods = "CTRL", action = wezterm.action.ActivateTabRelative(1) },
+	{ key = "Tab", mods = "SHIFT|CTRL", action = wezterm.action.ActivateTabRelative(-1) },
+	{ key = "Enter", mods = "ALT", action = wezterm.action.ToggleFullScreen },
+	{ key = "=", mods = "SHIFT|CTRL", action = wezterm.action.IncreaseFontSize },
+	{ key = "-", mods = "SHIFT|CTRL", action = wezterm.action.DecreaseFontSize },
+	{ key = ")", mods = "SHIFT|CTRL", action = wezterm.action.ResetFontSize },
+	{ key = "c", mods = "SHIFT|CTRL", action = wezterm.action.CopyTo("Clipboard") },
+	{ key = "c", mods = "SUPER", action = wezterm.action.CopyTo("Clipboard") },
+	{ key = "v", mods = "SHIFT|CTRL", action = wezterm.action.PasteFrom("Clipboard") },
+	{ key = "v", mods = "SUPER", action = wezterm.action.PasteFrom("Clipboard") },
+	{ key = "w", mods = "SHIFT|CTRL", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
+	{ key = "w", mods = "SUPER", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
+	{ key = "P", mods = "SUPER|SHIFT", action = wezterm.action.ActivateCommandPalette },
+	{ key = "P", mods = "SHIFT|CTRL", action = wezterm.action.ActivateCommandPalette },
+	{ key = "D", mods = "SUPER|SHIFT", action = wezterm.action.ShowDebugOverlay },
+	{ key = "D", mods = "SHIFT|CTRL", action = wezterm.action.ShowDebugOverlay },
 }
 
 return config
