@@ -1,4 +1,4 @@
-theme: nord
+theme: catppuccin-mocha
 poshTheme: {{ joinPath .paths.configHome "oh-my-posh" "chris468.omp.yaml" }}
 
 font:
@@ -27,4 +27,4 @@ windowsTerminal:
     defaultProfile: "{47302f9c-1ac4-566c-aa3e-8cf29889d6ab}"
 
 nvim:
-  flavor: lazyvim
+  flavor: ""
