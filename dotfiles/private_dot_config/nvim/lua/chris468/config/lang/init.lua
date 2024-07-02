@@ -9,6 +9,7 @@ local config = require("chris468.config")
 --- @field config? (table | fun():table?)
 --- @field register_server? table | fun():table?
 --- @field package_name? string
+--- @field install? boolean
 
 --- @class (exact) chris468.config.lang.Config
 --- @field lsp { [string]: false | chris468.config.lang.Lsp }
@@ -36,6 +37,12 @@ M.lsp = {
   lua_ls = {},
   mesonlsp = {},
   nil_ls = {}, -- nix
+  nushell = {
+    install = false,
+    config = {
+      filetypes = { "nu" },
+    },
+  },
   omnisharp = require("chris468.config.lang.omnisharp"),
   powershell_es = {},
   pyright = require("chris468.config.lang.pyright"),

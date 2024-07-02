@@ -2,8 +2,9 @@ local M = {}
 
 --- @class (exact) chris468.util.mason.Tool
 --- @field package_name string
+--- @field install boolean?
 --- @field on_complete fun(tool: chris468.util.mason.Tool)?
---- @field data  any?
+--- @field data any?
 
 --- @alias chris468.util.mason.ToolsForFiletype { [string]: (string|chris468.util.mason.Tool)[] }
 
@@ -35,19 +36,17 @@ function M.install_tools(tools)
       tool = { package_name = tool }
     end
     local on_complete = tool.on_complete or noop
-    if registry.is_installed(tool.package_name) then
+    if tool.install == false or registry.is_installed(tool.package_name) then
       on_complete(tool)
-      return
+    else
+      local pkg = registry.get_package(tool.package_name)
+      if pkg then
+        install_tool(pkg, on_complete, tool)
+      else
+        vim.notify("Package " .. tool .. " not found", vim.log.levels.ERROR)
+        on_complete(tool)
+      end
     end
-
-    local pkg = registry.get_package(tool.package_name)
-    if not pkg then
-      vim.notify("Package " .. tool .. " not found", vim.log.levels.ERROR)
-      on_complete(tool)
-      return
-    end
-
-    install_tool(pkg, on_complete, tool)
   end
 end
 

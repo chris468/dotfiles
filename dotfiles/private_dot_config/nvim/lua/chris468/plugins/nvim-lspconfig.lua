@@ -127,6 +127,7 @@ return {
       local mappings = require("mason-lspconfig.mappings.server").lspconfig_to_package
       local tool = {
         package_name = lsp.package_name or mappings[server] or server,
+        install = lsp.install,
         on_complete = register_lsp(opts.capabilities),
         data = {
           name = server,
