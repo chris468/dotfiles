@@ -1,14 +1,21 @@
+local tools = require("chris468.config.lang").tools
+
+--- @return chris468.util.mason.ToolsForFiletype
+local function get_formatters()
+  local result = {}
+  for ft, t in pairs(tools) do
+    result[ft] = t.format
+  end
+
+  return result
+end
+
+local formatters_by_ft = get_formatters()
+
 local function format()
   local conform = require("conform")
   conform.format({ lsp_fallback = true, timeout_ms = 1500 })
 end
-
---- @type  chris468.util.mason.ToolsForFiletype
-local formatters_by_ft = {
-  lua = { "stylua" },
-  python = { "black" },
-  javascript = { "prettierd" },
-}
 
 return {
   "stevearc/conform.nvim",

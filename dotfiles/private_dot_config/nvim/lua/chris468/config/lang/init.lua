@@ -63,6 +63,7 @@ M.lsp = {
 M.tools = {
   markdown = {
     lint = { "markdownlint" },
+    format = { "prettierd" },
   },
   lua = {
     format = { "stylua" },
@@ -71,7 +72,7 @@ M.tools = {
     format = { "black" },
   },
   javascript = {
-    format = { "prettierd", "prettier" },
+    format = { "prettierd" },
   },
 }
 
