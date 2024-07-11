@@ -54,6 +54,7 @@ return {
     { '<leader>f"', telescope_builtin("registers"), desc = "Registers" },
     { "<leader>fb", telescope_builtin("buffers"), desc = "Buffers" },
     { "<leader>fc", telescope_builtin("find_files", { cwd = config_path }), desc = "Configuration" },
+    { "<leader>fC", telescope_builtin("colorscheme", { enable_preview = true }), desc = "Colors" },
     {
       "<leader>fd",
       telescope_builtin("find_files", { cwd = chezmoi_path, hidden = true, file_ignore_patterns = { ".git/" } }),
