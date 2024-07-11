@@ -10,6 +10,8 @@ end
 --- @field BreakpointLine vim.api.keyset.highlight
 --- @field StoppedLine vim.api.keyset.highlight
 --- @field StoppedIcon vim.api.keyset.highlight
+--- @field DapBreakpoint? vim.api.keyset.highlight
+--- @field DapLogPoint? vim.api.keyset.highlight
 
 --- @class chris468.Theme
 --- @field highlights chris468.ThemeHighlights
