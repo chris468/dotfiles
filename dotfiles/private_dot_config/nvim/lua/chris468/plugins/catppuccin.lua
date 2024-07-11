@@ -12,23 +12,23 @@ return {
     local catppuccin = require("catppuccin.palettes").get_palette("mocha")
 
     local function create_highlights()
-      vim.api.nvim_set_hl(0, "chris468.IndentGuide", {
+      vim.api.nvim_set_hl(0, "IblIndent", {
         force = true,
         fg = catppuccin.surface0,
       })
-      vim.api.nvim_set_hl(0, "chris468.ScopeGuide", {
+      vim.api.nvim_set_hl(0, "IblScope", {
         force = true,
         fg = catppuccin.lavender,
       })
-      vim.api.nvim_set_hl(0, "chris468.BreakpointLine", {
+      vim.api.nvim_set_hl(0, "BreakpointLine", {
         force = true,
         bg = "#170208", -- catppuccin.red w/ lightness decreased to 5%
       })
-      vim.api.nvim_set_hl(0, "chris468.StoppedLine", {
+      vim.api.nvim_set_hl(0, "StoppedLine", {
         force = true,
         bg = "#261b03", -- catppuccin.yellow w/ lightness decreased to 8%
       })
-      vim.api.nvim_set_hl(0, "chris468.StoppedIcon", {
+      vim.api.nvim_set_hl(0, "StoppedIcon", {
         force = true,
         fg = catppuccin.yellow,
       })

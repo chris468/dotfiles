@@ -18,23 +18,23 @@ return {
     vim.g.nord_cursor_line_number_background = 1
 
     local function create_highlights()
-      vim.api.nvim_set_hl(0, "chris468.IndentGuide", {
+      vim.api.nvim_set_hl(0, "IblIndent", {
         force = true,
         fg = nord[2].gui,
       })
-      vim.api.nvim_set_hl(0, "chris468.ScopeGuide", {
+      vim.api.nvim_set_hl(0, "IblScope", {
         force = true,
         fg = nord[9].gui,
       })
-      vim.api.nvim_set_hl(0, "chris468.BreakpointLine", {
+      vim.api.nvim_set_hl(0, "BreakpointLine", {
         force = true,
         bg = "#120708", -- nord[11] w/ lightness decreased to 5%
       })
-      vim.api.nvim_set_hl(0, "chris468.StoppedLine", {
+      vim.api.nvim_set_hl(0, "StoppedLine", {
         force = true,
         bg = "#231906", -- nord[13] w/ lightness decreased to 8%
       })
-      vim.api.nvim_set_hl(0, "chris468.StoppedIcon", {
+      vim.api.nvim_set_hl(0, "StoppedIcon", {
         force = true,
         fg = nord[13].gui,
       })
