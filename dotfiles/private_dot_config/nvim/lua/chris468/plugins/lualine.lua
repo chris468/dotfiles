@@ -1,12 +1,11 @@
 local icons = require("chris468.config.icons")
-local theme = require("chris468.config.settings").theme
 
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
   opts = {
     options = {
-      theme = theme,
+      theme = auto,
       globalstatus = true,
     },
     extensions = {
