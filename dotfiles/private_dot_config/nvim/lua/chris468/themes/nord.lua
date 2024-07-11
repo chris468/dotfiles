@@ -35,5 +35,7 @@ return {
       bg = "#231906", -- nord[13] w/ lightness decreased to 8%
     },
     StoppedIcon = { fg = nord[13].gui },
+    DapBreakpoint = { fg = nord[11].gui },
+    DapLogPoint = { fg = nord[8].gui },
   },
 }
