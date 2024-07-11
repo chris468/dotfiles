@@ -1,6 +1,5 @@
-local themes = require("chris468.themes")
 local theme = require("chris468.config.settings").theme
-local is_default_theme = themes.family(theme) == "nord"
+local is_default_theme = theme == "nord"
 
 local priority = nil
 if is_default_theme then
