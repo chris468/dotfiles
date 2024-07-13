@@ -1,7 +1,19 @@
 local M = {}
 
 function M.family(theme)
-  return theme:find("^base16") and "base16" or (theme:find("^catppuccin") and "catppuccin" or theme)
+  local families = {
+    ["^base16"] = "base16",
+    ["^catppuccin"] = "catppuccin",
+    ["^tokyonight"] = "tokyonight",
+  }
+
+  for match, family in pairs(families) do
+    if theme:find(match) then
+      return family
+    end
+  end
+
+  return theme
 end
 
 --- @class chris468.ThemeHighlights
