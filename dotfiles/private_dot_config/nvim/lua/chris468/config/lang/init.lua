@@ -61,6 +61,9 @@ M.lsp = {
 
 --- @type { [string]: chris468.config.lang.Tools }
 M.tools = {
+  hcl = {
+    format = { "hclfmt" },
+  },
   markdown = {
     lint = { "markdownlint" },
     format = { "prettierd" },
