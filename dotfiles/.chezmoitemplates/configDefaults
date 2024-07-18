@@ -1,4 +1,5 @@
 theme: catppuccin-mocha
+base16theme: google-dark
 poshTheme: {{ joinPath .paths.configHome "oh-my-posh" "chris468.omp.yaml" }}
 
 font:

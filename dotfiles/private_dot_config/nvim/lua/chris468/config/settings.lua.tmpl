@@ -1,6 +1,7 @@
 local os = require("os")
+{{- $theme := "base16" | eq .realConfig.theme | ternary (printf "base16-%s" .realConfig.base16theme) .realConfig.theme }}
 return {
   profiles = profiles,
-  theme = os.getenv("CHRIS468_NVIM_THEME") or "{{ .realConfig.theme }}",
+  theme = os.getenv("CHRIS468_NVIM_THEME") or "{{ $theme }}",
   lockfile = lockfile,
 }

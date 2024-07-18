@@ -1,3 +1,3 @@
-{{- if .realConfig.theme | regexMatch "^base16-.+" -}}
-source {{ joinPath .paths.localInstall "base16-shell" "scripts" (printf "%s.sh" .realConfig.theme) }}
+{{- if eq "base16" .realConfig.theme -}}
+source {{ joinPath .paths.localInstall "base16-shell" "scripts" (printf "base16-%s.sh" .realConfig.base16theme) }}
 {{- end -}}
