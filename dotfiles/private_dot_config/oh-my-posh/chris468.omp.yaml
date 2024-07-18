@@ -98,6 +98,31 @@ palettes:
       ahead: p:red
       remote: p:sky
 
+    base16:
+      outer-foreground: "18"
+      outer-background: "4"
+      middle-foreground: "4"
+      middle-background: "19"
+      inner-foreground: "4"
+      inner-background: "18"
+      prompt-foreground: "4"
+      aws-foreground: "16"
+      kubectl-foreground: "4"
+      fail: "9"
+      dim-foreground: "18"
+      added: "2"
+      modified: "5"
+      deleted: "1"
+      untracked: "4"
+      unmerged: "16"
+      unstaged: "3"
+      staged: "2"
+      clean:  "2"
+      dirty: "1"
+      diverged: "1"
+      ahead: "1"
+      remote: "6"
+
 var:
   min_width: 90
   mapped_shells:
