@@ -23,7 +23,7 @@ local function load_theme(colorscheme)
   end
 
   local family = M.family(colorscheme)
-  if family ~= key then
+  if family ~= colorscheme then
     ok, val = pcall(require, "chris468.themes." .. family)
   end
   if ok then
@@ -31,7 +31,7 @@ local function load_theme(colorscheme)
   end
 
   vim.notify("No theme data for colorscheme " .. colorscheme)
-  return {}
+  return { highlights = {} }
 end
 
 M.theme = setmetatable({}, {
@@ -49,6 +49,10 @@ M.theme = setmetatable({}, {
 })
 
 function M.configure_highlights(colorscheme)
+  if not colorscheme then
+    return
+  end
+
   local theme = M.theme[colorscheme]
   for k, v in pairs(theme.highlights) do
     vim.api.nvim_set_hl(0, k, v)

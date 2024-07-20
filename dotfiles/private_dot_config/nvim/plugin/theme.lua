@@ -1,4 +1,5 @@
 local themes = require("chris468.themes")
+
 themes.configure_highlights(vim.g.colors_name)
 
 vim.api.nvim_create_autocmd("ColorScheme", {
