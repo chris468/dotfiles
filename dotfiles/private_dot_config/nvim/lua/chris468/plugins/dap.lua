@@ -135,17 +135,14 @@ return {
     vim.fn.sign_define("DapBreakpoint", {
       text = icons.debugging.breakpoint,
       texthl = "DapBreakpoint",
-      linehl = "chris468.BreakpointLine",
+      linehl = "BreakpointLine",
     })
     vim.fn.sign_define(
       "DapBreakpointCondition",
       { text = icons.debugging.conditional_breakpoint, texthl = "DapBreakpoint" }
     )
     vim.fn.sign_define("DapLogPoint", { text = icons.debugging.logpoint, texthl = "DapLogPoint" })
-    vim.fn.sign_define(
-      "DapStopped",
-      { text = icons.debugging.stopped, texthl = "chris468.StoppedIcon", linehl = "chris468.StoppedLine" }
-    )
+    vim.fn.sign_define("DapStopped", { text = icons.debugging.stopped, texthl = "StoppedIcon", linehl = "StoppedLine" })
     vim.fn.sign_define("DapBreakpointRejected", { text = icons.debugging.breakpoint, texthl = "Comment" })
   end,
   dependencies = {
