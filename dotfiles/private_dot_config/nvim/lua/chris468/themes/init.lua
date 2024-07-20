@@ -5,27 +5,16 @@ function M.family(theme)
 end
 
 --- @class chris468.ThemeHighlights
---- @field IblIndent vim.api.keyset.highlight
---- @field IblScope vim.api.keyset.highlight
---- @field BreakpointLine vim.api.keyset.highlight
---- @field StoppedLine vim.api.keyset.highlight
---- @field StoppedIcon vim.api.keyset.highlight
+--- @field IblIndent? vim.api.keyset.highlight
+--- @field IblScope? vim.api.keyset.highlight
+--- @field BreakpointLine? vim.api.keyset.highlight
+--- @field StoppedLine? vim.api.keyset.highlight
+--- @field StoppedIcon? vim.api.keyset.highlight
 --- @field DapBreakpoint? vim.api.keyset.highlight
 --- @field DapLogPoint? vim.api.keyset.highlight
 
 --- @class chris468.Theme
 --- @field highlights chris468.ThemeHighlights
-
---- @type chris468.Theme
-local defaults = {
-  highlights = {
-    IblIndent = {},
-    IblScope = {},
-    BreakpointLine = {},
-    StoppedLine = {},
-    StoppedIcon = {},
-  },
-}
 
 local function load_theme(colorscheme)
   local ok, val = pcall(require, "chris468.themes." .. colorscheme)
@@ -42,7 +31,7 @@ local function load_theme(colorscheme)
   end
 
   vim.notify("No theme data for colorscheme " .. colorscheme)
-  return defaults
+  return {}
 end
 
 M.theme = setmetatable({}, {
