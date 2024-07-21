@@ -11,6 +11,7 @@ data:
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
 {{- $_fzf := joinPath $_localInstall "fzf" -}}
 {{- $_fzfBin := joinPath $_fzf "bin" -}}
+{{- $_tokyonight := joinPath $_localInstall "tokyonight.nvim" -}}
 {{- $_relativePaths := dict
       "local" $_local
       "localInstall" $_localInstall
@@ -21,6 +22,7 @@ data:
       "configHome" $_configHome
       "fzf" $_fzf
       "fzfBin" $_fzfBin
+      "tokyonight" $_tokyonight
       "homebrew" "/opt/homebrew"
       "cacheHome" $_cacheHome
       "ipython" $_ipython
@@ -69,9 +71,11 @@ data:
 {{ $realConfig := $config | mergeOverwrite $_defaults -}}
 
 {{ $availableThemes := dict
-    "nord" nil
     "catppuccin-mocha" nil
     "catppuccin" "catppuccin-mocha"
+    "nord" nil
+    "tokyonight-night" nil
+    "tokyonight" "tokyonight-night"
 -}}
 
 {{ if $realConfig.theme | hasKey $availableThemes -}}
