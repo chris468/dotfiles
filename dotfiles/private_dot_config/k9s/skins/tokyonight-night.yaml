@@ -1,0 +1,149 @@
+# from folke/tokyonight.nvim
+bg: &bg "#1a1b26"
+bg_dark: &bg_dark "#16161e"
+bg_highlight: &bg_highlight "#292e42"
+blue: &blue "#7aa2f7"
+blue0: &blue0 "#3d59a1"
+blue1: &blue1 "#2ac3de"
+blue2: &blue2 "#0db9d7"
+blue5: &blue5 "#89ddff"
+blue6: &blue6 "#b4f9f8"
+blue7: &blue7 "#394b70"
+comment: &comment "#565f89"
+cyan: &cyan "#7dcfff"
+dark3: &dark3 "#545c7e"
+dark5: &dark5 "#737aa2"
+fg: &fg "#c0caf5"
+fg_dark: &fg_dark "#a9b1d6"
+fg_gutter: &fg_gutter "#3b4261"
+green: &green "#9ece6a"
+green1: &green1 "#73daca"
+green2: &green2 "#41a6b5"
+magenta: &magenta "#bb9af7"
+magenta2: &magenta2 "#ff007c"
+orange: &orange "#ff9e64"
+purple: &purple "#9d7cd8"
+red: &red "#f7768e"
+red1: &red1 "#db4b4b"
+teal: &teal "#1abc9c"
+terminal_black: &terminal_black "#414868"
+yellow: &yellow "#e0af68"
+git_add: &git_add "#449dab"
+git_change: &git_change "#6183bb"
+git_delete: &git_delete "#914c54"
+
+# Styles...
+background: &background default
+foreground: &foreground "#c0caf5" # fg
+brightBackground: &brightBackground "#292e42" # bg_highlight
+hint: &hint "#3b4261" # fg_gutter
+key: &key "#7aa2f7" # blue
+accent: &accent "#3d59a1" # blue0
+error: &error "#f7768e" # red
+danger: &danger "#ff9e64" # orange
+warning: &warning "#e0af68" # yellow
+success: &success "#73daca" # green1
+uncomon: &uncommon "#9d7cd8" # purple
+
+# Skin...
+k9s:
+  # General K9s styles
+  body:
+    fgColor: *foreground
+    bgColor: *background
+    logoColor: *accent
+  # Command prompt styles
+  prompt:
+    fgColor: *foreground
+    bgColor: *background
+    suggestColor: *hint
+  # ClusterInfoView styles.
+  info:
+    fgColor: *key
+    sectionColor: *foreground
+  # ialog styles.
+  dialog:
+    fgColor: *foreground
+    bgColor: *background
+    buttonFgColor: *foreground
+    buttonBgColor: *background
+    buttonFocusFgColor: *brightBackground
+    buttonFocusBgColor: *accent
+    labelFgColor: *key
+    fieldFgColor: *accent
+  frame:
+    # Borders styles.
+    border:
+      fgColor: *brightBackground
+      focusColor: *brightBackground
+    menu:
+      fgColor: *foreground
+      keyColor: *key
+      # Used for favorite namespaces
+      numKeyColor: *accent
+    # CrumbView attributes for history navigation.
+    crumbs:
+      fgColor: *foreground
+      bgColor: *brightBackground
+      activeColor: *accent
+    # Resource status and update styles
+    status:
+      newColor: *foreground
+      modifyColor: *warning
+      addColor: *success
+      errorColor: *error
+      highlightColor: *accent
+      killColor: *danger
+      completedColor: *hint
+    # Border title styles.
+    title:
+      fgColor: *foreground
+      bgColor: *brightBackground
+      highlightColor: *accent
+      counterColor: *accent
+      filterColor: *accent
+  views:
+    # Charts skins...
+    charts:
+      bgColor: *background
+      defaultDialColors:
+        - *uncommon
+        - *error
+      defaultChartColors:
+        - *uncommon
+        - *error
+    # TableView attributes.
+    table:
+      fgColor: *foreground
+      bgColor: *background
+      cursorColor: *accent
+      # Header row styles.
+      header:
+        fgColor: *foreground
+        bgColor: *background
+        sorterColor: *accent
+    # Xray view attributes.
+    xray:
+      fgColor: *foreground
+      bgColor: *background
+      graphicColor: *accent
+      showIcons: false
+    # YAML info styles.
+    yaml:
+      keyColor: *key
+      colonColor: *foreground
+      valueColor: *accent
+    # Logs styles.
+    logs:
+      fgColor: *foreground
+      bgColor: *background
+      indicator:
+        fgColor: *foreground
+        bgColor: *background
+        toggleOnColor: *accent
+        toggleOffColor: *key
+    help:
+      fgColor: *foreground
+      bgColor: *background
+      indicator:
+        fgColor: *error
