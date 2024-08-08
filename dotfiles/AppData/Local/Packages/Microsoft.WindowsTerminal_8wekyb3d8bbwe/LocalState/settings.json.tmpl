@@ -75,7 +75,7 @@
                 "source": "nu"
             },
 {{- range .realConfig.ssh_hosts }}
-{{-   if ne "wezterm" .type }}
+{{-   if ne "wezterm" ("type" | index .) }}
             {
                 "commandline": "ssh {{ .name }}",
                 "hidden": false,
