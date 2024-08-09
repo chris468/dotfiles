@@ -67,7 +67,7 @@ local function refresh_codelens(buf)
         method = "textDocument/codeLens",
       })
       if #codelens_clients > 0 then
-        vim.lsp.codelens.refresh()
+        vim.lsp.codelens.refresh({ bufnr = buf })
       end
     end,
   })
