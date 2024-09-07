@@ -44,6 +44,7 @@ M.lsp = {
     },
   },
   omnisharp = require("chris468.config.lang.omnisharp"),
+  phpactor = {},
   powershell_es = {},
   pyright = require("chris468.config.lang.pyright"),
   roslyn_lsp = require("chris468.config.lang.roslyn"),
@@ -70,6 +71,9 @@ M.tools = {
   },
   lua = {
     format = { "stylua" },
+  },
+  php = {
+    format = { "php-cs-fixer" },
   },
   python = {
     format = { "black" },
