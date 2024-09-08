@@ -37,6 +37,27 @@ local function oldfiles_opts()
   }
 end
 
+--- @param ignore boolean
+--- @param default_text string?
+local function live_grep(ignore, default_text)
+  return telescope_builtin("live_grep", {
+    additional_args = ignore and { "--no-ignore" } or {},
+    attach_mappings = function(_, map)
+      local function toggle_search_all()
+        local actions_state = require("telescope.actions.state")
+        local current_line = actions_state.get_current_line()
+        return live_grep(not ignore, current_line)()
+      end
+
+      map({ "i", "n" }, "<C-g>", toggle_search_all)
+
+      return true
+    end,
+    default_text = default_text,
+    prompt_title = "Live Grep" .. (ignore and " (all files)" or ""),
+  })
+end
+
 local config_path = vim.fn.stdpath("config")
 local chezmoi_path = vim.fn.expand("~/.local/share/chezmoi")
 
@@ -50,7 +71,7 @@ return {
   keys = {
     { "<leader><leader>", telescope_builtin("find_files"), desc = "Find files" },
     { "<leader>r", telescope_builtin("resume"), desc = "Resume last search " },
-    { "<leader>/", telescope_builtin("live_grep"), desc = "Grep" },
+    { "<leader>/", live_grep(false), desc = "Grep" },
     { '<leader>f"', telescope_builtin("registers"), desc = "Registers" },
     { "<leader>fb", telescope_builtin("buffers"), desc = "Buffers" },
     { "<leader>fc", telescope_builtin("find_files", { cwd = config_path }), desc = "Configuration" },
