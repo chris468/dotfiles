@@ -144,6 +144,11 @@ return {
     vim.fn.sign_define("DapLogPoint", { text = icons.debugging.logpoint, texthl = "DapLogPoint" })
     vim.fn.sign_define("DapStopped", { text = icons.debugging.stopped, texthl = "StoppedIcon", linehl = "StoppedLine" })
     vim.fn.sign_define("DapBreakpointRejected", { text = icons.debugging.breakpoint, texthl = "Comment" })
+
+    dap.adapters.php = {
+      type = "executable",
+      command = "php-debug-adapter",
+    }
   end,
   dependencies = {
     {
