@@ -161,6 +161,7 @@ return {
       },
       sources = cmp.config.sources({
         { name = "luasnip" },
+        { name = "codeium" },
         { name = "nvim_lsp" },
       }, {
         { name = "nerdfont" },

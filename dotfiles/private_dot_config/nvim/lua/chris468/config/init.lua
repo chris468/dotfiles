@@ -5,11 +5,13 @@
 --- @class chris468Config
 --- @field enable_noice boolean
 --- @field csharp_lsp chris468CsharpLsp | chris468CsharpLsp[]
+--- @field ai_assistant "copilot"|"codeium"|false
 
 --- @type chris468Config
 local default_config = {
   enable_noice = true,
   csharp_lsp = "roslyn",
+  ai_assistant = false,
 }
 
 --- @type boolean, fun(config: chris468Config) : chris468Config
