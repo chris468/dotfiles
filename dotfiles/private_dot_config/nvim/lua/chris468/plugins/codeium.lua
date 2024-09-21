@@ -4,11 +4,12 @@ return {
   config = function()
     require("codeium").setup({})
   end,
+  cmd = {
+    "Codeium",
+  },
   dependencies = {
     "nvim-lua/plenary.nvim",
     "hrsh7th/nvim-cmp",
   },
-  cmd = {
-    "Codeium",
-  },
+  event = { "InsertEnter" },
 }

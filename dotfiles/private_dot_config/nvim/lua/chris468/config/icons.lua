@@ -57,4 +57,5 @@ return {
   },
   history = "",
   command = ">",
+  codeium = "",
 }

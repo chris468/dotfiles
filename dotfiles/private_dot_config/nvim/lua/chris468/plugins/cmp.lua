@@ -31,6 +31,11 @@ end
 
 format.nerdfont = format.git
 
+function format.codeium(_, vim_item)
+  vim_item.kind = icons.codeium
+  return vim_item
+end
+
 function format.path(_, vim_item)
   local wda = require("nvim-web-devicons")
   local icon, hl
