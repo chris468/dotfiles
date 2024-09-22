@@ -1,5 +1,8 @@
 return {
   "Exafunction/codeium.nvim",
+  cmd = {
+    "Codeium",
+  },
   cond = function()
     local enable = require("chris468.config").ai_assistant == "codeium"
     local work = require("chris468.config.settings").work
@@ -10,12 +13,7 @@ return {
 
     return enable
   end,
-  config = function()
-    require("codeium").setup({})
-  end,
-  cmd = {
-    "Codeium",
-  },
+  config = true,
   dependencies = {
     "nvim-lua/plenary.nvim",
     "hrsh7th/nvim-cmp",
