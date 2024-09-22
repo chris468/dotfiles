@@ -1,6 +1,6 @@
 local os = require("os")
 return {
-  profiles = profiles,
   theme = os.getenv("CHRIS468_NVIM_THEME") or "{{ .realConfig.theme }}",
   lockfile = lockfile,
+  work = {{ .profile.work }}
 }
