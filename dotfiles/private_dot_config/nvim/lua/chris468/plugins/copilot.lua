@@ -18,6 +18,10 @@ return {
     },
   },
   {
+    "hrsh7th/nvim-cmp",
+    dependencies = enable and { "zbirenbaum/copilot-cmp" } or {},
+  },
+  {
     "zbirenbaum/copilot-cmp",
     cond = enable,
     config = true,
