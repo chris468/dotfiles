@@ -9,5 +9,8 @@ return {
     "nvim-lua/plenary.nvim",
     "hrsh7th/nvim-cmp",
   },
+  opts = {
+    enable_chat = true,
+  },
   event = { "InsertEnter" },
 }
