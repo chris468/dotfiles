@@ -1,4 +1,4 @@
-local enable = require("chris468.config").ai_assistant == "copilot"
+local enable = require("chris468.config").is_ai_assistant_enabled("copilot")
 
 return {
   {
