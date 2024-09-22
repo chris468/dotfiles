@@ -57,4 +57,6 @@ return {
   },
   history = "",
   command = ">",
+  codeium = "󰘦",
+  copilot = "",
 }

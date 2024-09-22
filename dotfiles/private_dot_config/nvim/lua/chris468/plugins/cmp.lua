@@ -31,6 +31,16 @@ end
 
 format.nerdfont = format.git
 
+function format.codeium(_, vim_item)
+  vim_item.kind = icons.codeium
+  return vim_item
+end
+
+function format.copilot(_, vim_item)
+  vim_item.kind = icons.copilot
+  return vim_item
+end
+
 function format.path(_, vim_item)
   local wda = require("nvim-web-devicons")
   local icon, hl
@@ -160,9 +170,10 @@ return {
         end,
       },
       sources = cmp.config.sources({
+        { name = "codeium" },
+        { name = "copilot" },
         { name = "luasnip" },
         { name = "nvim_lsp" },
-      }, {
         { name = "nerdfont" },
       }, {
         { name = "buffer" },
