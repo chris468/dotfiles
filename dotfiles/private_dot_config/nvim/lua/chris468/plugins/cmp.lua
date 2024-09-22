@@ -36,7 +36,10 @@ function format.codeium(_, vim_item)
   return vim_item
 end
 
-format.copilot = format.codeium
+function format.copilot(_, vim_item)
+  vim_item.kind = icons.copilot
+  return vim_item
+end
 
 function format.path(_, vim_item)
   local wda = require("nvim-web-devicons")
