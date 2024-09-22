@@ -20,6 +20,7 @@ return {
   {
     "zbirenbaum/copilot-cmp",
     cond = enable,
+    config = true,
     dependencies = "copilot.lua",
   },
   {
