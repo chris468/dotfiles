@@ -4,7 +4,7 @@ local settings = require("chris468.config.settings")
 --- | '"roslyn"'
 --- | '"omnisharp"'
 
---- @alias chris468AIAssistant "copilot"|"codeium"
+--- @alias chris468AIAssistant "copilot"|"codeium"|"chatgpt"
 
 --- @class chris468Config
 --- @field enable_noice boolean
@@ -20,6 +20,7 @@ local default_config = {
 
 --- @type table<chris468AIAssistant, boolean>
 local ai_assistant_enabled = {
+  chatgpt = not settings.work,
   codeium = not settings.work,
 }
 
