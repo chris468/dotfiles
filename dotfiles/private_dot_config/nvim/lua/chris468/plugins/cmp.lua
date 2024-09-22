@@ -171,7 +171,6 @@ return {
         { name = "copilot" },
         { name = "luasnip" },
         { name = "nvim_lsp" },
-      }, {
         { name = "nerdfont" },
       }, {
         { name = "buffer" },
