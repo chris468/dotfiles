@@ -24,6 +24,7 @@ return {
   },
   keys = {
     { "<leader>sL", "<cmd>Telescope lazy<CR>", desc = "Lazy plugins" },
+    { "<leader>r", "<cmd>Telescope resume<CR>", desc = "Resume last search " },
   },
   opts = {
     extensions = {
