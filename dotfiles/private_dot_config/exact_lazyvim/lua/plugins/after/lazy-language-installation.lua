@@ -15,4 +15,15 @@ return {
       opts.ensure_installed = {}
     end,
   },
+  {
+    "folke/noice.nvim",
+    opts = {
+      routes = {
+        {
+          filter = { event = "notify", kind = "warn", find = "^Mason package path not found for " },
+          opts = { skip = true },
+        },
+      },
+    },
+  },
 }
