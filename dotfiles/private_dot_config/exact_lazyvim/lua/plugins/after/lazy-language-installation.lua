@@ -2,64 +2,69 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function(_, opts)
-      -- opts._servers = opts.servers
-      -- opts.servers = {}
-      --
-      -- opts._setup = opts.setup
-      -- opts.setup = {}
-
-      -- for each server, server_opts in servers
-      --   server_opts.mason = false -- to prevent LazyVim plugin config from calling mason install.
-      --                        -- Will immediately set up instead.
-      --   original_setup = setup[server] or function() return false end
-      --   setup[server] = function(s, o)
-      --     on filetype o.filetypes or lspconfig[s].default_config.filetypes {
-      --        install the server
-      --        if not original_setup(s, o) then
-      --          lspconfig[s].setup(o)
-      --        end
-      --     }
-      --     return true
-      --   end
-      -- end
-
-      local function wrap(setup, opts)
-        if opts.wrapped then
-          return true
+      local lspconfig = require("lspconfig")
+      local wrapped_setup = {}
+      for n, _ in pairs(opts.servers) do
+        opts.servers[n].mason = false
+        if not opts.setup[n] then
+          opts.setup[n] = function() end
         end
-
-        opts.wrapped = true
-
-        return function(name, opts)
-          local lspconfig = require("lspconfig")
-
-          setup = setup or function()
-            return false
+      end
+      for name, su in pairs(opts.setup or {}) do
+        local original_setup = opts.setup[name]
+        wrapped_setup[name] = function(n, o)
+          local map = require("mason-lspconfig.mappings.server").lspconfig_to_package
+          local desc = "setup " .. n
+          local package_name = map[n]
+          if package_name then
+            desc = "install " .. package_name .. " and " .. desc
           end
-          local desc = "Install and configure " .. name .. "lsp server"
           vim.api.nvim_create_autocmd("FileType", {
             callback = function()
-              -- TODO: install
-              vim.notify("TODO: Install " .. name)
-              if setup(name, opts) ~= true then
-                vim.notify("seting up " .. name)
-                lspconfig[name].setup(opts)
+              local function _setup()
+                if original_setup(n, o) then
+                  lspconfig[n].setup(o)
+                end
+              end
+
+              local function install()
+                local registry = require("mason-registry")
+                if registry.is_installed(package_name) then
+                  _setup()
+                  return
+                end
+
+                local pkg = registry.get_package(package_name)
+                if not pkg then
+                  _setup()
+                  return
+                end
+
+                vim.notify("Installing " .. pkg.name .. "...")
+                pkg:install():once("closed", function()
+                  if pkg:is_installed() then
+                    vim.notify("Successfully installed " .. pkg.name .. ".")
+                    vim.schedule(_setup)
+                  else
+                    vim.notify("Failed to install " .. pkg.name .. ".", vim.log.levels.WARN)
+                  end
+                end)
+              end
+
+              if package_name then
+                install()
+              else
+                _setup()
               end
               return true
             end,
-            desc = desc,
-            group = vim.api.nvim_create_augroup(desc, { clear = true }),
-            pattern = opts.filetypes or lspconfig[name].config_def.default_config.filetypes,
+            pattern = o.filetypes or lspconfig[n].config_def.default_config.filetypes,
           })
-
-          return true
+          return su(n, o)
         end
       end
 
-      for server, server_opts in pairs(opts.servers) do
-        server_opts.mason = false
-        opts.setup[server] = wrap(opts.setup[server], server_opts)
-      end
+      opts.setup = wrapped_setup
     end,
   },
   {
