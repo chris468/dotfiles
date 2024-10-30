@@ -17,7 +17,7 @@ end
 
 ---Show content in a readonly popup
 ---@param content string|string[]
----@param opts table|nil
+---@param opts? table
 function M.show_in_readonly_popup(content, opts)
   local default_opts = {
     border = {
