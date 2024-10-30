@@ -1,32 +1,8 @@
 local lspconfig = require("lspconfig")
 local lspconfig_to_package = require("mason-lspconfig.mappings.server").lspconfig_to_package
-local registry = require("mason-registry")
+local install = require("chris468.util.mason").install
 
 local M = {}
-
-local function install(package_name, callback)
-  callback = callback or function() end
-  if registry.is_installed(package_name) then
-    callback()
-    return
-  end
-
-  local pkg = registry.get_package(package_name)
-  if not pkg then
-    callback()
-    return
-  end
-
-  vim.notify("Installing " .. pkg.name .. "...")
-  pkg:install():once("closed", function()
-    if pkg:is_installed() then
-      vim.notify("Successfully installed " .. pkg.name .. ".")
-      vim.schedule(callback)
-    else
-      vim.notify("Failed to install " .. pkg.name .. ".", vim.log.levels.WARN)
-    end
-  end)
-end
 
 function M.wrap_setup_with_lazy_install(original_setup)
   return function(server, opts)
@@ -36,7 +12,12 @@ function M.wrap_setup_with_lazy_install(original_setup)
       desc = "install " .. package_name .. " and " .. desc
     end
 
-    local function setup()
+    ---@param state InstallState
+    local function setup(state)
+      if state == "failed" then
+        return
+      end
+
       if not original_setup or not original_setup(server, opts) then
         lspconfig[server].setup(opts)
       end
@@ -47,7 +28,7 @@ function M.wrap_setup_with_lazy_install(original_setup)
         if package_name then
           install(package_name, setup)
         else
-          setup()
+          setup("not_found")
         end
 
         return true

@@ -1,6 +1,25 @@
 return {
   {
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = {}
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
+    dependencies = {
+      {
+        "folke/noice.nvim",
+        opts = {
+          routes = {
+            {
+              filter = { event = "notify", kind = "warn", find = "^Mason package path not found for " },
+              opts = { skip = true },
+            },
+          },
+        },
+      },
+    },
     opts = function(_, opts)
       local lspu = require("chris468.util.lspconfig")
 
@@ -18,20 +37,25 @@ return {
     end,
   },
   {
-    "williamboman/mason.nvim",
+    "mfussenegger/nvim-lint",
     opts = function(_, opts)
-      opts.ensure_installed = {}
+      vim.list_extend(opts.events, { "FileType" })
+
+      for ft, linters in pairs(opts.linters_by_ft or {}) do
+        vim.api.nvim_create_autocmd("FileType", {
+          callback = function()
+            local install = require("chris468.util.mason").install
+
+            for _, linter in ipairs(linters) do
+              install(linter)
+            end
+
+            return true
+          end,
+          desc = "Install linters for " .. ft,
+          pattern = ft,
+        })
+      end
     end,
-  },
-  {
-    "folke/noice.nvim",
-    opts = {
-      routes = {
-        {
-          filter = { event = "notify", kind = "warn", find = "^Mason package path not found for " },
-          opts = { skip = true },
-        },
-      },
-    },
   },
 }
