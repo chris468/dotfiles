@@ -1,8 +1,32 @@
 return {
   {
     "williamboman/mason.nvim",
+    lazy = false,
     opts = function(_, opts)
+      local M = {}
+      M.p = opts.ensure_installed
+      function M.callback()
+        local registry = require("mason-registry")
+        local languages = { none = {} }
+        for _, name in ipairs(M.p) do
+          local package = registry.get_package(name)
+          if #package.spec.languages == 0 then
+            languages.none[package.name] = true
+          else
+            for _, language in ipairs(package.spec.languages) do
+              languages[language] = languages[language] or {}
+              vim.list_extend(languages[language], { package.name })
+            end
+          end
+        end
+        vim.notify(vim.inspect(languages))
+      end
       opts.ensure_installed = {}
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = M.callback,
+      })
     end,
   },
   {
