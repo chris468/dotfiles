@@ -6,7 +6,7 @@ local M = {}
 
 ---comment
 ---@param package_name string
----@param callback fun(status: InstallState)
+---@param callback? fun(status: InstallState)
 function M.install(package_name, callback)
   callback = callback or function() end
   if registry.is_installed(package_name) then
