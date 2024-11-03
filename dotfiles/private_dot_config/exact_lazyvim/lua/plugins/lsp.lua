@@ -8,9 +8,16 @@ return {
       --
       -- Instead, we will install (if necessary) when required by the current filetype,
       -- and only emit `FileType` once all have finished installing.
-      require("chris468.lazy-mason-install").setup({ packages_for_filetypes = opts.packages_for_filetypes })
       require("mason").setup({ opts })
     end,
+    dependencies = { "lazy-mason-install" },
+  },
+  {
+    config = function(_, opts)
+      require("chris468.lazy-mason-install").setup(opts)
+    end,
+    dir = vim.fn.stdpath("config") .. "/lua/chris468/lazy-mason-install",
+    lazy = true,
     opts_extend = { "packages_for_filetypes" },
     opts = {
       packages_for_filetypes = {
