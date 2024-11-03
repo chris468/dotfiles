@@ -52,7 +52,6 @@ return {
       local original = mlspc.setup
 
       mlspc.setup = function(o) ---@diagnostic disable-line: duplicate-set-field
-        vim.notify("mason-lspconfig setup")
         original(vim.tbl_extend("force", o, { ensure_installed = {} }))
       end
 

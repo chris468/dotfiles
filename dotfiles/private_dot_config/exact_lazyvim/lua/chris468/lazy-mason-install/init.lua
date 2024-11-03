@@ -22,7 +22,6 @@ local config
 ---@param user_config lazy-mason-install.Config
 function M.setup(user_config)
   config = vim.tbl_deep_extend("keep", user_config, defaults)
-  vim.notify("lazy-mason-install " .. vim.inspect(config))
 
   ---@type table<string, true>
   local packages_with_unknown_filetypes = {}
@@ -57,7 +56,6 @@ function M.setup(user_config)
   end
 
   local packages_by_filetype = util.invert_list_map(install_for_filetypes)
-  vim.notify(vim.inspect(packages_by_filetype))
 end
 
 return M
