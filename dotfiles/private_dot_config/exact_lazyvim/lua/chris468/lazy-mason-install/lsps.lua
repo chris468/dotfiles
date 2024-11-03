@@ -1,5 +1,7 @@
-local have_mason_lspconfig, _ = pcall(require, "mason-lspconfig")
+local have_lazyvim, lazyvim_util = pcall(require, "lazyvim.util")
+local have_mason_lspconfig = have_lazyvim and lazyvim_util.has("mason-lspconfig.nvim")
 if not have_mason_lspconfig then
+  vim.notify(vim.inspect({ have_lazyvim = have_lazyvim, have_mason_lspconfig = have_mason_lspconfig }))
   return {
     to_filetypes = function()
       return {}
@@ -10,7 +12,6 @@ if not have_mason_lspconfig then
   }
 end
 
-local lazyvim_util = require("lazyvim.util")
 local filetype_to_lspconfigs = require("mason-lspconfig.mappings.filetype")
 local lspconfig_to_package = require("mason-lspconfig.mappings.server").lspconfig_to_package
 

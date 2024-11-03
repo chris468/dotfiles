@@ -1,3 +1,4 @@
+local autocmd = require("chris468.lazy-mason-install.autocmd")
 local daps = require("chris468.lazy-mason-install.daps")
 local formatters = require("chris468.lazy-mason-install.formatters")
 local linters = require("chris468.lazy-mason-install.linters")
@@ -56,6 +57,7 @@ function M.setup(user_config)
   end
 
   local packages_by_filetype = util.invert_list_map(install_for_filetypes)
+  autocmd.register(packages_by_filetype)
 end
 
 return M
