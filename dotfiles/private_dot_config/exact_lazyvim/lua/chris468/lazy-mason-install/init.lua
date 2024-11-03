@@ -1,7 +1,7 @@
-local daps = require("lazy-mason-install.daps")
-local formatters = require("lazy-mason-install.formatters")
-local linters = require("lazy-mason-install.linters")
-local lsps = require("lazy-mason-install.lsps")
+local daps = require("chris468.lazy-mason-install.daps")
+local formatters = require("chris468.lazy-mason-install.formatters")
+local linters = require("chris468.lazy-mason-install.linters")
+local lsps = require("chris468.lazy-mason-install.lsps")
 local util = require("chris468.util")
 local lazyvim_util = require("lazyvim.util")
 
