@@ -15,6 +15,41 @@ function M.split_lines(str)
   return lines
 end
 
+---Merge tables w/ list values into a single table
+---For example {a={1},b={2}}+{a={3},b={4,5}} -> {a={1,3}, b={3,4,5}}
+---@param ... table<any,any[]>[]
+---@return table<any,any[]>
+function M.merge_list_maps(...)
+  local result = {}
+  for _, m in ipairs({ ... }) do
+    for k, v in pairs(m) do
+      result[k] = result[k] or {}
+      vim.list_extend(result[k], v)
+    end
+  end
+
+  return result
+end
+
+---Invert a map where the values are lists.
+---For example {a={"x","y"}, b={"y","z"}} => {x={"a"},y={"a","b"},z={"b"}}
+---@param t table<string, string[]>
+---@return table<string, string[]>
+function M.invert_list_map(t)
+  local i = {}
+  for k, v in pairs(t) do
+    for _, ik in ipairs(v) do
+      i[ik] = i[ik] or {}
+      i[ik][k] = true
+    end
+  end
+
+  for k, v in pairs(i) do
+    i[k] = vim.tbl_keys(v)
+  end
+  return i
+end
+
 ---Show content in a readonly popup
 ---@param content string|string[]
 ---@param opts table|nil
