@@ -30,12 +30,12 @@ local function install_package(package_name, callback)
       notify("Installing " .. package_name)
       package
         :once("install:success", function()
-          notify("lmi success: " .. package_name)
+          notify("Successfully installed " .. package_name)
           M.installed[package_name] = "success"
           callback(package_name)
         end)
         :once("install:failed", function(p)
-          notify("lmi failed: " .. package_name)
+          notify("Error installing " .. package_name, vim.log.levels.WARN)
           M.installed[package_name] = "fail"
           callback(package_name)
         end)
@@ -61,7 +61,7 @@ local function install_packages(buf, package_names, done)
 end
 
 ---@param buf integer
----@oaram filetype string
+---@param filetype string
 local function install_packages_for_filetype(buf, filetype)
   if M.installing[buf] then
     return

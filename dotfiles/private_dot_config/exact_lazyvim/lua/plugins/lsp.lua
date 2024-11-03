@@ -59,4 +59,18 @@ return {
     end,
   },
   { "mason-nvim-dap.nvim", optional = true },
+  {
+    "folke/noice.nvim",
+    opts = {
+      routes = {
+        --- Some LazyVim extra configurations use a helper that asserts that a mason package path is present
+        --- Squash that error b/c that package may not need to be installed. The message can still be seen
+        --- in the history.
+        {
+          filter = { event = "notify", kind = "warn", find = "^Mason package path not found for " },
+          opts = { skip = true },
+        },
+      },
+    },
+  },
 }
