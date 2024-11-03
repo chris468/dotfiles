@@ -10,72 +10,69 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",
         callback = function()
+          local track = require("lazy.util").track
+          track("map packages to filetypes")
+          local util = require("chris468.util")
+
           local lazyvim_utils = require("lazyvim.util")
-          local server_mapping = require("mason-lspconfig.mappings.server").lspconfig_to_package
-          local dap_mapping = require("mason-nvim-dap.mappings.filetypes")
+          local server_to_package = require("mason-lspconfig.mappings.server").lspconfig_to_package
+          local filetype_to_dap = util.invert_list_map(require("mason-nvim-dap.mappings.filetypes"))
+          local filetype_to_lsp = require("mason-lspconfig.mappings.filetype")
+          local filetype_to_linter = lazyvim_utils.opts("nvim-lint").linters_by_ft or {}
+          local filetype_to_formatter = lazyvim_utils.opts("conform.nvim").formatters_by_ft or {}
 
-          local opts = {
-            conform = lazyvim_utils.opts("conform.nvim"),
-            lint = lazyvim_utils.opts("nvim-lint"),
-            lspconfig = lazyvim_utils.opts("nvim-lspconfig"),
-            mason = lazyvim_utils.opts("mason.nvim"),
-          }
+          track("lsp->package")
+          local filetype_to_lsppackage = {}
+          for ft, lsps in pairs(filetype_to_lsp) do
+            filetype_to_lsppackage[ft] = {}
+            for _, lsp in ipairs(lsps) do
+              table.insert(filetype_to_lsppackage[ft], server_to_package[lsp])
+            end
+          end
+          track()
 
+          track("merge")
+          local filetype_to_package =
+            util.merge_list_maps(filetype_to_dap, filetype_to_lsppackage, filetype_to_linter, filetype_to_formatter)
+          track()
+
+          track("invert")
+          local package_to_filetype = util.invert_list_map(filetype_to_package)
+          track()
+
+          local lspconfig_opts = lazyvim_utils.opts("nvim-lspconfig")
           local ensure_installed = {}
 
-          local function remove(package_names)
-            for _, package_name in ipairs(package_names) do
-              ensure_installed[package_name] = nil
+          track("registered servers -> ensure_installed")
+          for _, s in
+            ipairs(vim.tbl_keys(vim.tbl_extend("keep", lspconfig_opts.servers or {}, lspconfig_opts.setup or {})))
+          do
+            local p = server_to_package[s]
+            if s then
+              table.insert(ensure_installed, p)
             end
           end
+          track()
 
-          for _, package in ipairs(opts.mason.ensure_installed or {}) do
-            ensure_installed[package] = true
+          track("append packages")
+          vim.list_extend(ensure_installed, lazyvim_utils.opts("mason.nvim").ensure_installed or {})
+          track()
+
+          track("identify")
+          local ptf = {}
+          for _, p in ipairs(ensure_installed) do
+            ptf[p] = package_to_filetype[p] or "<unknown>"
           end
-          vim.notify(vim.inspect({ all = vim.tbl_keys(ensure_installed) }))
+          track()
 
-          local linter_package_names = vim.tbl_flatten(vim.tbl_values(opts.lint.linters_by_ft))
-          vim.notify(vim.inspect({ linters = linter_package_names, linters_by_ft = opts.lint.linters_by_ft }))
-          remove(linter_package_names)
-          vim.notify(vim.inspect({ without_linters = vim.tbl_keys(ensure_installed) }))
+          track()
 
-          local conform_package_names = vim.tbl_flatten(vim.tbl_values(opts.conform.formatters_by_ft))
-          remove(conform_package_names)
-          vim.notify(vim.inspect({ without_linters_formatters = vim.tbl_keys(ensure_installed) }))
+          vim.notify(vim.inspect({ filetype_to_dap = filetype_to_dap }))
+          vim.notify(vim.inspect({ enusre_installed = ensure_installed }))
 
-          remove(vim.tbl_keys(dap_mapping))
-          vim.notify(vim.inspect({ without_linters_formatters_dap = vim.tbl_keys(ensure_installed) }))
-
-          local server_package_names = vim.tbl_map(function(p)
-            return server_mapping[p] or p
-          end, vim.tbl_keys(vim.tbl_extend("keep", opts.lspconfig.servers or {}, opts.lspconfig.setup or {})))
-          remove(server_package_names)
-          vim.notify(vim.inspect({ without_known = vim.tbl_keys(ensure_installed) }))
-
-          local registry = require("mason-registry")
-
-          local languages = { none = {}, missing = {} }
-          for package_name, _ in pairs(ensure_installed) do
-            local ok, package = pcall(registry.get_package, package_name)
-            if ok then
-              if #package.spec.languages == 0 then
-                languages.none[package.name] = true
-              else
-                for _, language in ipairs(package.spec.languages) do
-                  languages[language] = languages[language] or {}
-                  languages[language][package.name] = true
-                end
-              end
-            else
-              languages.missing[package_name] = true
-            end
-          end
-
-          -- for k, v in pairs(languages) do
-          --   languages[k] = vim.tbl_keys(v)
-          -- end
-
-          vim.notify(vim.inspect(languages))
+          vim.notify(vim.inspect({ filetype_to_package = filetype_to_package }))
+          vim.notify(vim.inspect({ package_to_filetype = package_to_filetype }))
+          vim.notify(vim.inspect({ ptf = ptf }))
         end,
       })
     end,
