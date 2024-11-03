@@ -26,6 +26,7 @@ return {
           "typescript.tsx",
         },
         ["php-cs-fixer"] = { "php" },
+        ["tflint"] = { "hcl", "terraform" },
       },
     },
   },
