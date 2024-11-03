@@ -76,7 +76,11 @@ local function install_packages_for_filetype(buf, filetype)
     M.to_install[filetype] = nil
     M.to_install["*"] = nil
     install_packages(buf, packages, function()
-      -- todo
+      vim.defer_fn(function()
+        vim.api.nvim_exec_autocmds("FileType", {
+          buffer = buf,
+        })
+      end, 100)
     end)
   end
 end
