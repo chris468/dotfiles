@@ -40,27 +40,21 @@ return {
       { "mason-nvim-dap.nvim", optional = true },
       { "nvim-lspconfig", optional = true },
     },
-    opts = function()
-      local lazyvim_util = require("lazyvim.util")
-
-      ---@return string[]
-      local function lsps_to_install()
-        local lspconfig_opts = lazyvim_util.opts("nvim-lspconfig")
-        local lspconfigs = vim.tbl_extend("force", lspconfig_opts.setup or {}, lspconfig_opts.servers or {})
-
-        for lsp, config in pairs(lspconfigs) do
-          if config.enabled == false or config.mason == false then
-            lspconfigs[lsp] = nil
-          end
-        end
-
-        return vim.tbl_keys(lspconfigs)
-      end
-
-      return {
-        lsp_servers = lsps_to_install(),
-        packages = lazyvim_util.opts("mason.nvim").ensure_installed or {},
-      }
-    end,
+    opts = {
+      packages_for_filetypes = {
+        ["ansible-lint"] = { "yaml.ansible" },
+        ["php-cs-fixer"] = { "php" },
+        ["js-debug-adapter"] = {
+          "javascript",
+          "javascriptreact",
+          "javascript.jsx",
+          "typescript",
+          "typescriptreact",
+          "typescript.tsx",
+        },
+        ["java-debug-adapter"] = { "java" },
+        ["java-test"] = { "java" },
+      },
+    },
   },
 }

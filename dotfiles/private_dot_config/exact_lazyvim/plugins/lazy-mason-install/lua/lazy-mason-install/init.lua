@@ -3,20 +3,17 @@ local formatters = require("lazy-mason-install.formatters")
 local linters = require("lazy-mason-install.linters")
 local lsps = require("lazy-mason-install.lsps")
 local util = require("chris468.util")
+local lazyvim_util = require("lazyvim.util")
 
 local M = {}
 
 ---@class lazy-mason-install.Config
----@field packages string[]?
----@field lsp_servers string[]?
----@field additional_packages_by_ft table<string, string[]>?
+---@field packages_for_filetypes table<string, string[]>?
 ---@field all string[]?
 
 ---@type lazy-mason-install.Config
 local defaults = {
-  packages = {},
-  lsp_servers = {},
-  additional_packages_by_ft = {},
+  packages_for_filetypes = {},
 }
 
 ---@type lazy-mason-install.Config
@@ -30,9 +27,14 @@ function M.setup(user_config)
   ---@type table<string, true>
   local packages_with_unknown_filetypes = {}
   local install_for_filetypes = {}
-  local packages = vim.list_extend(lsps.to_packages(config.lsp_servers), config.packages)
-  local packages_to_filetypes =
-    util.merge_list_maps(daps.to_filetypes(), formatters.to_filetypes(), linters.to_filetypes(), lsps.to_filetypes())
+  local packages = vim.list_extend(lsps.to_install(), lazyvim_util.opts("mason.nvim").ensure_installed or {})
+  local packages_to_filetypes = util.merge_list_maps(
+    daps.to_filetypes(),
+    formatters.to_filetypes(),
+    linters.to_filetypes(),
+    lsps.to_filetypes(),
+    config.packages_for_filetypes
+  )
 
   for _, package in ipairs(packages) do
     if not install_for_filetypes[package] then

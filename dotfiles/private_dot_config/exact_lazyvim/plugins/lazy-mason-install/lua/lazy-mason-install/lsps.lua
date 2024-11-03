@@ -1,22 +1,23 @@
 local have_mason_lspconfig, _ = pcall(require, "mason-lspconfig")
 if not have_mason_lspconfig then
   return {
-    to_packages = function()
+    to_filetypes = function()
       return {}
     end,
-    to_filetypes = function()
+    to_install = function()
       return {}
     end,
   }
 end
 
+local lazyvim_util = require("lazyvim.util")
 local filetype_to_lspconfigs = require("mason-lspconfig.mappings.filetype")
 local lspconfig_to_package = require("mason-lspconfig.mappings.server").lspconfig_to_package
 
 local M = {}
 
 ---@return string[]
-function M.to_packages(servers)
+local function to_packages(servers)
   ---@type table<string, true>
   local packages = {}
   for _, server in ipairs(servers) do
@@ -27,6 +28,20 @@ function M.to_packages(servers)
   end
 
   return vim.tbl_keys(packages)
+end
+
+---@return string[]
+function M.to_install()
+  local lspconfig_opts = lazyvim_util.opts("nvim-lspconfig")
+  local lspconfigs = vim.tbl_extend("force", lspconfig_opts.setup or {}, lspconfig_opts.servers or {})
+
+  for lsp, config in pairs(lspconfigs) do
+    if config.enabled == false or config.mason == false then
+      lspconfigs[lsp] = nil
+    end
+  end
+
+  return to_packages(vim.tbl_keys(lspconfigs))
 end
 
 ---@return table<string, string[]>
