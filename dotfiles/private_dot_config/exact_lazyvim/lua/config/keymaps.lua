@@ -8,3 +8,7 @@ vim.keymap.del({ "n", "i", "v" }, "<A-k>")
 
 -- I never increment on purpose
 vim.keymap.set("n", "<C-a>", "<nop>")
+
+-- chezmoi dotfiles
+vim.keymap.set("n", "<leader>Da", "<cmd>!chezmoi apply<CR>", { desc = "Apply dotfiles" })
+vim.keymap.set("n", "<leader>DA", "<cmd>!chezmoi add %<CR>", { desc = "Add current file to dotfiles" })
