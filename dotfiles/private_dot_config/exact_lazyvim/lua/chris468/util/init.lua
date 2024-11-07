@@ -1,4 +1,4 @@
-local Popup = require("nui..popup")
+local Popup = require("nui.popup")
 local event = require("nui.utils.autocmd").event
 
 local M = {}
