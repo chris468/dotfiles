@@ -76,7 +76,16 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
-      opts.ensure_installed = {}
+      -- only install parsers needed by noice upfront
+      opts.ensure_installed = {
+        "bash",
+        "lua",
+        "markdown",
+        "markdown_inline",
+        "regex",
+        "vim",
+      }
+
       opts.auto_install = true
       return opts
     end,
