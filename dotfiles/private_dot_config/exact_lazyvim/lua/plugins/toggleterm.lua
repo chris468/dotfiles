@@ -146,7 +146,6 @@ local function create(opts)
   return Terminal:new(term_opts)
 end
 
-local notified = false
 --- @param opts TermOpts
 --- @param direction string?
 --- | "'horizontal'"
@@ -154,10 +153,6 @@ local notified = false
 --- | "'float'"
 --- @return function toggle
 local function toggle(opts, direction)
-  if not notified then
-    notified = true
-    vim.notify("plugin")
-  end
   return function()
     local term = create(opts)
     term:toggle(nil, direction)
@@ -175,7 +170,6 @@ end
 
 return {
   "akinsho/toggleterm.nvim",
-  enabled = false,
   cmd = {
     "ToggleTerm",
     "ToggleTermToggleAll",
@@ -186,20 +180,19 @@ return {
     "ToggleTermSendVisualSelection",
     "ToggleTermSetName",
   },
-  keys = {
-    { "<c-/>", default_toggle(terminals.default), mode = { "n", "t" }, desc = "Toggle last terminal" },
-    { "<c-_>", default_toggle(terminals.default), mode = { "n", "t" }, desc = "Toggle last terminal" },
-    { "<leader>Da", toggle(terminals.chezmoi_apply, "horizontal"), desc = "Apply chezmoi dotfiles" },
-    { "<leader>DA", toggle(terminals.chezmoi_add, "horizontal"), desc = "Add current file to chezmoi dotfiles" },
-    { "<leader>ft", "<cmd>TermSelect<CR>", desc = "Terminal" },
-    { "<leader>gg", toggle(terminals.lazygit, "float"), desc = "Lazygit" },
-    { "<leader>mf", toggle(terminals.default, "float"), desc = "Float deafult terminal" },
-    { "<leader>mh", toggle(terminals.default, "horizontal"), desc = "Horizontal deafult terminal" },
-    { "<leader>mm", toggle(terminals.default), desc = "Toggle default terminal" },
-    { "<leader>mv", toggle(terminals.default, "vertical"), desc = "Vertical deafult terminal" },
-  },
+  -- keys = {
+  --   { "<c-/>", default_toggle(terminals.default), mode = { "n", "t" }, desc = "Toggle last terminal" },
+  --   { "<c-_>", default_toggle(terminals.default), mode = { "n", "t" }, desc = "Toggle last terminal" },
+  --   { "<leader>Da", toggle(terminals.chezmoi_apply, "horizontal"), desc = "Apply chezmoi dotfiles" },
+  --   { "<leader>DA", toggle(terminals.chezmoi_add, "horizontal"), desc = "Add current file to chezmoi dotfiles" },
+  --   { "<leader>ft", "<cmd>TermSelect<CR>", desc = "Terminal" },
+  --   { "<leader>gg", toggle(terminals.lazygit, "float"), desc = "Lazygit" },
+  --   { "<leader>mf", toggle(terminals.default, "float"), desc = "Float deafult terminal" },
+  --   { "<leader>mh", toggle(terminals.default, "horizontal"), desc = "Horizontal deafult terminal" },
+  --   { "<leader>mm", toggle(terminals.default), desc = "Toggle default terminal" },
+  --   { "<leader>mv", toggle(terminals.default, "vertical"), desc = "Vertical deafult terminal" },
+  -- },
   opts = function()
-    vim.notify("opts")
     return {
       direction = "float",
       float_opts = {
