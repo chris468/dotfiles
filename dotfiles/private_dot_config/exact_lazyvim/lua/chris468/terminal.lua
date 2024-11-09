@@ -87,7 +87,6 @@ local function create(cmd, opts)
   opts = vim.tbl_extend("keep", opts or {}, { display_name = cmd }, defaults)
 
   local key = terminal_key(opts)
-  vim.notify(vim.inspect({ key, T }))
   if not T.terminals[key] then
     T.terminals[key] = T.next
     T.next = T.next + 1
