@@ -3,6 +3,25 @@ local lazyvim = {
 }
 local M = {}
 
+---@type Chris468TermOpts
+local defaults = {
+  direction = lazyvim.util.has("toggleterm.nvim") and lazyvim.util.opts("toggleterm.nvim").direction or "float",
+  display_name = "ToggleTerm",
+  remain_on_error = false,
+  warn_on_unsaved = false,
+}
+
+local T = {
+  next = 1 --[[@type integer]],
+  terminals = {} --[[@type table<string, integer>]],
+}
+
+---@param opts Chris468TermOpts
+---@return string
+local function terminal_key(opts)
+  return opts.display_name .. "|" .. opts.direction
+end
+
 ---@param buffer integer
 ---@param esc_esc boolean
 ---@param ctrl_hjkl boolean
@@ -52,14 +71,6 @@ end
 --- @field remain_on_error? boolean
 --- @field warn_on_unsaved? boolean
 
----@type Chris468TermOpts
-local defaults = {
-  direction = "float",
-  display_name = "Terminal",
-  remain_on_error = false,
-  warn_on_unsaved = false,
-}
-
 ---@param cmd? string|string[]|fun():(string|string[])
 ---@param opts? Chris468TermOpts
 local function create(cmd, opts)
@@ -75,6 +86,14 @@ local function create(cmd, opts)
   end
   opts = vim.tbl_extend("keep", opts or {}, { display_name = cmd }, defaults)
 
+  local key = terminal_key(opts)
+  vim.notify(vim.inspect({ key, T }))
+  if not T.terminals[key] then
+    T.terminals[key] = T.next
+    T.next = T.next + 1
+  end
+  local id = T.terminals[key]
+
   ---@param term Terminal
   local on_create = function(term)
     add_mappings(term.bufnr, opts.esc_esc, opts.ctrl_hjkl, term.direction)
@@ -85,10 +104,12 @@ local function create(cmd, opts)
     end
   end
 
+  ---@type TermCreateArgs
   local term_opts = {
     display_name = opts.display_name,
     cmd = cmd --[[@as string]],
     on_create = on_create,
+    id = id,
   }
 
   if opts.remain_on_error then
