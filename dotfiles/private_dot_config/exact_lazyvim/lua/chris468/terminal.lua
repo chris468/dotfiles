@@ -7,7 +7,7 @@ local M = {}
 ---@param esc_esc boolean
 ---@param ctrl_hjkl boolean
 ---@param direction? "float" | "horizontal" | "vertical
-local function map_keys(buffer, esc_esc, ctrl_hjkl, direction)
+local function add_mappings(buffer, esc_esc, ctrl_hjkl, direction)
   esc_esc = esc_esc ~= false
   if ctrl_hjkl == nil then
     ctrl_hjkl = direction ~= "float" and lazyvim.util.has("vim-tmux-navigator")
@@ -69,7 +69,7 @@ local function create(cmd, opts)
 
   ---@param term Terminal
   local on_create = function(term)
-    map_keys(term.bufnr, opts.esc_esc, opts.ctrl_hjkl, term.direction)
+    add_mappings(term.bufnr, opts.esc_esc, opts.ctrl_hjkl, term.direction)
     if opts.warn_on_unsaved then
       if any_modified_buffers() then
         vim.notify("Some files have unsaved changes", vim.log.levels.WARN)
