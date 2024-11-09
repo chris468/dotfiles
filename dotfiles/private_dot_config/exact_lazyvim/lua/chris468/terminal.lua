@@ -65,6 +65,14 @@ local defaults = {
 local function create(cmd, opts)
   local Terminal = require("toggleterm.terminal").Terminal
   cmd = type(cmd) == "function" and cmd() or cmd
+  if type(cmd) == "table" then
+    cmd = table.concat(
+      vim.tbl_map(function(c)
+        return vim.fn.shellescape(c)
+      end, cmd),
+      " "
+    )
+  end
   opts = vim.tbl_extend("keep", opts or {}, { display_name = cmd }, defaults)
 
   ---@param term Terminal
@@ -79,7 +87,7 @@ local function create(cmd, opts)
 
   local term_opts = {
     display_name = opts.display_name,
-    cmd = cmd,
+    cmd = cmd --[[@as string]],
     on_create = on_create,
   }
 
