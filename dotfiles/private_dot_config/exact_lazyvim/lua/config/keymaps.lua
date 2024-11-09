@@ -9,4 +9,4 @@ vim.keymap.del({ "n", "i", "v" }, "<A-k>")
 -- I never increment on purpose
 vim.keymap.set("n", "<C-a>", "<nop>")
 
--- chezmoi dotfiles
+vim.keymap.set("n", "<leader>f<C-T>", "<cmd>TermSelect<cr>", { desc = "Terminals" })
