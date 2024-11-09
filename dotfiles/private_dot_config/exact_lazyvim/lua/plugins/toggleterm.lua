@@ -195,6 +195,7 @@ return {
   opts = function()
     return {
       direction = "float",
+      open_mapping = [[<c-\>]],
       float_opts = {
         border = "rounded",
         title_pos = "center",
