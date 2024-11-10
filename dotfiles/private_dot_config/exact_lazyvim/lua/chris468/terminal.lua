@@ -31,33 +31,28 @@ local function terminal_key(opts)
 end
 
 ---@param buffer integer
----@param esc_esc boolean
----@param ctrl_hjkl boolean
+---@param esc_esc? boolean
+---@param ctrl_hjkl? boolean
 ---@param direction? "float" | "horizontal" | "vertical
 local function add_mappings(buffer, esc_esc, ctrl_hjkl, direction)
   esc_esc = esc_esc ~= false
   if ctrl_hjkl == nil then
-    ctrl_hjkl = direction ~= "float" and lazyvim.util.has("vim-tmux-navigator")
+    ctrl_hjkl = direction and direction ~= "float"
   end
 
   local keys = {
-    ["<C-h>"] = { "<C-h>", set = not ctrl_hjkl, mode = "n", opts = { noremap = true } },
-    ["<C-j>"] = { "<C-j>", set = not ctrl_hjkl, mode = "n", opts = { noremap = true } },
-    ["<C-k>"] = { "<C-k>", set = not ctrl_hjkl, mode = "n", opts = { noremap = true } },
-    ["<C-l>"] = { "<C-l>", set = not ctrl_hjkl, mode = "n", opts = { noremap = true } },
-    ["<esc><C-h>"] = { "<cmd>TmuxNavigateLeft<cr>", set = ctrl_hjkl },
-    ["<esc><C-j>"] = { "<cmd>TmuxNavigateDown<cr>", set = ctrl_hjkl },
-    ["<esc><C-k>"] = { "<cmd>TmuxNavigateUp<cr>", set = ctrl_hjkl },
-    ["<esc><C-l>"] = { "<cmd>TmuxNavigateRight<cr>", set = ctrl_hjkl },
-    ["<esc><esc>"] = { "<C-\\><C-N>", set = esc_esc, opts = { desc = "Normal mode", noremap = true } },
+    ["<C-h>"] = { enable = ctrl_hjkl },
+    ["<C-j>"] = { enable = ctrl_hjkl },
+    ["<C-k>"] = { enable = ctrl_hjkl },
+    ["<C-l>"] = { enable = ctrl_hjkl },
+    ["<esc>"] = { enable = esc_esc },
   }
 
-  for key, spec in pairs(keys) do
-    local cmd, set, mode, opts = spec[1], spec.set, spec.mode or "t", spec.opts or {}
-    if set then
-      vim.api.nvim_buf_set_keymap(buffer, mode, key, cmd, opts)
-    else
-      pcall(vim.api.nvim_buf_del_keymap, buffer, mode, key)
+  for k, opt in pairs(keys) do
+    if not opt.enable then
+      --- The keys are globally configured in LazyVim's base keyamps.lua.
+      --- Disabling means setting to themselves.
+      vim.keymap.set("t", k, k, { nowait = true, buffer = buffer })
     end
   end
 end
