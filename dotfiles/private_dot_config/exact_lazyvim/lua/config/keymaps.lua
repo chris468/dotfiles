@@ -42,24 +42,9 @@ lazyvim.util.on_load("which-key.nvim", function()
 end)
 
 local terminals = require("config.terminals")
-vim.keymap.set("n", "<leader>ftt", "", {
-  desc = "Float terminal",
-  callback = terminals.float,
-})
-vim.keymap.set("n", "<leader>fth", "", {
-  desc = "Horizontal terminal",
-  callback = terminals.horizontal,
-})
-vim.keymap.set("n", "<leader>ftv", "", {
-  desc = "Vertical terminal",
-  callback = terminals.vertical,
-})
-vim.keymap.set("n", "<leader>fda", "", {
-  desc = "Apply chezmoi dotfiles",
-  callback = terminals.chezmoi_apply,
-})
-vim.keymap.set("n", "<leader>fdA", "", {
-  desc = "Add current file to dotfiles",
-  callback = terminals.chezmoi_add,
-})
+vim.keymap.set("n", "<leader>ftt", terminals.float, { desc = "Float terminal" })
+vim.keymap.set("n", "<leader>fth", terminals.horizontal, { desc = "Horizontal terminal" })
+vim.keymap.set("n", "<leader>ftv", terminals.vertical, { desc = "Vertical terminal" })
+vim.keymap.set("n", "<leader>fda", terminals.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
+vim.keymap.set("n", "<leader>fdA", terminals.chezmoi_add, { desc = "Add current file to dotfiles" })
 vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
