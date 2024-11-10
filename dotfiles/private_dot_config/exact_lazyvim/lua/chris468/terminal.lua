@@ -11,6 +11,14 @@ local defaults = {
   warn_on_unsaved = false,
 }
 
+---@class Chris468TermConfig
+---@field overrides? table<1|string, fun(cmd: string|string[]|nil, opts: Chris468TermOpts, match?: string|string[])>
+
+---@type Chris468TermConfig
+local config = {
+  overrides = {},
+}
+
 local T = {
   next = 1 --[[@type integer]],
   terminals = {} --[[@type table<string, integer>]],
@@ -71,20 +79,10 @@ end
 --- @field remain_on_error? boolean
 --- @field warn_on_unsaved? boolean
 
----@param cmd? string|string[]|fun():(string|string[])
----@param opts? Chris468TermOpts
+---@param cmd? string
+---@param opts Chris468TermOpts
 local function create(cmd, opts)
   local Terminal = require("toggleterm.terminal").Terminal
-  cmd = type(cmd) == "function" and cmd() or cmd
-  if type(cmd) == "table" then
-    cmd = table.concat(
-      vim.tbl_map(function(c)
-        return vim.fn.shellescape(c)
-      end, cmd),
-      " "
-    )
-  end
-  opts = vim.tbl_extend("keep", opts or {}, { display_name = cmd }, defaults)
 
   local key = terminal_key(opts)
   if not T.terminals[key] then
@@ -123,13 +121,60 @@ local function create(cmd, opts)
   return Terminal:new(term_opts)
 end
 
+---param cmd? string
+---param opts Chris468TermOpts
+local function override_opts(cmd, opts)
+  local override = config.overrides[1]
+  local match = cmd
+  if config.overrides[cmd] then
+    override = config.overrides[cmd]
+  elseif cmd then
+    local keys = vim.tbl_keys(config.overrides)
+    table.sort(keys, function(a, b)
+      if type(a) ~= type(b) then
+        return type(a) < type(b)
+      end
+      return a > b
+    end)
+    for _, k in ipairs(keys) do
+      local m = type(k) == "string" and { cmd:match(k) }
+      if m and not vim.tbl_isempty(m) then
+        override = config.overrides[k]
+        match = m
+        break
+      end
+    end
+  end
+
+  if override then
+    override(cmd, opts, match)
+  end
+
+  return opts
+end
+
 ---@param cmd? string|string[]|fun():(string|string[])
 ---@param opts? Chris468TermOpts
 function M.open(cmd, opts)
+  if type(cmd) == "function" then
+    cmd = cmd()
+  end
+  if type(cmd) == "table" then
+    cmd = table.concat(
+      vim.tbl_map(function(c)
+        return vim.fn.shellescape(c)
+      end, cmd),
+      " "
+    )
+  end
+
+  opts = override_opts(cmd, vim.tbl_extend("keep", opts or {}, { display_name = cmd }, defaults))
   return create(cmd, opts):toggle(nil, opts and opts.direction or nil)
 end
 
-function M.setup()
+---@param opts? Chris468TermConfig
+function M.setup(opts)
+  config = vim.tbl_extend("keep", opts or {}, config or {})
   lazyvim.util.terminal.open = M.open
 end
 
