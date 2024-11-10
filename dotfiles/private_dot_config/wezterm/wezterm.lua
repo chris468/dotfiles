@@ -48,5 +48,6 @@ config.keys = {
 	{ key = "d", mods = "SUPER|SHIFT", action = wezterm.action.ShowDebugOverlay },
 	{ key = "d", mods = "SHIFT|CTRL", action = wezterm.action.ShowDebugOverlay },
 }
+config.send_composed_key_when_right_alt_is_pressed = false
 
 return config
