@@ -5,40 +5,61 @@ local lazyvim = {
   util = require("lazyvim.util"),
 }
 
--- was accidentally triggering line movement when leaving insert mode and trying to move
-vim.keymap.del({ "n", "i", "v" }, "<A-j>")
-vim.keymap.del({ "n", "i", "v" }, "<A-k>")
+---@class remove_keymap
+---@field modes string|string[]
+---@field keys string|string[]
+
+local remove_keymaps = {
+  {
+    -- was accidentally triggering line movement when leaving insert mode and trying to move
+    modes = { "n", "i", "v" },
+    keys = { "<A-j>", "<A-k>" },
+  },
+  {
+    -- will make a submenu under <leader>ft for terminals
+    modes = "n",
+    keys = { "<leader>ft", "<leader>fT" },
+  },
+}
+for _, remove in ipairs(remove_keymaps) do
+  local keys = type(remove.keys) == "table" and remove.keys or {
+    remove.keys --[[@as string]],
+  }
+  for _, key in ipairs(keys) do
+    vim.keymap.del(remove.modes, key)
+  end
+end
 
 -- I never increment on purpose
 vim.keymap.set("n", "<C-a>", "<nop>")
-
-vim.keymap.set("n", "<leader>f<C-T>", "<cmd>TermSelect<cr>", { desc = "Terminals" })
 
 lazyvim.util.on_load("which-key.nvim", function()
   local wk = require("which-key")
   wk.add({
     { "<leader>fd", group = "Chezmoi Dotfiles" },
+    { "<leader>ft", group = "Terminals" },
   })
 end)
 
+local terminals = require("config.terminals")
+vim.keymap.set("n", "<leader>ftt", "", {
+  desc = "Float terminal",
+  callback = terminals.float,
+})
+vim.keymap.set("n", "<leader>fth", "", {
+  desc = "Horizontal terminal",
+  callback = terminals.horizontal,
+})
+vim.keymap.set("n", "<leader>ftv", "", {
+  desc = "Vertical terminal",
+  callback = terminals.vertical,
+})
 vim.keymap.set("n", "<leader>fda", "", {
   desc = "Apply chezmoi dotfiles",
-  callback = function()
-    require("chris468.terminal").open(
-      "chezmoi apply",
-      { direction = "horizontal", display_name = "Chezmoi", remain_on_error = true, warn_on_unsaved = true }
-    )
-  end,
+  callback = terminals.chezmoi_apply,
 })
 vim.keymap.set("n", "<leader>fdA", "", {
   desc = "Add current file to dotfiles",
-  callback = function()
-    local cmd = function()
-      return { "chezmoi", "add", vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) }
-    end
-    require("chris468.terminal").open(
-      cmd,
-      { direction = "horizontal", display_name = "Chezmoi", remain_on_error = true, warn_on_unsaved = true }
-    )
-  end,
+  callback = terminals.chezmoi_add,
 })
+vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
