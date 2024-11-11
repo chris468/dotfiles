@@ -21,7 +21,7 @@ return {
           return vim.o.columns
         end,
         height = function()
-          return vim.o.lines - 3
+          return vim.o.lines - 1
         end,
       },
       size = function(term)
