@@ -12,6 +12,7 @@ local defaults = {
 }
 
 ---@class Chris468TermConfig
+---@field toggle_mapping? string
 ---@field overrides? table<1|string, fun(cmd: string|string[]|nil, opts: Chris468TermOpts, match?: string|string[])>
 
 ---@type Chris468TermConfig
@@ -167,9 +168,32 @@ function M.open(cmd, opts)
   return create(cmd, opts):toggle(nil, opts and opts.direction or nil)
 end
 
+---@param toggle_mapping string
+local function create_mapping(toggle_mapping)
+  vim.keymap.set({ "n", "i" }, toggle_mapping, function()
+    local toggleterm = require("toggleterm")
+    local find = require("toggleterm.terminal").find
+
+    local function any()
+      return true
+    end
+
+    if find(any) then
+      toggleterm.toggle()
+    end
+  end, { desc = "Toggle Terminal" })
+
+  vim.keymap.set("t", toggle_mapping, function()
+    require("toggleterm").toggle()
+  end, { desc = "Toggle Terminal" })
+end
+
 ---@param opts? Chris468TermConfig
 function M.setup(opts)
   config = vim.tbl_extend("keep", opts or {}, config or {})
+  if config.toggle_mapping then
+    create_mapping(config.toggle_mapping)
+  end
   lazyvim.util.terminal.open = M.open
 end
 

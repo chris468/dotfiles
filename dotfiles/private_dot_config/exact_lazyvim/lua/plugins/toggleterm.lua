@@ -13,7 +13,7 @@ return {
   opts = function()
     return {
       direction = "float",
-      open_mapping = [[<C-\><C-\>]],
+      open_mapping = nil, -- handled by chris468.terminal
       float_opts = {
         border = { "", "─", "", "", "", "", "", "" },
         title_pos = "center",

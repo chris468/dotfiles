@@ -3,6 +3,7 @@
 -- Add any additional options here
 
 require("chris468.terminal").setup({
+  toggle_mapping = [[<C-\><C-\>]],
   overrides = {
     function(cmd, opts)
       if cmd == nil then
