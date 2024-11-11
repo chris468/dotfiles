@@ -15,8 +15,14 @@ return {
       direction = "float",
       open_mapping = [[<c-\>]],
       float_opts = {
-        border = "rounded",
+        border = { "", "─", "", "", "", "", "", "" },
         title_pos = "center",
+        width = function()
+          return vim.o.columns
+        end,
+        height = function()
+          return vim.o.lines - 3
+        end,
       },
       size = function(term)
         if term.direction == "horizontal" then

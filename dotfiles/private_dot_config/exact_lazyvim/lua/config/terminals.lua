@@ -1,5 +1,6 @@
 local M = {}
 
+---@type table<string, {cmd: string|string[]|fun():(string|string[])|nil, opts: Chris468TermOpts|nil}>
 local terminals = {
   float = {
     opts = { direction = "float", display_name = "Terminal" },
