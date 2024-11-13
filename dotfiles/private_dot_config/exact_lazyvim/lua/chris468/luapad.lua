@@ -94,11 +94,11 @@ local function attach_luapad(buf)
   })
 end
 
-function M.luapad_split()
+function M.toggle()
   if buffer and vim.api.nvim_buf_is_loaded(buffer) then
     local win = vim.fn.win_findbuf(buffer)
     if win and win[1] then
-      vim.api.nvim_set_current_win(win[1])
+      vim.api.nvim_win_hide(win[1])
     else
       vim.api.nvim_command("botright vsplit")
       vim.api.nvim_win_set_buf(0, buffer)

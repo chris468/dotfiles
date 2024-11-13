@@ -8,7 +8,7 @@ return {
   config = function(_, opts)
     require("luapad").setup(opts)
     vim.api.nvim_create_user_command("Luapad", function()
-      require("chris468.luapad").luapad_split()
+      require("chris468.luapad").toggle()
     end, { force = true })
   end,
   keys = {
