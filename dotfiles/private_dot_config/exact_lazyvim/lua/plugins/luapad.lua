@@ -33,6 +33,9 @@ local function create_project()
   return table.concat({ tmpdir, "LuaPad" }, "/")
 end
 
+---@type integer|nil
+local buffer
+
 --- @param path string
 --- @return integer buffer
 local function create_buffer(path)
@@ -43,23 +46,24 @@ local function create_buffer(path)
   vim.bo[buf].bufhidden = "wipe"
   vim.bo[buf].buftype = "nofile"
   vim.bo[buf].bufhidden = "hide"
+  vim.bo[buf].buflisted = false
 
   return buf
 end
 
---- @param buffer integer
-local function attach_luapad(buffer)
+--- @param buf integer
+local function attach_luapad(buf)
   local evaluator = require("luapad.evaluator"):new({
-    buf = buffer,
+    buf = buf,
   })
   evaluator:start()
 
-  local last_changed_tick = vim.api.nvim_buf_get_changedtick(buffer)
+  local last_changed_tick = vim.api.nvim_buf_get_changedtick(buf)
 
   vim.api.nvim_create_autocmd({ "InsertLeave", "CursorHoldI", "CursorHold" }, {
     buffer = buffer,
     callback = function(_)
-      local current_changed_tick = vim.api.nvim_buf_get_changedtick(buffer)
+      local current_changed_tick = vim.api.nvim_buf_get_changedtick(buf)
       if current_changed_tick ~= last_changed_tick then
         evaluator:eval()
         last_changed_tick = current_changed_tick
@@ -69,13 +73,24 @@ local function attach_luapad(buffer)
 end
 
 local function luapad_split()
+  if buffer and vim.api.nvim_buf_is_valid(buffer) then
+    local win = vim.fn.win_findbuf(buffer)
+    if win and win[1] then
+      vim.api.nvim_set_current_win(win[1])
+    else
+      vim.api.nvim_command("botright vsplit")
+      vim.api.nvim_win_set_buf(0, buffer)
+    end
+    return
+  end
+
   local luapad_path, error = create_project()
   if not luapad_path then
     vim.notify(error or "unknown error", vim.log.levels.ERROR)
     return
   end
 
-  local buffer = create_buffer(luapad_path)
+  buffer = create_buffer(luapad_path)
 
   attach_luapad(buffer)
 end
