@@ -48,3 +48,9 @@ vim.keymap.set("n", "<leader>ftv", terminals.vertical, { desc = "Vertical termin
 vim.keymap.set("n", "<leader>fda", terminals.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
 vim.keymap.set("n", "<leader>fdA", terminals.chezmoi_add, { desc = "Add current file to dotfiles" })
 vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
+
+if lazyvim.util.has("nvim-luapad") then
+  vim.keymap.set("n", "<leader>cL", function()
+    require("chris468.luapad").toggle()
+  end, { desc = "LuaPad" })
+end
