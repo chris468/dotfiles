@@ -73,7 +73,7 @@ local function attach_luapad(buf)
 end
 
 local function luapad_split()
-  if buffer and vim.api.nvim_buf_is_valid(buffer) then
+  if buffer and vim.api.nvim_buf_is_loaded(buffer) then
     local win = vim.fn.win_findbuf(buffer)
     if win and win[1] then
       vim.api.nvim_set_current_win(win[1])
