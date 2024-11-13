@@ -1,7 +1,7 @@
-local have_lazyvim, lazyvim_util = pcall(require, "lazyvim.util")
-local have_mason_lspconfig = have_lazyvim and lazyvim_util.has("mason-lspconfig.nvim")
-if not have_mason_lspconfig then
-  vim.notify(vim.inspect({ have_lazyvim = have_lazyvim, have_mason_lspconfig = have_mason_lspconfig }))
+local lazyvim = {
+  util = require("lazyvim.util"),
+}
+if not lazyvim.util.has("mason-lspconfig.nvim") then
   return {
     to_filetypes = function()
       return {}
@@ -33,7 +33,7 @@ end
 
 ---@return string[]
 function M.to_install()
-  local lspconfig_opts = lazyvim_util.opts("nvim-lspconfig")
+  local lspconfig_opts = lazyvim.util.opts("nvim-lspconfig")
   local lspconfigs = vim.tbl_extend("force", lspconfig_opts.setup or {}, lspconfig_opts.servers or {})
 
   for lsp, config in pairs(lspconfigs) do

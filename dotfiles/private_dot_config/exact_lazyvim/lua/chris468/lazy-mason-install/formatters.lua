@@ -1,11 +1,13 @@
 local util = require("chris468.util")
+local lazyvim = {
+  util = require("lazyvim.util"),
+}
 
 local M = {}
 
 ---@return table<string, string[]>
 function M.to_filetypes()
-  local have_conform, _ = pcall(require, "conform")
-  if not have_conform then
+  if not lazyvim.util.has("conform.nvim") then
     return {}
   end
 
