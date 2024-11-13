@@ -33,6 +33,12 @@ local function create_project()
   return table.concat({ tmpdir, "LuaPad" }, "/")
 end
 
+---@param path string
+local function delete_project(path)
+  vim.uv.fs_unlink(table.concat({ path, "stylua.toml" }, "/"))
+  vim.uv.fs_rmdir(path, function() end)
+end
+
 ---@type integer|nil
 local buffer
 
@@ -68,6 +74,14 @@ local function attach_luapad(buf)
         evaluator:eval()
         last_changed_tick = current_changed_tick
       end
+    end,
+  })
+  vim.api.nvim_create_autocmd("BufUnload", {
+    buffer = buffer,
+    callback = function(arg)
+      vim.schedule(function()
+        delete_project(vim.fn.fnamemodify(arg.file, ":h"))
+      end)
     end,
   })
 end
