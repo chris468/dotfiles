@@ -49,9 +49,8 @@ local function create_buffer(path)
   local buf = vim.api.nvim_get_current_buf()
   vim.bo[buf].swapfile = false
   vim.bo[buf].filetype = "lua"
-  vim.bo[buf].bufhidden = "wipe"
-  vim.bo[buf].buftype = "nofile"
   vim.bo[buf].bufhidden = "hide"
+  vim.bo[buf].buftype = "nofile"
   vim.bo[buf].buflisted = false
 
   return buf
@@ -80,8 +79,15 @@ local function attach_luapad(buf)
     buffer = buffer,
     callback = function(arg)
       vim.schedule(function()
+        evaluator:finish()
         delete_project(vim.fn.fnamemodify(arg.file, ":h"))
       end)
+    end,
+  })
+  vim.api.nvim_create_autocmd("BufHidden", {
+    buffer = buffer,
+    callback = function()
+      evaluator:close_preview()
     end,
   })
 end
