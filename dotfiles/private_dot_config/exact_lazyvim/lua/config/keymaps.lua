@@ -53,6 +53,26 @@ if vim.g.chris468_use_toggleterm then
   vim.keymap.set("n", "<leader>fda", terminal_specs.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
   vim.keymap.set("n", "<leader>fdA", terminal_specs.chezmoi_add, { desc = "Add current file to dotfiles" })
   vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
+else
+  ---@param cmd? string | string[] | fun() : (string|string[])
+  ---@param opts? snacks.terminal.Opts
+  ---@return fun()
+  local function terminal(cmd, opts)
+    return function()
+      if type(cmd) == "function" then
+        cmd = cmd()
+      end
+      Snacks.terminal(cmd, opts)
+    end
+  end
+  vim.keymap.set("n", "<leader>fda", terminal("chezmoi apply", { win = { position = "bottom" } }))
+  vim.keymap.set(
+    "n",
+    "<leader>fdA",
+    terminal(function()
+      return { "chezmoi", "add", vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) }
+    end, { win = { position = "bottom" } })
+  )
 end
 
 if lazyvim.util.has("nvim-luapad") then
