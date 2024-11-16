@@ -46,12 +46,12 @@ lazyvim.util.on_load("which-key.nvim", function()
 end)
 
 if vim.g.chris468_use_toggleterm then
-  local terminals = require("config.terminals")
-  vim.keymap.set("n", "<leader>ftt", terminals.float, { desc = "Float terminal" })
-  vim.keymap.set("n", "<leader>fth", terminals.horizontal, { desc = "Horizontal terminal" })
-  vim.keymap.set("n", "<leader>ftv", terminals.vertical, { desc = "Vertical terminal" })
-  vim.keymap.set("n", "<leader>fda", terminals.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
-  vim.keymap.set("n", "<leader>fdA", terminals.chezmoi_add, { desc = "Add current file to dotfiles" })
+  local terminal_specs = require("chris468.terminal.specs")
+  vim.keymap.set("n", "<leader>ftt", terminal_specs.float, { desc = "Float terminal" })
+  vim.keymap.set("n", "<leader>fth", terminal_specs.horizontal, { desc = "Horizontal terminal" })
+  vim.keymap.set("n", "<leader>ftv", terminal_specs.vertical, { desc = "Vertical terminal" })
+  vim.keymap.set("n", "<leader>fda", terminal_specs.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
+  vim.keymap.set("n", "<leader>fdA", terminal_specs.chezmoi_add, { desc = "Add current file to dotfiles" })
   vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
 end
 
