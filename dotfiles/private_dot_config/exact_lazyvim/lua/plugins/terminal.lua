@@ -8,6 +8,11 @@ return {
           height = 0.95,
           width = 0.99,
         },
+        lazygit = {
+          keys = {
+            term_normal = false,
+          },
+        },
       } or nil,
     },
   },
