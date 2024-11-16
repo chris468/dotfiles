@@ -1,5 +1,17 @@
 return {
   {
+    "folke/snacks.nvim",
+    ---@type snacks.Config
+    opts = {
+      styles = not vim.g.chris468_use_toggleterm and {
+        float = {
+          height = 0.95,
+          width = 0.99,
+        },
+      } or nil,
+    },
+  },
+  {
     "akinsho/toggleterm.nvim",
     cmd = {
       "ToggleTerm",
