@@ -17,16 +17,20 @@ local remove_keymaps = {
   },
   {
     -- will make a submenu under <leader>ft for terminals
+    remove = vim.g.chris468_use_toggleterm or false,
     modes = "n",
     keys = { "<leader>ft", "<leader>fT" },
   },
 }
-for _, remove in ipairs(remove_keymaps) do
-  local keys = type(remove.keys) == "table" and remove.keys or {
-    remove.keys --[[@as string]],
-  }
-  for _, key in ipairs(keys) do
-    vim.keymap.del(remove.modes, key)
+for _, spec in ipairs(remove_keymaps) do
+  local remove = spec.remove == nil or spec.remove
+  if remove then
+    local keys = type(spec.keys) == "table" and spec.keys or {
+      spec.keys --[[@as string]],
+    }
+    for _, key in ipairs(keys) do
+      vim.keymap.del(spec.modes, key)
+    end
   end
 end
 
@@ -41,13 +45,15 @@ lazyvim.util.on_load("which-key.nvim", function()
   })
 end)
 
-local terminals = require("config.terminals")
-vim.keymap.set("n", "<leader>ftt", terminals.float, { desc = "Float terminal" })
-vim.keymap.set("n", "<leader>fth", terminals.horizontal, { desc = "Horizontal terminal" })
-vim.keymap.set("n", "<leader>ftv", terminals.vertical, { desc = "Vertical terminal" })
-vim.keymap.set("n", "<leader>fda", terminals.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
-vim.keymap.set("n", "<leader>fdA", terminals.chezmoi_add, { desc = "Add current file to dotfiles" })
-vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
+if vim.g.chris468_use_toggleterm then
+  local terminals = require("config.terminals")
+  vim.keymap.set("n", "<leader>ftt", terminals.float, { desc = "Float terminal" })
+  vim.keymap.set("n", "<leader>fth", terminals.horizontal, { desc = "Horizontal terminal" })
+  vim.keymap.set("n", "<leader>ftv", terminals.vertical, { desc = "Vertical terminal" })
+  vim.keymap.set("n", "<leader>fda", terminals.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
+  vim.keymap.set("n", "<leader>fdA", terminals.chezmoi_add, { desc = "Add current file to dotfiles" })
+  vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
+end
 
 if lazyvim.util.has("nvim-luapad") then
   vim.keymap.set("n", "<leader>cL", function()

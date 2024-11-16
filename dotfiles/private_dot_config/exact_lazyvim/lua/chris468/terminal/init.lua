@@ -194,7 +194,7 @@ function M.setup(opts)
   if config.toggle_mapping then
     create_mapping(config.toggle_mapping)
   end
-  lazyvim.util.terminal.open = M.open
+  Snacks.terminal.open = M.open
 end
 
 return M
