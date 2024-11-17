@@ -5,14 +5,19 @@
 vim.g.lazyvim_picker = "telescope"
 vim.g.trouble_lualine = false
 
+local chezmoi = require("config.chezmoi")
+
+---@class Chris468Options
+---@field options {
+---   use_toggleterm: boolean|nil,
+---   ai: "None"|"Codeium"|"Copilot"|nil,
+---}
 local chris468 = {
   options = {
     use_toggleterm = false,
+    ai = chezmoi.options.work and "Copilot" or "Codeium",
   },
 }
+local overrides = require("config.local")
 
-_G.Chris468 = vim.tbl_deep_extend(
-  "error",
-  vim.tbl_deep_extend("force", chris468, require("config.local")),
-  require("config.chezmoi")
-)
+_G.Chris468 = vim.tbl_deep_extend("error", vim.tbl_deep_extend("force", chris468, overrides), chezmoi)
