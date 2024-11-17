@@ -12,6 +12,9 @@ return {
           keys = {
             term_normal = false,
           },
+          wo = {
+            winbar = "Lazygit",
+          },
         },
       } or nil,
     },
