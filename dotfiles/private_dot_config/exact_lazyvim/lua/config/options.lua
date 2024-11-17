@@ -3,3 +3,4 @@
 -- Add any additional options here
 
 vim.g.chris468_use_toggleterm = false
+vim.g.lazyvim_picker = "telescope"
