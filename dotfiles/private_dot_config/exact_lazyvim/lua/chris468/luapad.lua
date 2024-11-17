@@ -64,6 +64,23 @@ Snacks.config.style("Luapad", {
     relativenumber = true,
     cursorline = true,
   },
+  keys = {
+    ["<leader>cL"] = {
+      "<leader>cL",
+      Snacks.win.close,
+      mode = { "n", "i" },
+    },
+    ["<c-/>"] = {
+      "<c-/>",
+      Snacks.win.close,
+      mode = { "n", "i" },
+    },
+    ["<c-_>"] = {
+      "<c-_>",
+      Snacks.win.close,
+      mode = { "n", "i" },
+    },
+  },
 })
 
 local function new()
