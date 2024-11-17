@@ -4,3 +4,4 @@
 
 vim.g.chris468_use_toggleterm = false
 vim.g.lazyvim_picker = "telescope"
+vim.g.trouble_lualine = false
