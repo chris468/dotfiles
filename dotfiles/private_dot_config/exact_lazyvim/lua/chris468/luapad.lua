@@ -65,11 +65,7 @@ Snacks.config.style("Luapad", {
     cursorline = true,
   },
   keys = {
-    ["<leader>cL"] = {
-      "<leader>cL",
-      Snacks.win.close,
-      mode = { "n", "i" },
-    },
+    ["<leader><c-l>"] = Snacks.win.close,
     ["<c-/>"] = {
       "<c-/>",
       Snacks.win.close,
