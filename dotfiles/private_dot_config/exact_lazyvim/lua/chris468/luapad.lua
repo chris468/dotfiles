@@ -14,20 +14,6 @@ end
 ---@type integer|nil
 local buffer
 
---- @param path string
---- @return integer buffer
-local function create_buffer(path)
-  vim.api.nvim_command("botright vsplit " .. path)
-  local buf = vim.api.nvim_get_current_buf()
-  vim.bo[buf].swapfile = false
-  vim.bo[buf].filetype = "lua"
-  vim.bo[buf].bufhidden = "hide"
-  vim.bo[buf].buftype = "nofile"
-  vim.bo[buf].buflisted = false
-
-  return buf
-end
-
 --- @param buf integer
 local function attach_luapad(buf)
   local evaluator = require("luapad.evaluator"):new({
@@ -63,22 +49,47 @@ local function attach_luapad(buf)
   })
 end
 
-function M.toggle()
-  if buffer and vim.api.nvim_buf_is_loaded(buffer) then
-    local win = vim.fn.win_findbuf(buffer)
-    if win and win[1] then
-      vim.api.nvim_win_hide(win[1])
-    else
-      vim.api.nvim_command("botright vsplit")
-      vim.api.nvim_win_set_buf(0, buffer)
-    end
-    return
-  end
+---@type table<integer, snacks.win>
+local pads = {}
 
+Snacks.config.style("Luapad", {
+  position = "right",
+  bo = {
+    swapfile = false,
+    filetype = "lua",
+    bufhidden = "hide",
+    buftype = "nofile",
+    buflisted = false,
+    modifiable = true,
+  },
+  wo = {
+    number = true,
+    relativenumber = true,
+    cursorline = true,
+  },
+  on_buf = vim.schedule_wrap(function()
+    vim.notify("on_buf")
+  end),
+  on_win = vim.schedule_wrap(function()
+    vim.notify("on_win")
+  end),
+})
+
+local function new()
   ensure_project()
   local luapad_path = project_root / "Luapad" .. (vim.v.count1 > 1 and " " .. vim.v.count1 or "")
-  buffer = create_buffer(luapad_path)
-  attach_luapad(buffer)
+  local win = Snacks.win({ style = "Luapad", file = luapad_path })
+  vim.notify(vim.inspect(win))
+  attach_luapad(win.buf)
+  return win
+end
+
+function M.toggle()
+  if pads[vim.v.count1] and pads[vim.v.count1]:buf_valid() then
+    pads[vim.v.count1]:toggle()
+  else
+    pads[vim.v.count1] = new()
+  end
 end
 
 return M
