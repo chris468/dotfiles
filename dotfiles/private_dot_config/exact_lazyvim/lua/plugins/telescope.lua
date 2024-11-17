@@ -29,20 +29,6 @@ return {
   opts = {
     defaults = {
       layout_strategy = "vertical",
-      mappings = {
-        i = {
-          ["<C-j>"] = "move_selection_next",
-          ["<C-k>"] = "move_selection_previous",
-          ["<C-b>"] = "results_scrolling_up",
-          ["<C-f>"] = "results_scrolling_down",
-        },
-        n = {
-          ["<C-j>"] = "move_selection_next",
-          ["<C-k>"] = "move_selection_previous",
-          ["<C-b>"] = "results_scrolling_up",
-          ["<C-f>"] = "results_scrolling_down",
-        },
-      },
     },
     extensions = {
       lazy = {
