@@ -5,8 +5,8 @@
 vim.g.lazyvim_picker = "telescope"
 vim.g.trouble_lualine = false
 
-_G.Chris468 = {
+_G.Chris468 = vim.tbl_deep_extend("error", {
   options = {
     use_toggleterm = false,
   },
-}
+}, require("config.chezmoi"))
