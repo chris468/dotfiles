@@ -11,9 +11,6 @@ local function ensure_project()
   end
 end
 
----@type integer|nil
-local buffer
-
 --- @param buf integer
 local function attach_luapad(buf)
   local evaluator = require("luapad.evaluator"):new({
@@ -24,7 +21,7 @@ local function attach_luapad(buf)
   local last_changed_tick = vim.api.nvim_buf_get_changedtick(buf)
 
   vim.api.nvim_create_autocmd({ "InsertLeave", "CursorHoldI", "CursorHold" }, {
-    buffer = buffer,
+    buffer = buf,
     callback = function(_)
       local current_changed_tick = vim.api.nvim_buf_get_changedtick(buf)
       if current_changed_tick ~= last_changed_tick then
@@ -34,15 +31,15 @@ local function attach_luapad(buf)
     end,
   })
   vim.api.nvim_create_autocmd("BufUnload", {
-    buffer = buffer,
-    callback = function(arg)
+    buffer = buf,
+    callback = function()
       vim.schedule(function()
         evaluator:finish()
       end)
     end,
   })
   vim.api.nvim_create_autocmd("BufHidden", {
-    buffer = buffer,
+    buffer = buf,
     callback = function()
       evaluator:close_preview()
     end,
@@ -67,19 +64,12 @@ Snacks.config.style("Luapad", {
     relativenumber = true,
     cursorline = true,
   },
-  on_buf = vim.schedule_wrap(function()
-    vim.notify("on_buf")
-  end),
-  on_win = vim.schedule_wrap(function()
-    vim.notify("on_win")
-  end),
 })
 
 local function new()
   ensure_project()
   local luapad_path = project_root / "Luapad" .. (vim.v.count1 > 1 and " " .. vim.v.count1 or "")
   local win = Snacks.win({ style = "Luapad", file = luapad_path })
-  vim.notify(vim.inspect(win))
   attach_luapad(win.buf)
   return win
 end
