@@ -17,7 +17,7 @@ local remove_keymaps = {
   },
   {
     -- will make a submenu under <leader>ft for terminals
-    remove = vim.g.chris468_use_toggleterm or false,
+    remove = Chris468.options.use_toggleterm or false,
     modes = "n",
     keys = { "<leader>ft", "<leader>fT" },
   },
@@ -45,7 +45,7 @@ lazyvim.util.on_load("which-key.nvim", function()
   })
 end)
 
-if vim.g.chris468_use_toggleterm then
+if Chris468.options.use_toggleterm then
   local terminal_specs = require("chris468.terminal.specs")
   vim.keymap.set("n", "<leader>ftt", terminal_specs.float, { desc = "Float terminal" })
   vim.keymap.set("n", "<leader>fth", terminal_specs.horizontal, { desc = "Horizontal terminal" })

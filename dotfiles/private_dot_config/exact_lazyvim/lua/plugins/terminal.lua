@@ -3,7 +3,7 @@ return {
     "folke/snacks.nvim",
     ---@type snacks.Config
     opts = {
-      styles = not vim.g.chris468_use_toggleterm and {
+      styles = not Chris468.options.use_toggleterm and {
         float = {
           height = 0.95,
           width = 0.99,
@@ -28,7 +28,7 @@ return {
       "ToggleTermSendVisualSelection",
       "ToggleTermSetName",
     },
-    enabled = vim.g.chris468_use_toggleterm,
+    enabled = Chris468.options.use_toggleterm,
     opts = function()
       return {
         direction = "float",
@@ -58,7 +58,7 @@ return {
       require("chris468.terminal").setup(opts)
     end,
     dir = vim.fn.stdpath("config") .. "/lua/chris468/terminal",
-    enabled = vim.g.chris468_use_toggleterm,
+    enabled = Chris468.options.use_toggleterm,
     lazy = false,
     opts = {
       toggle_mapping = [[<C-\><C-\>]],
