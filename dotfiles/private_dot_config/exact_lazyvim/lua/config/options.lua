@@ -9,12 +9,10 @@ local chezmoi = require("config.chezmoi")
 
 ---@class Chris468Options
 ---@field options {
----   use_toggleterm: boolean|nil,
 ---   ai: "None"|"Codeium"|"Copilot"|nil,
 ---}
 local chris468 = {
   options = {
-    use_toggleterm = false,
     ai = chezmoi.options.work and "Copilot" or "Codeium",
   },
 }

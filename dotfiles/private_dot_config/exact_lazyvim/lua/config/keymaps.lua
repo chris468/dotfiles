@@ -15,12 +15,6 @@ local remove_keymaps = {
     modes = { "n", "i", "v" },
     keys = { "<A-j>", "<A-k>" },
   },
-  {
-    -- will make a submenu under <leader>ft for terminals
-    remove = Chris468.options.use_toggleterm or false,
-    modes = "n",
-    keys = { "<leader>ft", "<leader>fT" },
-  },
 }
 for _, spec in ipairs(remove_keymaps) do
   local remove = spec.remove == nil or spec.remove
@@ -45,41 +39,31 @@ lazyvim.util.on_load("which-key.nvim", function()
   })
 end)
 
-if Chris468.options.use_toggleterm then
-  local terminal_specs = require("chris468.terminal.specs")
-  vim.keymap.set("n", "<leader>ftt", terminal_specs.float, { desc = "Float terminal" })
-  vim.keymap.set("n", "<leader>fth", terminal_specs.horizontal, { desc = "Horizontal terminal" })
-  vim.keymap.set("n", "<leader>ftv", terminal_specs.vertical, { desc = "Vertical terminal" })
-  vim.keymap.set("n", "<leader>fda", terminal_specs.chezmoi_apply, { desc = "Apply chezmoi dotfiles" })
-  vim.keymap.set("n", "<leader>fdA", terminal_specs.chezmoi_add, { desc = "Add current file to dotfiles" })
-  vim.keymap.set("n", "<leader>ftb", "<cmd>TermSelect<cr>", { desc = "Browse" })
-else
-  ---@param cmd? string | string[] | fun() : (string|string[])
-  ---@param opts? snacks.terminal.Opts
-  ---@return fun()
-  local function terminal(cmd, opts)
-    return function()
-      if type(cmd) == "function" then
-        cmd = cmd()
-      end
-      Snacks.terminal(cmd, opts)
+---@param cmd? string | string[] | fun() : (string|string[])
+---@param opts? snacks.terminal.Opts
+---@return fun()
+local function terminal(cmd, opts)
+  return function()
+    if type(cmd) == "function" then
+      cmd = cmd()
     end
+    Snacks.terminal(cmd, opts)
   end
-  vim.keymap.set(
-    "n",
-    "<leader>fda",
-    terminal("chezmoi apply", { win = { position = "bottom", wo = { winbar = "Apply chezmoi dotfiles" } } }),
-    { desc = "Apply chezmoi dotfiles" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>fdA",
-    terminal(function()
-      return { "chezmoi", "add", vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) }
-    end, { win = { position = "bottom" }, wo = { winbar = "Add current file to dotfiles" } }),
-    { desc = "Add current file to dotfiles" }
-  )
 end
+vim.keymap.set(
+  "n",
+  "<leader>fda",
+  terminal("chezmoi apply", { win = { position = "bottom", wo = { winbar = "Apply chezmoi dotfiles" } } }),
+  { desc = "Apply chezmoi dotfiles" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>fdA",
+  terminal(function()
+    return { "chezmoi", "add", vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) }
+  end, { win = { position = "bottom" }, wo = { winbar = "Add current file to dotfiles" } }),
+  { desc = "Add current file to dotfiles" }
+)
 
 if lazyvim.util.has("nvim-luapad") then
   vim.keymap.set("n", "<leader>cL", function()
