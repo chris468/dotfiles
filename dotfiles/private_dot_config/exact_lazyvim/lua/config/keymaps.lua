@@ -80,3 +80,14 @@ if lazyvim.util.has("nvim-luapad") then
     require("chris468.luapad").toggle()
   end, { desc = "LuaPad" })
 end
+
+if lazyvim.util.has("telescope.nvim") then
+  local t = require("chris468.telescope")
+  vim.keymap.set("n", "<leader>fr", LazyVim.pick("oldfiles", t.opts.ignore_helpdirs()), { desc = "Recent" })
+  vim.keymap.set(
+    "n",
+    "<leader>fR",
+    LazyVim.pick("oldfiles", t.opts.ignore_helpdirs({ cwd = vim.uv.cwd() })),
+    { desc = "Recent (cwd)" }
+  )
+end
