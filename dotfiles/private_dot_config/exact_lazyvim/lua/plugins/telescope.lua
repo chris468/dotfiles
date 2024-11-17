@@ -35,7 +35,7 @@ return {
         mappings = {
           change_cwd_to_plugin = "<C-w>",
           open_plugins_picker = "<C-o>",
-          show_configuration = "<C-c>",
+          show_configuration = "<C-s>",
         },
         actions_opts = {
           change_cwd_to_plugin = {
