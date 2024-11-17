@@ -1,44 +1,14 @@
+local Path = require("plenary.path")
+
 local M = {}
 
---- @param summary string
---- @param err_name string|nil
---- @param err_message string|nil
---- @return string error
-local function build_error(summary, err_name, err_message)
-  local err = {}
-  if err_name then
-    err[#err + 1] = err_name
+local project_root = Path:new(vim.fn.stdpath("state")) / "chris468" / "luapad"
+
+local function ensure_project()
+  local stylua = project_root / "stylua.toml"
+  if not stylua:exists() then
+    stylua:touch({ parents = true })
   end
-
-  if err_message then
-    err[#err + 1] = err_message
-  end
-
-  return summary .. (#err > 0 and (" (" .. table.concat(err, ": ") .. ")") or "")
-end
-
---- @return string|nil path, string|nil error
-local function create_project()
-  local tmpdir, err_name, err_message = vim.loop.fs_mkdtemp("/tmp/luapad.XXXXXX")
-  if not tmpdir then
-    return nil, build_error("failed to create tempdir for luapad", err_name, err_message)
-  end
-
-  local stylua_path = table.concat({ tmpdir, "stylua.toml" }, "/")
-  local stylua_fd
-  stylua_fd, err_name, err_message = vim.loop.fs_open(stylua_path, "w", 384) -- 0600
-  if not stylua_fd then
-    return nil, build_error("Failed to create " .. stylua_path, err_name, err_message)
-  end
-  vim.loop.fs_close(stylua_fd)
-
-  return table.concat({ tmpdir, "LuaPad" }, "/")
-end
-
----@param path string
-local function delete_project(path)
-  vim.uv.fs_unlink(table.concat({ path, "stylua.toml" }, "/"))
-  vim.uv.fs_rmdir(path, function() end)
 end
 
 ---@type integer|nil
@@ -82,7 +52,6 @@ local function attach_luapad(buf)
     callback = function(arg)
       vim.schedule(function()
         evaluator:finish()
-        delete_project(vim.fn.fnamemodify(arg.file, ":h"))
       end)
     end,
   })
@@ -106,14 +75,9 @@ function M.toggle()
     return
   end
 
-  local luapad_path, error = create_project()
-  if not luapad_path then
-    vim.notify(error or "unknown error", vim.log.levels.ERROR)
-    return
-  end
-
+  ensure_project()
+  local luapad_path = project_root / "Luapad" .. (vim.v.count1 > 1 and " " .. vim.v.count1 or "")
   buffer = create_buffer(luapad_path)
-
   attach_luapad(buffer)
 end
 
