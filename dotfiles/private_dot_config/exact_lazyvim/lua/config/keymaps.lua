@@ -65,13 +65,19 @@ else
       Snacks.terminal(cmd, opts)
     end
   end
-  vim.keymap.set("n", "<leader>fda", terminal("chezmoi apply", { win = { position = "bottom" } }))
+  vim.keymap.set(
+    "n",
+    "<leader>fda",
+    terminal("chezmoi apply", { win = { position = "bottom", wo = { winbar = "Apply chezmoi dotfiles" } } }),
+    { desc = "Apply chezmoi dotfiles" }
+  )
   vim.keymap.set(
     "n",
     "<leader>fdA",
     terminal(function()
       return { "chezmoi", "add", vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) }
-    end, { win = { position = "bottom" } })
+    end, { win = { position = "bottom" }, wo = { winbar = "Add current file to dotfiles" } }),
+    { desc = "Add current file to dotfiles" }
   )
 end
 
