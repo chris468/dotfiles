@@ -1,61 +1,14 @@
+local Path = require("plenary.path")
+
 local M = {}
 
---- @param summary string
---- @param err_name string|nil
---- @param err_message string|nil
---- @return string error
-local function build_error(summary, err_name, err_message)
-  local err = {}
-  if err_name then
-    err[#err + 1] = err_name
+local project_root = Path:new(vim.fn.stdpath("state")) / "chris468" / "luapad"
+
+local function ensure_project()
+  local stylua = project_root / "stylua.toml"
+  if not stylua:exists() then
+    stylua:touch({ parents = true })
   end
-
-  if err_message then
-    err[#err + 1] = err_message
-  end
-
-  return summary .. (#err > 0 and (" (" .. table.concat(err, ": ") .. ")") or "")
-end
-
---- @return string|nil path, string|nil error
-local function create_project()
-  local tmpdir, err_name, err_message = vim.loop.fs_mkdtemp("/tmp/luapad.XXXXXX")
-  if not tmpdir then
-    return nil, build_error("failed to create tempdir for luapad", err_name, err_message)
-  end
-
-  local stylua_path = table.concat({ tmpdir, "stylua.toml" }, "/")
-  local stylua_fd
-  stylua_fd, err_name, err_message = vim.loop.fs_open(stylua_path, "w", 384) -- 0600
-  if not stylua_fd then
-    return nil, build_error("Failed to create " .. stylua_path, err_name, err_message)
-  end
-  vim.loop.fs_close(stylua_fd)
-
-  return table.concat({ tmpdir, "LuaPad" }, "/")
-end
-
----@param path string
-local function delete_project(path)
-  vim.uv.fs_unlink(table.concat({ path, "stylua.toml" }, "/"))
-  vim.uv.fs_rmdir(path, function() end)
-end
-
----@type integer|nil
-local buffer
-
---- @param path string
---- @return integer buffer
-local function create_buffer(path)
-  vim.api.nvim_command("botright vsplit " .. path)
-  local buf = vim.api.nvim_get_current_buf()
-  vim.bo[buf].swapfile = false
-  vim.bo[buf].filetype = "lua"
-  vim.bo[buf].bufhidden = "hide"
-  vim.bo[buf].buftype = "nofile"
-  vim.bo[buf].buflisted = false
-
-  return buf
 end
 
 --- @param buf integer
@@ -68,7 +21,7 @@ local function attach_luapad(buf)
   local last_changed_tick = vim.api.nvim_buf_get_changedtick(buf)
 
   vim.api.nvim_create_autocmd({ "InsertLeave", "CursorHoldI", "CursorHold" }, {
-    buffer = buffer,
+    buffer = buf,
     callback = function(_)
       local current_changed_tick = vim.api.nvim_buf_get_changedtick(buf)
       if current_changed_tick ~= last_changed_tick then
@@ -78,43 +31,68 @@ local function attach_luapad(buf)
     end,
   })
   vim.api.nvim_create_autocmd("BufUnload", {
-    buffer = buffer,
-    callback = function(arg)
+    buffer = buf,
+    callback = function()
       vim.schedule(function()
         evaluator:finish()
-        delete_project(vim.fn.fnamemodify(arg.file, ":h"))
       end)
     end,
   })
   vim.api.nvim_create_autocmd("BufHidden", {
-    buffer = buffer,
+    buffer = buf,
     callback = function()
       evaluator:close_preview()
     end,
   })
 end
 
+---@type table<integer, snacks.win>
+local pads = {}
+
+Snacks.config.style("Luapad", {
+  position = "right",
+  bo = {
+    swapfile = false,
+    filetype = "lua",
+    bufhidden = "hide",
+    buftype = "nofile",
+    buflisted = false,
+    modifiable = true,
+  },
+  wo = {
+    number = true,
+    relativenumber = true,
+    cursorline = true,
+  },
+  keys = {
+    ["<leader><c-l>"] = Snacks.win.close,
+    ["<c-/>"] = {
+      "<c-/>",
+      Snacks.win.close,
+      mode = { "n", "i" },
+    },
+    ["<c-_>"] = {
+      "<c-_>",
+      Snacks.win.close,
+      mode = { "n", "i" },
+    },
+  },
+})
+
+local function new()
+  ensure_project()
+  local luapad_path = project_root / "Luapad" .. (vim.v.count1 > 1 and " " .. vim.v.count1 or "")
+  local win = Snacks.win({ style = "Luapad", file = luapad_path })
+  attach_luapad(win.buf)
+  return win
+end
+
 function M.toggle()
-  if buffer and vim.api.nvim_buf_is_loaded(buffer) then
-    local win = vim.fn.win_findbuf(buffer)
-    if win and win[1] then
-      vim.api.nvim_win_hide(win[1])
-    else
-      vim.api.nvim_command("botright vsplit")
-      vim.api.nvim_win_set_buf(0, buffer)
-    end
-    return
+  if pads[vim.v.count1] and pads[vim.v.count1]:buf_valid() then
+    pads[vim.v.count1]:toggle()
+  else
+    pads[vim.v.count1] = new()
   end
-
-  local luapad_path, error = create_project()
-  if not luapad_path then
-    vim.notify(error or "unknown error", vim.log.levels.ERROR)
-    return
-  end
-
-  buffer = create_buffer(luapad_path)
-
-  attach_luapad(buffer)
 end
 
 return M

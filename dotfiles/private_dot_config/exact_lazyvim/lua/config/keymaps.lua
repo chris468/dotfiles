@@ -66,7 +66,7 @@ vim.keymap.set(
 )
 
 if lazyvim.util.has("nvim-luapad") then
-  vim.keymap.set("n", "<leader>cL", function()
+  vim.keymap.set("n", "<leader><c-l>", function()
     require("chris468.luapad").toggle()
   end, { desc = "LuaPad" })
 end
