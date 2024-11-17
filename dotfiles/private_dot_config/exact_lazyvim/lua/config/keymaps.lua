@@ -35,7 +35,6 @@ lazyvim.util.on_load("which-key.nvim", function()
   local wk = require("which-key")
   wk.add({
     { "<leader>fd", group = "Chezmoi Dotfiles" },
-    { "<leader>ft", group = "Terminals" },
   })
 end)
 
