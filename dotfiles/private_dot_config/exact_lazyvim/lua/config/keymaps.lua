@@ -80,3 +80,10 @@ if lazyvim.util.has("telescope.nvim") then
     { desc = "Recent (cwd)" }
   )
 end
+
+if lazyvim.util.has("vim-tmux-navigator") then
+  vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { desc = "Move to window on left" })
+  vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { desc = "Move to window below" })
+  vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>", { desc = "Move to window above" })
+  vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>", { desc = "Move to window on right" })
+end
