@@ -1,7 +1,7 @@
 # inspired by the nord lualine theme
 # https://github.com/nvim-lualine/lualine.nvim/blob/master/lua/lualine/themes/nord.lua
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
-version: 2
+version: 3
 palettes:
   template: '{{ .Env.CHRIS468_THEME | default "nord" }}'
   list:
