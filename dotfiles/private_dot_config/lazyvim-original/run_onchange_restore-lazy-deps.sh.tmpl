@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-{{ $lockFile := (list "private_dot_config/lazyvim-original/lazy-lock" (.profile.work | ternary "work" "base") "json") | join "." -}}
-# {{ $lockFile | base }} hash: {{ include $lockFile | sha256sum }}
-
-if command -v nvim &>/dev/null ; then
-    echo "Restoring lazy.nvim dependencies..."
-    NVIM_APPNAME=lazyvim-original nvim --headless +'lua require("lazy").restore({wait=true})' +qa
-fi
