@@ -6,8 +6,8 @@ export def lazyvim-original [...rest] {
     NVIM_APPNAME="lazyvim-original" nvim ...$rest
 }
 
-export def lazyvim [...rest] {
-    NVIM_APPNAME=lazyvim nvim ...$rest
+export def nvim-custom [...rest] {
+    NVIM_APPNAME=nvim-custom nvim ...$rest
 }
 
 export def lvim [...rest] {

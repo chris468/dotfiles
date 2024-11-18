@@ -7,7 +7,7 @@ function Script:lazyvim {
   }
 
   try {
-    $env:NVIM_APPNAME = "lazyvim"
+    $env:NVIM_APPNAME = "nvim-custom"
     nvim @args
   }
   finally {
