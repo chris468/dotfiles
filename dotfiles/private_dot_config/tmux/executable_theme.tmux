@@ -7,10 +7,10 @@ colors_path="$script_path/colors"
 theme=$(tmux show-option -gv @chris468-theme)
 
 function dim_when_suspended() {
-	default="$1"
-	suspended="$2"
+  default="$1"
+  suspended="$2"
 
-	echo "#{?@theme468-suspended,$suspended,$default}"
+  echo "#{?@theme468-suspended,$suspended,$default}"
 }
 
 tmux set -g status-left-length 0
@@ -31,8 +31,6 @@ tmux set -g @theme468-segment-date "#($modules_path/date.tmux) "
 tmux set -g @theme468-segment-date-icon " 󰃰 "
 
 tmux set -g status-interval 1
-tmux set -g default-terminal xterm-256color
-tmux set -sa terminal-overrides ",xterm*:Tc"
 tmux set -g display-time 4000
 
 tmux set -g @theme468-status-left-separator-outer "█"
