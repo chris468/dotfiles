@@ -1,15 +1,22 @@
+local theme = require("config.chezmoi").options.theme or "tokyonight"
 require("chris468.util.lazy").install()
 
 require("lazy").setup({
   spec = {
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    {
+      "LazyVim/LazyVim",
+      import = "lazyvim.plugins",
+      opts = {
+        colorscheme = theme,
+      },
+    },
     { import = "plugins" },
   },
   defaults = {
     lazy = false,
     version = false,
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { theme, "tokyonight", "habamax" } },
   checker = {
     enabled = true,
     notify = false,
