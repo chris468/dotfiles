@@ -7,6 +7,7 @@ return {
   },
   {
     "folke/noice.nvim",
+    lazy = false,
     opts = {
       messages = {
         enabled = true,
