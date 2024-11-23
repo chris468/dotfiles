@@ -42,6 +42,7 @@
   "neotest-dotnet": { "branch": "main", "commit": "03509791912eaeac9f993f7cf49e170eca06a8bc" },
   "neotest-golang": { "branch": "main", "commit": "cdb0eb0edfedcdf145972fdbe19fb95d17d987c2" },
   "neotest-python": { "branch": "master", "commit": "a2861ab3c9a0bf75a56b11835c2bfc8270f5be7e" },
+  "neotree-file-nesting-config": { "branch": "main", "commit": "1aae716f76717a6b662e0c18fd022f244cd064da" },
   "noice.nvim": { "branch": "main", "commit": "221ffbc499d322699ea079fcd878a2399529e775" },
   "nui.nvim": { "branch": "main", "commit": "b58e2bfda5cea347c9d58b7f11cf3012c7b3953f" },
   "nvim-ansible": { "branch": "main", "commit": "44dabdaa8a9193b7f564a8408ed6d7107705030a" },
