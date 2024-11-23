@@ -90,4 +90,14 @@ return {
       return opts
     end,
   },
+  {
+    "nvim-lspconfig",
+    opts = {
+      servers = {
+        terraformls = {
+          filetypes = { "tf", "terraform", "terraform-vars" },
+        },
+      },
+    },
+  },
 }
