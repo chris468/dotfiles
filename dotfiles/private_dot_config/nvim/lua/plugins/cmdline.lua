@@ -36,6 +36,13 @@ return {
         },
         mapping = cmp.mapping.preset.cmdline(),
       })
+
+      vim.api.nvim_create_autocmd("CmdwinEnter", {
+        group = vim.api.nvim_create_augroup("Close cmp", { clear = true }),
+        callback = function()
+          cmp.close()
+        end,
+      })
     end,
   },
 }
