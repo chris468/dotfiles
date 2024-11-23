@@ -1,5 +1,16 @@
 return {
   {
+    "folke/noice.nvim",
+    opts = {
+      presets = {
+        command_palette = false,
+      },
+      cmdline = {
+        view = "cmdline",
+      },
+    },
+  },
+  {
     "hrsh7th/cmp-cmdline",
     dependencies = { "dmitmel/cmp-cmdline-history" },
     event = "CmdlineEnter",
