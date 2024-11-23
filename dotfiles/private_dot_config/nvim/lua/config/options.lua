@@ -5,6 +5,8 @@
 vim.g.lazyvim_picker = "telescope"
 vim.g.trouble_lualine = false
 
+vim.g.root_spec = { "lsp", "*.sln", "*.csproj", { ".git", "lua" }, "cwd" }
+
 local chezmoi = require("config.chezmoi")
 
 ---@class Chris468Options
