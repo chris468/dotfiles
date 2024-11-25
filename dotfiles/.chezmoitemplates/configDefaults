@@ -1,4 +1,4 @@
-theme: catppuccin-mocha
+theme: tokyonight-night
 poshTheme: {{ joinPath .paths.configHome "oh-my-posh" "chris468.omp.yaml" }}
 
 font:
