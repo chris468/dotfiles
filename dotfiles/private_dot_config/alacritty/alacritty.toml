@@ -1,6 +1,7 @@
+[general]
 live_config_reload = true
 
-import = [ "~/.config/alacritty/config.toml" ]
+import = ["~/.config/alacritty/config.toml"]
 
 [window.padding]
 x = 8
