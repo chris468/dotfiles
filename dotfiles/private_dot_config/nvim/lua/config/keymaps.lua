@@ -113,3 +113,14 @@ for k = 1, 12 do
   vim.api.nvim_set_keymap("", Wrap(F(k + 24)), Wrap(Control(F(k))), { desc = "which_key_ignore" })
   vim.api.nvim_set_keymap("", Wrap(F(k + 36)), Wrap(Control(Shift(F(k)))), { desc = "which_key_ignore" })
 end
+
+-- Prevent `<leader>cl` from being interpreted as `cl` when no lsp is attached.
+-- It will be replaced when an lsp is attached.
+vim.keymap.set(
+  "n",
+  "<leader>cl",
+  vim.schedule_wrap(function()
+    vim.notify("No lsp attached")
+  end),
+  { desc = "Lsp Info" }
+)
