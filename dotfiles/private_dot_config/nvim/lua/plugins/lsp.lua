@@ -35,6 +35,11 @@ return {
         ["php-cs-fixer"] = { "php" },
         ["tflint"] = { "hcl", "terraform" },
       },
+      prerequisites = {
+        ["nil"] = function()
+          return vim.fn.executable("nix") == 1, "nix package manager"
+        end,
+      },
     },
   },
   {

@@ -8,13 +8,17 @@ local lazyvim_util = require("lazyvim.util")
 
 local M = {}
 
+---@alias lazy-mason-install.CheckPrerequisite fun():boolean, string
+
 ---@class lazy-mason-install.Config
 ---@field packages_for_filetypes table<string, string[]>?
+---@field prerequisites table<string, lazy-mason-install.CheckPrerequisite>
 ---@field all string[]?
 
 ---@type lazy-mason-install.Config
 local defaults = {
   packages_for_filetypes = {},
+  prerequisites = {},
 }
 
 ---@type lazy-mason-install.Config
@@ -57,7 +61,7 @@ function M.setup(user_config)
   end
 
   local packages_by_filetype = util.invert_list_map(install_for_filetypes)
-  autocmd.register(packages_by_filetype)
+  autocmd.register(packages_by_filetype, config.prerequisites)
 end
 
 return M
