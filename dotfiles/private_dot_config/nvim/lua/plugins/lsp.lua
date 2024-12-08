@@ -11,6 +11,9 @@ return {
       require("mason").setup({ opts })
     end,
     dependencies = { "lazy-mason-install" },
+    opts = {
+      ensure_installed = { "rust-analyzer" },
+    },
   },
   {
     config = function(_, opts)
