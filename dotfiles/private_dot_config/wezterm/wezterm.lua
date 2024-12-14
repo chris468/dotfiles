@@ -48,5 +48,5 @@ config.keys = {
 	{ key = "d", mods = "SUPER|SHIFT", action = wezterm.action.ShowDebugOverlay },
 	{ key = "d", mods = "SHIFT|CTRL", action = wezterm.action.ShowDebugOverlay },
 }
-enable_kitty_keyboard = true
+config.term = "wezterm"
 return config
