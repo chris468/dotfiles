@@ -105,6 +105,7 @@ return {
         terraformls = {
           filetypes = { "tf", "terraform", "terraform-vars" },
         },
+        bashls = {},
       },
     },
   },
