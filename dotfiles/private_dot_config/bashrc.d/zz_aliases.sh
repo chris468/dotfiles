@@ -14,6 +14,7 @@ else
   alias ls='ls --color=auto'
 fi
 
+! _chk batcat || alias cat=batcat
 ! _chk bat || alias cat=bat
 
 unset -f _chk
