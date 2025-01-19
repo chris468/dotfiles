@@ -11,9 +11,23 @@ return {
       require("mason").setup({ opts })
     end,
     dependencies = { "lazy-mason-install" },
-    opts = {
-      ensure_installed = { "rust-analyzer" },
-    },
+    opts = function(_, opts)
+      opts.ensure_installed = vim.tbl_filter(function(v)
+        return v ~= "csharpier"
+      end, opts.ensure_installed or {})
+
+      vim.list_extend(opts.ensure_installed, { "rust-analyzer" })
+    end,
+  },
+  {
+    "conform.nvim",
+    opts = function(_, opts)
+      if opts.formatters_by_ft and opts.formatters_by_ft.cs then
+        opts.formatters_by_ft.cs = vim.tbl_filter(function(v)
+          return v ~= "csharpier"
+        end, opts.formatters_by_ft.cs)
+      end
+    end,
   },
   {
     config = function(_, opts)
