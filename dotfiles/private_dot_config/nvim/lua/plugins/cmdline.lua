@@ -13,7 +13,7 @@ return {
   },
   {
     "hrsh7th/cmp-cmdline",
-    dependencies = { "dmitmel/cmp-cmdline-history" },
+    dependencies = { "dmitmel/cmp-cmdline-history", "nvim-cmp" },
     event = "CmdlineEnter",
     config = function()
       local cmp = require("cmp")
@@ -44,5 +44,6 @@ return {
         end,
       })
     end,
+    optional = true,
   },
 }
