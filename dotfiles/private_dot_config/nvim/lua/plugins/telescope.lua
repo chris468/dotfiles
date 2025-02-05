@@ -1,5 +1,5 @@
 return {
-  "nvim-telescope/telescope.nvim",
+  "telescope.nvim",
   dependencies = {
     {
       "tsakirist/telescope-lazy.nvim",
@@ -26,6 +26,7 @@ return {
     { "<leader>sL", "<cmd>Telescope lazy<CR>", desc = "Lazy plugins" },
     { "<leader>r", "<cmd>Telescope resume<CR>", desc = "Resume last search " },
   },
+  optional = true,
   opts = {
     defaults = {
       layout_strategy = "vertical",
