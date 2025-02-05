@@ -22,11 +22,11 @@ return {
       end,
     },
   },
+  enabled = LazyVim.pick.want() == "telescope",
   keys = {
     { "<leader>sL", "<cmd>Telescope lazy<CR>", desc = "Lazy plugins" },
     { "<leader>r", "<cmd>Telescope resume<CR>", desc = "Resume last search " },
   },
-  optional = true,
   opts = {
     defaults = {
       layout_strategy = "vertical",
