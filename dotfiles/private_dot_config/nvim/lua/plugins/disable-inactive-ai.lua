@@ -2,20 +2,57 @@
 -- `Chris468.options.ai` selects the active assistant
 -- Disable the plugins for the inactive assistants
 
+--- @class AIPluginSpec
+--- @field enabled? boolean
+--- @field plugins? string[]
+--- @field blink? string[]
+
+--- @type {[string]: AIPluginSpec}
 local ai_plugins = {
-  Codeium = { enabled = not Chris468.options.work, "codeium.nvim" },
-  Copilot = { "copilot.lua", "copilot-cmp", "blink-cmp-copilot", "CopilotChat.nvim" },
+  Codeium = {
+    enabled = not require("config.chezmoi").work,
+    plugins = { "codeium.nvim" },
+    blink = { "codeium" },
+  },
+  Copilot = {
+    plugins = { "copilot.lua", "copilot-cmp", "blink-cmp-copilot", "CopilotChat.nvim" },
+    blink = { "copilot" },
+  },
 }
 
-local specs = {}
-
-for ai, plugins in pairs(ai_plugins) do
-  local enabled = Chris468.options.ai == ai and (plugins.enabled == nil or plugins.enabled)
-  if not enabled then
-    for _, plugin in ipairs(plugins) do
-      table.insert(specs, { plugin, enabled = false })
+--- @param callback fun(spec: AIPluginSpec)
+local function foreach_disabled_ai_plugin(callback)
+  for ai, spec in pairs(ai_plugins) do
+    local enabled = Chris468.options.ai == ai and (spec.enabled == nil or spec.enabled)
+    if not enabled then
+      callback(spec)
     end
   end
 end
+
+local specs = {
+  {
+    "blink.cmp",
+    optional = true,
+    opts = function(_, opts)
+      foreach_disabled_ai_plugin(function(spec)
+        for _, provider in ipairs(spec.blink) do
+          opts.sources.providers[provider] = nil
+        end
+        for _, field in ipairs({ "default", "compat", "cmdline" }) do
+          opts.sources[field] = vim.tbl_filter(function(v)
+            return not vim.list_contains(spec.blink, v)
+          end, opts.sources[field] or {})
+        end
+      end)
+    end,
+  },
+}
+
+foreach_disabled_ai_plugin(function(spec)
+  for _, plugin in ipairs(spec.plugins or {}) do
+    table.insert(specs, { plugin, enabled = false })
+  end
+end)
 
 return specs
