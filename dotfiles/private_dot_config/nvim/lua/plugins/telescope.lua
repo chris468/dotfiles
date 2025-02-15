@@ -22,7 +22,7 @@ return {
       end,
     },
   },
-  enabled = LazyVim.pick.want() == "telescope",
+  enabled = LazyVim.has_extra("editor.telescope"),
   keys = {
     { "<leader>sL", "<cmd>Telescope lazy<CR>", desc = "Lazy plugins" },
     { "<leader>r", "<cmd>Telescope resume<CR>", desc = "Resume last search " },

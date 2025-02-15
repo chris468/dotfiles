@@ -1,7 +1,7 @@
 return {
   {
     "snacks.nvim",
-    enabled = LazyVim.pick.want() == "snacks",
+    enabled = LazyVim.has_extra("editor.snacks_picker"),
     keys = {
       {
         "<leader>sR",
