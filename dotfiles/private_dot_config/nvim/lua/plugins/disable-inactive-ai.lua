@@ -39,11 +39,18 @@ local specs = {
         for _, provider in ipairs(spec.blink) do
           opts.sources.providers[provider] = nil
         end
-        for _, field in ipairs({ "default", "compat", "cmdline" }) do
-          opts.sources[field] = vim.tbl_filter(function(v)
-            return not vim.list_contains(spec.blink, v)
-          end, opts.sources[field] or {})
+
+        local function filter(tbl)
+          return tbl
+              and vim.tbl_filter(function(v)
+                return not vim.list_contains(spec.blink, v)
+              end, tbl)
+            or nil
         end
+
+        opts.sources.default = filter(opts.sources.default)
+        opts.sources.compat = filter(opts.sources.compat)
+        opts.cmdline.sources = filter(opts.cmdline.sources)
       end)
     end,
   },
