@@ -27,6 +27,7 @@ return {
           return v ~= "csharpier"
         end, opts.formatters_by_ft.cs)
       end
+      opts.formatters_by_ft.markdown = vim.list_extend(opts.formatters_by_ft.markdown or {}, { "prettier" })
     end,
   },
   {
@@ -120,6 +121,15 @@ return {
           filetypes = { "tf", "terraform", "terraform-vars" },
         },
         bashls = {},
+        yamlls = {
+          settings = {
+            yaml = {
+              format = {
+                enable = false,
+              },
+            },
+          },
+        },
       },
     },
   },
