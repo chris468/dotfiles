@@ -130,6 +130,19 @@ return {
             },
           },
         },
+        azure_pipelines_ls = {
+          enabled = false,
+          settings = {
+            yaml = {
+              schemas = {
+                ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = {
+                  "*pipeline*.y*l",
+                  "*Pipeline*.y*l",
+                },
+              },
+            },
+          },
+        },
       },
     },
   },
