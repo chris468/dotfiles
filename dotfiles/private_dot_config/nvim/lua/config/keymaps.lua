@@ -81,6 +81,8 @@ if lazyvim.util.has("telescope.nvim") then
   )
 end
 
+vim.keymap.set("n", "<leader>r", "<leader>sR", { desc = "Resume", remap = true })
+
 if lazyvim.util.has("vim-tmux-navigator") then
   vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { desc = "Move to window on left" })
   vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { desc = "Move to window below" })
