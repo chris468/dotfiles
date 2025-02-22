@@ -11,9 +11,8 @@ local M = {}
 ---@alias lazy-mason-install.CheckPrerequisite fun():boolean, string
 
 ---@class lazy-mason-install.Config
----@field packages_for_filetypes table<string, string[]>?
----@field prerequisites table<string, lazy-mason-install.CheckPrerequisite>
----@field all string[]?
+---@field packages_for_filetypes table<string, string[]>? Map mason packages to file types. Can be used to map additional packages, or when the mapping cannot be determined automatically.
+---@field prerequisites table<string, lazy-mason-install.CheckPrerequisite>? Map package to a function that determines whether the package can be enabled.
 
 ---@type lazy-mason-install.Config
 local defaults = {

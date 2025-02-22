@@ -37,28 +37,7 @@ return {
     dir = vim.fn.stdpath("config") .. "/lua/chris468/lazy-mason-install",
     lazy = true,
     opts_extend = { "packages_for_filetypes" },
-    opts = {
-      packages_for_filetypes = {
-        ["ansible-lint"] = { "yaml.ansible" },
-        ["java-debug-adapter"] = { "java" },
-        ["java-test"] = { "java" },
-        ["js-debug-adapter"] = {
-          "javascript",
-          "javascriptreact",
-          "javascript.jsx",
-          "typescript",
-          "typescriptreact",
-          "typescript.tsx",
-        },
-        ["php-cs-fixer"] = { "php" },
-        ["tflint"] = { "hcl", "terraform" },
-      },
-      prerequisites = {
-        ["nil"] = function()
-          return vim.fn.executable("nix") == 1, "nix package manager"
-        end,
-      },
-    },
+    opts = Chris468.options.lsp.install,
   },
   {
     "mason-lspconfig.nvim",
