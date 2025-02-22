@@ -108,35 +108,6 @@ return {
   },
   {
     "nvim-lspconfig",
-    opts = {
-      servers = {
-        terraformls = {
-          filetypes = { "tf", "terraform", "terraform-vars" },
-        },
-        bashls = {},
-        yamlls = {
-          settings = {
-            yaml = {
-              format = {
-                enable = false,
-              },
-            },
-          },
-        },
-        azure_pipelines_ls = {
-          enabled = false,
-          settings = {
-            yaml = {
-              schemas = {
-                ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = {
-                  "*pipeline*.y*l",
-                  "*Pipeline*.y*l",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    opts = Chris468.options.lsp.lspconfig,
   },
 }

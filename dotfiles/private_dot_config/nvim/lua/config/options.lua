@@ -16,6 +16,8 @@ local chezmoi = require("config.chezmoi")
 ---@class Chris468.Options.Lsp
 ---@field install lazy-mason-install.Config
 ---@field formatters table<string, Chris468.Options.Lsp.FormattersForFiletype>
+---@field lspconfig table Roughly nvim-lspconfig settings, but see LazyVim's lsp config docs.
+
 ---@class Chris468.Options
 ---@field ai "None"|"Codeium"|"Copilot"|nil,
 ---@field lsp Chris468.Options.Lsp
@@ -50,6 +52,36 @@ local chris468 = {
       formatters = {
         cs = {
           _remove = { "csharpier" },
+        },
+      },
+      lspconfig = {
+        servers = {
+          terraformls = {
+            filetypes = { "tf", "terraform", "terraform-vars" },
+          },
+          bashls = {},
+          yamlls = {
+            settings = {
+              yaml = {
+                format = {
+                  enable = false,
+                },
+              },
+            },
+          },
+          azure_pipelines_ls = {
+            enabled = false,
+            settings = {
+              yaml = {
+                schemas = {
+                  ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = {
+                    "*pipeline*.y*l",
+                    "*Pipeline*.y*l",
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
