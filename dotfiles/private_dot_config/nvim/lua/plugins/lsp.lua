@@ -22,12 +22,26 @@ return {
   {
     "conform.nvim",
     opts = function(_, opts)
-      if opts.formatters_by_ft and opts.formatters_by_ft.cs then
-        opts.formatters_by_ft.cs = vim.tbl_filter(function(v)
-          return v ~= "csharpier"
-        end, opts.formatters_by_ft.cs)
+      for ft, config in pairs(Chris468.options.lsp.formatters) do
+        local formatters = {}
+        for _, v in ipairs(config) do
+          formatters[#formatters + 1] = v
+        end
+
+        if config._replace then
+          opts.formatters_by_ft[ft] = formatters
+        else
+          opts.formatters_by_ft[ft] = vim.list_extend(opts.formatters_by_ft[ft] or {}, formatters)
+        end
+
+        if config._remove then
+          if opts.formatters_by_ft and opts.formatters_by_ft[ft] then
+            opts.formatters_by_ft[ft] = vim.tbl_filter(function(v)
+              return not vim.list_contains(config._remove, v)
+            end, opts.formatters_by_ft[ft])
+          end
+        end
       end
-      opts.formatters_by_ft.markdown = vim.list_extend(opts.formatters_by_ft.markdown or {}, { "prettier" })
     end,
   },
   {
@@ -37,28 +51,7 @@ return {
     dir = vim.fn.stdpath("config") .. "/lua/chris468/lazy-mason-install",
     lazy = true,
     opts_extend = { "packages_for_filetypes" },
-    opts = {
-      packages_for_filetypes = {
-        ["ansible-lint"] = { "yaml.ansible" },
-        ["java-debug-adapter"] = { "java" },
-        ["java-test"] = { "java" },
-        ["js-debug-adapter"] = {
-          "javascript",
-          "javascriptreact",
-          "javascript.jsx",
-          "typescript",
-          "typescriptreact",
-          "typescript.tsx",
-        },
-        ["php-cs-fixer"] = { "php" },
-        ["tflint"] = { "hcl", "terraform" },
-      },
-      prerequisites = {
-        ["nil"] = function()
-          return vim.fn.executable("nix") == 1, "nix package manager"
-        end,
-      },
-    },
+    opts = Chris468.options.lsp.install,
   },
   {
     "mason-lspconfig.nvim",
@@ -115,35 +108,6 @@ return {
   },
   {
     "nvim-lspconfig",
-    opts = {
-      servers = {
-        terraformls = {
-          filetypes = { "tf", "terraform", "terraform-vars" },
-        },
-        bashls = {},
-        yamlls = {
-          settings = {
-            yaml = {
-              format = {
-                enable = false,
-              },
-            },
-          },
-        },
-        azure_pipelines_ls = {
-          enabled = false,
-          settings = {
-            yaml = {
-              schemas = {
-                ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = {
-                  "*pipeline*.y*l",
-                  "*Pipeline*.y*l",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    opts = Chris468.options.lsp.lspconfig,
   },
 }
