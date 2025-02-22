@@ -51,9 +51,6 @@ local chris468 = {
         cs = {
           _remove = { "csharpier" },
         },
-        markdown = {
-          "prettier",
-        },
       },
     },
   },
