@@ -22,12 +22,26 @@ return {
   {
     "conform.nvim",
     opts = function(_, opts)
-      if opts.formatters_by_ft and opts.formatters_by_ft.cs then
-        opts.formatters_by_ft.cs = vim.tbl_filter(function(v)
-          return v ~= "csharpier"
-        end, opts.formatters_by_ft.cs)
+      for ft, config in pairs(Chris468.options.lsp.formatters) do
+        local formatters = {}
+        for _, v in ipairs(config) do
+          formatters[#formatters + 1] = v
+        end
+
+        if config._replace then
+          opts.formatters_by_ft[ft] = formatters
+        else
+          opts.formatters_by_ft[ft] = vim.list_extend(opts.formatters_by_ft[ft] or {}, formatters)
+        end
+
+        if config._remove then
+          if opts.formatters_by_ft and opts.formatters_by_ft[ft] then
+            opts.formatters_by_ft[ft] = vim.tbl_filter(function(v)
+              return not vim.list_contains(config._remove, v)
+            end, opts.formatters_by_ft[ft])
+          end
+        end
       end
-      opts.formatters_by_ft.markdown = vim.list_extend(opts.formatters_by_ft.markdown or {}, { "prettier" })
     end,
   },
   {
