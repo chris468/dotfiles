@@ -13,6 +13,7 @@ return {
     opts = {},
     keys = {
       { "<leader>gg", "<cmd>Neogit<cr>", "Neogit" },
+      { "<leader>gC", "<cmd>Neogit commit<cr>", "Neogit commit" },
     },
   },
 }
