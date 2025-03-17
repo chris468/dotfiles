@@ -31,6 +31,9 @@ local chris468 = {
     lsp = {
       ensure_installed = {
         "rust-analyzer", -- a plugin registers the lsp, not using lspconfig
+        "lemminx", -- xml language server
+        "xmlformatter",
+      },
       ensure_not_installed = {
         "csharpier", -- opinionated towards non-standard style
       },
@@ -49,6 +52,7 @@ local chris468 = {
           },
           ["php-cs-fixer"] = { "php" },
           tflint = { "hcl", "terraform" },
+          xmlformatter = { "xml" },
         },
         prerequisites = {
           ["nil"] = function()
