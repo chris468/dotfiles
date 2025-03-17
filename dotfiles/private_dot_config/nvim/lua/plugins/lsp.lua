@@ -12,11 +12,12 @@ return {
     end,
     dependencies = { "lazy-mason-install" },
     opts = function(_, opts)
+      local config = Chris468.options.lsp
       opts.ensure_installed = vim.tbl_filter(function(v)
-        return v ~= "csharpier"
+        return not vim.list_contains(config.ensure_not_installed, v)
       end, opts.ensure_installed or {})
 
-      vim.list_extend(opts.ensure_installed, { "rust-analyzer" })
+      opts.ensure_installed = vim.list_extend(opts.ensure_installed or {}, config.ensure_installed)
     end,
   },
   {

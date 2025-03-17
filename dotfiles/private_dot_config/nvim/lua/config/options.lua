@@ -14,6 +14,8 @@ local chezmoi = require("config.chezmoi")
 ---@field _remove string[]? Remove the specified formatters from the defaults.
 
 ---@class Chris468.Options.Lsp
+---@field ensure_installed string[] -- Install for the appropriate file type even if not registerd w/ lspconfig/conform/nvim-lint
+---@field ensure_not_installed string[] -- Prevent mason packages from being installed.
 ---@field install lazy-mason-install.Config
 ---@field formatters table<string, Chris468.Options.Lsp.FormattersForFiletype>
 ---@field lspconfig table Roughly nvim-lspconfig settings, but see LazyVim's lsp config docs.
@@ -27,6 +29,11 @@ local chris468 = {
   options = {
     ai = chezmoi.options.work and "Copilot" or "Codeium",
     lsp = {
+      ensure_installed = {
+        "rust-analyzer", -- a plugin registers the lsp, not using lspconfig
+      ensure_not_installed = {
+        "csharpier", -- opinionated towards non-standard style
+      },
       install = {
         packages_for_filetypes = {
           ["ansible-lint"] = { "yaml.ansible" },
