@@ -3,3 +3,9 @@
   url: {{ (gitHubLatestRelease "folke/tokyonight.nvim").TarballURL }}
   stripComponents: 1
 
+
+{{ joinPath .paths.relative.configHome "nushell" "scripts" "_lib" "tokyonight-night.nu" | quote }}:
+  type: file
+  url: https://raw.githubusercontent.com/nushell/nu_scripts/main/themes/nu-themes/tokyo-night.nu
+  refreshPeriod: "168h"
+
