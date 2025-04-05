@@ -3,6 +3,7 @@ return LazyVim.has_extra("editor.fzf")
       {
         "fzf-lua",
         opts = {
+          "hide",
           winopts = {
             preview = {
               layout = "vertical",
