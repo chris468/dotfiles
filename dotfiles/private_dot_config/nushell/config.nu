@@ -59,3 +59,7 @@ export-env {
 }
 
 export use _config nvim-flavors *
+
+# uses aliases so it must be sourced directly at the top-level
+# configuration in env.nu generates an appropriate file even if zoxide is not installed
+source "~/.config/nushell/scripts/_lib/.zoxide.nu"
