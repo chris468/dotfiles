@@ -2,7 +2,7 @@ use ../chris468/util/
 use set-environment.nu
 
 def --env dircolors [] {
-    const script_path = ~/.config/dircolors/dircolors.sh
+    const script_path = "~/.config/dircolors/dircolors.sh"
     const set_dircolors_env = 'eval "$(SHELL=nu bash ' + $script_path + ')"'
     if ($script_path | path exists) {
         $set_dircolors_env | util env capture

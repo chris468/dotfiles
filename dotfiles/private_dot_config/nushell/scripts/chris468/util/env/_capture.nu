@@ -23,7 +23,7 @@ export def --env capture [
     # Additional arguments to shell.
     --verbose
     # Enable verbose output
-] -> record {
+] : string -> record {
     let $script = $in
 
     def parse-env [] {
