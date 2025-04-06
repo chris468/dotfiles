@@ -59,6 +59,14 @@ def --env configure-carapace [] {
     }
 }
 
+def --env configure_zoxide [] {
+  if (which zoxide | is-not-empty) {
+    zoxide init nushell 
+  } else {
+    "# zoxide not installed"
+  } | save -f ~/.config/nushell/scripts/_lib/.zoxide.nu
+}
+
 def generate-oh-my-posh-config [] {
     if (which oh-my-posh | is-not-empty) {
         oh-my-posh init nu --print | save --force ~/.config/nushell/scripts/_lib/.oh-my-posh.nu
@@ -74,6 +82,7 @@ export def --env main [] {
     libvirt
     configure-carapace
     generate-oh-my-posh-config
+    configure_zoxide
 
     if $nu.os-info.name != "windows" { ssh-agent }
 }
