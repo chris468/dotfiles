@@ -26,11 +26,12 @@ return {
       opts.ensure_installed = filter(opts.ensure_installed or {}, config.ensure_not_installed)
 
       opts.ensure_installed = vim.list_extend(opts.ensure_installed or {}, config.ensure_installed)
-    end
+    end,
   },
   {
     "conform.nvim",
     opts = function(_, opts)
+      local filter = require("chris468.lazy-mason-install").filter
       for ft, config in pairs(Chris468.options.lsp.formatters) do
         local formatters = {}
         for _, v in ipairs(config) do
@@ -43,12 +44,8 @@ return {
           opts.formatters_by_ft[ft] = vim.list_extend(opts.formatters_by_ft[ft] or {}, formatters)
         end
 
-        if config._remove then
-          if opts.formatters_by_ft and opts.formatters_by_ft[ft] then
-            opts.formatters_by_ft[ft] = vim.tbl_filter(function(v)
-              return not vim.list_contains(config._remove, v)
-            end, opts.formatters_by_ft[ft])
-          end
+        if opts.formatters_by_ft and opts.formatters_by_ft[ft] then
+          opts.formatters_by_ft[ft] = filter(opts.formatters_by_ft[ft], config._remove)
         end
       end
     end,

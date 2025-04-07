@@ -70,12 +70,25 @@ function M.filter(packages, ...)
 
   local updated = packages
   for _, e in ipairs(exclude) do
-    updated = vim.tbl_filter(function(v)
-      return not vim.list_contains(e, v)
-    end, updated)
+    if e and #e > 0 then
+      updated = vim.tbl_filter(function(v)
+        return not vim.list_contains(e, v)
+      end, updated)
+    end
   end
 
   return updated
 end
+
+-- ---@param ft_to_packages table<string, string[]>
+-- ---@param ... string[]
+-- function M.filter_ft_to_packages(ft_to_packages, ...)
+--   local updated = {}
+--   for ft, packages in pairs(ft_to_packages) do
+--     updated[ft] = M.filter(packages, ...)
+--   end
+--
+--   return updated
+-- end
 
 return M

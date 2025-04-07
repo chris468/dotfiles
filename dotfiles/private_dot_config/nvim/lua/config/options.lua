@@ -63,7 +63,7 @@ local chris468 = {
       formatters = {
         cs = {
           _remove = {
-            "csharpier",
+            -- "csharpier",
           },
         },
       },
