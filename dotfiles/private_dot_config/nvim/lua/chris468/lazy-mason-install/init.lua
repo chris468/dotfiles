@@ -63,4 +63,19 @@ function M.setup(user_config)
   autocmd.register(packages_by_filetype, config.prerequisites)
 end
 
+---@param packages string[]
+---@param ... string[]
+function M.filter(packages, ...)
+  local exclude = { ... }
+
+  local updated = packages
+  for _, e in ipairs(exclude) do
+    updated = vim.tbl_filter(function(v)
+      return not vim.list_contains(e, v)
+    end, updated)
+  end
+
+  return updated
+end
+
 return M

@@ -21,13 +21,12 @@ return {
     end,
     dependencies = { "lazy-mason-install" },
     opts = function(_, opts)
+      local filter = require("chris468.lazy-mason-install").filter
       local config = Chris468.options.lsp
-      opts.ensure_installed = vim.tbl_filter(function(v)
-        return not vim.list_contains(config.ensure_not_installed, v)
-      end, opts.ensure_installed or {})
+      opts.ensure_installed = filter(opts.ensure_installed or {}, config.ensure_not_installed)
 
       opts.ensure_installed = vim.list_extend(opts.ensure_installed or {}, config.ensure_installed)
-    end,
+    end
   },
   {
     "conform.nvim",
