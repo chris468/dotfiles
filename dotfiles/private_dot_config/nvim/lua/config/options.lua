@@ -8,16 +8,12 @@ vim.g.root_spec = { "lsp", "*.sln", "*.csproj", { ".git", "lua" }, "cwd" }
 
 local chezmoi = require("config.chezmoi")
 
----@class Chris468.Options.Lsp.FormattersForFiletype
----@field [integer] string? The formatters for the filetype
----@field _replace boolean? Whether to replace the default formatters for the filetype with these formatters
----@field _remove string[]? Remove the specified formatters from the defaults.
-
 ---@class Chris468.Options.Lsp
 ---@field ensure_installed string[] -- Install for the appropriate file type even if not registerd w/ lspconfig/conform/nvim-lint
 ---@field ensure_not_installed string[] -- Prevent mason packages from being installed.
 ---@field install lazy-mason-install.Config
----@field formatters table<string, Chris468.Options.Lsp.FormattersForFiletype>
+---@field formatters table<string, lazy-mason-install.PackagesForFiletype>
+---@field linters table<string, lazy-mason-install.PackagesForFiletype>
 ---@field lspconfig table Roughly nvim-lspconfig settings, but see LazyVim's lsp config docs.
 
 ---@class Chris468.Options
@@ -61,6 +57,7 @@ local chris468 = {
         },
       },
       formatters = {},
+      linters = {},
       lspconfig = {
         servers = {
           terraformls = {
@@ -95,13 +92,13 @@ local chris468 = {
   },
 }
 
-if chezmoi.options.work then
-  -- vim.list_extend(chris468.options.lsp.ensure_not_installed, { "markdownlint-cli2" })
-  chris468.options.lsp.formatters.markdown = {
-    _remove = { "markdownlint-cli2" },
-  }
-  chris468.options.lsp.formatters["markdown.mdx"] = chris468.options.lsp.formatters.markdown
-end
+-- if chezmoi.options.work then
+-- vim.list_extend(chris468.options.lsp.ensure_not_installed, { "markdownlint-cli2" })
+chris468.options.lsp.formatters.markdown = {
+  _remove = { "markdownlint-cli2" },
+}
+chris468.options.lsp.formatters["markdown.mdx"] = chris468.options.lsp.formatters.markdown
+-- end
 
 local overrides = require("config.local")
 

@@ -80,15 +80,33 @@ function M.filter(packages, ...)
   return updated
 end
 
--- ---@param ft_to_packages table<string, string[]>
--- ---@param ... string[]
--- function M.filter_ft_to_packages(ft_to_packages, ...)
---   local updated = {}
---   for ft, packages in pairs(ft_to_packages) do
---     updated[ft] = M.filter(packages, ...)
---   end
---
---   return updated
--- end
+---@class lazy-mason-install.PackagesForFiletype
+---@field [integer] string? The formatters for the filetype
+---@field _replace boolean? Whether to replace the default formatters for the filetype with these formatters
+---@field _remove string[]? Remove the specified formatters from the defaults.
+
+---@param packages_by_ft table<string, string[]>
+---@param merge lazy-mason-install.PackagesForFiletype
+---@param additional_exclusions string[]
+function M.merge_and_filter_packages_by_filetype(packages_by_ft, merge, additional_exclusions)
+  for ft, m in pairs(merge) do
+    local merged = {}
+    for _, v in ipairs(m) do
+      merged[#merged + 1] = v
+    end
+
+    if m._replace then
+      packages_by_ft[ft] = merged
+    else
+      packages_by_ft[ft] = vim.list_extend(packages_by_ft[ft] or {}, merged)
+    end
+  end
+
+  for ft, packages in pairs(packages_by_ft) do
+    local m = merge[ft]
+    local remove = m and m._remove or {}
+    packages_by_ft[ft] = M.filter(packages, remove, additional_exclusions)
+  end
+end
 
 return M

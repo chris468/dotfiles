@@ -31,25 +31,25 @@ return {
   {
     "conform.nvim",
     opts = function(_, opts)
-      local filter = require("chris468.lazy-mason-install").filter
-      for ft, config in pairs(Chris468.options.lsp.formatters) do
-        local formatters = {}
-        for _, v in ipairs(config) do
-          formatters[#formatters + 1] = v
-        end
-
-        if config._replace then
-          opts.formatters_by_ft[ft] = formatters
-        else
-          opts.formatters_by_ft[ft] = vim.list_extend(opts.formatters_by_ft[ft] or {}, formatters)
-        end
-      end
-
-      for ft, formatters in pairs(opts.formatters_by_ft) do
-        local config = Chris468.options.lsp.formatters[ft]
-        local remove = config and config._remove or {}
-        opts.formatters_by_ft[ft] = filter(formatters, remove, Chris468.options.lsp.ensure_not_installed)
-      end
+      local merge_and_filter_packages_by_filetype =
+        require("chris468.lazy-mason-install").merge_and_filter_packages_by_filetype
+      merge_and_filter_packages_by_filetype(
+        opts.formatters_by_ft,
+        Chris468.options.lsp.formatters,
+        Chris468.options.lsp.ensure_not_installed
+      )
+    end,
+  },
+  {
+    "nvim-lint",
+    opts = function(_, opts)
+      local merge_and_filter_packages_by_filetype =
+        require("chris468.lazy-mason-install").merge_and_filter_packages_by_filetype
+      merge_and_filter_packages_by_filetype(
+        opts.linters_by_ft,
+        Chris468.options.lsp.formatters,
+        Chris468.options.lsp.ensure_not_installed
+      )
     end,
   },
   {
