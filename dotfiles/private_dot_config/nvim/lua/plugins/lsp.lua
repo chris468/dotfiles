@@ -43,10 +43,12 @@ return {
         else
           opts.formatters_by_ft[ft] = vim.list_extend(opts.formatters_by_ft[ft] or {}, formatters)
         end
+      end
 
-        if opts.formatters_by_ft and opts.formatters_by_ft[ft] then
-          opts.formatters_by_ft[ft] = filter(opts.formatters_by_ft[ft], config._remove)
-        end
+      for ft, formatters in pairs(opts.formatters_by_ft) do
+        local config = Chris468.options.lsp.formatters[ft]
+        local remove = config and config._remove or {}
+        opts.formatters_by_ft[ft] = filter(formatters, remove, Chris468.options.lsp.ensure_not_installed)
       end
     end,
   },

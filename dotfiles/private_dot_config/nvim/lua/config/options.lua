@@ -60,13 +60,7 @@ local chris468 = {
           end,
         },
       },
-      formatters = {
-        cs = {
-          _remove = {
-            -- "csharpier",
-          },
-        },
-      },
+      formatters = {},
       lspconfig = {
         servers = {
           terraformls = {
