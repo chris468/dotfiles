@@ -47,7 +47,7 @@ return {
         require("chris468.lazy-mason-install").merge_and_filter_packages_by_filetype
       merge_and_filter_packages_by_filetype(
         opts.linters_by_ft,
-        Chris468.options.lsp.formatters,
+        Chris468.options.lsp.linters,
         Chris468.options.lsp.ensure_not_installed
       )
     end,

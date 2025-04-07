@@ -92,13 +92,12 @@ local chris468 = {
   },
 }
 
--- if chezmoi.options.work then
--- vim.list_extend(chris468.options.lsp.ensure_not_installed, { "markdownlint-cli2" })
-chris468.options.lsp.formatters.markdown = {
-  _remove = { "markdownlint-cli2" },
-}
-chris468.options.lsp.formatters["markdown.mdx"] = chris468.options.lsp.formatters.markdown
--- end
+if chezmoi.options.work then
+  chris468.options.lsp.formatters.markdown = {
+    _remove = { "markdownlint-cli2" },
+  }
+  chris468.options.lsp.formatters["markdown.mdx"] = chris468.options.lsp.formatters.markdown
+end
 
 local overrides = require("config.local")
 
