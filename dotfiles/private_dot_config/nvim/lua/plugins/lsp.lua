@@ -1,5 +1,14 @@
 return {
   {
+    config = function(_, opts)
+      require("chris468.lazy-mason-install").setup(opts)
+    end,
+    dir = vim.fn.stdpath("config") .. "/lua/chris468/lazy-mason-install",
+    lazy = true,
+    opts_extend = { "packages_for_filetypes" },
+    opts = Chris468.options.lsp.install,
+  },
+  {
     "mason.nvim",
     config = function(_, opts)
       -- LazyVim's `config` for mason installs all packages in `opts.ensure_installed`
@@ -44,15 +53,6 @@ return {
         end
       end
     end,
-  },
-  {
-    config = function(_, opts)
-      require("chris468.lazy-mason-install").setup(opts)
-    end,
-    dir = vim.fn.stdpath("config") .. "/lua/chris468/lazy-mason-install",
-    lazy = true,
-    opts_extend = { "packages_for_filetypes" },
-    opts = Chris468.options.lsp.install,
   },
   {
     "mason-lspconfig.nvim",
