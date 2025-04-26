@@ -70,35 +70,25 @@ data:
 
 {{ $realConfig := $config | mergeOverwrite $_defaults -}}
 
-{{ $availableThemes := dict
-    "catppuccin-mocha" nil
-    "catppuccin" "catppuccin-mocha"
-    "nord" nil
-    "tokyonight-night" nil
-    "tokyonight" "tokyonight-night"
+{{ $availableThemes := list
+    "catppuccin-mocha"
+    "catppuccin"
+    "nord"
+    "tokyonight-night"
 -}}
 
-{{ if $realConfig.theme | hasKey $availableThemes -}}
-{{   $realConfig := set $realConfig "theme" (
-       $realConfig.theme | get $availableThemes | default $realConfig.theme)
--}}
-{{ else -}}
-{{   fail (printf "Invalid theme '%s'. Available themes: %s." ($realConfig.theme) ($availableThemes | keys | join ", ")) -}}
+{{ if not ($availableThemes | has $realConfig.theme) -}}
+{{   fail (printf "Invalid theme '%s'. Available themes: %s." ($realConfig.theme) ($availableThemes | join ", ")) -}}
 {{ end -}}
 
-{{ $nvimFlavors := dict
-    "lunarvim" "lvim"
-    "nvim-custom" nil
-    "astrovim" nil
+{{ $nvimFlavors := list
+    "lvim"
+    "nvim-custom"
+    "astrovim"
 -}}
 
-{{ $nvimAppName := false -}}
-{{ if $realConfig.nvim.flavor -}}
-{{   if $realConfig.nvim.flavor | hasKey $nvimFlavors -}}
-{{     $nvimAppName = $realConfig.nvim.flavor | get $nvimFlavors | default $realConfig.nvim.flavor  -}}
-{{   else -}}
-{{     fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($realConfig.nvim.flavor) ($nvimFlavors | keys | join ", ")) -}}
-{{   end -}}
+{{ if and $realConfig.nvim.flavor (not ($nvimFlavors | has $realConfig.nvim.flavor)) -}}
+{{   fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($realConfig.nvim.flavor) ($nvimFlavors | join ", ")) -}}
 {{ end -}}
 
 {{ dict "realConfig" $realConfig | toYaml | indent 4 }}
@@ -107,54 +97,6 @@ data:
 {{ $paths | toYaml | indent 8 }}
         unix:
 {{ includeTemplate ".chezmoitemplates/buildUnixPaths" (dict "chezmoi" .chezmoi "paths" $paths) | indent 12 }}
-    environment:
-        - name: CHRIS468_LAZYVIM_PROFILE
-          action: unset
-          persist: true
-        - name: NVIM_APPNAME
-          persist: true
-{{- if $nvimAppName }}
-          value: {{ $nvimAppName }}
-{{- else }}
-          action: unset
-{{- end }}
-        - name: CHRIS468_THEME
-          value: {{ $realConfig.theme }}
-        - name: AWS_PROFILE
-          action: unset
-        - name: KUBECONFIG
-          action: unset
-        - name: IPYTHONDIR
-          path: true
-          value: {{ $paths.ipython }}
-        - name: LOCAL_INSTALL_DIR
-          path: true
-          value: {{ $paths.localInstall }}
-        - name: POSH_THEME
-          path: true
-          value: {{ $realConfig.poshTheme }}
-        - name: XDG_DATA_HOME
-          path: true
-          persist: true
-          value: {{ $paths.dataHome }}
-        - name: XDG_CONFIG_HOME
-          path: true
-          persist: true
-          value: {{ $paths.configHome }}
-        - name: XDG_CACHE_HOME
-          path: true
-          persist: true
-          value: {{ $paths.cacheHome }}
-        - name: PATH
-          path: true
-          action: prepend
-          persist: true
-          value:
-            - {{ $paths.localInstallBin }}
-            - {{ $paths.fzfBin }}
-{{- if $realConfig.packageManager.homebrew.enable }}
-            - {{ "bin" | joinPath $paths.homebrew }}
-{{- end }}
     defaults:
 {{ $_defaults | toYaml | indent 8 }}
 
