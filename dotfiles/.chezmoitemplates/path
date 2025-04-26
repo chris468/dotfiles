@@ -39,14 +39,8 @@
 {{-   $path = joinPath .chezmoi.homeDir $path -}}
 {{- end -}}
 
-{{- if and ("unix" | index .) (eq "windows" .chezmoi.os) -}}
-{{-   $split := regexSplit ":" $path 2 -}}
-{{-   $p := $split | last}}
-{{-   $driveLetter := "" }}
-{{-   if $split | initial -}}
-{{-     $driveLetter = printf "/%s" (0 | index $split | lower) -}}
-{{-   end }}
-{{-   $path = printf "%s%s" $driveLetter $p | replace "\\" "/" -}}
+{{- if and ("unix" | index .) ("windows" | eq .chezmoi.os) -}}
+{{-   $path = includeTemplate "asUnixPath" $path -}}
 {{- end -}}
 
 {{- $path -}}

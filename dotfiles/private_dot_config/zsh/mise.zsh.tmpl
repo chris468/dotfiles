@@ -1,6 +1,13 @@
 {{- $config := includeTemplate "config" . | fromJson -}}
 {{- if $config.packageManager.mise.enable -}}
+{{- $localInstallBin := includeTemplate "path" (dict "path" "localInstallBin" "chezmoi" .chezmoi) -}}
 if command -v mise >&/dev/null ; then
-    eval "$(mise activate zsh)"
+{{- if "windows" | eq .chezmoi.os }}
+{{-   $windowsPath := "mise.exe" | joinPath $localInstallBin | replace "/" "\\" }}
+{{-   $unixPath := includeTemplate "asUnixpath" $windowsPath }}
+	eval "$(mise activate zsh | sed -E 's|{{ $windowsPath | replace "\\" "\\\\" }}|{{ $unixPath }}|')"
+{{- else }}
+	eval "$(mise activate bash)"
+{{- end }}
 fi
 {{- end -}}
