@@ -1,15 +1,16 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 - name: CHRIS468_LAZYVIM_PROFILE
   action: unset
   persist: true
 - name: NVIM_APPNAME
   persist: true
-{{- if .realConfig.nvim.flavor }}
-  value: {{ .realConfig.nvim.flavor }}
+{{- if $config.nvim.flavor }}
+  value: {{ $config.nvim.flavor }}
 {{- else }}
   action: unset
 {{- end }}
 - name: CHRIS468_THEME
-  value: {{ .realConfig.theme }}
+  value: {{ $config.theme }}
 - name: AWS_PROFILE
   action: unset
 - name: KUBECONFIG
@@ -22,7 +23,7 @@
   value: {{ includeTemplate "path" (dict "path" "localInstall" "chezmoi" .chezmoi) }}
 - name: POSH_THEME
   path: true
-  value: {{ .realConfig.poshTheme }}
+  value: {{ $config.poshTheme | isAbs | ternary $config.poshTheme ($config.poshTheme | joinPath .chezmoi.homeDir) }}
 - name: XDG_DATA_HOME
   path: true
   persist: true
@@ -42,7 +43,7 @@
   value:
     - {{ includeTemplate "path" (dict "path" "localInstallBin" "chezmoi" .chezmoi) }}
     - {{ includeTemplate "path" (dict "path" "fzfBin" "chezmoi" .chezmoi) }}
-{{- if .realConfig.packageManager.homebrew.enable }}
+{{- if $config.packageManager.homebrew.enable }}
     - {{ "bin" | joinPath (includeTemplate "path" (dict "path" "homebrew" "chezmoi" .chezmoi)) }}
 {{- end }}
 

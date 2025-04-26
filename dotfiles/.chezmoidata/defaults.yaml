@@ -1,0 +1,47 @@
+defaults:
+  theme: tokyonight-night
+  poshTheme: .config/oh-my-posh/chris468.omp.yaml
+
+  font:
+    family: Hack Nerd Font Mono
+    size: 14
+
+  gitCredentialManager:
+    configure: true
+    install: false
+
+  ssh_hosts: []
+
+  packageManager:
+    mise:
+      install: false
+      version: "v2025.4.0"
+      sha512: 85a441e9da0e834e23107a9706f5331c9526c41c90e61d74780d2b8ac5d3004d4b0953772984f5c0553dd9292345e99658be21a49ee34bb846e6951ea61a35d9
+    homebrew:
+      enable: false
+    nix:
+      enable: false
+
+  windowsTerminal:
+    defaultProfile: Git Bash
+
+  nvim:
+    flavor: ""
+
+  override:
+    windows:
+      font:
+        size: 11
+
+    linux:
+      gitCredentialManager:
+        store: plaintext
+        install: true
+      packageManager:
+        mise:
+          install: true
+
+    darwin:
+      packageManager:
+        homebrew:
+          enable: true

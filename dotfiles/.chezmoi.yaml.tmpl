@@ -1,32 +1,26 @@
 data:
-{{- $_defaults := includeTemplate ".chezmoitemplates/configDefaults" (dict "chezmoi" .chezmoi "paths" (dict "configHome" "~/.config")) | fromYaml }}
-
 {{- $_profile := "profile" | index . | default dict -}}
 {{- $work := promptBoolOnce $_profile "work" "Work" false }}
-    profile:
-        work: {{ $work }}
-        swapkeys: {{ "swapkeys" | index $_profile | default false }}
+  profile:
+    work: {{ $work }}
+    swapkeys: {{ "swapkeys" | index $_profile | default false }}
 
 {{ $config := "config" | index . | default dict -}}
 
-{{ dict "config" $config | toYaml | indent 4 }}
+{{ dict "config" $config | toYaml | trim | indent 2 }}
+{{- "" }}
 
 # ==============================================================================
 # ==== Everything past this point is generated, changes will be overwritten ====
 # ==============================================================================
-
-
-{{ $realConfig := $config | mergeOverwrite $_defaults -}}
-
 {{ $availableThemes := list
     "catppuccin-mocha"
-    "catppuccin"
     "nord"
     "tokyonight-night"
 -}}
 
-{{ if not ($availableThemes | has $realConfig.theme) -}}
-{{   fail (printf "Invalid theme '%s'. Available themes: %s." ($realConfig.theme) ($availableThemes | join ", ")) -}}
+{{ if and ("theme" | index $config) (not ($config.theme | has $availableThemes)) -}}
+{{   fail (printf "Invalid theme '%s'. Available themes: %s." ($config.theme) ($availableThemes | keys | join ", ")) -}}
 {{ end -}}
 
 {{ $nvimFlavors := list
@@ -35,14 +29,9 @@ data:
     "astrovim"
 -}}
 
-{{ if and $realConfig.nvim.flavor (not ($nvimFlavors | has $realConfig.nvim.flavor)) -}}
-{{   fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($realConfig.nvim.flavor) ($nvimFlavors | join ", ")) -}}
+{{ if and ($config | dig "nvim" "flavor" false) (not ($config.nvim.flavor | has $nvimFlavors)) -}}
+{{   fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($config.nvim.flavor) ($nvimFlavors | join ", ")) -}}
 {{ end -}}
-
-{{ dict "realConfig" $realConfig | toYaml | indent 4 }}
-
-    defaults:
-{{ $_defaults | toYaml | indent 8 }}
 
 umask: 0o022
 
@@ -58,4 +47,5 @@ interpreters:
     cd:
         command: pwsh
 {{- end  }}
+
 # vim: set ft=none syntax=yaml ts=4 sw=4 et :
