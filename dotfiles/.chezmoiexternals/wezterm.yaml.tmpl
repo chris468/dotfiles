@@ -1,4 +1,4 @@
-{{- $release := gitHubLatestRelease "wez/wezterm" }}
+{{- $release := gitHubLatestRelease "wezterm/wezterm" }}
 .terminfo:
   type: archive
   url: {{ $release.TarballURL }}
