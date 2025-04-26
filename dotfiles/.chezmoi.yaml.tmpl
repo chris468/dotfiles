@@ -9,18 +9,6 @@ data:
 
 {{ $config := "config" | index . | default dict -}}
 
-{{/* Check for old (the only legacy config I was likely to set) */ -}}
-{{ if not ("config" | hasKey .) -}}
-{{   $_legacy_ssh_hosts := "ssh_hosts" | index . -}}
-{{   if $_legacy_ssh_hosts -}}
-{{     $config = set $config "ssh_hosts" $_legacy_ssh_hosts -}}
-{{   end -}}
-{{   $_legacy_font_size := "size" | index ("font" | index . | default dict) -}}
-{{   if and $_legacy_font_size (ne $_legacy_font_size $_defaults.font.size) -}}
-{{     $config = set $config "font" (dict "size" $_legacy_font_size) }}
-{{   end -}}
-{{ end -}}
-
 {{ dict "config" $config | toYaml | indent 4 }}
 
 # ==============================================================================
