@@ -1,45 +1,5 @@
 data:
-{{- $_local := ".local" -}}
-{{- $_localInstall := joinPath $_local "opt" -}}
-{{- $_localInstallBin := joinPath $_local "bin" -}}
-{{- $_localInstallSbin := joinPath $_local "sbin" -}}
-{{- $_dataHome := joinPath $_local "share" -}}
-{{- $_configHome := ".config" -}}
-{{- $_cacheHome := ".cache" -}}
-{{- $_ipython := joinPath $_configHome "ipython" -}}
-{{- $_zshConfig := joinPath $_configHome "zsh" -}}
-{{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
-{{- $_fzf := joinPath $_localInstall "fzf" -}}
-{{- $_fzfBin := joinPath $_fzf "bin" -}}
-{{- $_tokyonight := joinPath $_localInstall "tokyonight.nvim" -}}
-{{- $_relativePaths := dict
-      "local" $_local
-      "localInstall" $_localInstall
-      "localInstallBin" $_localInstallBin
-      "localInstallSbin" $_localInstallSbin
-      "asdf" ".asdf"
-      "dataHome" $_dataHome
-      "configHome" $_configHome
-      "fzf" $_fzf
-      "fzfBin" $_fzfBin
-      "tokyonight" $_tokyonight
-      "homebrew" "/opt/homebrew"
-      "cacheHome" $_cacheHome
-      "ipython" $_ipython
-      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
-      "zshConfig" $_zshConfig
-      "zshPlugins" $_zshPlugins
--}}
-{{- if eq "windows" .chezmoi.os -}}
-{{-   $_relativePaths = set $_relativePaths "bash" (joinPath "C:\\" "Program Files" "git" "bin" "bash.exe") -}}
-{{- end -}}
-{{- $paths := dict -}}
-{{- range $k, $v := $_relativePaths -}}
-{{-   $paths = set $paths $k ($v | osIsAbs | ternary $v (joinPath $.chezmoi.homeDir $v)) -}}
-{{- end -}}
-{{- $paths = set $paths "relative" $_relativePaths -}}
-
-{{- $_defaults := includeTemplate ".chezmoitemplates/configDefaults" (dict "chezmoi" .chezmoi "paths" $paths) | fromYaml }}
+{{- $_defaults := includeTemplate ".chezmoitemplates/configDefaults" (dict "chezmoi" .chezmoi "paths" (dict "configHome" "~/.config")) | fromYaml }}
 
 {{- $_profile := "profile" | index . | default dict -}}
 {{- $work := promptBoolOnce $_profile "work" "Work" false }}
@@ -93,10 +53,6 @@ data:
 
 {{ dict "realConfig" $realConfig | toYaml | indent 4 }}
 
-    paths:
-{{ $paths | toYaml | indent 8 }}
-        unix:
-{{ includeTemplate ".chezmoitemplates/buildUnixPaths" (dict "chezmoi" .chezmoi "paths" $paths) | indent 12 }}
     defaults:
 {{ $_defaults | toYaml | indent 8 }}
 
@@ -105,7 +61,7 @@ umask: 0o022
 {{- if eq .chezmoi.os "windows" }}
 interpreters:
     sh:
-        command: {{ $paths.bash }}
+        command: {{ joinPath "C:\\" "Program Files" "git" "bin" "bash.exe" }}
     ps1:
         command: pwsh
         args:

@@ -1,3 +1,4 @@
+{{- $configHome := includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) -}}
 {{- if eq "windows" .chezmoi.os -}}
 
 function Install-Scoop {
@@ -9,7 +10,7 @@ function Install-Scoop {
 }
 
 function Install-Essentials {
-    scoop import {{ .paths.configHome }}/install/windows/bootstrap.scoop.json 6>$null
+    scoop import {{ $configHome }}/install/windows/bootstrap.scoop.json 6>$null
 }
 
 Install-Scoop

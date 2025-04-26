@@ -1,7 +1,8 @@
 {{- $config := includeTemplate "config" . | fromJson -}}
+{{- $localInstallBin := includeTemplate "path" (dict "path" "localInstallBin" "chezmoi" .chezmoi) -}}
 {{- if $config.packageManager.nix.enable -}}
 #!/usr/bin/env bash
 
 # default.nix hash: {{ include "private_dot_config/install/nix/default.nix" | sha256sum }}
-{{ joinPath .paths.localInstallBin "install-nix" }}
+{{ joinPath $localInstallBin "install-nix" }}
 {{- end -}}

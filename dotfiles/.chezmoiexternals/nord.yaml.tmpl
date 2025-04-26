@@ -1,3 +1,4 @@
+{{- $configHome := includeTemplate "path" (dict "path" "configHome" "relative" true "chezmoi" .chezmoi) -}}
 {{ if "windows" | eq .chezmoi.os -}}
 {{ joinPath "AppData" "Local" "Microsoft" "Windows Terminal" "Fragments" "nord" "nord.json" | quote }}:
   type: file
@@ -5,18 +6,18 @@
   refreshPeriod: "168h"
 {{- end }}
 
-{{ joinPath .paths.relative.configHome "dircolors" "nord" | quote }}:
+{{ joinPath $configHome "dircolors" "nord" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/nordtheme/dircolors/develop/src/dir_colors
   refreshPeriod: "168h"
 
-{{ joinPath .paths.relative.configHome "nushell" "scripts" "_lib" "nord.nu" | quote }}:
+{{ joinPath $configHome "nushell" "scripts" "_lib" "nord.nu" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/nushell/nu_scripts/main/themes/nu-themes/nord.nu
   refreshPeriod: "168h"
 
 
-{{ joinPath .paths.relative.configHome "alacritty" "themes" "nord.yaml" | quote }}:
+{{ joinPath $configHome "alacritty" "themes" "nord.yaml" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/nordtheme/alacritty/main/src/nord.yaml
   refreshPeriod: "168h"

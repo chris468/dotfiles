@@ -1,10 +1,12 @@
+{{- $localInstall := includeTemplate "path" (dict "path" "localInstall" "relative" true "chezmoi" .chezmoi) -}}
+{{- $zshPlugins := includeTemplate "path" (dict "path" "zshPlugins" "relative" true "chezmoi" .chezmoi) -}}
 {{- if ne "windows" .chezmoi.os }}
-{{ joinPath .paths.relative.localInstall "oh-my-zsh" | quote }}:
+{{ joinPath $localInstall "oh-my-zsh" | quote }}:
   url: "https://github.com/ohmyzsh/ohmyzsh"
   type: git-repo
   refreshPeriod: "168h"
 {{-   range .zsh.externalPlugins }}
-{{ joinPath $.paths.relative.zshPlugins .name | quote }}:
+{{ joinPath $zshPlugins .name | quote }}:
   type: git-repo
   url: {{ .url | quote }}
   refreshPeriod: "168h"

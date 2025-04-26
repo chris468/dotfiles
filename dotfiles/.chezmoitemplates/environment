@@ -16,33 +16,33 @@
   action: unset
 - name: IPYTHONDIR
   path: true
-  value: {{ .paths.ipython }}
+  value: {{ includeTemplate "path" (dict "path" "ipython" "chezmoi" .chezmoi) }}
 - name: LOCAL_INSTALL_DIR
   path: true
-  value: {{ .paths.localInstall }}
+  value: {{ includeTemplate "path" (dict "path" "localInstall" "chezmoi" .chezmoi) }}
 - name: POSH_THEME
   path: true
   value: {{ .realConfig.poshTheme }}
 - name: XDG_DATA_HOME
   path: true
   persist: true
-  value: {{ .paths.dataHome }}
+  value: {{ includeTemplate "path" (dict "path" "dataHome" "chezmoi" .chezmoi) }}
 - name: XDG_CONFIG_HOME
   path: true
   persist: true
-  value: {{ .paths.configHome }}
+  value: {{ includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) }}
 - name: XDG_CACHE_HOME
   path: true
   persist: true
-  value: {{ .paths.cacheHome }}
+  value: {{ includeTemplate "path" (dict "path" "cacheHome" "chezmoi" .chezmoi) }}
 - name: PATH
   path: true
   action: prepend
   persist: true
   value:
-    - {{ .paths.localInstallBin }}
-    - {{ .paths.fzfBin }}
+    - {{ includeTemplate "path" (dict "path" "localInstallBin" "chezmoi" .chezmoi) }}
+    - {{ includeTemplate "path" (dict "path" "fzfBin" "chezmoi" .chezmoi) }}
 {{- if .realConfig.packageManager.homebrew.enable }}
-    - {{ "bin" | joinPath .paths.homebrew }}
+    - {{ "bin" | joinPath (includeTemplate "path" (dict "path" "homebrew" "chezmoi" .chezmoi)) }}
 {{- end }}
 

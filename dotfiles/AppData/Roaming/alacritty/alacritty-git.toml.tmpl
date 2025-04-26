@@ -1,4 +1,4 @@
 import = ['~/.config/alacritty/alacritty.toml']
 
 [shell]
-program = '{{ .paths.bash }}'
+program = '{{ includeTemplate "path" (dict "path" "bash" "chezmoi" .chezmoi)}}'
