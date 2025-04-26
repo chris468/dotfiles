@@ -1,0 +1,8 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
+{{- if and $config.packageManager.mise.enable ("windows" | eq .chezmoi.os) -}}
+{{- $shims := includeTemplate "asUnixPath" (joinPath (includeTemplate "path" (dict "chezmoi" .chezmoi "path" "dataHome" )) "mise" "shims") -}}
+if command -v mise >&/dev/null; then
+  export PATH="{{ $shims }}:$PATH"
+fi
+{{- end -}}
+

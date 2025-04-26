@@ -1,0 +1,7 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
+{{- if and $config.packageManager.mise.enable ("windows" | eq .chezmoi.os) -}}
+{{- $shims := includeTemplate "asUnixPath" (joinPath (includeTemplate "path" (dict "chezmoi" .chezmoi "path" "dataHome" )) "mise" "shims") -}}
+if ("$env:PATH" -NotLike '*{{ $shims }}*') {
+  $env:PATH = "{{ $shims }};$env:PATH"
+}
+{{ end -}}
