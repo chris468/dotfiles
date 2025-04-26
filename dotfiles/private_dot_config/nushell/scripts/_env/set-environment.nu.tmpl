@@ -1,6 +1,6 @@
 chezmoi:template:missing-key=zero
 export def --env main [] {
-{{- $environment := .environment -}}
+{{- $environment := (includeTemplate "environment" . | fromYaml) -}}
 {{- if "windows" | eq .chezmoi.os -}}
 {{-   $fixed := list -}}
 {{-   range $e := $environment -}}

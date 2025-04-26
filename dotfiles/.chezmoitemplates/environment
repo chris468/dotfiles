@@ -1,0 +1,49 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
+- name: CHRIS468_LAZYVIM_PROFILE
+  action: unset
+  persist: true
+- name: NVIM_APPNAME
+  persist: true
+{{- if $config.nvim.flavor }}
+  value: {{ $config.nvim.flavor }}
+{{- else }}
+  action: unset
+{{- end }}
+- name: CHRIS468_THEME
+  value: {{ $config.theme }}
+- name: AWS_PROFILE
+  action: unset
+- name: KUBECONFIG
+  action: unset
+- name: IPYTHONDIR
+  path: true
+  value: {{ includeTemplate "path" (dict "path" "ipython" "chezmoi" .chezmoi) }}
+- name: LOCAL_INSTALL_DIR
+  path: true
+  value: {{ includeTemplate "path" (dict "path" "localInstall" "chezmoi" .chezmoi) }}
+- name: POSH_THEME
+  path: true
+  value: {{ $config.poshTheme | isAbs | ternary $config.poshTheme ($config.poshTheme | joinPath .chezmoi.homeDir) }}
+- name: XDG_DATA_HOME
+  path: true
+  persist: true
+  value: {{ includeTemplate "path" (dict "path" "dataHome" "chezmoi" .chezmoi) }}
+- name: XDG_CONFIG_HOME
+  path: true
+  persist: true
+  value: {{ includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) }}
+- name: XDG_CACHE_HOME
+  path: true
+  persist: true
+  value: {{ includeTemplate "path" (dict "path" "cacheHome" "chezmoi" .chezmoi) }}
+- name: PATH
+  path: true
+  action: prepend
+  persist: true
+  value:
+    - {{ includeTemplate "path" (dict "path" "localInstallBin" "chezmoi" .chezmoi) }}
+    - {{ includeTemplate "path" (dict "path" "fzfBin" "chezmoi" .chezmoi) }}
+{{- if $config.packageManager.homebrew.enable }}
+    - {{ "bin" | joinPath (includeTemplate "path" (dict "path" "homebrew" "chezmoi" .chezmoi)) }}
+{{- end }}
+

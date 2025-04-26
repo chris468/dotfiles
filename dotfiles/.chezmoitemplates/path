@@ -1,0 +1,52 @@
+{{- $_local := ".local" -}}
+{{- $_localInstall := joinPath $_local "opt" -}}
+{{- $_localInstallBin := joinPath $_local "bin" -}}
+{{- $_localInstallSbin := joinPath $_local "sbin" -}}
+{{- $_dataHome := joinPath $_local "share" -}}
+{{- $_configHome := ".config" -}}
+{{- $_cacheHome := ".cache" -}}
+{{- $_ipython := joinPath $_configHome "ipython" -}}
+{{- $_zshConfig := joinPath $_configHome "zsh" -}}
+{{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
+{{- $_fzf := joinPath $_localInstall "fzf" -}}
+{{- $_fzfBin := joinPath $_fzf "bin" -}}
+{{- $_tokyonight := joinPath $_localInstall "tokyonight.nvim" -}}
+{{- $paths := dict
+      "local" $_local
+      "localInstall" $_localInstall
+      "localInstallBin" $_localInstallBin
+      "localInstallSbin" $_localInstallSbin
+      "asdf" ".asdf"
+      "dataHome" $_dataHome
+      "configHome" $_configHome
+      "fzf" $_fzf
+      "fzfBin" $_fzfBin
+      "tokyonight" $_tokyonight
+      "homebrew" "/opt/homebrew"
+      "cacheHome" $_cacheHome
+      "ipython" $_ipython
+      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
+      "zshConfig" $_zshConfig
+      "zshPlugins" $_zshPlugins
+-}}
+{{- if eq "windows" .chezmoi.os -}}
+{{-   $paths = set $paths "bash" (joinPath "C:\\" "Program Files" "git" "bin" "bash.exe") -}}
+{{- end -}}
+
+{{- $path := .path | index $paths -}}
+
+{{- if and (not ("relative" | index .)) (not (osIsAbs $path)) -}}
+{{-   $path = joinPath .chezmoi.homeDir $path -}}
+{{- end -}}
+
+{{- if and ("unix" | index .) (eq "windows" .chezmoi.os) -}}
+{{-   $split := regexSplit ":" $path 2 -}}
+{{-   $p := $split | last}}
+{{-   $driveLetter := "" }}
+{{-   if $split | initial -}}
+{{-     $driveLetter = printf "/%s" (0 | index $split | lower) -}}
+{{-   end }}
+{{-   $path = printf "%s%s" $driveLetter $p | replace "\\" "/" -}}
+{{- end -}}
+
+{{- $path -}}

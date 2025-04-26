@@ -5,6 +5,5 @@
 .local/opt/sbin/**
 .local/bin/update-tools
 .local/bin/update-tools.ps1
-
-{{ joinPath .paths.relative.configHome "alacritty" "dracula.yml" }}
-{{ joinPath .paths.relative.configHome "xfce4" "colorschemes" "Dracula.theme" }}
+.config/alacritty/dracula.yml
+.config/xfce4/colorschemes/Dracula.theme

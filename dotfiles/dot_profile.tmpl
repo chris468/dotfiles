@@ -1,7 +1,7 @@
 chezmoi:template:missing-key=zero
 {{ "" }}
 {{- template "set-environment" (dict
-        "environment" .environment
+        "environment" (includeTemplate "environment" . | fromYaml)
         "command" (dict
           "unset" "unset {NAME}"
           "set" "export {NAME}=\"{VALUE}\""

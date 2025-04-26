@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# Environment hash: {{ .environment | toJson | sha256sum }}
+# Environment hash: {{ (includeTemplate "environment" . ) | sha256sum }}
 
 echo "Environment was updated, restart shell."

@@ -1,20 +1,15 @@
+{{- $localInstall := includeTemplate "path" (dict "path" "localInstall" "relative" true "chezmoi" .chezmoi) -}}
+{{- $localInstallBin := includeTemplate "path" (dict "path" "localInstallBin" "relative" true "chezmoi" .chezmoi) -}}
 {{- $posh_ext := eq .chezmoi.os "windows" | ternary ".exe" "" }}
-{{- $posh_filename := list "oh-my-posh" $posh_ext | join "" }}
-{{- $posh_version := "latest" }}
-{{- $posh_url_base := "https://github.com/JanDeDobbeleer/oh-my-posh/releases" }}
-{{- $posh_url_path := eq $posh_version "latest"
-                      | ternary
-                        "latest/download"
-                        ((list "download/v" $posh_version) | join "")
--}}
-{{- $posh_url_filename := (list "posh-" .chezmoi.os "-" .chezmoi.arch $posh_ext) | join "" }}
-{{ list (joinPath .paths.relative.localInstallBin "oh-my-posh") $posh_ext | join "" | quote }}:
+{{- $posh_filename := printf "oh-my-posh%s" $posh_ext }}
+{{- $pattern := printf "posh-%s-%s%s" .chezmoi.os .chezmoi.arch $posh_ext }}
+{{ list (joinPath $localInstallBin "oh-my-posh") $posh_ext | join "" | quote }}:
   type: file
-  url: "{{ $posh_url_base }}/{{ $posh_url_path }}/{{ $posh_url_filename }}"
+  url: {{ gitHubLatestReleaseAssetURL "JanDeDobbeleer/oh-my-posh" $pattern }}
   executable: true
   refreshPeriod: "168h"
-{{ joinPath .paths.relative.localInstall "oh-my-posh" "themes" | quote }}:
+{{ joinPath $localInstall "oh-my-posh" "themes" | quote }}:
   type: archive
-  url: "{{ $posh_url_base }}/{{ $posh_url_path }}/themes.zip"
+  url: {{ gitHubLatestReleaseAssetURL "JanDeDobbeleer/oh-my-posh" "themes.zip" }}
   refreshPeriod: "168h"
 

@@ -1,3 +1,4 @@
+{{- $fzf := includeTemplate "path" (dict "path" "fzf" "unix" true "chezmoi" .chezmoi) -}}
 #!/usr/bin/env bash
 # fzf version: {{ (gitHubLatestRelease "junegunn/fzf").TagName }}
-{{ .paths.unix.fzf }}/install --xdg --no-update-rc --key-bindings --completion
+{{ $fzf }}/install --xdg --no-update-rc --key-bindings --completion

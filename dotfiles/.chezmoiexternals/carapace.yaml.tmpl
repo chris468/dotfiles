@@ -1,10 +1,9 @@
+{{- $localInstallBin := includeTemplate "path" (dict "path" "localInstallBin" "relative" true "chezmoi" .chezmoi) -}}
 {{- $archive_ext := ("windows" | eq .chezmoi.os) | ternary "zip" "tar.gz" -}}
-{{- $tag := (gitHubLatestRelease "carapace-sh/carapace-bin").TagName -}}
-{{- $version := $tag | trimPrefix "v" -}}
-{{- $base := "https://github.com/carapace-sh/carapace-bin/releases/download" }}
-{{ joinPath .paths.relative.localInstallBin | quote }}:
+{{- $pattern := printf "carapace-bin_*_%s_%s.%s" .chezmoi.os .chezmoi.arch $archive_ext -}}
+{{ joinPath $localInstallBin | quote }}:
   type: archive
-  url: {{ $base }}/{{ $tag }}/carapace-bin_{{ $version }}_{{ .chezmoi.os }}_{{ .chezmoi.arch }}.{{ $archive_ext }}
+  url: {{ gitHubLatestReleaseAssetURL "carapace-sh/carapace-bin" $pattern }}
   include:
     - carapace*
   refreshPeriod: "168h"

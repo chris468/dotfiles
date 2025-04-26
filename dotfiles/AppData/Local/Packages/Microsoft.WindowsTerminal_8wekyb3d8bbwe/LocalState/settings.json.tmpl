@@ -1,3 +1,4 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
@@ -22,7 +23,7 @@
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
-    "defaultProfile": {{ .realConfig.windowsTerminal.defaultProfile | quote }},
+    "defaultProfile": {{ $config.windowsTerminal.defaultProfile | quote }},
     "newTabMenu": 
     [
         {
@@ -38,11 +39,11 @@
                 "window",
                 "taskbar"
             ],
-            "colorScheme": "{{ .realConfig.theme }}",
+            "colorScheme": "{{ $config.theme }}",
             "font": 
             {
-                "face": {{ .realConfig.font.family | quote }},
-                "size": {{ .realConfig.font.size }},
+                "face": {{ $config.font.family | quote }},
+                "size": {{ $config.font.size }},
                 "weight": "normal"
             },
             "opacity": 95,
@@ -74,7 +75,7 @@
                 "name": "Nushell",
                 "source": "nu"
             },
-{{- range .realConfig.ssh_hosts }}
+{{- range $config.ssh_hosts }}
 {{-   if ne "wezterm" ("type" | index .) }}
             {
                 "commandline": "ssh {{ .name }}",

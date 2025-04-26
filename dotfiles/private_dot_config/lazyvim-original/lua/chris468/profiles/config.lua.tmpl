@@ -1,3 +1,4 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 local os = require("os")
 local env_profiles = os.getenv("CHRIS468_LAZYVIM_PROFILE")
 local profiles
@@ -23,6 +24,6 @@ end
 
 return {
   profiles = profiles,
-  theme = "{{ .realConfig.theme }}",
+  theme = "{{ $config.theme }}",
   lockfile = lockfile,
 }

@@ -1,7 +1,7 @@
 chezmoi:template:missing-key=zero
 {{- if eq "windows" .chezmoi.os -}}
 {{-   $persisted := list -}}
-{{-   range .environment -}}
+{{-   range (includeTemplate "environment" . | fromYaml) -}}
 {{-     if "persist" | get . | default false -}}
 {{-       $persisted = . | append $persisted -}}
 {{-     end -}}

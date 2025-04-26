@@ -1,5 +1,6 @@
-{{ $nordToml := joinPath .paths.configHome "alacritty" "themes" "nord.toml" -}}
-{{- $nordYaml := joinPath .paths.configHome "alacritty" "themes" "nord.yaml" -}}
+{{- $configHome := includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) -}}
+{{ $nordToml := joinPath $configHome "alacritty" "themes" "nord.toml" -}}
+{{- $nordYaml := joinPath $configHome "alacritty" "themes" "nord.yaml" -}}
 {{- $nordTomlModDate := "modTime" | get (stat $nordToml | default dict) | default 0 -}}
 {{- $nordYamlModDate := "modTime" | get (stat $nordYaml) -}}
 {{- if lt $nordTomlModDate $nordYamlModDate -}}

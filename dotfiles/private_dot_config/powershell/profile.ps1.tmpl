@@ -1,6 +1,6 @@
 chezmoi:template:missing-key=zero
 {{- template "set-environment" (dict
-        "environment" .environment
+        "environment" (includeTemplate "environment" . | fromYaml)
         "command" (dict
             "unset" "Remove-Item -ErrorAction Ignore env:{NAME}"
             "set" "$env:{NAME} = \"{VALUE}\""

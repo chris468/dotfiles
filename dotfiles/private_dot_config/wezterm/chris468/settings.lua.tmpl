@@ -1,13 +1,14 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 return {
-  theme = "{{ .realConfig.theme }}",
+  theme = "{{ $config.theme }}",
   font = {
-    family = {{ .realConfig.font.family | quote }},
-    size = {{ .realConfig.font.size }}
+    family = {{ $config.font.family | quote }},
+    size = {{ $config.font.size }}
   },
   homedir = {{ .chezmoi.homeDir | quote }},
   os = {{ .chezmoi.os | quote }},
   ssh_domains = {
-{{- range .realConfig.ssh_hosts }}
+{{- range $config.ssh_hosts }}
     {
       {{- $type := eq "wezterm" ("type" | index .) | ternary "WezTerm" "None" }}
       name = "{{ .name }} ({{ eq $type "WezTerm" | ternary "Remote" "ssh" }})",

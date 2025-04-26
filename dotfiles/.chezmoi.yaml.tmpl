@@ -1,169 +1,44 @@
 data:
-{{- $_local := ".local" -}}
-{{- $_localInstall := joinPath $_local "opt" -}}
-{{- $_localInstallBin := joinPath $_local "bin" -}}
-{{- $_localInstallSbin := joinPath $_local "sbin" -}}
-{{- $_dataHome := joinPath $_local "share" -}}
-{{- $_configHome := ".config" -}}
-{{- $_cacheHome := ".cache" -}}
-{{- $_ipython := joinPath $_configHome "ipython" -}}
-{{- $_zshConfig := joinPath $_configHome "zsh" -}}
-{{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
-{{- $_fzf := joinPath $_localInstall "fzf" -}}
-{{- $_fzfBin := joinPath $_fzf "bin" -}}
-{{- $_tokyonight := joinPath $_localInstall "tokyonight.nvim" -}}
-{{- $_relativePaths := dict
-      "local" $_local
-      "localInstall" $_localInstall
-      "localInstallBin" $_localInstallBin
-      "localInstallSbin" $_localInstallSbin
-      "asdf" ".asdf"
-      "dataHome" $_dataHome
-      "configHome" $_configHome
-      "fzf" $_fzf
-      "fzfBin" $_fzfBin
-      "tokyonight" $_tokyonight
-      "homebrew" "/opt/homebrew"
-      "cacheHome" $_cacheHome
-      "ipython" $_ipython
-      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
-      "zshConfig" $_zshConfig
-      "zshPlugins" $_zshPlugins
--}}
-{{- if eq "windows" .chezmoi.os -}}
-{{-   $_relativePaths = set $_relativePaths "bash" (joinPath "C:\\" "Program Files" "git" "bin" "bash.exe") -}}
-{{- end -}}
-{{- $paths := dict -}}
-{{- range $k, $v := $_relativePaths -}}
-{{-   $paths = set $paths $k ($v | osIsAbs | ternary $v (joinPath $.chezmoi.homeDir $v)) -}}
-{{- end -}}
-{{- $paths = set $paths "relative" $_relativePaths -}}
-
-{{- $_defaults := includeTemplate ".chezmoitemplates/configDefaults" (dict "chezmoi" .chezmoi "paths" $paths) | fromYaml }}
-
 {{- $_profile := "profile" | index . | default dict -}}
 {{- $work := promptBoolOnce $_profile "work" "Work" false }}
-    profile:
-        work: {{ $work }}
-        swapkeys: {{ "swapkeys" | index $_profile | default false }}
+  profile:
+    work: {{ $work }}
+    swapkeys: {{ "swapkeys" | index $_profile | default false }}
 
 {{ $config := "config" | index . | default dict -}}
 
-{{/* Check for old (the only legacy config I was likely to set) */ -}}
-{{ if not ("config" | hasKey .) -}}
-{{   $_legacy_ssh_hosts := "ssh_hosts" | index . -}}
-{{   if $_legacy_ssh_hosts -}}
-{{     $config = set $config "ssh_hosts" $_legacy_ssh_hosts -}}
-{{   end -}}
-{{   $_legacy_font_size := "size" | index ("font" | index . | default dict) -}}
-{{   if and $_legacy_font_size (ne $_legacy_font_size $_defaults.font.size) -}}
-{{     $config = set $config "font" (dict "size" $_legacy_font_size) }}
-{{   end -}}
-{{ end -}}
-
-{{ dict "config" $config | toYaml | indent 4 }}
+{{ dict "config" $config | toYaml | trim | indent 2 }}
+{{- "" }}
 
 # ==============================================================================
-# ==== Everything past this point is generated, changed will be overwritten ====
+# ==== Everything past this point is generated, changes will be overwritten ====
 # ==============================================================================
-
-
-{{ $realConfig := $config | mergeOverwrite $_defaults -}}
-
-{{ $availableThemes := dict
-    "catppuccin-mocha" nil
-    "catppuccin" "catppuccin-mocha"
-    "nord" nil
-    "tokyonight-night" nil
-    "tokyonight" "tokyonight-night"
+{{ $availableThemes := list
+    "catppuccin-mocha"
+    "nord"
+    "tokyonight-night"
 -}}
 
-{{ if $realConfig.theme | hasKey $availableThemes -}}
-{{   $realConfig := set $realConfig "theme" (
-       $realConfig.theme | get $availableThemes | default $realConfig.theme)
--}}
-{{ else -}}
-{{   fail (printf "Invalid theme '%s'. Available themes: %s." ($realConfig.theme) ($availableThemes | keys | join ", ")) -}}
+{{ if and ("theme" | index $config) (not ($config.theme | has $availableThemes)) -}}
+{{   fail (printf "Invalid theme '%s'. Available themes: %s." ($config.theme) ($availableThemes | keys | join ", ")) -}}
 {{ end -}}
 
-{{ $nvimFlavors := dict
-    "lunarvim" "lvim"
-    "nvim-custom" nil
-    "astrovim" nil
+{{ $nvimFlavors := list
+    "lvim"
+    "nvim-custom"
+    "astrovim"
 -}}
 
-{{ $nvimAppName := false -}}
-{{ if $realConfig.nvim.flavor -}}
-{{   if $realConfig.nvim.flavor | hasKey $nvimFlavors -}}
-{{     $nvimAppName = $realConfig.nvim.flavor | get $nvimFlavors | default $realConfig.nvim.flavor  -}}
-{{   else -}}
-{{     fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($realConfig.nvim.flavor) ($nvimFlavors | keys | join ", ")) -}}
-{{   end -}}
+{{ if and ($config | dig "nvim" "flavor" false) (not ($config.nvim.flavor | has $nvimFlavors)) -}}
+{{   fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($config.nvim.flavor) ($nvimFlavors | join ", ")) -}}
 {{ end -}}
-
-{{ dict "realConfig" $realConfig | toYaml | indent 4 }}
-
-    paths:
-{{ $paths | toYaml | indent 8 }}
-        unix:
-{{ includeTemplate ".chezmoitemplates/buildUnixPaths" (dict "chezmoi" .chezmoi "paths" $paths) | indent 12 }}
-    environment:
-        - name: CHRIS468_LAZYVIM_PROFILE
-          action: unset
-          persist: true
-        - name: NVIM_APPNAME
-          persist: true
-{{- if $nvimAppName }}
-          value: {{ $nvimAppName }}
-{{- else }}
-          action: unset
-{{- end }}
-        - name: CHRIS468_THEME
-          value: {{ $realConfig.theme }}
-        - name: AWS_PROFILE
-          action: unset
-        - name: KUBECONFIG
-          action: unset
-        - name: IPYTHONDIR
-          path: true
-          value: {{ $paths.ipython }}
-        - name: LOCAL_INSTALL_DIR
-          path: true
-          value: {{ $paths.localInstall }}
-        - name: POSH_THEME
-          path: true
-          value: {{ $realConfig.poshTheme }}
-        - name: XDG_DATA_HOME
-          path: true
-          persist: true
-          value: {{ $paths.dataHome }}
-        - name: XDG_CONFIG_HOME
-          path: true
-          persist: true
-          value: {{ $paths.configHome }}
-        - name: XDG_CACHE_HOME
-          path: true
-          persist: true
-          value: {{ $paths.cacheHome }}
-        - name: PATH
-          path: true
-          action: prepend
-          persist: true
-          value:
-            - {{ $paths.localInstallBin }}
-            - {{ $paths.fzfBin }}
-{{- if $realConfig.packageManager.homebrew.enable }}
-            - {{ "bin" | joinPath $paths.homebrew }}
-{{- end }}
-    defaults:
-{{ $_defaults | toYaml | indent 8 }}
 
 umask: 0o022
 
 {{- if eq .chezmoi.os "windows" }}
 interpreters:
     sh:
-        command: {{ $paths.bash }}
+        command: {{ joinPath "C:\\" "Program Files" "git" "bin" "bash.exe" }}
     ps1:
         command: pwsh
         args:
@@ -172,4 +47,5 @@ interpreters:
     cd:
         command: pwsh
 {{- end  }}
+
 # vim: set ft=none syntax=yaml ts=4 sw=4 et :

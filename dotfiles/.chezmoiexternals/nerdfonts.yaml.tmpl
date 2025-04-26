@@ -1,6 +1,7 @@
-{{ joinPath .paths.relative.dataHome "fonts" | quote }}:
+{{- $dataHome := includeTemplate "path" (dict "path" "dataHome" "relative" true "chezmoi" .chezmoi) -}}
+{{ joinPath $dataHome "fonts" | quote }}:
   type: archive
-  url: {{ template "gitHubReleaseAsset" (dict "repo" "ryanoasis/nerd-fonts" "pattern" "Hack.zip") }}
+  url: {{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "Hack.zip" }}
   exact: true
   include:
     - "*Mono*"
