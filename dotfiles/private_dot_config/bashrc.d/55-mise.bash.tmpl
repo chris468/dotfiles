@@ -1,0 +1,6 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
+{{- if $config.packageManager.mise.enable -}}
+if command -v mise >&/dev/null; then
+	eval "$(mise activate bash)"
+fi
+{{- end -}}

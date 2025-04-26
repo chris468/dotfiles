@@ -1,3 +1,4 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 export-env {
     use _config *
 
@@ -46,10 +47,9 @@ export-env {
     }
 
     prompt setup
-
-    if $nu.os-info.name == "linux" {
-        use _lib/mise.nu
-    }
+{{ if $config.packageManager.mise.enable }}
+    use _lib/mise.nu
+{{- end }}
 
     hook-fix-env-path
     hook-update-tmux-environment
