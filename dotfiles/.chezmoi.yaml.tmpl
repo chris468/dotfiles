@@ -29,7 +29,7 @@ data:
     "astrovim"
 -}}
 
-{{ if and ($config | dig "nvim" "flavor" false) (not ($config.nvim.flavor | has $nvimFlavors)) -}}
+{{ if and ($config | dig "nvim" "flavor" false) (not ($nvimFlavors | has $config.nvim.flavor)) -}}
 {{   fail (printf "Invalid nvim flavor '%s'. Available flavors: %s, or unset for default." ($config.nvim.flavor) ($nvimFlavors | join ", ")) -}}
 {{ end -}}
 
