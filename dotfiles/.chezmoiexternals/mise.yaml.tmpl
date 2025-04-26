@@ -1,7 +1,8 @@
 {{- $localInstallBin := includeTemplate "path" (dict "path" "localInstallBin" "relative" true "chezmoi" .chezmoi) -}}
-{{- if .defaults.packageManager.mise.install -}}
-{{- $version := .defaults.packageManager.mise.version -}}
-{{- $sha512 := .defaults.packageManager.mise.sha512 -}}
+{{- $config := includeTemplate "config" . | fromJson -}}
+{{- if $config.packageManager.mise.install -}}
+{{- $version := $config.packageManager.mise.version -}}
+{{- $sha512 := $config.packageManager.mise.sha512 -}}
 {{- $arch := "amd64" | eq .chezmoi.arch | ternary "x64" .chezmoi.arch -}}
 {{- $os := "darwin" | eq .chezmoi.os | ternary "macos" .chezmoi.os }}
 {{ joinPath $localInstallBin "mise" | quote }}:
