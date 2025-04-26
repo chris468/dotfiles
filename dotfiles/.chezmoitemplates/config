@@ -1,1 +1,2 @@
-{{ (.chezmoi.os | index .defaults.override) | mergeOverwrite .defaults | toJson }}
+{{- $config := (.chezmoi.os | index .defaults.override) | mergeOverwrite .defaults .config -}}
+{{ "override" | omit $config | toJson }}
