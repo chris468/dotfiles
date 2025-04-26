@@ -1,5 +1,6 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 export def default [] {
-    use _lib {{ .realConfig.theme }}
-    {{ .realConfig.theme }}
+    use _lib {{ $config.theme }}
+    {{ $config.theme }}
 }
 

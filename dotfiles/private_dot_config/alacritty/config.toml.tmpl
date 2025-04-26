@@ -1,10 +1,11 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 [general]
 working_directory = "{{ .chezmoi.homeDir }}"
 
-import = [ "~/.config/alacritty/themes/{{ .realConfig.theme }}.toml" ]
+import = [ "~/.config/alacritty/themes/{{ $config.theme }}.toml" ]
 
 [font]
-size = {{ .realConfig.font.size }}
+size = {{ $config.font.size }}
 
 [font.normal]
-family = {{ .realConfig.font.family | quote }}
+family = {{ $config.font.family | quote }}

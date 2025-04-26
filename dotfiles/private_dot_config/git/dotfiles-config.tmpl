@@ -1,3 +1,4 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 [alias]
 	pushnew = push origin HEAD --set-upstream
 	pushf = push --force-with-lease
@@ -17,12 +18,12 @@
 	ff = only
 [init]
 	defaultBranch = main
-{{ if .realConfig.gitCredentialManager.configure -}}
+{{ if $config.gitCredentialManager.configure -}}
 [credential]
 	helper =
 	helper = manager
-{{   if "store" | hasKey .realConfig.gitCredentialManager -}}
-    credentialStore = {{ "store" | index .realConfig.gitCredentialManager }}
+{{   if "store" | hasKey $config.gitCredentialManager -}}
+    credentialStore = {{ "store" | index $config.gitCredentialManager }}
 {{-  end }}
 [credential "https://dev.azure.com"]
 	useHttpPath = true

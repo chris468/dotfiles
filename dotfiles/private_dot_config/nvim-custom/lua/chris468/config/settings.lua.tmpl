@@ -1,6 +1,7 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 local os = require("os")
 return {
-  theme = os.getenv("CHRIS468_NVIM_THEME") or "{{ .realConfig.theme }}",
+  theme = os.getenv("CHRIS468_NVIM_THEME") or "{{ $config.theme }}",
   lockfile = lockfile,
   work = {{ .profile.work }}
 }

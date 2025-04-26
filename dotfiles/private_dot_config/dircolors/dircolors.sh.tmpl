@@ -1,4 +1,5 @@
-__theme=~/.config/dircolors/{{ .realConfig.theme }}.sh
+{{- $config := includeTemplate "config" . | fromJson -}}
+__theme=~/.config/dircolors/{{ $config.theme }}.sh
 
 if [ -r "$__theme" ]; then
     source "$__theme"

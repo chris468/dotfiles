@@ -1,6 +1,7 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 return {
   options = {
     work = {{ .profile.work }},
-    theme = [[{{ .realConfig.theme }}]],
+    theme = [[{{ $config.theme }}]],
   },
 }
