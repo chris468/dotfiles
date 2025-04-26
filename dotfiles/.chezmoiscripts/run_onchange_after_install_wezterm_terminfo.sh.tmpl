@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+{{- $terminfo := ".terminfo" | joinPath .chezmoi.homeDir -}}
+{{- $wezterm := "wezterm.terminfo" | joinPath $terminfo }}
+# Terminfo hash: {{ if $wezterm | lstat }}{{ $wezterm | include | sha256sum }}{{ end }}
+
+if [[ -f {{ $wezterm }} ]] ; then
+  tic -x -o {{ $terminfo }} {{ $wezterm }}
+fi
