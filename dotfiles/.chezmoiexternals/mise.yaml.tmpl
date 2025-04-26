@@ -1,9 +1,11 @@
 {{- if .defaults.packageManager.mise.install -}}
-{{- $version := .defaults.packageManager.mise.version }}
-{{- $sha512 := .defaults.packageManager.mise.sha512 }}
+{{- $version := .defaults.packageManager.mise.version -}}
+{{- $sha512 := .defaults.packageManager.mise.sha512 -}}
+{{- $arch := "amd64" | eq .chezmoi.arch | ternary "x64" .chezmoi.arch -}}
+{{- $os := "darwin" | eq .chezmoi.os | ternary "macos" .chezmoi.os }}
 {{ joinPath .paths.relative.localInstallBin "mise" | quote }}:
   type: file
-  url: https://github.com/jdx/mise/releases/download/{{ $version }}/mise-{{ $version }}-{{ .chezmoi.os }}-{{ "amd64" | eq .chezmoi.arch | ternary "x64" .chezmoi.arch }}
+  url: {{ gitHubReleaseAssetURL "jdx/mise" $version (printf "mise-*-%s-%s" $os $arch)  }}
   executable: true
   "checksum.sha512": {{ $sha512 }}
 {{- end -}}
