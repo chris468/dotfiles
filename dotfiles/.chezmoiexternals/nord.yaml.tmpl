@@ -1,6 +1,6 @@
 {{- $configHome := includeTemplate "path" (dict "path" "configHome" "relative" true "chezmoi" .chezmoi) -}}
 {{ if "windows" | eq .chezmoi.os -}}
-{{ joinPath "AppData" "Local" "Microsoft" "Windows Terminal" "Fragments" "nord" "nord.json" | quote }}:
+{{ joinPath "AppData" "Local" "Microsoft" "Windows Terminal" "Fragments" "chris468" "nord.json" | quote }}:
   type: file
   url: https://raw.githubusercontent.com/thismat/nord-windows-terminal/main/nord.json
   refreshPeriod: "168h"

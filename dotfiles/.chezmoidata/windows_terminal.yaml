@@ -1,0 +1,6 @@
+windows_terminal:
+  colorscheme_mapping:
+    nord: "Nord"
+  theme_mapping:
+    nord: dark
+    tokyonight-night: dark

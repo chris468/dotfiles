@@ -19,7 +19,7 @@ data:
     "tokyonight-night"
 -}}
 
-{{ if and ("theme" | index $config) (not ($config.theme | has $availableThemes)) -}}
+{{ if and ("theme" | index $config) (not ($availableThemes | has $config.theme)) -}}
 {{   fail (printf "Invalid theme '%s'. Available themes: %s." ($config.theme) ($availableThemes | keys | join ", ")) -}}
 {{ end -}}
 
