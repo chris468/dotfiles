@@ -1,12 +1,12 @@
+{{- $config := "config" | index . | default dict -}}
+
+{{/* Merge profile from old location */}}
+{{- $config := "profile" | index . | default dict | merge $config -}}
+
+{{- $work := promptBoolOnce $config "work" "Work" false -}}
+{{- $config := $work | set $config "work" -}}
+
 data:
-{{- $_profile := "profile" | index . | default dict -}}
-{{- $work := promptBoolOnce $_profile "work" "Work" false }}
-  profile:
-    work: {{ $work }}
-    swapkeys: {{ "swapkeys" | index $_profile | default false }}
-
-{{ $config := "config" | index . | default dict -}}
-
 {{ dict "config" $config | toYaml | trim | indent 2 }}
 {{- "" }}
 

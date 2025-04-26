@@ -13,7 +13,7 @@ vimfiles
 Library/
 {{- end }}
 
-{{- if not .profile.work }}
+{{- if not .config.work }}
 .vim/plugin/work.vim
 {{- end }}
 

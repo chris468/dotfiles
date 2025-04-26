@@ -1,4 +1,5 @@
 defaults:
+  swapkeys: false
   theme: tokyonight-night
   poshTheme: .config/oh-my-posh/chris468.omp.yaml
 
