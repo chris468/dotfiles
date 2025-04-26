@@ -1,0 +1,10 @@
+if command -v carapace >/dev/null 2>&1; then
+  export CARAPACE_BRIDGES='zsh,fish,bash,powershell'
+{{ if "windows" | eq .chezmoi.os }}
+  # carapace uses the go path separator which is `;` on windows, even i git bash
+  # fix the path by replacing the drive letter (C: -> /C) and separating w/ `:`.
+  source <(carapace _carapace | sed -E 's|^(# )?export PATH="(.):(.*);(.*)"|\1if [[ ! $PATH == */\2\3:* ]]; then export PATH="/\2\3:\4"; fi|')
+{{- else }}
+  source <(carapace _carapace)
+{{- end }}
+fi
