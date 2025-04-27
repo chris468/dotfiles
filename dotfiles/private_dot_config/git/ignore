@@ -1,3 +1,4 @@
 *.swp
 .tool-versions
 .DS_Store
+mise.local.toml
