@@ -2,28 +2,28 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": 
-    [
-        {
-            "command": "unbound",
-            "keys": "ctrl+v"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+c"
-        },
-        {
-            "command": "unbound",
-            "keys": "f11"
-        },
-        {
-            "command": "find",
-            "keys": "ctrl+shift+f"
-        }
-    ],
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": {{ $config.windowsTerminal.defaultProfile | quote }},
+    "keybindings": 
+    [
+        {
+            "id": "Terminal.FindText",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+v"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+c"
+        },
+        {
+            "id": null,
+            "keys": "f11"
+        }
+    ],
     "newTabMenu": 
     [
         {
@@ -114,6 +114,7 @@
             }
         ]
     },
+    "schemes": [],
     "theme": "{{ $config.theme | index .windows_terminal.theme_mapping | default $config.theme }}",
     "themes":
     [
