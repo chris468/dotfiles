@@ -1,0 +1,4 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
+{{- if and $config.packageManager.mise.enable ("windows" | eq .chezmoi.os) -}}
+../bashrc.d/55-mise-shims.bash.tmpl
+{{- end -}}
