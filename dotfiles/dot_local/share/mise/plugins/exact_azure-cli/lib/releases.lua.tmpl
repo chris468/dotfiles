@@ -1,0 +1,23 @@
+{{- $releases := gitHubReleases "Azure/azure-cli" -}}
+{{- $r := list }}
+{{- range $release := $releases -}}
+{{-   range $release.Assets -}}
+{{-     if .Name | regexMatch ".*-x64\\.zip" -}}
+{{-       $r = append $r
+            (dict
+              "url" .BrowserDownloadURL
+              "version" ($release.TagName | splitList "-" | last)
+            )
+-}}
+{{-     end -}}
+{{-   end -}}
+{{- end -}}
+
+return {
+{{- range $r }}
+  {
+    version = "{{ .version }}",
+    url = "{{ .url }}", 
+  },
+{{- end }}
+}
