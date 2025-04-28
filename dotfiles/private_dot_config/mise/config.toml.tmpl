@@ -15,8 +15,9 @@ lazydocker = "latest"
 python = "latest"
 poetry = "latest"
 uv = "latest"
-{{- if "windows" | ne .chezmoi.os }}
 azure-cli = "latest"
+{{- if "windows" | eq .chezmoi.os }}
+clang = "latest"
 {{- end }}
 
 [alias]
