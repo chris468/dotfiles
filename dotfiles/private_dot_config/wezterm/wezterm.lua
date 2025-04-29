@@ -49,4 +49,10 @@ config.keys = {
 	{ key = "d", mods = "SHIFT|CTRL", action = wezterm.action.ShowDebugOverlay },
 }
 config.term = "wezterm"
+
+local ok, l = pcall(require, "chris468.local")
+if ok and type(l) == "function" then
+	config = l(config)
+end
+
 return config
