@@ -31,6 +31,9 @@ return {
         options = {
           require_lsp_activation = false,
         },
+        search = {
+          pipx = false,
+        },
       },
     },
   },
