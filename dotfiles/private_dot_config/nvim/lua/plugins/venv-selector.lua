@@ -2,6 +2,8 @@ local additional_filetypes = #Chris468.options.venv.additional_filetypes ~= 0
     and Chris468.options.venv.additional_filetypes
   or false
 
+local script_path = vim.fn.stdpath("config") .. "/scripts/find-venvs.sh"
+
 return {
   {
     "venv-selector.nvim",
@@ -33,6 +35,12 @@ return {
         },
         search = {
           pipx = false,
+          cwd = {
+            command = "bash " .. script_path .. " $CWD",
+          },
+          filed = {
+            command = "bash " .. script_path .. " $FILE_DIR",
+          },
         },
       },
     },
