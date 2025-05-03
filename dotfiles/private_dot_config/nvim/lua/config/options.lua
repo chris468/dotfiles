@@ -16,9 +16,13 @@ local chezmoi = require("config.chezmoi")
 ---@field linters table<string, lazy-mason-install.PackagesForFiletype>
 ---@field lspconfig table Roughly nvim-lspconfig settings, but see LazyVim's lsp config docs.
 
+---@class Chris468.Options.Venv
+---@field additional_filetypes string[]|nil Additional filetypes (besides python) which should activate the venv
+
 ---@class Chris468.Options
 ---@field ai "None"|"Codeium"|"Copilot"|nil,
 ---@field lsp Chris468.Options.Lsp
+---@field venv Chris468.Options.Venv
 
 local chris468 = {
   ---@type Chris468.Options
@@ -87,6 +91,11 @@ local chris468 = {
             },
           },
         },
+      },
+    },
+    venv = {
+      additional_filetypes = {
+        "yaml.ansible",
       },
     },
   },
