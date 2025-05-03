@@ -13,11 +13,12 @@ terragrunt = "latest"
 kubectl = "latest"
 lazydocker = "latest"
 python = "latest"
-poetry = "latest"
-uv = "latest"
 {{- if "windows" | ne .chezmoi.os }}
 azure-cli = "latest"
 {{- end }}
 
-[alias]
-poetry = "pipx:poetry"
+[settings]
+
+disable_backends = [
+"pipx"
+]
