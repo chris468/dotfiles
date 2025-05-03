@@ -14,3 +14,17 @@ vim.api.nvim_create_autocmd("QuitPre", {
     end
   end,
 })
+
+if Chris468.options.venv.additional_filetypes and #Chris468.options.venv.additional_filetypes then
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = Chris468.options.venv.additional_filetypes,
+    callback = function()
+      if vim.list_contains(Chris468.options.venv.additional_filetypes, vim.bo.filetype) then
+        local ok, cache = pcall(require, "venv-selector.cached_venv")
+        if ok then
+          cache.retrieve()
+        end
+      end
+    end,
+  })
+end
