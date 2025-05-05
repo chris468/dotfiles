@@ -1,3 +1,3 @@
-if [[ -d $HOME/.rd/bin ]] ; then
-	export PATH="$HOME/.rd/bin:$PATH"
+if [[ $PATH != *$HOME/.rd/bin:$PATH*: ]] && [[ -d $HOME/.rd/bin ]]; then
+  export PATH="$HOME/.rd/bin:$PATH"
 fi
