@@ -7,5 +7,6 @@ return {
   end,
   opts = {
     preset = "helix",
+    spec = Chris468.keymaps,
   },
 }

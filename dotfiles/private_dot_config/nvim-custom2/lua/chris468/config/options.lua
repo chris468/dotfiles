@@ -2,7 +2,11 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 local chezmoi = require("chris468.config.chezmoi")
-local chris468 = {}
+local chris468 = {
+  keymaps = {
+    { "<leader>l", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
+  },
+}
 local has_overrides, overrides = pcall(require, "chris468.config.local")
 
 _G.Chris468 =
