@@ -17,5 +17,19 @@ return {
       { "<C-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Navigate up" },
       { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Navigate right" },
     },
+    dependencies = { "which-key.nvim" },
+  },
+  {
+    "which-key.nvim",
+    opts = {
+      icons = {
+        rules = {
+          { pattern = "navigate left", icon = "←", color = "green" },
+          { pattern = "navigate down", icon = "↓", color = "green" },
+          { pattern = "navigate up", icon = "↑", color = "green" },
+          { pattern = "navigate right", icon = "→", color = "green" },
+        },
+      },
+    },
   },
 }
