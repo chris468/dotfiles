@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+vim.o.timeout = true
+vim.o.timeoutlen = 250
+
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   keymaps = {
