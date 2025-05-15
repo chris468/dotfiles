@@ -1,8 +1,33 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-vim.o.timeout = true
-vim.o.timeoutlen = 250
+-- sidebar behavior
+vim.opt.cursorline = true
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.showmode = false
+vim.opt.signcolumn = "yes"
+
+-- window behavior
+vim.opt.confirm = true
+vim.opt.scrolloff = 4
+vim.opt.sidescrolloff = 8
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+
+-- indention
+vim.opt.breakindent = true
+vim.opt.shiftround = true
+
+-- search
+vim.opt.ignorecase = true
+vim.opt.inccommand = "split"
+vim.opt.smartcase = true
+
+-- delays
+vim.opt.timeout = true
+vim.opt.timeoutlen = 300
+vim.opt.updatetime = 250
 
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
