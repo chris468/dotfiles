@@ -33,6 +33,7 @@ local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   keymaps = {
     { "<leader>l", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
+    { "<Esc>", "<cmd>nohlsearch<CR>", desc = "Clear search hilight" },
   },
   options = {
     work = chezmoi.work,
