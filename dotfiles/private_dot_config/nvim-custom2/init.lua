@@ -1,7 +1,5 @@
-local theme = require("chris468.config.chezmoi").options.theme or "tokyonight"
-require("chris468.lazy").install()
-
 require("chris468.config.options")
+require("chris468.lazy").install()
 
 require("lazy").setup({
   spec = {
@@ -11,7 +9,7 @@ require("lazy").setup({
     lazy = false,
     version = false,
   },
-  install = { colorscheme = { theme, "tokyonight", "habamax" } },
+  install = { colorscheme = { Chris468.options.theme, "tokyonight", "habamax" } },
   checker = {
     enabled = true,
     notify = false,
