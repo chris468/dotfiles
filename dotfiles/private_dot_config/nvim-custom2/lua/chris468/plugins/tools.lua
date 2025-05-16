@@ -53,6 +53,13 @@ return {
     ft = vim.tbl_keys(formatters_by_ft),
     opts = {
       formatters_by_ft = formatters_by_ft,
+      format_on_save = function(bufnr)
+        if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
+          return
+        end
+
+        return { timeout_ms = 500, lsp_format = "fallback" }
+      end,
     },
   },
   {
