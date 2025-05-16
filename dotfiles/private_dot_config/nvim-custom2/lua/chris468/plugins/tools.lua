@@ -24,6 +24,7 @@ return {
     "mason-org/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
     keys = {
+      { "<leader>ci", "<cmd>checkhealth vim.lsp conform<CR>", desc = "LSP/Formatter info" },
       { "<leader>m", "<cmd>Mason<CR>", desc = "Mason" },
     },
     opts = {
@@ -38,6 +39,10 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    cmd = { "LspInfo", "LspInstall", "LspLog", "LspStart", "LspRestart", "LspUninstall" },
+    keys = {
+      { "<leader>cL", "<cmd>LspInfo<CR>", desc = "LSP info" },
+    },
   },
   {
     "mason-org/mason-lspconfig.nvim",
@@ -50,15 +55,29 @@ return {
   {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim" },
+    cmd = { "ConformInfo" },
     ft = vim.tbl_keys(formatters_by_ft),
+    keys = {
+      {
+        "<leader>cf",
+        function()
+          require("conform").format({ async = true })
+        end,
+        desc = "Format",
+      },
+      { "<leader>cF", "<cmd>ConformInfo<CR>", desc = "Formatter info" },
+    },
     opts = {
+      default_format_opts = {
+        lsp_format = "fallback",
+      },
       formatters_by_ft = formatters_by_ft,
       format_on_save = function(bufnr)
         if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
           return
         end
 
-        return { timeout_ms = 500, lsp_format = "fallback" }
+        return { timeout_ms = 500 }
       end,
     },
   },
