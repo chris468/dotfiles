@@ -42,7 +42,7 @@ local chris468 = {
   tools = {
     ---@type string[] disable tooling on these filetypes
     disable = { "lazy", "lazy_backdrop", "mason" },
-    ---@type chris468.config.ToolsByFiletype
+    ---@type chris468.config.FormattersByFiletype
     formatters = {
       python = { "black" },
       csharp = {
