@@ -40,7 +40,23 @@ local chris468 = {
     theme = chezmoi.theme,
   },
   tools = {
-    ---@type table<string, { config: vim.lsp.Config, prerequisite?: fun(): boolean, string }>
+    ---@type chris468.config.ToolsByFiletype
+    formatters = {
+      python = { "black" },
+      csharp = {
+        {
+          "csharpier",
+          prerequisite = function()
+            return false, "never"
+          end,
+        },
+      },
+    },
+    ---@type chris468.config.ToolsByFiletype
+    linters = {
+      ["yaml.ansible"] = { "ansible-lint" },
+    },
+    ---@type chris468.config.Lsps
     lsps = {
       omnisharp = {},
       yamlls = {

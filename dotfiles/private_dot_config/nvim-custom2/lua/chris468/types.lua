@@ -1,0 +1,3 @@
+---@alias chris468.config.CheckPrequisite fun(): boolean, string
+---@alias chris468.config.ToolsByFiletype { [string]: string[]|{[1]: string, prerequisite?: chris468.config.CheckPrequisite}[] }
+---@alias chris468.config.Lsps  table<string, { config: vim.lsp.Config, prerequisite?: chris468.config.CheckPrequisite }>
