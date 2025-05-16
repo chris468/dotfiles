@@ -18,4 +18,10 @@ function M.install()
   vim.opt.rtp:prepend(lazypath)
 end
 
+---@param name string
+---@return boolean
+function M.has_plugin(name)
+  return require("lazy.core.config").spec.plugins[name] ~= nil
+end
+
 return M
