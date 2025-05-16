@@ -52,10 +52,16 @@ end
 ---@param prerequisite? chris468.config.CheckPrequisite
 ---@param callback? fun()
 local function install_package(bufnr, package_name, prerequisite, callback)
+  local function complete()
+    raise_filetype(bufnr)
+    if callback then
+      callback()
+    end
+  end
   local registry = require("mason-registry")
   local ok, package = pcall(registry.get_package, package_name)
   if not ok or package:is_installed() or not check_prerequisite(package_name, prerequisite) then
-    raise_filetype(bufnr)
+    complete()
     return
   end
 
@@ -63,7 +69,7 @@ local function install_package(bufnr, package_name, prerequisite, callback)
   package
     :once("install:success", function()
       notify("Successfully installed " .. package_name .. ".")
-      raise_filetype(bufnr)
+      complete()
     end)
     :once("install:failed", function()
       notify("Error installing " .. package_name .. ".", vim.log.levels.WARN)
@@ -94,22 +100,24 @@ local function install_and_enable_lsps(bufnr, filetype)
     if config.config then
       vim.lsp.config(lsp, config.config)
     end
-    install_package(bufnr, lsp_package(lsp), config.prerequisite, function()
-      notify("enabling " .. lsp)
-      vim.lsp.enable(lsp)
-    end)
+    install_package(bufnr, lsp_package(lsp), config.prerequisite)
   end
 end
 
 ---@param bufnr integer
 ---@param tools_for_filetype chris468.config.ToolsByFiletype
 ---@param filetype string
-local function install_tools_for_filetype(bufnr, tools_for_filetype, filetype)
+---@param callback? fun(bufnr: integer, tool: chris468.config.ToolSpec)
+local function install_tools_for_filetype(bufnr, tools_for_filetype, filetype, callback)
   for _, tool in ipairs(tools_for_filetype[filetype] or {}) do
     tool = type(tool) == "string" and { tool } or tool
     local package = tool[1]
     local prerequisite = tool.prerequisite
-    install_package(bufnr, package, prerequisite)
+    install_package(bufnr, package, prerequisite, function()
+      if callback then
+        callback(bufnr, tool --[[@as chris468.config.ToolSpec)--]])
+      end
+    end)
   end
 end
 
@@ -118,7 +126,12 @@ local function install_linters(bufnr, filetype)
 end
 
 local function install_formatters(bufnr, filetype)
-  install_tools_for_filetype(bufnr, Chris468.tools.formatters, filetype)
+  install_tools_for_filetype(bufnr, Chris468.tools.formatters, filetype, function(b, tool)
+    ---@diagnostic disable-next-line: undefined-field
+    if tool.format_on_save == false then
+      vim.b[b].format_on_save = false
+    end
+  end)
 end
 
 ---@param bufnr integer
