@@ -52,6 +52,7 @@ local chris468 = {
           end,
         },
       },
+      lua = { "stylua" },
       python = { "black" },
     },
     ---@type chris468.config.ToolsByFiletype
@@ -61,6 +62,7 @@ local chris468 = {
     },
     ---@type chris468.config.Lsps
     lsps = {
+      lua_ls = {},
       omnisharp = {},
       yamlls = {
         config = {
