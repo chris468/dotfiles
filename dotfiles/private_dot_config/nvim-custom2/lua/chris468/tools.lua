@@ -22,7 +22,7 @@ local function raise_filetype(bufnr)
 end
 
 ---@param package_name string
----@param prerequisite? fun(): boolean, string
+---@param prerequisite? chris468.config.CheckPrequisite
 ---@return boolean
 local function check_prerequisite(package_name, prerequisite)
   prerequisite = prerequisite or function()
@@ -40,7 +40,7 @@ end
 
 ---@param bufnr integer
 ---@param package_name string
----@param prerequisite? fun(): boolean, string
+---@param prerequisite? chris468.config.CheckPrequisite
 ---@param callback? fun()
 local function install_package(bufnr, package_name, prerequisite, callback)
   local ok, package = pcall(registry.get_package, package_name)
@@ -61,7 +61,6 @@ local function install_package(bufnr, package_name, prerequisite, callback)
   package:install()
 end
 
----@param filetype string
 ---@param filetype string
 local function lsps_for_filetype(lsps, filetype)
   local function iter(tbl, key)
@@ -92,11 +91,33 @@ local function install_and_enable_lsps(bufnr, filetype)
 end
 
 ---@param bufnr integer
+---@param tools_for_filetype chris468.config.ToolsByFiletype
+---@param filetype string
+local function install_tools_for_filetype(bufnr, tools_for_filetype, filetype)
+  for _, tool in ipairs(tools_for_filetype[filetype] or {}) do
+    tool = type(tool) == "string" and { tool } or tool
+    local package = tool[1]
+    local prerequisite = tool.prerequisite
+    install_package(bufnr, package, prerequisite)
+  end
+end
+
+local function install_linters(bufnr, filetype)
+  install_tools_for_filetype(bufnr, Chris468.tools.linters, filetype)
+end
+
+local function install_formatters(bufnr, filetype)
+  install_tools_for_filetype(bufnr, Chris468.tools.formatters, filetype)
+end
+
+---@param bufnr integer
 ---@param filetype string
 function M.install_tools(bufnr, filetype)
   if not installed_tools_for_filetype[filetype] then
     installed_tools_for_filetype[filetype] = true
     install_and_enable_lsps(bufnr, filetype)
+    install_linters(bufnr, filetype)
+    install_formatters(bufnr, filetype)
   end
 end
 
