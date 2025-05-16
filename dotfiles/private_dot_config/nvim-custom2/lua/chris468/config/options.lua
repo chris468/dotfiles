@@ -44,15 +44,15 @@ local chris468 = {
     disable = { "lazy", "lazy_backdrop", "mason" },
     ---@type chris468.config.FormattersByFiletype
     formatters = {
-      python = { "black" },
       csharp = {
         {
           "csharpier",
           prerequisite = function()
-            return false, "never"
+            return false, "Too opinionated towards nonstandard style"
           end,
         },
       },
+      python = { "black" },
     },
     ---@type chris468.config.ToolsByFiletype
     linters = {
