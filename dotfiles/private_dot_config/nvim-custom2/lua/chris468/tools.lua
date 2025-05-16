@@ -1,7 +1,16 @@
-local registry = require("mason-registry")
-local lsp_package = require("mason-lspconfig.mappings").get_mason_map().lspconfig_to_package
-
 local M = {}
+
+local _lsp_package
+
+---@param lsp string
+---@return string
+local function lsp_package(lsp)
+  if not _lsp_package then
+    _lsp_package = require("mason-lspconfig.mappings").get_mason_map().lspconfig_to_package
+  end
+
+  return _lsp_package[lsp]
+end
 
 ---@type { [string]: boolean }
 local installed_tools_for_filetype = {}
@@ -43,6 +52,7 @@ end
 ---@param prerequisite? chris468.config.CheckPrequisite
 ---@param callback? fun()
 local function install_package(bufnr, package_name, prerequisite, callback)
+  local registry = require("mason-registry")
   local ok, package = pcall(registry.get_package, package_name)
   if not ok or package:is_installed() or not check_prerequisite(package_name, prerequisite) then
     raise_filetype(bufnr)
@@ -63,6 +73,7 @@ end
 
 ---@param filetype string
 local function lsps_for_filetype(lsps, filetype)
+  local _ = require("lspconfig")
   local function iter(tbl, key)
     local next_key, config = next(tbl, key)
     while next_key and not vim.list_contains(vim.lsp.config[next_key].filetypes or {}, filetype) do
@@ -83,7 +94,7 @@ local function install_and_enable_lsps(bufnr, filetype)
     if config.config then
       vim.lsp.config(lsp, config.config)
     end
-    install_package(bufnr, lsp_package[lsp], config.prerequisite, function()
+    install_package(bufnr, lsp_package(lsp), config.prerequisite, function()
       notify("enabling " .. lsp)
       vim.lsp.enable(lsp)
     end)
