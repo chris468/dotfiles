@@ -57,6 +57,7 @@ local chris468 = {
     ---@type chris468.config.ToolsByFiletype
     linters = {
       ["yaml.ansible"] = { "ansible-lint" },
+      markdown = { "markdownlint-cli2" },
     },
     ---@type chris468.config.Lsps
     lsps = {
