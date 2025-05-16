@@ -1,1 +1,4 @@
-return { "echasnovski/mini.icons" }
+return {
+  "echasnovski/mini.icons",
+  opts = {},
+}

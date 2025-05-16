@@ -40,6 +40,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     cmd = { "LspInfo", "LspInstall", "LspLog", "LspStart", "LspRestart", "LspUninstall" },
+    dependencies = { "blink.cmp", optional = true },
     keys = {
       { "<leader>cL", "<cmd>LspInfo<CR>", desc = "LSP info" },
     },

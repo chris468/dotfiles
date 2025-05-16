@@ -92,13 +92,25 @@ local function lsps_for_filetype(lsps, filetype)
   return iter, lsps
 end
 
+---@param config? lspconfig.Config
+---@return lspconfig.Config?
+local function merge_completion_capabilities(config)
+  if require("chris468.lazy").has_plugin("blink.cmp") then
+    config = config or {}
+    config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+  end
+
+  return config
+end
+
 ---@param bufnr integer
 ---@param filetype string
 local function install_and_enable_lsps(bufnr, filetype)
   for lsp, config in lsps_for_filetype(Chris468.tools.lsps, filetype) do
     vim.lsp.enable(lsp)
-    if config.config then
-      vim.lsp.config(lsp, config.config)
+    local lsp_config = merge_completion_capabilities(config.config)
+    if lsp_config then
+      vim.lsp.config(lsp, lsp_config)
     end
     install_package(bufnr, lsp_package(lsp), config.prerequisite)
   end
