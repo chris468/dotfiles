@@ -15,4 +15,15 @@ return {
       },
     },
   },
+  {
+    "neovim/nvim-lspconfig",
+  },
+  {
+    "mason-org/mason-lspconfig.nvim",
+    dependencies = { "mason.nvim", "nvim-lspconfig" },
+    opts = {
+      automatic_enable = false,
+      ensure_installed = {},
+    },
+  },
 }
