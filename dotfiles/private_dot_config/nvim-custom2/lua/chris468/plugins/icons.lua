@@ -1,1 +1,1 @@
-return { "echasnovski/mini.icons", lazy = true }
+return { "echasnovski/mini.icons" }

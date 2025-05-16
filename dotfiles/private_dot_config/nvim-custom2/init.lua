@@ -6,7 +6,7 @@ require("lazy").setup({
     { import = "chris468.plugins" },
   },
   defaults = {
-    lazy = false,
+    lazy = true,
     version = false,
   },
   install = { colorscheme = { Chris468.options.theme, "tokyonight", "habamax" } },
