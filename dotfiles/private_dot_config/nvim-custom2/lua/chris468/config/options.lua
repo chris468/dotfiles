@@ -32,8 +32,8 @@ vim.opt.updatetime = 250
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   keymaps = {
-    { "<leader>l", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
     { "<Esc>", "<cmd>nohlsearch<CR>", desc = "Clear search hilight" },
+    { "<leader>l", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
   },
   options = {
     work = chezmoi.work,
