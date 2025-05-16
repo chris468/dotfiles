@@ -40,6 +40,8 @@ local chris468 = {
     theme = chezmoi.theme,
   },
   tools = {
+    ---@type string[] disable tooling on these filetypes
+    disable = { "lazy", "lazy_backdrop", "mason" },
     ---@type chris468.config.ToolsByFiletype
     formatters = {
       python = { "black" },
