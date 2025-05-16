@@ -39,6 +39,23 @@ local chris468 = {
     work = chezmoi.work,
     theme = chezmoi.theme,
   },
+  tools = {
+    ---@type table<string, { config: vim.lsp.Config, prerequisite?: fun(): boolean, string }>
+    lsps = {
+      omnisharp = {},
+      yamlls = {
+        config = {
+          settings = {
+            yaml = {
+              format = {
+                enable = false,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 }
 local has_overrides, overrides = pcall(require, "chris468.config.local")
 
