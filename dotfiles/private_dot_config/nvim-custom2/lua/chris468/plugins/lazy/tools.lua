@@ -24,7 +24,7 @@ return {
     "mason-org/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
     init = function()
-      require("chris468.tools").configure_tool_install()
+      require("chris468.plugins.config.tools").configure_tool_install()
     end,
     keys = {
       { "<leader>ci", "<cmd>checkhealth vim.lsp conform<CR>", desc = "LSP/Formatter info" },
@@ -44,7 +44,7 @@ return {
     "neovim/nvim-lspconfig",
     cmd = { "LspInfo", "LspInstall", "LspLog", "LspStart", "LspRestart", "LspUninstall" },
     config = function()
-      require("chris468.tools").configure_lsp()
+      require("chris468.plugins.config.tools").configure_lsp()
     end,
     dependencies = { "blink.cmp", optional = true },
     keys = {

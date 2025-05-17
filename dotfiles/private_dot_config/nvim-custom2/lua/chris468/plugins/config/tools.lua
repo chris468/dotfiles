@@ -95,7 +95,7 @@ end
 ---@param config? lspconfig.Config
 ---@return lspconfig.Config?
 local function merge_completion_capabilities(config)
-  if require("chris468.lazy").has_plugin("blink.cmp") then
+  if require("chris468.util.lazy").has_plugin("blink.cmp") then
     config = config or {}
     config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities, true)
   end
@@ -160,7 +160,7 @@ end
 ---@param bufnr integer
 ---@param client vim.lsp.Client
 local function configure_inlay_hints(bufnr, client)
-  local bufutil = require("chris468.buffer")
+  local bufutil = require("chris468.util.buffer")
   if bufutil.valid_normal(bufnr) and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr) then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end

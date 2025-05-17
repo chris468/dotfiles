@@ -51,7 +51,7 @@ return {
           enabled = function()
             -- Avoid hangs on windows.
             -- Suggested by https://cmp.saghen.dev/recipes.html#disable-completion-in-only-shell-command-mode
-            local os = require("chris468.os")
+            local os = require("chris468.util.os")
             if os.is_windows() or os.is_wsl() then
               return vim.fn.getcmdtype() ~= ":" or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
             end

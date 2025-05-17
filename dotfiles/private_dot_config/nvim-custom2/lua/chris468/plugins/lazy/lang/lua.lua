@@ -21,7 +21,7 @@ return {
       {
         "<leader><c-l>",
         function()
-          require("chris468.lang.luapad").toggle()
+          require("chris468.plugins.config.lang.luapad").toggle()
         end,
         desc = "Luapad",
       },
