@@ -1,1 +1,1 @@
-require("chris468.diagnostics").setup()
+require("chris468.plugins.config.diagnostics").setup()

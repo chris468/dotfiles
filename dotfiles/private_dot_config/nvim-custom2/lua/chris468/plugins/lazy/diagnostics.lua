@@ -5,7 +5,7 @@ return {
     dependencies = { "mini.icons" },
     opts = function(_, opts)
       local icons = require("mini.icons")
-      local strutil = require("chris468.string")
+      local strutil = require("chris468.util.string")
       local overrides = {
         focus = false,
         follow = false,
