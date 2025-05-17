@@ -97,7 +97,7 @@ end
 local function merge_completion_capabilities(config)
   if require("chris468.lazy").has_plugin("blink.cmp") then
     config = config or {}
-    config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+    config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities, true)
   end
 
   return config
@@ -155,6 +155,53 @@ function M.install_tools(bufnr, filetype)
     install_linters(bufnr, filetype)
     install_formatters(bufnr, filetype)
   end
+end
+
+---@param bufnr integer
+---@param client vim.lsp.Client
+local function configure_inlay_hints(bufnr, client)
+  local bufutil = require("chris468.buffer")
+  if bufutil.valid_normal(bufnr) and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr) then
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  end
+end
+
+---@param bufnr integer
+---@param client vim.lsp.Client
+local function lsp_attach(bufnr, client)
+  configure_inlay_hints(bufnr, client)
+end
+
+--@param group integer
+local function register_lsp_attach(group)
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = group,
+    callback = function(arg)
+      local bufnr = arg.buf
+      local client = vim.lsp.get_client_by_id(arg.data.client_id)
+      if client then
+        lsp_attach(bufnr, client)
+      end
+    end,
+  })
+end
+
+local function register_dynamic_capability_handlers()
+  local original = vim.lsp.handlers[vim.lsp.protocol.Methods.client_registerCapability]
+  vim.lsp.handlers[vim.lsp.protocol.Methods.client_registerCapability] = function(err, result, context, config)
+    original(err, result, context, config)
+    local client = vim.lsp.get_client_by_id(context.client_id) or {}
+    for bufnr, _ in pairs(client.attached_buffers or {}) do
+      configure_inlay_hints(bufnr, client)
+    end
+  end
+end
+
+function M.configure_lsp()
+  local group = vim.api.nvim_create_augroup("chris468.tools.lsp", { clear = true })
+  register_lsp_attach(group)
+
+  register_dynamic_capability_handlers()
 end
 
 return M
