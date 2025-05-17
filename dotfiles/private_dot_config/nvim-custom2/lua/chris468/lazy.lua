@@ -19,9 +19,22 @@ function M.install()
 end
 
 ---@param name string
+---@return LazyPlugin
+function M.plugin(name)
+  return require("lazy.core.config").spec.plugins[name]
+end
+
+---@param name string
 ---@return boolean
 function M.has_plugin(name)
-  return require("lazy.core.config").spec.plugins[name] ~= nil
+  return M.plugin(name) ~= nil
+end
+
+---@param name string
+---@return table
+function M.opts(name)
+  local plugin_api = require("lazy.core.plugin")
+  return plugin_api.values(M.plugin(name), "opts")
 end
 
 return M
