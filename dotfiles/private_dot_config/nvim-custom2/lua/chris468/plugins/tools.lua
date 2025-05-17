@@ -23,6 +23,9 @@ return {
   {
     "mason-org/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
+    init = function()
+      require("chris468.tools").configure_tool_install()
+    end,
     keys = {
       { "<leader>ci", "<cmd>checkhealth vim.lsp conform<CR>", desc = "LSP/Formatter info" },
       { "<leader>m", "<cmd>Mason<CR>", desc = "Mason" },

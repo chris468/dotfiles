@@ -148,7 +148,7 @@ end
 
 ---@param bufnr integer
 ---@param filetype string
-function M.install_tools(bufnr, filetype)
+local function install_tools(bufnr, filetype)
   if not installed_tools_for_filetype[filetype] then
     installed_tools_for_filetype[filetype] = true
     install_and_enable_lsps(bufnr, filetype)
@@ -202,6 +202,19 @@ function M.configure_lsp()
   register_lsp_attach(group)
 
   register_dynamic_capability_handlers()
+end
+
+function M.configure_tool_install()
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("chris468.tools", { clear = true }),
+    callback = function(arg)
+      local filetype = arg.match
+      if not vim.list_contains(Chris468.tools.disable, filetype) then
+        local buf = arg.buf
+        return install_tools(buf, filetype)
+      end
+    end,
+  })
 end
 
 return M
