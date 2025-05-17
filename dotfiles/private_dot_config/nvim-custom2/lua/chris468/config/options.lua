@@ -62,7 +62,25 @@ local chris468 = {
     },
     ---@type chris468.config.Lsps
     lsps = {
-      lua_ls = {},
+      lua_ls = {
+        config = {
+          settings = {
+            Lua = {
+              completion = {
+                callSnippet = "Replace",
+              },
+              hint = {
+                enable = true,
+                setType = false,
+                paramType = true,
+                paramName = "Disable",
+                semicolon = "Disable",
+                arrayIndex = "Disable",
+              },
+            },
+          },
+        },
+      },
       omnisharp = {},
       pyright = {},
       yamlls = {

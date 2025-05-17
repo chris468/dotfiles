@@ -4,7 +4,6 @@ return {
     cmd = "Trouble",
     dependencies = { "mini.icons" },
     opts = function(_, opts)
-      vim.notify(vim.inspect(opts))
       local icons = require("mini.icons")
       local strutil = require("chris468.string")
       local overrides = {
