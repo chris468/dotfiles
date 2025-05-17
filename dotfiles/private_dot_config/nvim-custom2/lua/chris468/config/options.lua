@@ -64,6 +64,7 @@ local chris468 = {
     lsps = {
       lua_ls = {},
       omnisharp = {},
+      pyright = {},
       yamlls = {
         config = {
           settings = {
