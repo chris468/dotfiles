@@ -40,6 +40,9 @@ return {
   {
     "neovim/nvim-lspconfig",
     cmd = { "LspInfo", "LspInstall", "LspLog", "LspStart", "LspRestart", "LspUninstall" },
+    config = function()
+      require("chris468.tools").configure_lsp()
+    end,
     dependencies = { "blink.cmp", optional = true },
     keys = {
       { "<leader>cL", "<cmd>LspInfo<CR>", desc = "LSP info" },
@@ -88,7 +91,7 @@ return {
       local lint = require("lint")
       lint.linters_by_ft = opts.linters_by_ft
       vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
-        group = vim.api.nvim_create_augroup("lint", { clear = true }),
+        group = vim.api.nvim_create_augroup("chris468.lint", { clear = true }),
         callback = function()
           lint.try_lint()
         end,
