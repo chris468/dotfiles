@@ -10,6 +10,24 @@ return {
     },
   },
   {
+    "blink.cmp",
+    dependencies = { "lazydev.nvim" },
+    opts = {
+      sources = {
+        per_filetype = {
+          lua = { inherit_defaults = true, "lazydev" },
+        },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            score_offset = 100,
+          },
+        },
+      },
+    },
+  },
+  {
     "rafcamlet/nvim-luapad",
     cmd = {
       "Luapad",

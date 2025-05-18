@@ -14,6 +14,10 @@ end
 
 return {
   "saghen/blink.cmp",
+  dependencies = {
+    "MahanRahmati/blink-nerdfont.nvim",
+    "moyiz/blink-emoji.nvim",
+  },
   event = { "CmdLineEnter", "InsertEnter" },
   opts = {
     keymap = { preset = "super-tab" },
@@ -46,6 +50,14 @@ return {
       enabled = true,
     },
     sources = {
+      default = function()
+        local defaults = require("blink.cmp.config.sources").default
+        local default_providers = type(defaults.default) == "function" and defaults.default() or defaults.default
+        return vim.list_extend({
+          "emoji",
+          "nerdfont",
+        }, default_providers --[[ @as string[] ]])
+      end,
       providers = {
         cmdline = {
           enabled = function()
@@ -58,6 +70,18 @@ return {
 
             return true
           end,
+        },
+        emoji = {
+          module = "blink-emoji",
+          name = "Emoji",
+          score_offset = 15,
+          opts = { insert = true },
+        },
+        nerdfont = {
+          module = "blink-nerdfont",
+          name = "Nerd Fonts",
+          score_offset = 15,
+          opts = { insert = true },
         },
         snippets = {
           -- Hide snippets after trigger character
