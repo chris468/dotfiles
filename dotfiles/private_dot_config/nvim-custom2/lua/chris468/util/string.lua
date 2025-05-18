@@ -7,4 +7,16 @@ function M.capitalize(s)
   return result
 end
 
+---@param s string
+---@param delimiters string
+---@return string[]
+function M.split(s, delimiters)
+  local t = {}
+  for str in s:gmatch("([^" .. delimiters .. "]+)") do
+    t[#t + 1] = str
+  end
+
+  return t
+end
+
 return M
