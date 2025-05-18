@@ -1,3 +1,4 @@
+local notify = require("chris468.util").schedule_notify
 local M = {}
 
 local _lsp_package
@@ -14,12 +15,6 @@ end
 
 ---@type { [string]: boolean }
 local installed_tools_for_filetype = {}
-
-local function notify(message, level, opts)
-  vim.schedule(function()
-    vim.notify(message, level, opts)
-  end)
-end
 
 ---@param bufnr integer
 local function raise_filetype(bufnr)
