@@ -96,6 +96,16 @@ local chris468 = {
       },
     },
   },
+  ui = {
+    icons = {
+      error = "󰅚",
+      warning = "󰀪",
+      info = "󰋽",
+      hint = "󰌶",
+      debug = "",
+      trace = "✎",
+    },
+  },
 }
 local has_overrides, overrides = pcall(require, "chris468.config.local")
 

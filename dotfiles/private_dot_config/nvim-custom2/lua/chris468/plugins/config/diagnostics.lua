@@ -5,10 +5,10 @@ local function configure_diagnostics()
     severity_sort = true,
     signs = {
       text = {
-        [vim.diagnostic.severity.ERROR] = "󰅚 ",
-        [vim.diagnostic.severity.WARN] = "󰀪 ",
-        [vim.diagnostic.severity.INFO] = "󰋽 ",
-        [vim.diagnostic.severity.HINT] = "󰌶 ",
+        [vim.diagnostic.severity.ERROR] = Chris468.ui.icons.error .. " ",
+        [vim.diagnostic.severity.WARN] = Chris468.ui.icons.warning .. " ",
+        [vim.diagnostic.severity.INFO] = Chris468.ui.icons.info .. " ",
+        [vim.diagnostic.severity.HINT] = Chris468.ui.icons.hint .. " ",
       },
     },
     underline = {
