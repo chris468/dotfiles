@@ -56,6 +56,7 @@ return {
         return vim.list_extend({
           "emoji",
           "nerdfont",
+          "unicode",
         }, default_providers --[[ @as string[] ]])
       end,
       providers = {
@@ -89,6 +90,11 @@ return {
           should_show_items = function(ctx)
             return ctx.trigger.initial_kind ~= "trigger-character"
           end,
+        },
+        unicode = {
+          module = "chris468.blink.sources.unicode",
+          name = "Unicode",
+          score_offset = 14,
         },
       },
     },
