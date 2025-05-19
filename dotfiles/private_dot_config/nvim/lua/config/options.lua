@@ -74,6 +74,12 @@ local chris468 = {
                 format = {
                   enable = false,
                 },
+                schemas = {
+                  ["https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json"] = {
+                    "**/charts/*/tests/*_test.yaml",
+                    "**\\charts\\*\\tests\\_test.yaml",
+                  },
+                },
               },
             },
           },
