@@ -126,3 +126,10 @@ vim.keymap.set(
   end),
   { desc = "Lsp Info" }
 )
+
+local lazygit_mapping = Chris468.options.git.primary == "lazygit" and "<leader>gg" or "<leader>gG"
+local neogit_mapping = Chris468.options.git.primary == "neogit" and "<leader>gg" or "<leader>gG"
+vim.keymap.set("n", lazygit_mapping, function()
+  Snacks.lazygit({ cwd = LazyVim.root.git() })
+end, { desc = "Lazygit (Root Dir)" })
+vim.keymap.set("n", neogit_mapping, "<cmd>Neogit<cr>", { desc = "Neogit" })

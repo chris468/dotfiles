@@ -20,7 +20,8 @@ local chezmoi = require("config.chezmoi")
 ---@field additional_filetypes string[]|nil Additional filetypes (besides python) which should activate the venv
 
 ---@class Chris468.Options
----@field ai "None"|"Codeium"|"Copilot"|nil,
+---@field ai "None"|"Codeium"|"Copilot"|nil
+---@field git { primary: "neogit"|"lazygit"}
 ---@field lsp Chris468.Options.Lsp
 ---@field venv Chris468.Options.Venv
 
@@ -28,6 +29,9 @@ local chris468 = {
   ---@type Chris468.Options
   options = {
     ai = chezmoi.options.work and "Copilot" or "Codeium",
+    git = {
+      primary = "neogit",
+    },
     lsp = {
       ensure_installed = {
         "rust-analyzer", -- a plugin registers the lsp, not using lspconfig

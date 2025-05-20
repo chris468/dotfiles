@@ -1,3 +1,4 @@
+local mapping = Chris468.options.git.primary == "neogit" and "<leader>gg" or "<leader>gG"
 return {
   {
     "sindrets/diffview.nvim",
@@ -12,7 +13,6 @@ return {
     lazy = true,
     opts = {},
     keys = {
-      { "<leader>gg", "<cmd>Neogit<cr>", "Neogit" },
       { "<leader>gC", "<cmd>Neogit commit<cr>", "Neogit commit" },
     },
   },
