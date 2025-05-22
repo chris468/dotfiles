@@ -20,6 +20,20 @@ return {
     verion = "*",
   },
   {
+    "echasnovski/mini.files",
+    keys = {
+      {
+        "<leader>e",
+        function()
+          require("mini.files").open()
+        end,
+        desc = "Explore",
+      },
+    },
+    opts = {},
+    version = "*",
+  },
+  {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
     lazy = true,
