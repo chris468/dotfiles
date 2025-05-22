@@ -38,6 +38,30 @@ return {
     },
   },
   {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    opts = {
+      presets = {
+        command_palette = false,
+        inc_rename = false,
+      },
+      cmdline = {
+        view = "cmdline",
+      },
+      notify = {
+        enabled = false,
+      },
+      lsp = {
+        progress = {
+          enabled = false,
+        },
+      },
+    },
+  },
+  {
     "j-hui/fidget.nvim",
     lazy = false,
     opts = {
