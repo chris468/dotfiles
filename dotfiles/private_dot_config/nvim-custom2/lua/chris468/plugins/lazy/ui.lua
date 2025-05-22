@@ -38,21 +38,12 @@ return {
     },
   },
   {
-    "rcarriga/nvim-notify",
-    init = function()
-      vim.notify = require("notify")
-    end,
+    "j-hui/fidget.nvim",
+    lazy = false,
     opts = {
-      icons = {
-        ERROR = Chris468.ui.icons.error,
-        WARN = Chris468.ui.icons.warning,
-        INFO = Chris468.ui.icons.info,
-        DEBUG = Chris468.ui.icons.debug,
-        TRACE = Chris468.ui.icons.trace,
+      notification = {
+        override_vim_notify = true,
       },
-      render = "compact",
-      timeout = 1000,
-      top_down = false,
     },
   },
 }
