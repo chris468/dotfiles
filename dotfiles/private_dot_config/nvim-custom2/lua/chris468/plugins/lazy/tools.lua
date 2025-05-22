@@ -101,4 +101,25 @@ return {
       linters_by_ft = linters_by_ft,
     },
   },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    event = "VeryLazy",
+    main = "nvim-treesitter.configs",
+    opts = {
+      highlight = {
+        enable = true,
+      },
+      indent = {
+        enable = true,
+      },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = "VeryLazy",
+    opts = {
+      enable = true,
+    },
+  },
 }

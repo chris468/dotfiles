@@ -42,6 +42,10 @@ local chris468 = {
   tools = {
     ---@type string[] disable tooling on these filetypes
     disable = { "lazy", "lazy_backdrop", "mason" },
+    ---@type { provider: "codeium"|"copilot" }
+    ai = {
+      provider = chezmoi.work and "copilot" or "codeium",
+    },
     ---@type chris468.config.FormattersByFiletype
     formatters = {
       csharp = {
@@ -115,6 +119,7 @@ local chris468 = {
       terminal = "",
       confirm = "",
       lsp_status = "",
+      windsurf = "",
     },
   },
 }
