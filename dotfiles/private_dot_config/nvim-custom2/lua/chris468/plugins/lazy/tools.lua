@@ -28,7 +28,7 @@ return {
     end,
     keys = {
       { "<leader>ci", "<cmd>checkhealth vim.lsp conform<CR>", desc = "LSP/Formatter info" },
-      { "<leader>m", "<cmd>Mason<CR>", desc = "Mason" },
+      { "<leader>M", "<cmd>Mason<CR>", desc = "Mason" },
     },
     opts = {
       ui = {
