@@ -29,8 +29,6 @@ return {
     },
     event = { "CmdLineEnter", "InsertEnter" },
     opts = {
-      keymap = { preset = "super-tab" },
-      fuzzy = { implementation = "prefer_rust" },
       completion = {
         documentation = {
           auto_show = true,
@@ -59,6 +57,11 @@ return {
           show_on_keyword = false,
         },
       },
+      enabled = function()
+        return vim.bo.filetype ~= "TelescopePrompt"
+      end,
+      fuzzy = { implementation = "prefer_rust" },
+      keymap = { preset = "super-tab" },
       signature = {
         enabled = true,
       },
