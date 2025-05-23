@@ -29,7 +29,7 @@ vim.opt.smartcase = true
 
 -- delays
 vim.opt.timeout = true
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 400
 vim.opt.updatetime = 250
 
 local chezmoi = require("chris468.config.chezmoi")
