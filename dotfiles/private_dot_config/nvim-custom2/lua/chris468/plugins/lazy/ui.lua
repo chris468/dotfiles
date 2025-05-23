@@ -30,6 +30,11 @@ return {
     "nvim-lualine/lualine.nvim",
     dependencies = { "mini.icons" },
     event = "VeryLazy",
+    keys = {
+      { "<leader>sn", "<cmd>Noice telescope<CR>", desc = "Notifications" },
+      { "<leader>sN", "<cmd>Noice all<CR>", desc = "Noice" },
+      { "<leader>ud", "<cmd>Noice dismiss<CR>", desc = "Dismiss notifications" },
+    },
     opts = {
       sections = {
         lualine_a = { { "mode", fmt = config.format.mode } },
