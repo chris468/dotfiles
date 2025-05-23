@@ -2,9 +2,22 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
+    config = function(_, opts)
+      local telescope = require("telescope")
+      telescope.setup(opts)
+      if require("chris468.util.lazy").has_plugin("noice.nvim") then
+        telescope.load_extension("noice")
+      end
+    end,
     dependencies = "plenary.nvim",
     keys = {
-      { "<leader>/", "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
+      {
+        "<leader>/",
+        function()
+          require("chris468.plugins.config.telescope").grep()
+        end,
+        desc = "Live grep",
+      },
       { "<leader><leader>", "<cmd>Telescope find_files<CR>", desc = "Files" },
       { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
       { "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "Recent files" },
