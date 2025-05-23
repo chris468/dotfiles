@@ -67,7 +67,7 @@ return {
       },
       lsp = {
         progress = {
-          enabled = false,
+          format_done = { "" },
         },
       },
       presets = {
