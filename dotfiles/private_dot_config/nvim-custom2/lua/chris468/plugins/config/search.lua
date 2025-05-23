@@ -7,8 +7,15 @@ local actions_state = require("telescope.actions.state")
 local M = {}
 
 local defaults = {
-  hidden = true,
-  ignored = false,
+  search_hidden_files = false,
+  search_ignored_files = false,
+  default_globs = {
+    "!**/.git/**",
+    "!**/node_modules/**",
+    "!**/bin/**",
+    "!**/obj/**",
+    "!**/.venv/**",
+  },
 }
 
 function M.grep(opts)
@@ -17,13 +24,13 @@ function M.grep(opts)
 
   opts.attach_mappings = function(_, map)
     map({ "i", "n" }, "<C-E>i", function()
-      opts.ignored = not opts.ignored
+      opts.search_ignored_files = not opts.search_ignored_files
       opts.default_text = actions_state.get_current_line()
       M.grep(opts)
     end)
 
     map({ "i", "n" }, "<C-e>h", function()
-      opts.hidden = not opts.hidden
+      opts.search_hidden_files = not opts.search_hidden_files
       opts.default_text = actions_state.get_current_line()
       M.grep(opts)
     end)
@@ -37,22 +44,32 @@ function M.grep(opts)
         return nil
       end
 
-      local pieces = vim.split(prompt, "  ")
       local args = { "rg" }
+
+      for _, glob in ipairs(opts.default_globs) do
+        vim.list_extend(args, { "--glob", glob })
+      end
+
+      local pieces = vim.split(prompt, "  ")
       if pieces[1] then
         vim.list_extend(args, { "-e", pieces[1] })
       end
 
       if pieces[2] and pieces[2] ~= "" then
-        vim.list_extend(args, { "-g", pieces[2] })
+        local globs = vim.split(pieces[2], "|")
+        for _, glob in ipairs(globs) do
+          if glob and glob ~= "" then
+            vim.list_extend(args, { "--glob", glob })
+          end
+        end
       end
 
-      if opts.hidden then
+      if opts.search_hidden_files then
         vim.list_extend(args, { "--hidden" })
       end
 
-      if not opts.ignored then
-        vim.list_extend(args, { "--no-ignore" })
+      if not opts.search_ignored_files then
+        vim.list_extend(args, { "--no-ignore" }) -- don't respect .gitignore, etc.
       end
 
       vim.list_extend(
@@ -67,8 +84,11 @@ function M.grep(opts)
 
   pickers
     .new(opts, {
-      prompt_title = string.format("Grep%s%s", opts.hidden and " 󰘓" or "", opts.ignored and "" or " "),
-      -- prompt_prefix = string.format("%s%s > ", opts.hidden and "󰘓" or " ", opts.ignored and " " or ""),
+      prompt_title = string.format(
+        "Grep%s%s",
+        opts.search_hidden_files and " 󰘓" or "",
+        opts.search_ignored_files and " " or ""
+      ),
       debounce = 100,
       finder = finder,
       preview = conf.grep_previewer(opts),
