@@ -14,7 +14,7 @@ return {
       {
         "<leader>/",
         function()
-          require("chris468.plugins.config.telescope").grep()
+          require("chris468.plugins.config.search").grep()
         end,
         desc = "Live grep",
       },
