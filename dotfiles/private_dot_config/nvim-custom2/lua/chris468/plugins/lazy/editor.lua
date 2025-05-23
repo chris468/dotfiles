@@ -30,7 +30,12 @@ return {
         desc = "Explore",
       },
     },
-    opts = {},
+    opts = {
+      mappings = {
+        close = "<Esc>",
+        go_in_plus = "<Enter>",
+      },
+    },
     version = "*",
   },
   {
