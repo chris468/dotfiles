@@ -62,16 +62,29 @@ return {
       "nvim-notify",
     },
     opts = {
-      presets = {
-        command_palette = false,
-        inc_rename = false,
-      },
       cmdline = {
         view = "cmdline",
       },
       lsp = {
         progress = {
           enabled = false,
+        },
+      },
+      presets = {
+        command_palette = false,
+        inc_rename = false,
+      },
+      routes = {
+        {
+          filter = {
+            any = {
+              { error = true },
+              { warning = true },
+              { event = "notify" },
+            },
+          },
+          opts = { title = "" },
+          view = "notify",
         },
       },
     },
