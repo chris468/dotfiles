@@ -1,4 +1,21 @@
 local config = require("chris468.plugins.config.lualine")
+
+local function remove_border(original, direction)
+  if type(original) == "string" then
+    original = require("notify.stages")[original]
+  end
+  return vim.tbl_map(function(v)
+    return function(...)
+      local result = v(...)
+      if result.border then
+        result.border = "none"
+      else
+      end
+      return result
+    end
+  end, original(direction))
+end
+
 return {
   {
     "echasnovski/mini.icons",
@@ -42,6 +59,7 @@ return {
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
+      "nvim-notify",
     },
     opts = {
       presets = {
@@ -51,9 +69,6 @@ return {
       cmdline = {
         view = "cmdline",
       },
-      notify = {
-        enabled = false,
-      },
       lsp = {
         progress = {
           enabled = false,
@@ -62,12 +77,21 @@ return {
     },
   },
   {
-    "j-hui/fidget.nvim",
-    lazy = false,
-    opts = {
-      notification = {
-        override_vim_notify = true,
-      },
-    },
+    "rcarriga/nvim-notify",
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts, {
+        icons = {
+          DEBUG = Chris468.ui.icons.debug,
+          ERROR = Chris468.ui.icons.error,
+          INFO = Chris468.ui.icons.info,
+          TRACE = Chris468.ui.icons.trace,
+          WARN = Chris468.ui.icons.warning,
+        },
+        stages = remove_border("fade_in_slide_out", "bottom_up"),
+        render = "compact",
+        top_down = false,
+      })
+    end,
+    version = "*",
   },
 }
