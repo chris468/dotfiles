@@ -75,6 +75,9 @@ return {
           format_done = { "" },
         },
       },
+      messages = {
+        view = "mini",
+      },
       presets = {
         command_palette = false,
         inc_rename = false,
