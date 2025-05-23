@@ -36,8 +36,8 @@ local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   keymaps = {
     { "<Esc>", "<cmd>nohlsearch<CR>", desc = "Clear search hilight" },
-    { "<leader>l", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
-    { "<leader>X", require("chris468.util.lua").run_selection, desc = "Run selected lua", mode = { "n", "x" } },
+    { "<leader>L", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
+    { "<leader>lx", require("chris468.util.lua").run_selection, desc = "Run selected", mode = { "n", "x" } },
   },
   options = {
     work = chezmoi.work,
