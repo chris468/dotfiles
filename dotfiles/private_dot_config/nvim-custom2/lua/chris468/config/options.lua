@@ -47,14 +47,7 @@ local chris468 = {
     },
     ---@type chris468.config.FormattersByFiletype
     formatters = {
-      cs = {
-        {
-          "csharpier",
-          prerequisite = function()
-            return false, "Too opinionated towards nonstandard style"
-          end,
-        },
-      },
+      cs = { { "csharpier", install = false } },
       lua = { "stylua" },
       python = { "black" },
     },

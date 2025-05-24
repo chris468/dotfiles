@@ -26,27 +26,30 @@ local function raise_filetype(bufnr)
 end
 
 ---@param package_name string
----@param prerequisite? chris468.config.CheckPrequisite
+---@param install? chris468.config.ShouldInstallTool
 ---@return boolean
-local function check_prerequisite(package_name, prerequisite)
-  prerequisite = prerequisite or function()
-    return true, ""
+local function should_install_tool(package_name, install)
+  local should_install, description
+  if install == nil then
+    should_install = true
+  elseif type(install) == "function" then
+    should_install, description = install()
+  else
+    should_install = install
   end
 
-  local can_install, description = prerequisite()
-  if not can_install then
-    notify("Missing prerequisite for " .. package_name .. ": " .. description, vim.log.levels.WARN)
+  if not should_install and description then
+    notify("Skipping " .. package_name .. "install: " .. description, vim.log.levels.WARN)
   end
 
-  ---@diagnostic disable-next-line: return-type-mismatch
-  return can_install
+  return should_install
 end
 
 ---@param bufnr integer
 ---@param package_name string
----@param prerequisite? chris468.config.CheckPrequisite
+---@param install? chris468.config.ShouldInstallTool
 ---@param callback? fun()
-local function install_package(bufnr, package_name, prerequisite, callback)
+local function install_package(bufnr, package_name, install, callback)
   local function complete()
     raise_filetype(bufnr)
     if callback then
@@ -55,7 +58,7 @@ local function install_package(bufnr, package_name, prerequisite, callback)
   end
   local registry = require("mason-registry")
   local ok, package = pcall(registry.get_package, package_name)
-  if not ok or package:is_installed() or not check_prerequisite(package_name, prerequisite) then
+  if not ok or package:is_installed() or not should_install_tool(package_name, install) then
     complete()
     return
   end
@@ -107,7 +110,7 @@ local function install_and_enable_lsps(bufnr, filetype)
     if lsp_config then
       vim.lsp.config(lsp, lsp_config)
     end
-    install_package(bufnr, lsp_package(lsp), config.prerequisite)
+    install_package(bufnr, lsp_package(lsp), config.install)
   end
 end
 
@@ -119,8 +122,8 @@ local function install_tools_for_filetype(bufnr, tools_for_filetype, filetype, c
   for _, tool in ipairs(tools_for_filetype[filetype] or {}) do
     tool = type(tool) == "string" and { tool } or tool
     local package = tool[1]
-    local prerequisite = tool.prerequisite
-    install_package(bufnr, package, prerequisite, function()
+    local install = tool.install
+    install_package(bufnr, package, install, function()
       if callback then
         callback(bufnr, tool --[[@as chris468.config.ToolSpec)--]])
       end

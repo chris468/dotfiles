@@ -2,7 +2,13 @@
 ---@return table<string, string[]>
 local function convert(tools_by_filetype)
   local function filter(v)
-    return type(v) == "string" or v.prerequisite == nil or v.prerequisite()
+    if type(v) == "string" then
+      return true
+    elseif type(v.install) == "function" then
+      return v.install()
+    else
+      return v.install ~= false
+    end
   end
 
   local function extract_tool_name(v)
