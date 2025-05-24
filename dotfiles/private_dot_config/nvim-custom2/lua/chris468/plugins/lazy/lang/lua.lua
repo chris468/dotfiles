@@ -51,7 +51,7 @@ return {
     version = false,
   },
   {
-    "folke/snacks.nvim",
+    "snacks.nvim",
     opts = {
       win = { enable = true },
       styles = {
