@@ -109,10 +109,26 @@ return {
           TRACE = Chris468.ui.icons.trace,
           WARN = Chris468.ui.icons.warning,
         },
-        stages = remove_border("fade_in_slide_out", "bottom_up"),
         render = "compact",
-        top_down = false,
+
+        -- custom option, handled below
+        remove_border = true,
       })
+    end,
+  },
+  {
+    "nvim-notify",
+    opts = function(_, opts)
+      if not opts.remove_border then
+        return
+      end
+      if opts.stages == nil then
+        opts.stages = "fade_in_slide_out"
+      end
+      if opts.top_down == nil then
+        opts.top_down = true
+      end
+      opts.stages = remove_border(opts.stages, opts.top_down and "top_down" or "bottom_up")
     end,
   },
   {
