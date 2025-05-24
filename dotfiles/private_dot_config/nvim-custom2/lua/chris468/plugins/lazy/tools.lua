@@ -103,9 +103,9 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
     build = ":TSUpdate",
     event = "VeryLazy",
-    main = "nvim-treesitter.configs",
     opts = {
       highlight = {
         enable = true,
