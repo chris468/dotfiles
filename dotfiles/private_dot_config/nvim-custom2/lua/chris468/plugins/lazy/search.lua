@@ -11,13 +11,7 @@ return {
     end,
     dependencies = "plenary.nvim",
     keys = {
-      {
-        "<leader>/",
-        function()
-          require("chris468.plugins.config.search").grep()
-        end,
-        desc = "Live grep",
-      },
+      { "<leader>/", require("chris468.plugins.config.search.grep"), desc = "Live grep" },
       { "<leader><leader>", "<cmd>Telescope find_files<CR>", desc = "Files" },
       { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
       { "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "Recent files" },
