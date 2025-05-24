@@ -67,7 +67,7 @@ local chris468 = {
     },
     ---@type chris468.config.FormattersByFiletype
     formatters = {
-      csharp = {
+      cs = {
         {
           "csharpier",
           prerequisite = function()
