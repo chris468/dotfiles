@@ -69,12 +69,9 @@ return {
         default = {
           "buffer",
           "codeium",
-          "emoji",
           "lsp",
-          "nerdfont",
           "path",
           "snippets",
-          "unicode",
         },
         providers = {
           codeium = {
@@ -95,29 +92,12 @@ return {
               return true
             end,
           },
-          emoji = {
-            module = "blink-emoji",
-            name = "Emoji",
-            score_offset = 15,
-            opts = { insert = true },
-          },
-          nerdfont = {
-            module = "blink-nerdfont",
-            name = "Nerd Fonts",
-            score_offset = 15,
-            opts = { insert = true },
-          },
           snippets = {
             -- Hide snippets after trigger character
             -- https://cmp.saghen.dev/recipes#hide-snippets-after-trigger-character
             should_show_items = function(ctx)
               return ctx.trigger.initial_kind ~= "trigger-character"
             end,
-          },
-          unicode = {
-            module = "chris468.blink.sources.unicode",
-            name = "Unicode",
-            score_offset = 14,
           },
         },
       },

@@ -20,6 +20,7 @@ return {
       { "<leader>r", "<cmd>Telescope resume<CR>", desc = "Resume last search" },
       { "<leader>sh", "<cmd>Telescope highlights<CR>", desc = "Highlights" },
       { "<leader>sk", "<cmd>Telescope keymaps<CR>", desc = "Key maps" },
+      { "<leader>su", require("chris468.plugins.config.search.unicode"), desc = "Unicode symbols" },
       { "<leader>uC", "<cmd>Telescope colorschemes<CR>", desc = "Change color scheme" },
     },
     opts = {
