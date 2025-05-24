@@ -23,8 +23,6 @@ return {
   {
     "saghen/blink.cmp",
     dependencies = {
-      "MahanRahmati/blink-nerdfont.nvim",
-      "moyiz/blink-emoji.nvim",
       { "codeium.nvim", optional = true },
     },
     event = { "CmdLineEnter", "InsertEnter" },
