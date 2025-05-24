@@ -1,3 +1,6 @@
+local util = require("chris468.util")
+local util_lazy = require("chris468.util.lazy")
+
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -5,7 +8,7 @@ return {
     config = function(_, opts)
       local telescope = require("telescope")
       telescope.setup(opts)
-      if require("chris468.util.lazy").has_plugin("noice.nvim") then
+      if util_lazy.has_plugin("noice.nvim") then
         telescope.load_extension("noice")
       end
     end,
@@ -21,6 +24,13 @@ return {
       { "<leader>sh", "<cmd>Telescope highlights<CR>", desc = "Highlights" },
       { "<leader>sk", "<cmd>Telescope keymaps<CR>", desc = "Key maps" },
       { "<leader>su", require("chris468.plugins.config.search.unicode"), desc = "Unicode symbols" },
+      { "<C-R><C-U>", require("chris468.plugins.config.search.unicode"), desc = "Unicode symbols" },
+      {
+        "<C-R><C-U>",
+        util.wrap(require("chris468.plugins.config.search.unicode"), { mode = "i" }),
+        desc = "Unicode symbols",
+        mode = "i",
+      },
       { "<leader>uC", "<cmd>Telescope colorschemes<CR>", desc = "Change color scheme" },
     },
     opts = {
