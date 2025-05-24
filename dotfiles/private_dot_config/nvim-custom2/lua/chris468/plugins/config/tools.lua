@@ -184,11 +184,12 @@ end
 local function register_dynamic_capability_handlers()
   local original = vim.lsp.handlers[vim.lsp.protocol.Methods.client_registerCapability]
   vim.lsp.handlers[vim.lsp.protocol.Methods.client_registerCapability] = function(err, result, context, config)
-    original(err, result, context, config)
+    local ret = original(err, result, context, config)
     local client = vim.lsp.get_client_by_id(context.client_id) or {}
     for bufnr, _ in pairs(client.attached_buffers or {}) do
       configure_inlay_hints(bufnr, client)
     end
+    return ret
   end
 end
 
