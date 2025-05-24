@@ -10,6 +10,6 @@ return {
       { "<leader>l", group = "Lua", icon = "󰢱" },
       { "<leader>s", group = "Search" },
       { "<leader>u", group = "UI" },
-    }, Chris468.keymaps),
+    }, require("chris468.config.mappings")),
   },
 }
