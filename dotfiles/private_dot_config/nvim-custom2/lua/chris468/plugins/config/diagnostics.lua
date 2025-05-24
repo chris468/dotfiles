@@ -1,8 +1,7 @@
 local M = {}
 
-local function configure_diagnostics()
-  vim.diagnostic.config({
-    severity_sort = true,
+local config = {
+  default = {
     signs = {
       text = {
         [vim.diagnostic.severity.ERROR] = Chris468.ui.icons.error .. " ",
@@ -17,7 +16,41 @@ local function configure_diagnostics()
         vim.diagnostic.severity.WARN,
       },
     },
-    virtual_lines = true,
+    virtual_lines = {},
+  },
+  lazy = {
+    signs = false,
+    underline = false,
+    virtual_lines = false,
+  },
+}
+
+setmetatable(config, {
+  __index = function(t, k)
+    local v = rawget(t, k)
+    if v == nil then
+      v = {}
+      rawset(t, k, v)
+    end
+    return v
+  end,
+})
+
+local function configure_diagnostics()
+  vim.diagnostic.config({
+    severity_sort = true,
+    signs = function(_, bufnr)
+      local filetype = vim.bo[bufnr].filetype
+      return config[filetype].signs or config.default.signs
+    end,
+    underline = function(_, bufnr)
+      local filetype = vim.bo[bufnr].filetype
+      return config[filetype].underline or config.default.underline
+    end,
+    virtual_lines = function(_, bufnr)
+      local filetype = vim.bo[bufnr].filetype
+      return config[filetype].virtual_lines or config.default.virtual_lines
+    end,
   })
   return true
 end
