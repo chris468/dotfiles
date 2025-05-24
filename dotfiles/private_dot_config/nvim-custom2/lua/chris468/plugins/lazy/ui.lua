@@ -115,4 +115,24 @@ return {
     end,
     version = "*",
   },
+  {
+    "akinsho/bufferline.nvim",
+    dependencies = { "mini.icons" },
+    event = "VeryLazy",
+    keys = {
+      { "[b", "<cmd>BufferLineCyclePrev<CR>", desc = "Previous" },
+      { "]b", "<cmd>BufferLineCycleNext<CR>", desc = "Next" },
+    },
+    opts = {
+      options = {
+        close_command = function(bufnr)
+          require("snacks").bufdelete(bufnr)
+        end,
+        right_mouse_command = function(bufnr)
+          require("snacks").bufdelete(bufnr)
+        end,
+      },
+    },
+    version = "*",
+  },
 }

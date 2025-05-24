@@ -38,6 +38,21 @@ local chris468 = {
     { "<Esc>", "<cmd>nohlsearch<CR>", desc = "Clear search hilight" },
     { "<leader>L", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
     { "<leader>lx", require("chris468.util.lua").run_selection, desc = "Run selected", mode = { "n", "x" } },
+    { "<leader>bb", "<cmd>e #<CR>", desc = "Switch to previous" },
+    {
+      "<leader>bd",
+      function()
+        require("snacks").bufdelete()
+      end,
+      desc = "Delete buffer",
+    },
+    {
+      "<leader>bo",
+      function()
+        require("snacks").bufdelete.other()
+      end,
+      desc = "Delete buffer",
+    },
   },
   options = {
     work = chezmoi.work,
