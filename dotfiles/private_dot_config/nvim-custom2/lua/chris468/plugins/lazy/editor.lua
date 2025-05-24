@@ -1,3 +1,12 @@
+local git_signs = {
+  add = { text = "┃" },
+  change = { text = "┃" },
+  delete = { text = "╻" },
+  topdelete = { text = "╹" },
+  changedelete = { text = "┃" },
+  untracked = { text = "┆" },
+}
+
 return {
   {
     "echasnovski/mini.surround",
@@ -58,6 +67,13 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "BufRead",
-    opts = {},
+    config = function(_, opts)
+      require("gitsigns").setup(opts)
+      vim.api.nvim_set_hl(0, "GitSignsChangeDelete", { link = "DiagnosticWarn" })
+    end,
+    opts = {
+      signs = git_signs,
+      signs_staged = git_signs,
+    },
   },
 }
