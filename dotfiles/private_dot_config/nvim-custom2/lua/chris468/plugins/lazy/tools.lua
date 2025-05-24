@@ -100,6 +100,7 @@ return {
     opts = {
       linters_by_ft = linters_by_ft,
     },
+    version = false,
   },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -114,6 +115,7 @@ return {
         enable = true,
       },
     },
+    version = false,
   },
   {
     "nvim-treesitter/nvim-treesitter-context",
@@ -121,5 +123,6 @@ return {
     opts = {
       enable = true,
     },
+    version = false,
   },
 }

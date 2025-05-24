@@ -27,6 +27,5 @@ return {
 
       return vim.tbl_deep_extend("force", opts, overrides)
     end,
-    version = "*",
   },
 }

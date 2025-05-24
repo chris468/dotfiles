@@ -8,6 +8,7 @@ return {
       "TmuxNavigateRight",
       "TmuxNavigatePrevious",
     },
+    dependencies = { "which-key.nvim" },
     init = function()
       vim.g.tmux_navigator_no_mappings = 1
     end,
@@ -17,7 +18,7 @@ return {
       { "<C-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Navigate up" },
       { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Navigate right" },
     },
-    dependencies = { "which-key.nvim" },
+    version = false,
   },
   {
     "which-key.nvim",

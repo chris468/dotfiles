@@ -43,5 +43,6 @@ return {
         sorting_strategy = "ascending",
       },
     },
+    version = false,
   },
 }

@@ -11,7 +11,6 @@ return {
       "sn",
     },
     opts = {},
-    verion = "*",
   },
   {
     "echasnovski/mini.pairs",
@@ -36,13 +35,13 @@ return {
         go_in_plus = "<Enter>",
       },
     },
-    version = "*",
   },
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
     lazy = true,
     opts = {},
+    version = false,
   },
   {
     "NeogitOrg/neogit",
@@ -54,6 +53,7 @@ return {
       { "<leader>gg", "<cmd>Neogit<cr>", "Neogit" },
       { "<leader>gC", "<cmd>Neogit commit<cr>", "Neogit commit" },
     },
+    version = false,
   },
   {
     "lewis6991/gitsigns.nvim",

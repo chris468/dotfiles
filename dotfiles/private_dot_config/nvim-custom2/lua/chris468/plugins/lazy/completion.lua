@@ -100,7 +100,6 @@ return {
         },
       },
     },
-    version = "*",
   },
   {
     "Exafunction/windsurf.nvim",
@@ -111,5 +110,6 @@ return {
     opts = {
       enable_cmp_source = false,
     },
+    version = false,
   },
 }

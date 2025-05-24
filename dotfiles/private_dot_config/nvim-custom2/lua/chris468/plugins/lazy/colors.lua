@@ -15,6 +15,7 @@ return {
     end,
     event = "VeryLazy",
     lazy = not theme.tokyonight,
+    version = false,
   },
   {
     "catppuccin/nvim",

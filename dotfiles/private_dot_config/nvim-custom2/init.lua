@@ -7,7 +7,7 @@ require("lazy").setup({
   },
   defaults = {
     lazy = true,
-    version = false,
+    version = "*",
   },
   install = { colorscheme = { Chris468.options.theme, "tokyonight", "habamax" } },
   checker = {

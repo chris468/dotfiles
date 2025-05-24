@@ -58,6 +58,7 @@ return {
         lualine_z = {},
       },
     },
+    version = false,
   },
   {
     "folke/noice.nvim",
@@ -113,7 +114,6 @@ return {
         top_down = false,
       })
     end,
-    version = "*",
   },
   {
     "akinsho/bufferline.nvim",
@@ -133,6 +133,5 @@ return {
         end,
       },
     },
-    version = "*",
   },
 }
