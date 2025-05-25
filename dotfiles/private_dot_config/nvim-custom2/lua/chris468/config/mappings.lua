@@ -3,18 +3,19 @@ local whichkey = require("which-key")
 local util_lua = require("chris468.util.lua")
 
 local mappings = {
+  { "<Esc>", "<cmd>nohlsearch<CR>", desc = "Clear search hilight" },
+  { "<leader>L", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
+  { "<leader>b", group = "Buffers" },
+  { "<leader>bb", "<cmd>e #<CR>", desc = "Switch to previous" },
+  { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
+  { "<leader>bo", snacks.bufdelete.other, desc = "Delete buffer" },
   { "<leader>c", group = "Code" },
   { "<leader>f", group = "Files" },
   { "<leader>g", group = "Git" },
   { "<leader>l", group = "Lua", icon = "󰢱" },
+  { "<leader>lx", util_lua.run_selection, desc = "Run selected", mode = { "n", "x" } },
   { "<leader>s", group = "Search" },
   { "<leader>u", group = "UI" },
-  { "<Esc>", "<cmd>nohlsearch<CR>", desc = "Clear search hilight" },
-  { "<leader>L", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
-  { "<leader>lx", util_lua.run_selection, desc = "Run selected", mode = { "n", "x" } },
-  { "<leader>bb", "<cmd>e #<CR>", desc = "Switch to previous" },
-  { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
-  { "<leader>bo", snacks.bufdelete.other, desc = "Delete buffer" },
   { "j", "gj", hidden = true },
   { "k", "gk", hidden = true },
 }
