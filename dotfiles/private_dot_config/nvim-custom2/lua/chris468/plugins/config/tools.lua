@@ -128,7 +128,7 @@ end
 local function install_tools_for_filetype(bufnr, tools_for_filetype, filetype, callback)
   for _, tool in ipairs(tools_for_filetype[filetype] or {}) do
     tool = type(tool) == "string" and { tool } or tool
-    local package = tool[1]
+    local package = tool.package or tool[1]
     local install = tool.install
     install_package(bufnr, package, install, function()
       if callback then

@@ -1,7 +1,8 @@
 ---@alias chris468.config.ShouldInstallTool boolean|fun(): boolean, string
 
 ---@class chris468.config.ToolSpec
----@field [1] string package name
+---@field [1] string name
+---@field package? string package name (if different from name)
 ---@field install? chris468.config.ShouldInstallTool
 
 ---@class chris468.config.FormatterSpec: chris468.config.ToolSpec
