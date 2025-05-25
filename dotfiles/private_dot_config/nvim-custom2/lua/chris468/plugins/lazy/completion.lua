@@ -56,7 +56,10 @@ return {
         },
       },
       enabled = function()
-        return vim.bo.filetype ~= "TelescopePrompt"
+        return not vim.list_contains({
+          "TelescopePrompt",
+          "minifiles",
+        }, vim.bo.filetype)
       end,
       fuzzy = { implementation = "prefer_rust" },
       keymap = { preset = "super-tab" },
