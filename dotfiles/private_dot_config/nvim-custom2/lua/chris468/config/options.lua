@@ -46,6 +46,11 @@ local chris468 = {
     },
   },
   tools = require("chris468.config.tools"),
+  venv = {
+    additional_filetypes = {
+      "yaml.ansible",
+    },
+  },
   ui = {
     icons = {
       error = "󰅚",

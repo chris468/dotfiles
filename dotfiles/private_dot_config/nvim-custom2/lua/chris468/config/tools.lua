@@ -1,7 +1,6 @@
 --[[ TODO:
     java
     ~~nix~~
-    python
     rust
     sql
     tailwind - ??
@@ -96,6 +95,7 @@ return {
     omnisharp = {},
     phpactor = {},
     pyright = {},
+    ruff = {},
     yamlls = {
       config = {
         settings = {
