@@ -15,6 +15,8 @@ local mappings = {
   { "<leader>bb", "<cmd>e #<CR>", desc = "Switch to previous" },
   { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
   { "<leader>bo", snacks.bufdelete.other, desc = "Delete buffer" },
+  { "j", "gj", hidden = true },
+  { "k", "gk", hidden = true },
 }
 
 whichkey.add(mappings)
