@@ -1,7 +1,5 @@
 --[[ TODO:
-    dotfiles
     java
-    json
     markdown
     ~~nix~~
     nushell
@@ -78,6 +76,19 @@ return {
           },
         },
       },
+    },
+    jsonls = {
+      config = function()
+        return {
+          settings = {
+            json = {
+              format = { enable = true },
+              validate = { enable = true },
+              schemas = require("schemastore").json.schemas(),
+            },
+          },
+        }
+      end,
     },
     omnisharp = {},
     pyright = {},
