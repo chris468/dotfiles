@@ -1,3 +1,27 @@
+--[[ TODO:
+    bash
+    dotfiles
+    java
+    json
+    markdown
+    ~~nix~~
+    nushell
+    omnisharp
+    php
+    python
+    rust
+    sql
+    tailwind - ??
+    terraform
+    toml
+    typescript - require angular config?
+    yaml
+
+also:
+  test
+  dap
+]]
+
 local chezmoi = require("chris468.config.chezmoi")
 
 return {
