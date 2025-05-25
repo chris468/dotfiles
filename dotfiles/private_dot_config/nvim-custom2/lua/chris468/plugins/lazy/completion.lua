@@ -22,9 +22,6 @@ end
 return {
   {
     "saghen/blink.cmp",
-    dependencies = {
-      { "codeium.nvim", optional = true },
-    },
     event = { "CmdLineEnter", "InsertEnter" },
     opts = {
       completion = {
@@ -66,18 +63,11 @@ return {
       sources = {
         default = {
           "buffer",
-          "codeium",
           "lsp",
           "path",
           "snippets",
         },
         providers = {
-          codeium = {
-            enabled = Chris468.tools.ai.provider == "codeium",
-            name = "Codeium",
-            module = "codeium.blink",
-            async = true,
-          },
           cmdline = {
             enabled = function()
               -- Avoid hangs on windows.
@@ -100,6 +90,7 @@ return {
         },
       },
     },
+    opts_extend = { "sources.default" },
   },
   {
     "Exafunction/windsurf.nvim",
@@ -110,6 +101,75 @@ return {
     opts = {
       enable_cmp_source = false,
     },
+    specs = {
+      "blink.cmp",
+      dependencies = { "windsurf.nvim" },
+      opts = {
+        sources = {
+          default = { "codeium" },
+          providers = {
+            codeium = {
+              enabled = Chris468.tools.ai.provider == "codeium",
+              name = "Codeium",
+              module = "codeium.blink",
+              async = true,
+            },
+          },
+        },
+      },
+    },
     version = false,
+  },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    enabled = Chris468.tools.ai.provider == "copilot",
+    event = "InsertEnter",
+    opts = {
+      suggestion = { enabled = false },
+      panel = { enabled = false },
+    },
+    specs = {
+      {
+        "CopilotC-Nvim/CopilotChat.nvim",
+        cmd = {
+          "CopilotChat",
+          "CopilotChatOpen",
+          "CopilotChatClose",
+          "CopilotChatToggle",
+          "CopilotChatStop",
+          "CopilotChatReset",
+          "CopilotChatSave",
+          "CopilotChatLoad",
+          "CopilotChatPrompts",
+          "CopilotChatModels",
+          "CopilotChatAgents",
+        },
+        opts = {},
+      },
+      {
+        "blink.cmp",
+        dependencies = {
+          {
+            "giuxtaposition/blink-cmp-copilot",
+            enabled = Chris468.tools.ai.provider == "copilot",
+            dependencies = "copilot.lua",
+          },
+        },
+        opts = {
+          sources = {
+            default = { "copilot" },
+            providers = {
+              copilot = {
+                async = true,
+                module = "blink-cmp-copilot",
+                name = "Copilot",
+                score_offset = 100,
+              },
+            },
+          },
+        },
+      },
+    },
   },
 }
