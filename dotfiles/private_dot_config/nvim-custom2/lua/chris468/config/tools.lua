@@ -1,10 +1,6 @@
 --[[ TODO:
     java
-    markdown
     ~~nix~~
-    nushell
-    omnisharp
-    php
     python
     rust
     sql
@@ -35,6 +31,9 @@ return {
     go = { "goimports", "gofumpt" },
     htmlangular = { "prettier" },
     lua = { "stylua" },
+    markdown = { "prettier" },
+    ["markdown.mdx"] = { "prettier" },
+    php = { { "php_cs_fixer", package = "php-cs-fixer" } },
     python = { "black" },
     sh = { "shfmt" },
     zsh = { "shfmt" },
@@ -43,6 +42,8 @@ return {
   linters = {
     dockerfile = { "hadolint" },
     markdown = { "markdownlint-cli2" },
+    ["markdown.mdx"] = { "markdownlint-cli2" },
+    php = { "phpcs" },
   },
   ---@type chris468.config.Lsps
   lsps = {
@@ -90,7 +91,10 @@ return {
         }
       end,
     },
+    marksman = {},
+    nushell = {},
     omnisharp = {},
+    phpactor = {},
     pyright = {},
     yamlls = {
       config = {
