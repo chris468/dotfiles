@@ -24,7 +24,6 @@ return {
       { "<leader>sh", "<cmd>Telescope highlights<CR>", desc = "Highlights" },
       { "<leader>sk", "<cmd>Telescope keymaps<CR>", desc = "Key maps" },
       { "<leader>su", require("chris468.plugins.config.search.unicode"), desc = "Unicode symbols" },
-      { "<C-R><C-U>", require("chris468.plugins.config.search.unicode"), desc = "Unicode symbols" },
       {
         "<C-R><C-U>",
         util.wrap(require("chris468.plugins.config.search.unicode"), { mode = "i" }),
