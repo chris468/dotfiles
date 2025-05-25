@@ -1,5 +1,4 @@
 --[[ TODO:
-    bash
     dotfiles
     java
     json
@@ -33,11 +32,14 @@ return {
   },
   ---@type chris468.config.FormattersByFiletype
   formatters = {
+    bash = { "shfmt" },
     cs = { { "csharpier", install = false } },
     go = { "goimports", "gofumpt" },
     htmlangular = { "prettier" },
     lua = { "stylua" },
     python = { "black" },
+    sh = { "shfmt" },
+    zsh = { "shfmt" },
   },
   ---@type chris468.config.ToolsByFiletype
   linters = {
@@ -48,6 +50,11 @@ return {
   lsps = {
     angular_ls = {},
     ansiblels = {},
+    bashls = {
+      config = {
+        filetypes = { "bash", "sh", "zsh" },
+      },
+    },
     clangd = {},
     dockerls = {},
     docker_compose_language_service = {},
