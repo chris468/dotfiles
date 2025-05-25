@@ -3,11 +3,6 @@
     ~~nix~~
     rust
     sql
-    tailwind - ??
-    terraform
-    toml
-    typescript - require angular config?
-    yaml
 
 also:
   test
@@ -35,6 +30,9 @@ return {
     php = { { "php_cs_fixer", package = "php-cs-fixer" } },
     python = { "black" },
     sh = { "shfmt" },
+    terraform = { "terraform_fmt" },
+    ["terraform-vars"] = { "terraform_fmt" },
+    tf = { "terraform_fmt" },
     zsh = { "shfmt" },
   },
   ---@type chris468.config.ToolsByFiletype
@@ -43,10 +41,12 @@ return {
     markdown = { "markdownlint-cli2" },
     ["markdown.mdx"] = { "markdownlint-cli2" },
     php = { "phpcs" },
+    terraform = { "terraform_validate" },
+    tf = { "terraform_validate" },
   },
   ---@type chris468.config.Lsps
   lsps = {
-    angular_ls = {},
+    angularls = {},
     ansiblels = {},
     bashls = {
       config = {
@@ -96,6 +96,45 @@ return {
     phpactor = {},
     pyright = {},
     ruff = {},
+    tailwindcss = {
+      config = function()
+        local filetypes = vim.tbl_get(vim.lsp.config, "tailwindcss", "filetypes")
+        if filetypes then
+          filetypes = vim.tbl_filter(function(ft)
+            return ft ~= "markdown"
+          end, vim.lsp.config.tailwindcss.filetypes or {})
+        end
+        return {
+          filetypes = filetypes,
+        }
+      end,
+    },
+    terraformls = {
+      filetypes = { "tf", "terraform", "terraform-vars" },
+    },
+    taplo = {},
+    vtsls = {
+      config = function()
+        local mason_path = require("mason-core.installer.InstallLocation").global():get_dir()
+        return {
+          settings = {
+            vstls = {
+              tsserver = {
+                globalPlugins = {
+                  {
+                    name = "@angular/language-server",
+                    location = string.format(
+                      "%s/packages/angular-language-server/node_modules/@angular/language-server",
+                      mason_path
+                    ),
+                  },
+                },
+              },
+            },
+          },
+        }
+      end,
+    },
     yamlls = {
       config = {
         settings = {
