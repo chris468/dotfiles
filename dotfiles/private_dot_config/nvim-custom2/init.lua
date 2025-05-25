@@ -1,6 +1,8 @@
 require("chris468.config.options")
 require("chris468.util.lazy").install()
 
+vim.filetype.add(Chris468.filetypes or {})
+
 require("lazy").setup({
   spec = {
     { import = "chris468.plugins.lazy" },

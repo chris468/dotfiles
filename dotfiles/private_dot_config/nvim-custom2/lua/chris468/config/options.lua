@@ -38,6 +38,13 @@ local chris468 = {
     work = chezmoi.work,
     theme = chezmoi.theme,
   },
+  ---@type vim.filetype.add.filetypes
+  filetypes = {
+    pattern = {
+      ["docker%-compose%.ya?ml"] = "yaml.docker-compose",
+      ["docker%-compose%..*%.ya?ml"] = "yaml.docker-compose",
+    },
+  },
   tools = require("chris468.config.tools"),
   ui = {
     icons = {
