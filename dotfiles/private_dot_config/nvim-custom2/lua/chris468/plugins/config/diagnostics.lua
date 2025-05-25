@@ -16,7 +16,8 @@ local config = {
         vim.diagnostic.severity.WARN,
       },
     },
-    virtual_lines = {},
+    virtual_lines = false,
+    virtual_text = {},
   },
   lazy = {
     signs = false,
@@ -50,6 +51,10 @@ local function configure_diagnostics()
     virtual_lines = function(_, bufnr)
       local filetype = vim.bo[bufnr].filetype
       return config[filetype].virtual_lines or config.default.virtual_lines
+    end,
+    virtual_text = function(_, bufnr)
+      local filetype = vim.bo[bufnr].filetype
+      return config[filetype].virtual_text or config.default.virtual_text
     end,
   })
   return true
