@@ -10,18 +10,25 @@ return {
   ---@type chris468.config.FormattersByFiletype
   formatters = {
     cs = { { "csharpier", install = false } },
+    go = { "goimports", "gofumpt" },
     htmlangular = { "prettier" },
     lua = { "stylua" },
     python = { "black" },
   },
   ---@type chris468.config.ToolsByFiletype
   linters = {
+    dockerfile = { "hadolint" },
     markdown = { "markdownlint-cli2" },
   },
   ---@type chris468.config.Lsps
   lsps = {
     angular_ls = {},
     ansiblels = {},
+    clangd = {},
+    dockerls = {},
+    docker_compose_language_service = {},
+    gopls = {},
+    helm_ls = {},
     lua_ls = {
       config = {
         settings = {
