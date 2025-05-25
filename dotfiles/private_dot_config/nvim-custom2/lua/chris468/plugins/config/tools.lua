@@ -75,23 +75,25 @@ local function install_package(bufnr, package_name, install, callback)
   package:install()
 end
 
----@param filetype string
-local function lsps_for_filetype(lsps, filetype)
-  local _ = require("lspconfig")
-  local function iter(tbl, key)
-    local next_key, config = next(tbl, key)
-    while next_key and not vim.list_contains(vim.lsp.config[next_key].filetypes or {}, filetype) do
-      next_key, config = next(tbl, next_key)
+local function map_lsps_to_filetypes()
+  _ = require("lspconfig")
+  local result = vim.defaulttable(function()
+    return {}
+  end)
+  --
+  for lsp, _ in pairs(Chris468.tools.lsps) do
+    if vim.lsp.config[lsp] then
+      for _, filetype in ipairs(vim.lsp.config[lsp].filetypes or {}) do
+        table.insert(result[filetype], lsp)
+      end
     end
-
-    return next_key, config
   end
 
-  return iter, lsps
+  return result
 end
 
----@param config? lspconfig.Config
----@return lspconfig.Config?
+---@param config? vim.lsp.Config
+---@return vim.lsp.Config?
 local function merge_completion_capabilities(config)
   if require("chris468.util.lazy").has_plugin("blink.cmp") then
     config = config or {}
@@ -102,15 +104,16 @@ local function merge_completion_capabilities(config)
 end
 
 ---@param bufnr integer
----@param filetype string
-local function install_and_enable_lsps(bufnr, filetype)
-  for lsp, config in lsps_for_filetype(Chris468.tools.lsps, filetype) do
+---@param lsps string[]
+local function install_and_enable_lsps(bufnr, lsps)
+  for _, lsp in ipairs(lsps) do
     vim.lsp.enable(lsp)
-    local lsp_config = merge_completion_capabilities(config.config)
+    local lsp_tool = Chris468.tools.lsps[lsp]
+    local lsp_config = merge_completion_capabilities(lsp_tool.config)
     if lsp_config then
       vim.lsp.config(lsp, lsp_config)
     end
-    install_package(bufnr, lsp_package(lsp), config.install)
+    install_package(bufnr, lsp_package(lsp), lsp_tool.install)
   end
 end
 
@@ -144,12 +147,18 @@ local function install_formatters(bufnr, filetype)
   end)
 end
 
+---@type table<string, string[]>
+local lsps_by_ft
 ---@param bufnr integer
 ---@param filetype string
 local function install_tools(bufnr, filetype)
+  if not lsps_by_ft then
+    lsps_by_ft = map_lsps_to_filetypes()
+  end
+
   if not installed_tools_for_filetype[filetype] then
     installed_tools_for_filetype[filetype] = true
-    install_and_enable_lsps(bufnr, filetype)
+    install_and_enable_lsps(bufnr, lsps_by_ft[filetype])
     install_linters(bufnr, filetype)
     install_formatters(bufnr, filetype)
   end
