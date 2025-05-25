@@ -13,7 +13,7 @@ local chezmoi = require("chris468.config.chezmoi")
 
 return {
   ---@type string[] disable tooling on these filetypes
-  disable = { "lazy", "lazy_backdrop", "mason" },
+  disable_filetypes = { "lazy", "lazy_backdrop", "mason" },
   ---@type { provider: "codeium"|"copilot" }
   ai = {
     provider = chezmoi.work and "copilot" or "codeium",

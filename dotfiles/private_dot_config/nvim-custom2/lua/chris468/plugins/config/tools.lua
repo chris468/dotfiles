@@ -221,7 +221,7 @@ function M.configure_tool_install()
     group = vim.api.nvim_create_augroup("chris468.tools", { clear = true }),
     callback = function(arg)
       local filetype = arg.match
-      if not vim.list_contains(Chris468.tools.disable, filetype) then
+      if not vim.list_contains(Chris468.tools.disable_filetypes, filetype) then
         local buf = arg.buf
         return install_tools(buf, filetype)
       end
