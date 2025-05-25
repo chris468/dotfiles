@@ -81,9 +81,11 @@ local function map_lsps_to_filetypes()
     return {}
   end)
   --
-  for lsp, _ in pairs(Chris468.tools.lsps) do
+  for lsp, lsp_tool in pairs(Chris468.tools.lsps) do
     if vim.lsp.config[lsp] then
-      for _, filetype in ipairs(vim.lsp.config[lsp].filetypes or {}) do
+      local tool_filetypes = (lsp_tool.config or {}).filetypes
+      local lspconfig_filetypes = vim.lsp.config[lsp].filetypes or {}
+      for _, filetype in ipairs(tool_filetypes or lspconfig_filetypes) do
         table.insert(result[filetype], lsp)
       end
     end
