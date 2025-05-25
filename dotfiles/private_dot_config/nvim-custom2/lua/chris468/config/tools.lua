@@ -10,6 +10,7 @@ return {
   ---@type chris468.config.FormattersByFiletype
   formatters = {
     cs = { { "csharpier", install = false } },
+    htmlangular = { "prettier" },
     lua = { "stylua" },
     python = { "black" },
   },
@@ -20,6 +21,7 @@ return {
   },
   ---@type chris468.config.Lsps
   lsps = {
+    angular_ls = {},
     lua_ls = {
       config = {
         settings = {
