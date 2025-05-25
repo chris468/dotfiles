@@ -9,4 +9,4 @@
 
 ---@alias chris468.config.ToolsByFiletype { [string]: string[]|chris468.config.ToolSpec[] }
 ---@alias chris468.config.FormattersByFiletype { [string]: string[]|chris468.config.FormatterSpec[] }
----@alias chris468.config.Lsps  table<string, { config: vim.lsp.Config, install?: chris468.config.ShouldInstallTool }>
+---@alias chris468.config.Lsps  table<string, { config: vim.lsp.Config|fun(): vim.lsp.Config, install?: chris468.config.ShouldInstallTool }>

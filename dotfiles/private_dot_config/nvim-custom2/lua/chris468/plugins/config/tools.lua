@@ -83,6 +83,8 @@ local function map_lsps_to_filetypes()
   --
   for lsp, lsp_tool in pairs(Chris468.tools.lsps) do
     if vim.lsp.config[lsp] then
+      local tool_config = type(lsp_tool.config) == "function" and lsp_tool.config() or lsp_tool.config
+      lsp_tool.config = tool_config
       local tool_filetypes = (lsp_tool.config or {}).filetypes
       local lspconfig_filetypes = vim.lsp.config[lsp].filetypes or {}
       for _, filetype in ipairs(tool_filetypes or lspconfig_filetypes) do
