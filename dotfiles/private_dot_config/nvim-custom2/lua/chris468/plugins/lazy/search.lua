@@ -25,8 +25,8 @@ return {
     },
     keys = function()
       local keys = {
-        { "<leader>/", require("chris468.plugins.config.search.grep"), desc = "Live grep" },
-        { "<leader><leader>", "<cmd>Telescope find_files<CR>", desc = "Files" },
+        { "<leader>/", require("chris468.plugins.config.search.rg"), desc = "Live grep" },
+        { "<leader><leader>", require("chris468.plugins.config.search.fd"), desc = "Files" },
         { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
         { "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "Recent files" },
         { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Git status" },
