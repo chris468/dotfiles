@@ -87,4 +87,17 @@ return {
       },
     },
   },
+  {
+    "jbyuki/one-small-step-for-vimkind",
+    keys = {
+      {
+        "<leader>ld",
+        function()
+          require("osv").launch({ port = 8086 })
+        end,
+        desc = "Listen for debugger",
+      },
+    },
+    version = false,
+  },
 }
