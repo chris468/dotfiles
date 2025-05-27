@@ -3,29 +3,24 @@ return {
     "folke/trouble.nvim",
     cmd = "Trouble",
     dependencies = { "mini.icons" },
-    opts = function(_, opts)
-      local icons = require("mini.icons")
-      local strutil = require("chris468.util.string")
-      local overrides = {
-        focus = false,
-        follow = false,
-        open_no_results = true,
-        warn_no_results = false,
-        modes = {
-          symbols = {
-            follow = true,
-          },
+    opts = {
+      follow = false,
+      icons = {
+        kinds = setmetatable({}, {
+          __index = function(_, k)
+            return require("mini.icons").get("lsp", k)
+          end,
+        }),
+      },
+      modes = {
+        lsp_base = {
+          focus = true,
+          follow = false,
         },
-        icons = {
-          kinds = {},
+        diagnostics = {
+          follow = true,
         },
-      }
-
-      for _, kind in ipairs(icons.list("lsp")) do
-        overrides.icons.kinds[strutil.capitalize(kind)] = icons.get("lsp", kind)
-      end
-
-      return vim.tbl_deep_extend("force", opts, overrides)
-    end,
+      },
+    },
   },
 }

@@ -29,38 +29,48 @@ local mappings = {
 
 local lsp_mappings = {
   {
-    "ci",
-    "<cmd>Trouble lsp_incoming_calls follow=false<CR>",
+    "<leader>ci",
+    "<cmd>Trouble lsp_incoming_calls<CR>",
     desc = "Incoming calls (Trouble)",
   },
   {
-    "co",
-    "<cmd>Trouble lsp_outgoing_calls follow=false<CR>",
+    "<leader>co",
+    "<cmd>Trouble lsp_outgoing_calls<CR>",
     desc = "Outgoing calls (Trouble)",
   },
   {
+    "<leader>cs",
+    "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>",
+    desc = "Find symbol",
+  },
+  {
+    "<leader>cx",
+    "<cmd>Trouble close<CR>",
+    desc = "Close Trouble",
+  },
+  {
     "gd",
-    "<cmd>Trouble lsp_definitions follow=false<CR>",
+    "<cmd>Trouble lsp_definitions<CR>",
     desc = "Go to definition (Trouble)",
   },
   {
     "gD",
-    "<cmd>Trouble lsp_declarations follow=false<CR>",
+    "<cmd>Trouble lsp_declarations<CR>",
     desc = "Go to declarations (Trouble)",
   },
   {
     "gI",
-    "<cmd>Trouble lsp_implementations follow=false<CR>",
+    "<cmd>Trouble lsp_implementations<CR>",
     desc = "Go to implementation (Trouble)",
   },
   {
     "gr",
-    "<cmd>Trouble lsp_references follow=false<CR>",
+    "<cmd>Trouble lsp_references<CR>",
     desc = "Find references (Trouble)",
   },
   {
     "gy",
-    "<cmd>Trouble lsp_type_definitions follow=false<CR>",
+    "<cmd>Trouble lsp_type_definitions<CR>",
     desc = "Go to type definition (Trouble)",
   },
 }
