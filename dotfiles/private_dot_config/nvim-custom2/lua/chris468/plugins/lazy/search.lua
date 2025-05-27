@@ -52,6 +52,7 @@ return {
     end,
     opts = {
       defaults = {
+        dynamic_preview_title = true,
         layout_config = {
           prompt_position = "top",
           mirror = true,
