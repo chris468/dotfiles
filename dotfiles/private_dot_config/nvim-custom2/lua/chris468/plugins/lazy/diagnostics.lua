@@ -22,6 +22,17 @@ return {
           follow = true,
         },
       },
+      win = {
+        size = 10,
+      },
+      preview = {
+        type = "float",
+        scratch = true,
+        size = { width = 0.8, height = 0.3 },
+        anchor = "SW",
+        border = "rounded",
+        position = { -12, 0.5 },
+      },
     },
   },
 }
