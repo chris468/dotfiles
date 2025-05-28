@@ -16,6 +16,7 @@ return {
         lsp_base = {
           focus = true,
           follow = false,
+          auto_refresh = false,
         },
         diagnostics = {
           follow = true,
