@@ -11,11 +11,7 @@ local mappings = {
   { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
   { "<leader>bo", snacks.bufdelete.other, desc = "Delete buffer" },
   { "<leader>c", group = "Code" },
-  {
-    "<leader>cd",
-    "<cmd>Trouble diagnostics<CR>",
-    desc = "Diagnostics (Trouble)",
-  },
+  { "<leader>cd", vim.diagnostic.setqflist, desc = "Diagnostics" },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
   { "<leader>f", group = "Files" },
   { "<leader>g", group = "Git" },
@@ -30,13 +26,13 @@ local mappings = {
 local lsp_mappings = {
   {
     "<leader>ci",
-    "<cmd>Trouble lsp_incoming_calls first<CR>",
-    desc = "Incoming calls (Trouble)",
+    vim.lsp.buf.incoming_calls,
+    desc = "Incoming calls",
   },
   {
     "<leader>co",
-    "<cmd>Trouble lsp_outgoing_calls first<CR>",
-    desc = "Outgoing calls (Trouble)",
+    vim.lsp.buf.outgoing_calls,
+    desc = "Outgoing calls",
   },
   {
     "<leader>cs",
@@ -44,34 +40,29 @@ local lsp_mappings = {
     desc = "Find symbol",
   },
   {
-    "<leader>cx",
-    "<cmd>Trouble close<CR>",
-    desc = "Close Trouble",
-  },
-  {
     "gd",
-    "<cmd>Trouble lsp_definitions first<CR>",
-    desc = "Go to definition (Trouble)",
+    vim.lsp.buf.definition,
+    desc = "Go to definition",
   },
   {
     "gD",
-    "<cmd>Trouble lsp_declarations first<CR>",
-    desc = "Go to declarations (Trouble)",
+    vim.lsp.buf.declaration,
+    desc = "Go to declaration",
   },
   {
     "gI",
-    "<cmd>Trouble lsp_implementations first<CR>",
-    desc = "Go to implementation (Trouble)",
+    vim.lsp.buf.implementation,
+    desc = "Go to implementation",
   },
   {
     "gr",
-    "<cmd>Trouble lsp_references first<CR>",
-    desc = "Find references (Trouble)",
+    vim.lsp.buf.references,
+    desc = "Find references",
   },
   {
     "gy",
-    "<cmd>Trouble lsp_type_definitions first<CR>",
-    desc = "Go to type definition (Trouble)",
+    vim.lsp.buf.type_definition,
+    desc = "Go to type definition",
   },
 }
 
@@ -103,4 +94,20 @@ vim.api.nvim_create_autocmd("LspAttach", {
       })
     end
   end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("chris468.mappings.quick_quit", {}),
+  callback = function()
+    vim.keymap.set("n", "q", "<cmd>quit<CR>", {
+      buffer = true,
+      desc = "Close",
+      nowait = true,
+    })
+  end,
+  pattern = {
+    "qf",
+    "help",
+    "TelescopePrompt",
+  },
 })
