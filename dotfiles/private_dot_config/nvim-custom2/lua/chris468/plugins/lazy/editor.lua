@@ -53,16 +53,42 @@ return {
     version = false,
   },
   {
-    "NeogitOrg/neogit",
-    dependencies = { "diffview.nvim" },
-    cmd = "Neogit",
-    lazy = true,
-    opts = {},
+    "tpope/vim-fugitive",
+    cmd = { "G", "Git" },
     keys = {
-      { "<leader>gg", "<cmd>Neogit<cr>", "Neogit" },
-      { "<leader>gC", "<cmd>Neogit commit<cr>", "Neogit commit" },
+      { "<leader>gg", "<cmd>G<CR>", desc = "Git (vim-fugitive)" },
     },
-    version = false,
+  },
+  {
+    "junegunn/gv.vim",
+    cmd = { "GV" },
+    dependencies = "vim-fugitive",
+  },
+  {
+    "ruifm/gitlinker.nvim",
+    dependencis = "plenary.nvim",
+    keys = { { "<leader>gy", mode = { "n", "v" } } },
+    opts = {
+      callbacks = {
+        ["dev.azure.com"] = function(url_data)
+          return string.format(
+            "%s?path=/%s&version=GC%s&line=%d&lineEnd=%d&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents",
+            require("gitlinker.hosts").get_base_https_url(url_data),
+            url_data.file,
+            url_data.rev,
+            url_data.lstart,
+            url_data.lend or url_data.lstart + 1
+          )
+        end,
+      },
+      opts = {
+        action_callback = function(url)
+          require("gitlinker.actions").copy_to_clipboard(url)
+          vim.notify("Url on clipboard", nil, { title = "gitlinker" })
+        end,
+        print_url = false,
+      },
+    },
   },
   {
     "lewis6991/gitsigns.nvim",
