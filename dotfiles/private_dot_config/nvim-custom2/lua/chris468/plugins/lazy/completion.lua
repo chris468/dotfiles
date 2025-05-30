@@ -94,9 +94,9 @@ return {
   },
   {
     "Exafunction/windsurf.nvim",
+    cond = Chris468.tools.ai.provider == "codeium",
     cmd = "Codeium",
     dependencies = { "plenary.nvim" },
-    enabled = Chris468.tools.ai.provider == "codeium",
     main = "codeium",
     opts = {
       enable_cmp_source = false,
@@ -109,7 +109,6 @@ return {
           default = { "codeium" },
           providers = {
             codeium = {
-              enabled = Chris468.tools.ai.provider == "codeium",
               name = "Codeium",
               module = "codeium.blink",
               async = true,
@@ -122,8 +121,8 @@ return {
   },
   {
     "zbirenbaum/copilot.lua",
+    cond = Chris468.tools.ai.provider == "copilot",
     cmd = "Copilot",
-    enabled = Chris468.tools.ai.provider == "copilot",
     event = "InsertEnter",
     opts = {
       suggestion = { enabled = false },
@@ -131,28 +130,11 @@ return {
     },
     specs = {
       {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        cmd = {
-          "CopilotChat",
-          "CopilotChatOpen",
-          "CopilotChatClose",
-          "CopilotChatToggle",
-          "CopilotChatStop",
-          "CopilotChatReset",
-          "CopilotChatSave",
-          "CopilotChatLoad",
-          "CopilotChatPrompts",
-          "CopilotChatModels",
-          "CopilotChatAgents",
-        },
-        opts = {},
-      },
-      {
         "blink.cmp",
         dependencies = {
           {
             "giuxtaposition/blink-cmp-copilot",
-            enabled = Chris468.tools.ai.provider == "copilot",
+            cond = Chris468.tools.ai.provider == "copilot",
             dependencies = "copilot.lua",
           },
         },
@@ -171,5 +153,23 @@ return {
         },
       },
     },
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    cond = Chris468.tools.ai.provider == "copilot",
+    cmd = {
+      "CopilotChat",
+      "CopilotChatOpen",
+      "CopilotChatClose",
+      "CopilotChatToggle",
+      "CopilotChatStop",
+      "CopilotChatReset",
+      "CopilotChatSave",
+      "CopilotChatLoad",
+      "CopilotChatPrompts",
+      "CopilotChatModels",
+      "CopilotChatAgents",
+    },
+    opts = {},
   },
 }
