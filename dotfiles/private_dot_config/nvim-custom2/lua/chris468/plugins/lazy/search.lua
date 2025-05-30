@@ -29,7 +29,6 @@ return {
         { "<leader><leader>", require("chris468.plugins.config.search.fd"), desc = "Files" },
         { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
         { "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "Recent files" },
-        { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Git status" },
         { "<leader>r", "<cmd>Telescope resume<CR>", desc = "Resume last search" },
         { "<leader>sh", "<cmd>Telescope highlights<CR>", desc = "Highlights" },
         { "<leader>sk", "<cmd>Telescope keymaps<CR>", desc = "Key maps" },

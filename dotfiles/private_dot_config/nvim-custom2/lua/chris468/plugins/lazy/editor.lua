@@ -48,26 +48,29 @@ return {
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
-    lazy = true,
+    keys = {
+      { "<leader>gd", "<cmd>DiffviewOpen -- %<CR>", desc = "Diff current buffer" },
+      { "<leader>gg", "<cmd>DiffviewOpen<CR>", desc = "Git" },
+    },
     opts = {},
     version = false,
   },
   {
-    "tpope/vim-fugitive",
-    cmd = { "G", "Git" },
-    keys = {
-      { "<leader>gg", "<cmd>G<CR>", desc = "Git (vim-fugitive)" },
+    "NeogitOrg/neogit",
+    dependencies = { "diffview.nvim" },
+    cmd = "Neogit",
+    opts = {
+      remember_settings = false,
     },
-  },
-  {
-    "junegunn/gv.vim",
-    cmd = { "GV" },
-    dependencies = "vim-fugitive",
+    keys = {
+      { "<leader>gG", "<cmd>Neogit<CR>", desc = "Neogit" },
+      { "<leader>gc", "<cmd>Neogit commit<CR>", desc = "Neogit commit" },
+    },
   },
   {
     "ruifm/gitlinker.nvim",
     dependencis = "plenary.nvim",
-    keys = { { "<leader>gy", mode = { "n", "v" } } },
+    keys = { { "<leader>gy", desc = "Copy link", mode = { "n", "v" } } },
     opts = {
       callbacks = {
         ["dev.azure.com"] = function(url_data)
@@ -97,6 +100,17 @@ return {
       require("gitsigns").setup(opts)
       vim.api.nvim_set_hl(0, "GitSignsChangeDelete", { link = "DiagnosticWarn" })
     end,
+    keys = {
+      { "<leader>gB", "<cmd>Gitsigns blame<CR>", desc = "Blame buffer" },
+      { "<leader>gS", "<cmd>Gitsigns stage_buffer<CR>", desc = "Stage buffer" },
+      { "<leader>gU", "<cmd>Gitsigns unstage_buffer<CR>", desc = "Untage buffer" },
+      { "<leader>gb", "<cmd>Gitsigns blame_line<CR>", desc = "Blame line" },
+      { "<leader>gp", "<cmd>Gitsigns preview_hunk_inline<CR>", desc = "Preview hunk" },
+      { "<leader>gs", "<cmd>Gitsigns stage_hunk<CR>", desc = "Stage hunk" },
+      { "<leader>gu", "<cmd>Gitsigns unstage_hunk<CR>", desc = "Untage hunk" },
+      { "[g", "<cmd>Gitsigns prev_hunk<CR>", desc = "Previous git hunk" },
+      { "]g", "<cmd>Gitsigns next_hunk<CR>", desc = "Next git hunk" },
+    },
     opts = {
       signs = git_signs,
       signs_staged = git_signs,
