@@ -32,6 +32,10 @@ vim.opt.timeout = true
 vim.opt.timeoutlen = 400
 vim.opt.updatetime = 250
 
+-- preserve undo stack
+vim.opt.undofile = true
+vim.opt.undolevels = 1000
+
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   options = {
