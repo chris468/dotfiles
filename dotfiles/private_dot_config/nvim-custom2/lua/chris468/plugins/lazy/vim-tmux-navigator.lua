@@ -1,3 +1,5 @@
+local cmd = require("chris468.util.keymap").cmd
+
 return {
   {
     "christoomey/vim-tmux-navigator",
@@ -13,10 +15,10 @@ return {
       vim.g.tmux_navigator_no_mappings = 1
     end,
     keys = {
-      { "<C-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Navigate left" },
-      { "<C-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Navigate down" },
-      { "<C-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Navigate up" },
-      { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Navigate right" },
+      { "<C-h>", cmd("TmuxNavigateLeft"), desc = "Navigate left" },
+      { "<C-j>", cmd("TmuxNavigateDown"), desc = "Navigate down" },
+      { "<C-k>", cmd("TmuxNavigateUp"), desc = "Navigate up" },
+      { "<C-l>", cmd("TmuxNavigateRight"), desc = "Navigate right" },
     },
     version = false,
   },

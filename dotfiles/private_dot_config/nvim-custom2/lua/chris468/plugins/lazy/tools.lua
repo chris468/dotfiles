@@ -1,3 +1,5 @@
+local cmd = require("chris468.util.keymap").cmd
+
 ---@type chris468.config.ToolsByFiletype
 ---@return table<string, string[]>
 local function convert(tools_by_filetype)
@@ -30,8 +32,8 @@ return {
     "mason-org/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
     keys = {
-      { "<leader>ci", "<cmd>checkhealth vim.lsp conform<CR>", desc = "LSP/Formatter info" },
-      { "<leader>M", "<cmd>Mason<CR>", desc = "Mason" },
+      { "<leader>ci", cmd("checkhealth vim.lsp conform"), desc = "LSP/Formatter info" },
+      { "<leader>M", cmd("Mason"), desc = "Mason" },
     },
     opts = {
       ui = {
@@ -51,7 +53,7 @@ return {
     end,
     dependencies = { "blink.cmp", optional = true },
     keys = {
-      { "<leader>cL", "<cmd>LspInfo<CR>", desc = "LSP info" },
+      { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
     },
   },
   {
@@ -75,7 +77,7 @@ return {
         end,
         desc = "Format",
       },
-      { "<leader>cF", "<cmd>ConformInfo<CR>", desc = "Formatter info" },
+      { "<leader>cF", cmd("ConformInfo"), desc = "Formatter info" },
     },
     opts = {
       default_format_opts = {

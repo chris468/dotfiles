@@ -1,5 +1,6 @@
 local util = require("chris468.util")
 local util_lazy = require("chris468.util.lazy")
+local cmd = require("chris468.util.keymap").cmd
 
 local have_zoxide = vim.fn.executable("zoxide") == 1
 
@@ -27,12 +28,12 @@ return {
       local keys = {
         { "<leader>/", require("chris468.plugins.config.search.rg"), desc = "Live grep" },
         { "<leader><leader>", require("chris468.plugins.config.search.fd"), desc = "Files" },
-        { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
-        { "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "Recent files" },
-        { "<leader>r", "<cmd>Telescope resume<CR>", desc = "Resume last search" },
-        { "<leader>sh", "<cmd>Telescope highlights<CR>", desc = "Highlights" },
-        { "<leader>sk", "<cmd>Telescope keymaps<CR>", desc = "Key maps" },
-        { "<leader>sT", "<cmd>Telescope terraform_doc", desc = "Terraform docs" },
+        { "<leader>fb", cmd("Telescope buffers"), desc = "Buffers" },
+        { "<leader>fr", cmd("Telescope oldfiles"), desc = "Recent files" },
+        { "<leader>r", cmd("Telescope resume"), desc = "Resume last search" },
+        { "<leader>sh", cmd("Telescope highlights"), desc = "Highlights" },
+        { "<leader>sk", cmd("Telescope keymaps"), desc = "Key maps" },
+        { "<leader>sT", cmd("Telescope terraform_doc"), desc = "Terraform docs" },
         { "<leader>su", require("chris468.plugins.config.search.unicode"), desc = "Unicode symbols" },
         {
           "<C-R><C-U>",
@@ -40,11 +41,11 @@ return {
           desc = "Unicode symbols",
           mode = "i",
         },
-        { "<leader>uC", "<cmd>Telescope colorschemes<CR>", desc = "Change color scheme" },
+        { "<leader>uC", cmd("Telescope colorschemes"), desc = "Change color scheme" },
       }
 
       if have_zoxide then
-        table.insert(keys, { "<leader>fz", "<cmd>Telescope zoxide list<CR>", desc = "Zoxide" })
+        table.insert(keys, { "<leader>fz", cmd("Telescope zoxide list"), desc = "Zoxide" })
       end
 
       return keys

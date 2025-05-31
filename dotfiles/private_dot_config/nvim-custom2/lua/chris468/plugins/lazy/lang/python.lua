@@ -1,3 +1,5 @@
+local cmd = require("chris468.util.keymap").cmd
+
 local filetypes =
   vim.list_extend({ "python" }, Chris468.venv.additional_filetypes ~= 0 and Chris468.venv.additional_filetypes or {})
 
@@ -12,7 +14,7 @@ return {
     keys = {
       {
         "<leader>cv",
-        "<cmd>:VenvSelect<cr>",
+        cmd(":VenvSelect"),
         desc = "Select VirtualEnv",
         ft = vim.list_extend({ "python" }, filetypes),
       },

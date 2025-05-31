@@ -1,3 +1,5 @@
+local cmd = require("chris468.util.keymap").cmd
+
 local git_signs = {
   add = { text = "┃" },
   change = { text = "┃" },
@@ -7,18 +9,18 @@ local git_signs = {
   untracked = { text = "┆" },
 }
 
-local toggle_diffview_keymap = { "n", "<leader>gg", "<cmd>DiffviewClose<CR>", { desc = "Close git (diffview)" } }
-local close_diffview_keymap = { "n", "q", "<cmd>DiffviewClose<CR>", { desc = "Close git (diffview)" } }
+local toggle_diffview_keymap = { "n", "<leader>gg", cmd("DiffviewClose"), { desc = "Close git (diffview)" } }
+local close_diffview_keymap = { "n", "q", cmd("DiffviewClose"), { desc = "Close git (diffview)" } }
 
 return {
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen -- %<CR>", desc = "Diff current buffer" },
-      { "<leader>gg", "<cmd>DiffviewOpen<CR>", desc = "Git (diffview)" },
-      { "<leader>gl", "<cmd>DiffviewFileHistory %<CR>", desc = "Log (current file)" },
-      { "<leader>gL", "<cmd>DiffviewFileHistory<CR>", desc = "Log" },
+      { "<leader>gd", cmd("DiffviewOpen -- %"), desc = "Diff current buffer" },
+      { "<leader>gg", cmd("DiffviewOpen"), desc = "Git (diffview)" },
+      { "<leader>gl", cmd("DiffviewFileHistory %"), desc = "Log (current file)" },
+      { "<leader>gL", cmd("DiffviewFileHistory"), desc = "Log" },
     },
     opts = {
       keymaps = {
@@ -37,10 +39,10 @@ return {
       remember_settings = false,
     },
     keys = {
-      { "<leader>gG", "<cmd>Neogit<CR>", desc = "Neogit" },
-      { "<leader>gP", "<cmd>Neogit push<CR>", desc = "Push" },
-      { "<leader>gc", "<cmd>Neogit commit<CR>", desc = "Commit" },
-      { "<leader>gp", "<cmd>Neogit pull<CR>", desc = "Pull" },
+      { "<leader>gG", cmd("Neogit"), desc = "Neogit" },
+      { "<leader>gP", cmd("Neogit push"), desc = "Push" },
+      { "<leader>gc", cmd("Neogit commit"), desc = "Commit" },
+      { "<leader>gp", cmd("Neogit pull"), desc = "Pull" },
     },
   },
   {
@@ -77,15 +79,15 @@ return {
       vim.api.nvim_set_hl(0, "GitSignsChangeDelete", { link = "DiagnosticWarn" })
     end,
     keys = {
-      { "<leader>gB", "<cmd>Gitsigns blame<CR>", desc = "Blame buffer" },
-      { "<leader>gS", "<cmd>Gitsigns stage_buffer<CR>", desc = "Stage buffer" },
-      { "<leader>gU", "<cmd>Gitsigns unstage_buffer<CR>", desc = "Untage buffer" },
-      { "<leader>gb", "<cmd>Gitsigns blame_line<CR>", desc = "Blame line" },
-      { "<leader>gp", "<cmd>Gitsigns preview_hunk_inline<CR>", desc = "Preview hunk" },
-      { "<leader>gs", "<cmd>Gitsigns stage_hunk<CR>", desc = "Stage hunk" },
-      { "<leader>gu", "<cmd>Gitsigns unstage_hunk<CR>", desc = "Untage hunk" },
-      { "[g", "<cmd>Gitsigns prev_hunk<CR>", desc = "Previous git hunk" },
-      { "]g", "<cmd>Gitsigns next_hunk<CR>", desc = "Next git hunk" },
+      { "<leader>gB", cmd("Gitsigns blame"), desc = "Blame buffer" },
+      { "<leader>gS", cmd("Gitsigns stage_buffer"), desc = "Stage buffer" },
+      { "<leader>gU", cmd("Gitsigns unstage_buffer"), desc = "Untage buffer" },
+      { "<leader>gb", cmd("Gitsigns blame_line"), desc = "Blame line" },
+      { "<leader>gp", cmd("Gitsigns preview_hunk_inline"), desc = "Preview hunk" },
+      { "<leader>gs", cmd("Gitsigns stage_hunk"), desc = "Stage hunk" },
+      { "<leader>gu", cmd("Gitsigns unstage_hunk"), desc = "Untage hunk" },
+      { "[g", cmd("Gitsigns prev_hunk"), desc = "Previous git hunk" },
+      { "]g", cmd("Gitsigns next_hunk"), desc = "Next git hunk" },
     },
     opts = {
       signs = git_signs,

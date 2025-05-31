@@ -1,3 +1,4 @@
+local cmd = require("chris468.util.keymap").cmd
 local config = require("chris468.plugins.config.lualine")
 
 local function remove_border(original, direction)
@@ -31,9 +32,9 @@ return {
     dependencies = { "mini.icons" },
     event = "VeryLazy",
     keys = {
-      { "<leader>sn", "<cmd>Noice telescope<CR>", desc = "Notifications" },
-      { "<leader>sN", "<cmd>Noice all<CR>", desc = "Noice" },
-      { "<leader>ud", "<cmd>Noice dismiss<CR>", desc = "Dismiss notifications" },
+      { "<leader>sn", cmd("Noice telescope"), desc = "Notifications" },
+      { "<leader>sN", cmd("Noice all"), desc = "Noice" },
+      { "<leader>ud", cmd("Noice dismiss"), desc = "Dismiss notifications" },
     },
     opts = {
       sections = {
@@ -136,8 +137,8 @@ return {
     dependencies = { "mini.icons" },
     event = "VeryLazy",
     keys = {
-      { "[b", "<cmd>BufferLineCyclePrev<CR>", desc = "Previous" },
-      { "]b", "<cmd>BufferLineCycleNext<CR>", desc = "Next" },
+      { "[b", cmd("BufferLineCyclePrev"), desc = "Previous" },
+      { "]b", cmd("BufferLineCycleNext"), desc = "Next" },
     },
     opts = {
       options = {

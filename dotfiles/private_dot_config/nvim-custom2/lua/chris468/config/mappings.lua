@@ -1,13 +1,13 @@
 local snacks = require("snacks")
 local whichkey = require("which-key")
-local util = require("chris468.util")
 local util_lua = require("chris468.util.lua")
+local cmd = require("chris468.util.keymap").cmd
 
 local mappings = {
-  { "<Esc>", "<cmd>nohlsearch<CR>", desc = "Clear search hilight" },
-  { "<leader>L", "<cmd>Lazy<CR>", desc = "Lazy", icon = "󰒲" },
+  { "<Esc>", cmd("nohlsearch"), desc = "Clear search hilight" },
+  { "<leader>L", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
   { "<leader>b", group = "Buffers" },
-  { "<leader>bb", "<cmd>e #<CR>", desc = "Switch to previous" },
+  { "<leader>bb", cmd("e #"), desc = "Switch to previous" },
   { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
   { "<leader>bo", snacks.bufdelete.other, desc = "Delete buffer" },
   { "<leader>c", group = "Code" },
@@ -36,7 +36,7 @@ local lsp_mappings = {
   },
   {
     "<leader>cs",
-    "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>",
+    cmd("Telescope lsp_dynamic_workspace_symbols"),
     desc = "Find symbol",
   },
   {
@@ -99,7 +99,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("chris468.mappings.quick_quit", {}),
   callback = function()
-    vim.keymap.set("n", "q", "<cmd>quit<CR>", {
+    vim.keymap.set("n", "q", cmd("quit"), {
       buffer = true,
       desc = "Close",
       nowait = true,
