@@ -7,6 +7,9 @@ local git_signs = {
   untracked = { text = "┆" },
 }
 
+local toggle_diffview_keymap = { "n", "<leader>gg", "<cmd>DiffviewClose<CR>", { desc = "Close git (diffview)" } }
+local close_diffview_keymap = { "n", "q", "<cmd>DiffviewClose<CR>", { desc = "Close git (diffview)" } }
+
 return {
   {
     "echasnovski/mini.surround",
@@ -47,12 +50,20 @@ return {
   },
   {
     "sindrets/diffview.nvim",
-    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
+    cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
     keys = {
       { "<leader>gd", "<cmd>DiffviewOpen -- %<CR>", desc = "Diff current buffer" },
-      { "<leader>gg", "<cmd>DiffviewOpen<CR>", desc = "Git" },
+      { "<leader>gg", "<cmd>DiffviewOpen<CR>", desc = "Git (diffview)" },
+      { "<leader>gl", "<cmd>DiffviewFileHistory %<CR>", desc = "Log (current file)" },
+      { "<leader>gL", "<cmd>DiffviewFileHistory<CR>", desc = "Log" },
     },
-    opts = {},
+    opts = {
+      keymaps = {
+        view = { toggle_diffview_keymap },
+        file_panel = { toggle_diffview_keymap, close_diffview_keymap },
+        file_history_panel = { toggle_diffview_keymap, close_diffview_keymap },
+      },
+    },
     version = false,
   },
   {
