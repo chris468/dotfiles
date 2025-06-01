@@ -29,7 +29,7 @@ end
 local function create_finder(opts)
   return require("telescope.finders").new_async_job({
     command_generator = function(prompt)
-      local args = { "fd", "--color", "never", "--type", "f" }
+      local args = { "fd", "--color", "never", "--type", "f", "--full-path" }
 
       search.append_args(args, "--hidden", { append = opts.search_hidden_files })
 
