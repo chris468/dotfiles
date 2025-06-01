@@ -23,14 +23,12 @@ return {
       "ANGkeith/telescope-terraform-doc.nvim",
       "jvgrootveld/telescope-zoxide",
       "tsakirist/telescope-lazy.nvim",
-      { "nvim-telescope/telescope-file-browser.nvim", version = false },
     },
     keys = function()
       local keys = {
         { "<leader>/", require("chris468.plugins.config.search.rg"), desc = "Live grep" },
         { "<leader><leader>", require("chris468.plugins.config.search.fd"), desc = "Files" },
         { "<leader>fb", cmd("Telescope buffers"), desc = "Buffers" },
-        { "<leader>fe", require("chris468.plugins.config.search.explore"), desc = "Browse files" },
         { "<leader>fr", cmd("Telescope oldfiles"), desc = "Recent files" },
         { "<leader>r", cmd("Telescope resume"), desc = "Resume last search" },
         { "<leader>sh", cmd("Telescope highlights"), desc = "Highlights" },
@@ -82,16 +80,6 @@ return {
         sorting_strategy = "ascending",
       },
       extensions = {
-        file_browser = {
-          mappings = {
-            i = {
-              ["C-e"] = "nop",
-            },
-            n = {
-              ["C-e"] = "nop",
-            },
-          },
-        },
         noice = {
           enabled = util_lazy.has_plugin("noice.nvim"),
         },
