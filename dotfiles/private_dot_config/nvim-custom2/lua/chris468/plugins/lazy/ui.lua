@@ -35,6 +35,15 @@ return {
       { "<leader>sn", cmd("Noice telescope"), desc = "Notifications" },
       { "<leader>sN", cmd("Noice all"), desc = "Noice" },
       { "<leader>ud", cmd("Noice dismiss"), desc = "Dismiss notifications" },
+      {
+        "<S-Enter>",
+        function()
+          vim.notify("redirecting")
+          require("noice").redirect(vim.fn.getcmdline())
+        end,
+        desc = "Redirect",
+        mode = "c",
+      },
     },
     opts = {
       sections = {
@@ -83,6 +92,7 @@ return {
       presets = {
         command_palette = false,
         inc_rename = false,
+        long_message_to_split = true,
       },
       routes = {
         {
