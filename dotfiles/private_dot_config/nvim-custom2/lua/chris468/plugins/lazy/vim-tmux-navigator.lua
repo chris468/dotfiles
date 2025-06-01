@@ -15,10 +15,10 @@ return {
       vim.g.tmux_navigator_no_mappings = 1
     end,
     keys = {
-      { "<C-h>", cmd("TmuxNavigateLeft"), desc = "Navigate left" },
-      { "<C-j>", cmd("TmuxNavigateDown"), desc = "Navigate down" },
-      { "<C-k>", cmd("TmuxNavigateUp"), desc = "Navigate up" },
-      { "<C-l>", cmd("TmuxNavigateRight"), desc = "Navigate right" },
+      { "<C-h>", cmd("TmuxNavigateLeft"), desc = "Navigate left", mode = { "n", "i" } },
+      { "<C-j>", cmd("TmuxNavigateDown"), desc = "Navigate down", mode = { "n", "i" } },
+      { "<C-k>", cmd("TmuxNavigateUp"), desc = "Navigate up", mode = { "n", "i" } },
+      { "<C-l>", cmd("TmuxNavigateRight"), desc = "Navigate right", mode = { "n", "i" } },
     },
     version = false,
   },
