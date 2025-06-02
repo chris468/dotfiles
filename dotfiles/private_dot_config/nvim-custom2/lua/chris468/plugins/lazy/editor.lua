@@ -1,3 +1,5 @@
+local cmd = require("chris468.util.keymap").cmd
+
 return {
   {
     "echasnovski/mini.surround",
@@ -19,21 +21,25 @@ return {
     verion = "*",
   },
   {
-    "echasnovski/mini.files",
+    "stevearc/oil.nvim",
+    dependencies = { "mini.icons" },
     keys = {
       {
         "<leader>e",
         function()
-          require("mini.files").open()
+          require("oil").toggle_float(vim.uv.cwd())
         end,
         desc = "Explore",
       },
-    },
-    opts = {
-      mappings = {
-        close = "<Esc>",
-        go_in_plus = "<Enter>",
+      {
+        "<leader>E",
+        function()
+          require("oil").toggle_float()
+        end,
+        desc = "Explore buffer directory",
       },
     },
+    opts = {},
+    lazy = false,
   },
 }

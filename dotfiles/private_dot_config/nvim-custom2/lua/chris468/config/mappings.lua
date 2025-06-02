@@ -106,8 +106,9 @@ vim.api.nvim_create_autocmd("FileType", {
     })
   end,
   pattern = {
-    "qf",
-    "help",
     "TelescopePrompt",
+    "help",
+    "oil",
+    "qf",
   },
 })
