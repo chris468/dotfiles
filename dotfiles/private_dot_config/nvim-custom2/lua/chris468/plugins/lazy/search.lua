@@ -92,6 +92,15 @@ return {
           enabled = have_zoxide,
         },
       },
+      pickers = {
+        buffers = {
+          mappings = {
+            n = {
+              ["<BS>"] = "delete_buffer",
+            },
+          },
+        },
+      },
     },
     version = false,
   },
