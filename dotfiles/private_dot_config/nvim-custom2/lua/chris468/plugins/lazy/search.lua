@@ -1,6 +1,7 @@
 local util = require("chris468.util")
 local util_lazy = require("chris468.util.lazy")
 local cmd = require("chris468.util.keymap").cmd
+local os = require("chris468.util.os")
 
 local have_zoxide = vim.fn.executable("zoxide") == 1
 
@@ -23,6 +24,7 @@ return {
       "ANGkeith/telescope-terraform-doc.nvim",
       "jvgrootveld/telescope-zoxide",
       "tsakirist/telescope-lazy.nvim",
+      "telescope-fzf-native.nvim",
     },
     keys = function()
       local keys = {
@@ -80,6 +82,7 @@ return {
         sorting_strategy = "ascending",
       },
       extensions = {
+        fzf = {},
         noice = {
           enabled = util_lazy.has_plugin("noice.nvim"),
         },
@@ -91,5 +94,11 @@ return {
       },
     },
     version = false,
+  },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = os.is_windows() and "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release"
+      or "make",
+    enabled = not os.is_windows() or vim.fn.executable("cmake") == 1,
   },
 }
