@@ -34,8 +34,7 @@ local function get_command_generator(opts, include_prompt)
 
     search.append_args(args, "--hidden", { append = opts.search_hidden_files })
 
-    -- --no-ignore means don't respect .gitignore, etc. - double negative
-    search.append_args(args, "--no-ignore", { append = not opts.search_ignored_files })
+    search.append_args(args, "--no-ignore", { append = opts.search_ignored_files })
 
     search.append_args(args, prompt, { append = include_prompt ~= false and prompt and prompt ~= "" })
 
