@@ -26,20 +26,25 @@ local function attach_mappings(opts)
   end
 end
 
+---@param opts table
+---@param include_prompt boolean? Defaults true. Exclude the prompt for oneshot jobs.
+local function get_command_generator(opts, include_prompt)
+  return function(prompt)
+    local args = { "fd", "--color", "never", "--type", "f", "--full-path" }
+
+    search.append_args(args, "--hidden", { append = opts.search_hidden_files })
+
+    -- --no-ignore means don't respect .gitignore, etc. - double negative
+    search.append_args(args, "--no-ignore", { append = not opts.search_ignored_files })
+
+    search.append_args(args, prompt, { append = include_prompt ~= false and prompt and prompt ~= "" })
+
+    return args
+  end
+end
+
 local function create_finder(opts)
-  return require("telescope.finders").new_async_job({
-    command_generator = function(prompt)
-      local args = { "fd", "--color", "never", "--type", "f", "--full-path" }
-
-      search.append_args(args, "--hidden", { append = opts.search_hidden_files })
-
-      -- --no-ignore means don't respect .gitignore, etc. - double negative
-      search.append_args(args, "--no-ignore", { append = not opts.search_ignored_files })
-
-      search.append_args(args, prompt, { apppend = prompt and prompt ~= "" })
-
-      return args
-    end,
+  return require("telescope.finders").new_oneshot_job(get_command_generator(opts, false)(), {
     entry_maker = require("telescope.make_entry").gen_from_file(opts),
     cwd = opts.cwd,
   })
@@ -70,7 +75,7 @@ fd = function(opts)
       finder = create_finder(opts),
       previewer = conf.grep_previewer(opts),
       prompt_title = format_title(opts),
-      sorter = conf.generic_sorter(opts),
+      sorter = conf.file_sorter(opts),
     })
     :find()
 end
