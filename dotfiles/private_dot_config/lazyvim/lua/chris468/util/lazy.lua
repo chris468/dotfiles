@@ -1,5 +1,18 @@
 local M = {}
 
+---Gets the merged options for a lazy plugin
+---@param name string
+---@return table
+function M.get_plugin_opts(name)
+  local config = require("lazy.core.config")
+  local plugin = require("lazy.core.plugin")
+
+  local lazy_plugin = config.plugins[name]
+  local opts = plugin.values(lazy_plugin, "opts")
+
+  return opts
+end
+
 function M.install()
   local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
   if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -16,25 +29,6 @@ function M.install()
     end
   end
   vim.opt.rtp:prepend(lazypath)
-end
-
----@param name string
----@return LazyPlugin
-function M.plugin(name)
-  return require("lazy.core.config").spec.plugins[name]
-end
-
----@param name string
----@return boolean
-function M.has_plugin(name)
-  return M.plugin(name) ~= nil
-end
-
----@param name string
----@return table
-function M.opts(name)
-  local plugin_api = require("lazy.core.plugin")
-  return plugin_api.values(M.plugin(name), "opts")
 end
 
 return M
