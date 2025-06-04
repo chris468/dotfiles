@@ -35,15 +35,6 @@ return {
       { "<leader>sn", cmd("Noice telescope"), desc = "Notifications" },
       { "<leader>sN", cmd("Noice all"), desc = "Noice" },
       { "<leader>ud", cmd("Noice dismiss"), desc = "Dismiss notifications" },
-      {
-        "<S-Enter>",
-        function()
-          vim.notify("redirecting")
-          require("noice").redirect(vim.fn.getcmdline())
-        end,
-        desc = "Redirect",
-        mode = "c",
-      },
     },
     opts = {
       extensions = {
@@ -117,6 +108,16 @@ return {
     dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-notify",
+    },
+    keys = {
+      {
+        "<S-Enter>",
+        function()
+          require("noice").redirect(vim.fn.getcmdline())
+        end,
+        desc = "Redirect",
+        mode = "c",
+      },
     },
     opts = {
       cmdline = {
