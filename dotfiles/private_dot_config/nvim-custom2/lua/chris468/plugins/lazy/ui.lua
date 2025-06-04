@@ -153,21 +153,20 @@ return {
   },
   {
     "rcarriga/nvim-notify",
-    opts = function(_, opts)
-      return vim.tbl_deep_extend("force", opts, {
-        icons = {
-          DEBUG = Chris468.ui.icons.debug,
-          ERROR = Chris468.ui.icons.error,
-          INFO = Chris468.ui.icons.info,
-          TRACE = Chris468.ui.icons.trace,
-          WARN = Chris468.ui.icons.warning,
-        },
-        render = "compact",
+    opts = {
+      icons = {
+        DEBUG = Chris468.ui.icons.debug,
+        ERROR = Chris468.ui.icons.error,
+        INFO = Chris468.ui.icons.info,
+        TRACE = Chris468.ui.icons.trace,
+        WARN = Chris468.ui.icons.warning,
+      },
+      timeout = 1000,
+      render = "compact",
 
-        -- custom option, handled below
-        remove_border = true,
-      })
-    end,
+      -- custom option, handled below
+      remove_border = true,
+    },
   },
   {
     "nvim-notify",
