@@ -1,12 +1,16 @@
+local kind_icons = {
+  Copilot = { icon = Chris468.ui.icons.copilot, hl = "BlinkCmpKindCopilot" },
+  Codeium = { icon = Chris468.ui.icons.windsurf, hl = "BlinkCmpKindCopilot" },
+  Windsurf = { icon = Chris468.ui.icons.windsurf, hl = "BlinkCmpKindCopilot" },
+}
+
 ---@param kind string
 ---@return string
 local function get_icon(kind)
-  if kind == "Codeium" then
-    return Chris468.ui.icons.windsurf
+  if kind_icons[kind] then
+    return kind_icons[kind].icon
   end
-  if kind == "Copilot" then
-    return Chris468.ui.icons.copilot
-  end
+
   local icon, _, _ = require("mini.icons").get("lsp", kind)
   return icon
 end
@@ -14,8 +18,8 @@ end
 ---@param kind string
 ---@return string
 local function get_highlight(kind)
-  if kind == "Codeium" or kind == "Copilot" then
-    return "BlinkCmpKindCopilot"
+  if kind_icons[kind] then
+    return kind_icons[kind].hl
   end
 
   local _, hl, _ = require("mini.icons").get("lsp", kind)
