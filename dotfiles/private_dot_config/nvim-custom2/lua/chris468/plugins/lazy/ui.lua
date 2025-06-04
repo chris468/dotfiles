@@ -147,8 +147,8 @@ return {
     dependencies = { "mini.icons" },
     event = "VeryLazy",
     keys = {
-      { "[b", cmd("BufferLineCyclePrev"), desc = "Previous" },
-      { "]b", cmd("BufferLineCycleNext"), desc = "Next" },
+      { "[b", cmd("BufferLineCyclePrev"), desc = "Previous buffer" },
+      { "]b", cmd("BufferLineCycleNext"), desc = "Next buffer" },
     },
     opts = {
       options = {

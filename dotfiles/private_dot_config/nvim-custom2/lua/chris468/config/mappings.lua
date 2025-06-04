@@ -19,6 +19,11 @@ local mappings = {
   { "<leader>lx", util_lua.run_selection, desc = "Run selected", mode = { "n", "x" } },
   { "<leader>s", group = "Search" },
   { "<leader>u", group = "UI" },
+  { "<Tab>", group = "Tab" },
+  { "<Tab>n", cmd("tabnew"), desc = "New" },
+  { "<Tab>c", cmd("tabclose"), desc = "Close" },
+  { "[<Tab>", cmd("tabprevious"), desc = "Previous tab" },
+  { "]<Tab>", cmd("tabnext"), desc = "Next tab" },
   { "j", "gj", hidden = true },
   { "k", "gk", hidden = true },
 }
@@ -69,6 +74,28 @@ local lsp_mappings = {
 whichkey.add(mappings)
 
 snacks.toggle.diagnostics({ name = "diagnostics" }):map("<leader>cD")
+
+snacks.toggle
+  .new({
+    id = "qf",
+    name = "quickfix window",
+    notify = false,
+    wk_desc = {
+      enabled = "Close ",
+      disabled = "Open ",
+    },
+    get = function()
+      return vim.fn.getqflist({ winid = 0 }).winid ~= 0
+    end,
+    set = function(state)
+      if state then
+        vim.cmd.copen()
+      else
+        vim.cmd.cclose()
+      end
+    end,
+  })
+  :map("<leader>q")
 
 snacks.toggle
   .new({
