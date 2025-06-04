@@ -46,6 +46,26 @@ return {
       },
     },
     opts = {
+      extensions = {
+        {
+          filetypes = { "toggleterm" },
+          sections = {
+            lualine_a = { { "mode", fmt = config.format.mode } },
+            lualine_b = {
+              function()
+                local t = require("toggleterm.terminal")
+                local terminal = t.get(vim.b.toggle_number)
+
+                if not terminal then
+                  return "Terminal"
+                end
+
+                return " " .. terminal.display_name or ("Terminal #" .. vim.b.toggle_number)
+              end,
+            },
+          },
+        },
+      },
       sections = {
         lualine_a = { { "mode", fmt = config.format.mode } },
         lualine_b = { "filename", "branch", "diff", "diagnostics" },
