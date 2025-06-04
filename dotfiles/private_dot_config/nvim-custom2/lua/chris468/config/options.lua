@@ -76,6 +76,7 @@ local chris468 = {
       confirm = "",
       lsp_status = "",
       windsurf = "",
+      copilot = "",
     },
   },
 }
