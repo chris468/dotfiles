@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- disable startup banner
+vim.opt.shortmess:append("I")
+
 -- sidebar behavior
 vim.opt.cursorline = true
 vim.opt.number = true
