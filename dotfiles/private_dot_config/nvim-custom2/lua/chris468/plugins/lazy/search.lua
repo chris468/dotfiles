@@ -31,6 +31,7 @@ return {
         { "<leader>/", require("chris468.plugins.config.search.rg"), desc = "Live grep" },
         { "<leader><leader>", require("chris468.plugins.config.search.fd"), desc = "Files" },
         { "<leader>fb", cmd("Telescope buffers"), desc = "Buffers" },
+        { "<leader>fg", cmd("Telescope git_status"), desc = "Git changes" },
         { "<leader>fr", cmd("Telescope oldfiles"), desc = "Recent files" },
         { "<leader>r", cmd("Telescope resume"), desc = "Resume last search" },
         { "<leader>sh", cmd("Telescope highlights"), desc = "Highlights" },
