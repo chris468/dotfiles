@@ -1,6 +1,6 @@
 local cmd = require("chris468.util.keymap").cmd
 
-local function toggle()
+local function toggle_terminal()
   require("toggleterm").toggle(vim.v.count1, nil, nil, nil, ("Terminal %s"):format(vim.v.count1))
 end
 
@@ -65,13 +65,15 @@ return {
       })
     end,
     keys = vim.list_extend({
-      { "<C-/>", toggle, desc = "Toggle term", mode = { "n", "i", "t" } },
-      { "<C-_>", toggle, desc = "Toggle term", mode = { "n", "i", "t" } },
+      { "<C-/>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
+      { "<C-_>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
       { [[<C-\><C-\>]], toggle_mappings, desc = "Toggle mappings", mode = "t" },
       {
         [[<C-\><C-R>]],
         function()
-          return [[<C-\><C-N>"]] .. vim.fn.nr2char(vim.fn.getchar()) .. "pi"
+          return [[<C-\><C-N>"]]
+            .. vim.fn.nr2char(vim.fn.getchar() --[[@as integer ]])
+            .. "pi"
         end,
         desc = "Registers",
         expr = true,
