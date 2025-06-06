@@ -40,6 +40,22 @@ vim.opt.updatetime = 250
 vim.opt.undofile = true
 vim.opt.undolevels = 1000
 
+-- shell
+if vim.fn.has("win32") == 1 then
+  local shell = vim.opt.shell:get()
+  if shell:match("bash") then
+    vim.opt.shellcmdflag = "-s"
+  elseif shell:match("cmd") or shell:match("powershell") or shell:match("pwsh") then
+    vim.opt.shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell"
+    vim.opt.shellcmdflag =
+      "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+    vim.opt.shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait"
+    vim.opt.shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
+    vim.opt.shellquote = ""
+    vim.opt.shellxquote = ""
+  end
+end
+
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   options = {
