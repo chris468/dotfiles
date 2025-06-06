@@ -5,6 +5,21 @@ local os = require("chris468.util.os")
 
 local have_zoxide = vim.fn.executable("zoxide") == 1
 
+local function configure_select()
+  local original = vim.ui.select
+  local M = {}
+  function M.select(...)
+    _ = require("telescope")
+    if vim.ui.select == M.select then
+      vim.ui.select = original
+    end
+
+    return vim.ui.select(...)
+  end
+
+  vim.ui.select = M.select
+end
+
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -25,6 +40,10 @@ return {
       "jvgrootveld/telescope-zoxide",
       "tsakirist/telescope-lazy.nvim",
       "telescope-fzf-native.nvim",
+      {
+        "nvim-telescope/telescope-ui-select.nvim",
+        config = configure_select(),
+      },
     },
     keys = function()
       local keys = {
@@ -87,8 +106,9 @@ return {
         noice = {
           enabled = util_lazy.has_plugin("noice.nvim"),
         },
-        terraform_doc = {},
         lazy = {},
+        terraform_doc = {},
+        ["ui-select"] = {},
         zoxide = {
           enabled = have_zoxide,
         },

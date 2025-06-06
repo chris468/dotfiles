@@ -31,11 +31,6 @@ return {
     "nvim-lualine/lualine.nvim",
     dependencies = { "mini.icons" },
     event = "VeryLazy",
-    keys = {
-      { "<leader>sn", cmd("Noice telescope"), desc = "Notifications" },
-      { "<leader>sN", cmd("Noice all"), desc = "Noice" },
-      { "<leader>ud", cmd("Noice dismiss"), desc = "Dismiss notifications" },
-    },
     opts = {
       extensions = {
         {
@@ -118,6 +113,9 @@ return {
         desc = "Redirect",
         mode = "c",
       },
+      { "<leader>sn", cmd("Noice telescope"), desc = "Notifications" },
+      { "<leader>sN", cmd("Noice all"), desc = "Noice" },
+      { "<leader>ud", cmd("Noice dismiss"), desc = "Dismiss notifications" },
     },
     opts = {
       cmdline = {
