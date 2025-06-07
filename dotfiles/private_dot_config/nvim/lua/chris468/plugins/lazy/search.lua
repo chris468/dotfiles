@@ -108,7 +108,9 @@ return {
         },
         lazy = {},
         terraform_doc = {},
-        ["ui-select"] = {},
+        ["ui-select"] = {
+          layout_strategy = "center",
+        },
         zoxide = {
           enabled = have_zoxide,
         },
