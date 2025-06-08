@@ -35,12 +35,11 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    cmd = { "LspInfo", "LspLog", "LspStart", "LspRestart" },
-    event = { "BufReadPost", "BufNew" },
     config = function(_, opts)
       require("chris468.plugins.config.tools").lspconfig(opts)
     end,
     dependencies = { "blink.cmp", optional = true },
+    lazy = false,
     keys = {
       { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
     },
@@ -51,11 +50,10 @@ return {
   {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim" },
-    cmd = { "ConformInfo" },
     config = function(_, opts)
       require("chris468.plugins.config.tools").formatter_config(opts)
     end,
-    event = { "BufReadPost", "BufNew" },
+    lazy = false,
     keys = {
       {
         "<leader>cf",
@@ -89,6 +87,7 @@ return {
       require("chris468.plugins.config.tools").linter_config(opts)
     end,
     dependencies = { "mason.nvim" },
+    lazy = false,
     opts = {
       -- linters_by_ft is custom - a map of key to map of filetype to plugins.
       -- Outer map is to avoid conflicts, inner maps will be merged.
