@@ -8,6 +8,13 @@ local cmd = require("chris468.util.keymap").cmd
 
 ---@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
 
+---@class chris468.config.Formatter
+---@field [1] string Formatter name
+---@field enabled? boolean Whether to enable the formatter, default true
+---@field package package? string Package name, if different than formatter, or false for no package
+
+---@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
+
 ---@type chris468.config.ToolsByFiletype
 ---@return table<string, string[]>
 local function convert(tools_by_filetype)
@@ -72,7 +79,10 @@ return {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim" },
     cmd = { "ConformInfo" },
-    ft = vim.tbl_keys(formatters_by_ft),
+    config = function(_, opts)
+      require("chris468.plugins.config.tools").formatter_config(opts)
+    end,
+    event = { "BufReadPost", "BufNew" },
     keys = {
       {
         "<leader>cf",
@@ -87,7 +97,10 @@ return {
       default_format_opts = {
         lsp_format = "fallback",
       },
-      formatters_by_ft = formatters_by_ft,
+      -- formatters_by_ft is custom - a map of key to map of filetype to plugins.
+      -- Outer map is to avoid conflicts, inner maps will be merged.
+      ---@type {string: chris468.config.FormattersByFileType}
+      formatters_by_ft = {},
       format_on_save = function(bufnr)
         if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
           return

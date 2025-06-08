@@ -165,7 +165,7 @@ local function install_tools(bufnr, filetype)
     installed_tools_for_filetype[filetype] = true
     -- install_and_enable_lsps(bufnr, lsps_by_ft[filetype])
     install_linters(bufnr, filetype)
-    install_formatters(bufnr, filetype)
+    -- install_formatters(bufnr, filetype)
   end
 end
 
@@ -307,6 +307,66 @@ function M.lspconfig(opts)
             name == server_name and "" or string.format("(%s) ", server_name)
           ))
         end
+      end
+    end,
+  })
+end
+
+function M.formatter_config(opts)
+  local handled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
+  local config = vim
+    .iter(opts.formatters_by_ft)
+    :fold({ formatters_by_ft = {}, config_by_ft = {} }, function(result, _, v)
+      for ft, formatters in pairs(v) do
+        if not handled_filetypes[ft] then
+          result.formatters_by_ft[ft] = result.formatters_by_ft[ft] or {}
+          result.config_by_ft[ft] = result.config_by_ft[ft] or {}
+          for _, formatter in ipairs(formatters) do
+            local is_string = type(formatter) == "string"
+            if is_string or formatter.enabled ~= false then
+              table.insert(result.formatters_by_ft[ft], is_string and formatter or formatter[1])
+              table.insert(result.config_by_ft[ft], is_string and { formatter } or formatter)
+            end
+          end
+        end
+      end
+      return result
+    end)
+
+  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.formatters_by_ft }, opts))
+
+  local cache = {}
+
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("chris468.formatter", { clear = true }),
+    callback = function(arg)
+      local filetype = arg.match
+      if handled_filetypes[filetype] then
+        return
+      end
+      handled_filetypes[filetype] = true
+
+      for _, c in ipairs(config.config_by_ft[filetype] or {}) do
+        local name = c[1]
+        if not cache[name] then
+          local package
+          if c.package ~= false then
+            local ok, p = pcall(require("mason-registry").get_package, c.package or name)
+            package = ok and p or nil
+          end
+
+          cache[name] = { package = package, package_name = package and package.spec.name or name }
+        end
+
+        local package, package_name = cache[name].package, cache[name].package_name
+        util_mason.install(
+          package,
+          function()
+            raise_filetype(arg.buf)
+          end,
+          nil,
+          string.format("Formatter %s%s", package_name, name == package_name and "" or string.format(" (%s)", name))
+        )
       end
     end,
   })

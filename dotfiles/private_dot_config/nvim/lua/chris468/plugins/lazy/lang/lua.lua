@@ -24,6 +24,16 @@ return {
     },
   },
   {
+    "conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        lua = {
+          lua = { "stylua" },
+        },
+      },
+    },
+  },
+  {
     "folke/lazydev.nvim",
     cmd = { "LazyDev" },
     ft = { "lua" },
