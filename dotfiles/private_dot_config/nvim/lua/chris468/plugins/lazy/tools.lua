@@ -1,5 +1,13 @@
 local cmd = require("chris468.util.keymap").cmd
 
+---@class chris468.config.LspServer
+---@field enabled? boolean Whether to enable the server. Default true
+---@field name? string The server config name. Defaults to package name, or lspconfig name from package if available.
+---@field package package? boolean Whether there is a mason package. Defaults to true.
+---@field cfg? vim.lsp.Config The server config. Defaults to empty
+
+---@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
+
 ---@type chris468.config.ToolsByFiletype
 ---@return table<string, string[]>
 local function convert(tools_by_filetype)
@@ -47,22 +55,18 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    cmd = { "LspInfo", "LspInstall", "LspLog", "LspStart", "LspRestart", "LspUninstall" },
-    config = function()
-      require("chris468.plugins.config.tools").configure_lsp()
+    cmd = { "LspInfo", "LspLog", "LspStart", "LspRestart" },
+    event = { "BufReadPost", "BufNew" },
+    config = function(_, opts)
+      require("chris468.plugins.config.tools").lspconfig(opts)
     end,
     dependencies = { "blink.cmp", optional = true },
     keys = {
       { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
     },
-  },
-  {
-    "mason-org/mason-lspconfig.nvim",
-    dependencies = { "mason.nvim", "nvim-lspconfig" },
-    opts = {
-      automatic_enable = false,
-      ensure_installed = {},
-    },
+    -- This is custom config (nvim-lspconfig is just data and has no setup)
+    ---@type chris468.config.LspConfig
+    opts = {},
   },
   {
     "stevearc/conform.nvim",

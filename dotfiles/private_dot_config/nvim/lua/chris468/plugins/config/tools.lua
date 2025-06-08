@@ -1,4 +1,4 @@
-local notify = require("chris468.util").schedule_notify
+local util = require("chris468.util")
 local M = {}
 
 local _lsp_package
@@ -39,7 +39,7 @@ local function should_install_tool(package_name, install)
   end
 
   if not should_install and description then
-    notify("Skipping " .. package_name .. "install: " .. description, vim.log.levels.WARN)
+    util.schedule_notify("Skipping " .. package_name .. "install: " .. description, vim.log.levels.WARN)
   end
 
   return should_install
@@ -63,14 +63,14 @@ local function install_package(bufnr, package_name, install, callback)
     return
   end
 
-  notify("Installing " .. package_name .. "...")
+  util.schedule_notify("Installing " .. package_name .. "...")
   package
     :once("install:success", function()
-      notify("Successfully installed " .. package_name .. ".")
+      util.schedule_notify("Successfully installed " .. package_name .. ".")
       complete()
     end)
     :once("install:failed", function()
-      notify("Error installing " .. package_name .. ".", vim.log.levels.WARN)
+      util.schedule_notify("Error installing " .. package_name .. ".", vim.log.levels.WARN)
     end)
   package:install()
 end
@@ -156,13 +156,13 @@ local lsps_by_ft
 ---@param bufnr integer
 ---@param filetype string
 local function install_tools(bufnr, filetype)
-  if not lsps_by_ft then
-    lsps_by_ft = map_lsps_to_filetypes()
-  end
+  -- if not lsps_by_ft then
+  --   lsps_by_ft = map_lsps_to_filetypes()
+  -- end
 
   if not installed_tools_for_filetype[filetype] then
     installed_tools_for_filetype[filetype] = true
-    install_and_enable_lsps(bufnr, lsps_by_ft[filetype])
+    -- install_and_enable_lsps(bufnr, lsps_by_ft[filetype])
     install_linters(bufnr, filetype)
     install_formatters(bufnr, filetype)
   end
@@ -249,6 +249,72 @@ function M.register_lint(linters_by_ft)
     callback = function()
       local linters = linters_by_ft[vim.bo.filetype] or {}
       run_installed_linters(linters)
+    end,
+  })
+end
+
+---- SIMPLIFIED (?)
+
+--- @param opts chris468.config.LspConfig
+function M.lspconfig(opts)
+  local _ = require("lspconfig")
+  local cache = {}
+
+  local configs = vim.iter(opts):fold({}, function(result, k, v)
+    if v.enabled ~= false then
+      result[k] = v
+    end
+    return result
+  end)
+
+  local handled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("chris468.lspconfig", { clear = true }),
+    callback = function(arg)
+      local filetype = arg.match
+      if handled_filetypes[filetype] then
+        return
+      end
+
+      handled_filetypes[filetype] = true
+
+      for name, config in pairs(configs) do
+        if not cache[name] then
+          local package
+          if config.package ~= false then
+            local ok, p = pcall(require("mason-registry").get_package, name)
+            package = ok and p or nil
+          end
+
+          local server_name = config.name or vim.tbl_get(package or {}, "spec", "neovim", "lspconfig") or name
+          local filetypes = util.make_set((config.cfg or {}).filetypes or vim.lsp.config[server_name].filetypes or {})
+          cache[name] = { server_name = server_name, filetypes = filetypes, package = package }
+        end
+
+        if cache[name].filetypes[filetype] then
+          local package = cache[name].package
+          local server_name = cache[name].server_name
+          vim.lsp.config(server_name, config)
+          vim.lsp.enable(server_name)
+          if package and not package:is_installed() then
+            local display =
+              string.format("%s%s", name, name == server_name and "" or string.format("(%s) ", server_name))
+            util.schedule_notify(string.format("Installing LSP %s...", display))
+            package
+              :once("install:success", function()
+                util.schedule_notify(string.format("Successfully installed LSP %s.", display))
+                raise_filetype(arg.buf)
+              end)
+              :once("install:failed", function()
+                util.schedule_notify(string.format("Error installing LSP %s.", display), vim.log.levels.WARN)
+                vim.lsp.disable(server_name)
+              end)
+            package:install()
+          else
+            raise_filetype(arg.buf)
+          end
+        end
+      end
     end,
   })
 end

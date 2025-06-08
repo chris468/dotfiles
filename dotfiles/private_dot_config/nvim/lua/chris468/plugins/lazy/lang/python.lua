@@ -7,6 +7,13 @@ local script_path = vim.fn.stdpath("config") .. "/scripts/find-venvs.sh"
 
 return {
   {
+    "nvim-lspconfig",
+    opts = {
+      pyright = {},
+      ruff = {},
+    },
+  },
+  {
     "linux-cultist/venv-selector.nvim",
     branch = "regexp",
     enabled = true,
