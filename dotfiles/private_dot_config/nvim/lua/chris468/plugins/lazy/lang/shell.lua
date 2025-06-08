@@ -7,6 +7,10 @@ return {
           filetypes = { "bash", "sh", "zsh" },
         },
       },
+      nushell = {
+        enable = vim.fn.executable("nu") == 1,
+        package = false,
+      },
     },
   },
   {

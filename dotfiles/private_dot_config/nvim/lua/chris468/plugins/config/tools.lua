@@ -104,7 +104,7 @@ function M.lspconfig(opts)
     return result
   end)
 
-  local handled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
+  local handled_filetypes = util.make_set(Chris468.disable_filetypes)
   vim.api.nvim_create_autocmd("FileType", {
     group = group,
     callback = function(arg)
@@ -214,14 +214,14 @@ local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes
 end
 
 function M.formatter_config(opts)
-  local disabled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
+  local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
   local config = normalize_tools_by_ft(opts.formatters_by_ft, disabled_filetypes)
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.tools_by_ft }, opts))
   lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
-  local disabled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
+  local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
   local config = normalize_tools_by_ft(opts.linters_by_ft, disabled_filetypes)
   require("lint").linters_by_ft = config.tools_by_ft
   lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "linter")

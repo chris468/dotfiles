@@ -60,7 +60,7 @@ return {
         },
       },
       enabled = function()
-        return not vim.list_contains(Chris468.tools.disable_filetypes, vim.bo.filetype)
+        return not vim.list_contains(Chris468.disable_filetypes, vim.bo.filetype)
       end,
       fuzzy = { implementation = "prefer_rust" },
       keymap = { preset = "super-tab" },
@@ -101,7 +101,7 @@ return {
   },
   {
     "Exafunction/windsurf.nvim",
-    cond = Chris468.tools.ai.provider == "codeium",
+    cond = Chris468.ai.provider == "codeium",
     cmd = "Codeium",
     dependencies = { "plenary.nvim" },
     main = "codeium",
@@ -128,7 +128,7 @@ return {
   },
   {
     "zbirenbaum/copilot.lua",
-    cond = Chris468.tools.ai.provider == "copilot",
+    cond = Chris468.ai.provider == "copilot",
     cmd = "Copilot",
     event = "InsertEnter",
     opts = {
@@ -141,7 +141,7 @@ return {
         dependencies = {
           {
             "giuxtaposition/blink-cmp-copilot",
-            cond = Chris468.tools.ai.provider == "copilot",
+            cond = Chris468.ai.provider == "copilot",
             dependencies = "copilot.lua",
           },
         },
@@ -163,7 +163,7 @@ return {
   },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
-    cond = Chris468.tools.ai.provider == "copilot",
+    cond = Chris468.ai.provider == "copilot",
     cmd = {
       "CopilotChat",
       "CopilotChatOpen",
