@@ -2,7 +2,7 @@ return {
   {
     "nvim-lspconfig",
     opts = {
-      lua_ls = {
+      ["lua-language-server"] = {
         lspconfig = {
           settings = {
             Lua = {
