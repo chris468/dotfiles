@@ -3,7 +3,7 @@ local cmd = require("chris468.util.keymap").cmd
 ---@class chris468.config.LspServer
 ---@field enabled? boolean Whether to enable the server. Default true
 ---@field name? string The server config name. Defaults to package name, or lspconfig name from package if available.
----@field package package? boolean Whether there is a mason package. Defaults to true.
+---@field public package? boolean Whether there is a mason package. Defaults to true.
 ---@field cfg? vim.lsp.Config The server config. Defaults to empty
 
 ---@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
@@ -11,7 +11,7 @@ local cmd = require("chris468.util.keymap").cmd
 ---@class chris468.config.Formatter
 ---@field [1] string Formatter name
 ---@field enabled? boolean Whether to enable the formatter, default true
----@field package package? string Package name, if different than formatter, or false for no package
+---@field public package? string Package name, if different than formatter, or false for no package
 
 ---@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
 
@@ -48,7 +48,7 @@ return {
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
     keys = {
       { "<leader>ci", cmd("checkhealth vim.lsp conform"), desc = "LSP/Formatter info" },
-      { "<leader>M", cmd("Mason"), desc = "Mason" },
+      { "<leader>M",  cmd("Mason"),                       desc = "Mason" },
     },
     opts = {
       ui = {

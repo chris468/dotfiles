@@ -312,28 +312,33 @@ function M.lspconfig(opts)
   })
 end
 
-function M.formatter_config(opts)
-  local handled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
-  local config = vim
-    .iter(opts.formatters_by_ft)
-    :fold({ formatters_by_ft = {}, config_by_ft = {} }, function(result, _, v)
-      for ft, formatters in pairs(v) do
-        if not handled_filetypes[ft] then
-          result.formatters_by_ft[ft] = result.formatters_by_ft[ft] or {}
-          result.config_by_ft[ft] = result.config_by_ft[ft] or {}
-          for _, formatter in ipairs(formatters) do
-            local is_string = type(formatter) == "string"
-            if is_string or formatter.enabled ~= false then
-              table.insert(result.formatters_by_ft[ft], is_string and formatter or formatter[1])
-              table.insert(result.config_by_ft[ft], is_string and { formatter } or formatter)
-            end
+---@param tools_by_ft chris468.config.FormattersByFileType
+---@param disabled_filetypes { [string]: true }
+---@return { tools_by_ft: {[string]: string[]}, config_by_ft: {[string]: chris468.config.Formatter[]}}
+local function normalize_tools_by_ft(tools_by_ft, disabled_filetypes)
+  return vim.iter(tools_by_ft):fold({ tools_by_ft = {}, config_by_ft = {} }, function(result, _, v)
+    for ft, tools in pairs(v) do
+      if not disabled_filetypes[ft] then
+        result.tools_by_ft[ft] = result.tools_by_ft[ft] or {}
+        result.config_by_ft[ft] = result.config_by_ft[ft] or {}
+        for _, tool in ipairs(tools) do
+          local is_string = type(tool) == "string"
+          if is_string or tool.enabled ~= false then
+            table.insert(result.tools_by_ft[ft], is_string and tool or tool[1])
+            table.insert(result.config_by_ft[ft], is_string and { tool } or tool)
           end
         end
       end
-      return result
-    end)
+    end
+    return result
+  end)
+end
 
-  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.formatters_by_ft }, opts))
+function M.formatter_config(opts)
+  local handled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
+  local config = normalize_tools_by_ft(opts.formatters_by_ft, handled_filetypes)
+
+  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.tools_by_ft }, opts))
 
   local cache = {}
 
