@@ -15,33 +15,6 @@ local cmd = require("chris468.util.keymap").cmd
 
 ---@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
 
----@type chris468.config.ToolsByFiletype
----@return table<string, string[]>
-local function convert(tools_by_filetype)
-  local function filter(v)
-    if type(v) == "string" then
-      return true
-    elseif type(v.install) == "function" then
-      return v.install()
-    else
-      return v.install ~= false
-    end
-  end
-
-  local function extract_tool_name(v)
-    return type(v) == "table" and v[1] or v
-  end
-
-  local function map(v)
-    return vim.tbl_map(extract_tool_name, vim.tbl_filter(filter, v))
-  end
-
-  return vim.tbl_map(map, tools_by_filetype)
-end
-
-local formatters_by_ft = convert(Chris468.tools.formatters)
-local linters_by_ft = convert(Chris468.tools.linters)
-
 return {
   {
     "mason-org/mason.nvim",
@@ -116,7 +89,6 @@ return {
       require("chris468.plugins.config.tools").linter_config(opts)
     end,
     dependencies = { "mason.nvim" },
-    ft = vim.tbl_keys(linters_by_ft),
     opts = {
       -- linters_by_ft is custom - a map of key to map of filetype to plugins.
       -- Outer map is to avoid conflicts, inner maps will be merged.
