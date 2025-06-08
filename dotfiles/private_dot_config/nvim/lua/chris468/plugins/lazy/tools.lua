@@ -48,7 +48,7 @@ return {
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
     keys = {
       { "<leader>ci", cmd("checkhealth vim.lsp conform"), desc = "LSP/Formatter info" },
-      { "<leader>M",  cmd("Mason"),                       desc = "Mason" },
+      { "<leader>M", cmd("Mason"), desc = "Mason" },
     },
     opts = {
       ui = {
@@ -113,14 +113,15 @@ return {
   {
     "mfussenegger/nvim-lint",
     config = function(_, opts)
-      local lint = require("lint")
-      lint.linters_by_ft = opts.linters_by_ft
-      require("chris468.plugins.config.tools").register_lint(opts.linters_by_ft)
+      require("chris468.plugins.config.tools").linter_config(opts)
     end,
     dependencies = { "mason.nvim" },
     ft = vim.tbl_keys(linters_by_ft),
     opts = {
-      linters_by_ft = linters_by_ft,
+      -- linters_by_ft is custom - a map of key to map of filetype to plugins.
+      -- Outer map is to avoid conflicts, inner maps will be merged.
+      ---@type {string: chris468.config.FormattersByFileType}
+      linters_by_ft = {},
     },
     version = false,
   },
