@@ -334,16 +334,15 @@ local function normalize_tools_by_ft(tools_by_ft, disabled_filetypes)
   end)
 end
 
-function M.formatter_config(opts)
-  local handled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
-  local config = normalize_tools_by_ft(opts.formatters_by_ft, handled_filetypes)
-
-  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.tools_by_ft }, opts))
-
+---@param config_by_ft { [string]: chris468.config.Formatter[] }
+---@param disabled_filetypes { [string]: true }
+---@param tool_type string
+local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes, tool_type)
+  local handled_filetypes = disabled_filetypes
   local cache = {}
 
   vim.api.nvim_create_autocmd("FileType", {
-    group = vim.api.nvim_create_augroup("chris468.formatter", { clear = true }),
+    group = vim.api.nvim_create_augroup("chris468." .. tool_type, { clear = true }),
     callback = function(arg)
       local filetype = arg.match
       if handled_filetypes[filetype] then
@@ -351,7 +350,7 @@ function M.formatter_config(opts)
       end
       handled_filetypes[filetype] = true
 
-      for _, c in ipairs(config.config_by_ft[filetype] or {}) do
+      for _, c in ipairs(config_by_ft[filetype] or {}) do
         local name = c[1]
         if not cache[name] then
           local package
@@ -370,11 +369,18 @@ function M.formatter_config(opts)
             raise_filetype(arg.buf)
           end,
           nil,
-          string.format("Formatter %s%s", package_name, name == package_name and "" or string.format(" (%s)", name))
+          string.format("%s %s%s", tool_type, package_name, name == package_name and "" or string.format(" (%s)", name))
         )
       end
     end,
   })
+end
+
+function M.formatter_config(opts)
+  local disabled_filetypes = util.make_set(Chris468.tools.disable_filetypes)
+  local config = normalize_tools_by_ft(opts.formatters_by_ft, disabled_filetypes)
+  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.tools_by_ft }, opts))
+  lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "formatter")
 end
 
 return M
