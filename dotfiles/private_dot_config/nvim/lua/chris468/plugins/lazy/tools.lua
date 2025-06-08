@@ -4,7 +4,7 @@ local cmd = require("chris468.util.keymap").cmd
 ---@field enabled? boolean Whether to enable the server. Default true
 ---@field name? string The server config name. Defaults to package name, or lspconfig name from package if available.
 ---@field public package? boolean Whether there is a mason package. Defaults to true.
----@field cfg? vim.lsp.Config The server config. Defaults to empty
+---@field lspconfig? vim.lsp.Config The server config. Defaults to empty
 
 ---@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
 

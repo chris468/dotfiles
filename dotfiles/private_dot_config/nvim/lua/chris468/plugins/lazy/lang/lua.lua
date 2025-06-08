@@ -3,7 +3,7 @@ return {
     "nvim-lspconfig",
     opts = {
       lua_ls = {
-        cfg = {
+        lspconfig = {
           settings = {
             Lua = {
               completion = {

@@ -124,14 +124,15 @@ function M.lspconfig(opts)
           end
 
           local server_name = config.name or vim.tbl_get(package or {}, "spec", "neovim", "lspconfig") or name
-          local filetypes = util.make_set((config.cfg or {}).filetypes or vim.lsp.config[server_name].filetypes or {})
+          local filetypes =
+            util.make_set((config.lspconfig or {}).filetypes or vim.lsp.config[server_name].filetypes or {})
           cache[name] = { server_name = server_name, filetypes = filetypes, package = package }
         end
 
         if cache[name].filetypes[filetype] then
           local package = cache[name].package
           local server_name = cache[name].server_name
-          vim.lsp.config(server_name, merge_completion_capabilities(config.cfg))
+          vim.lsp.config(server_name, merge_completion_capabilities(config.lspconfig))
           vim.lsp.enable(server_name)
           util_mason.install(package, function()
             raise_filetype(arg.buf)
