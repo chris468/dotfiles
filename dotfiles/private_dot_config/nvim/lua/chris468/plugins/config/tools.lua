@@ -1,4 +1,5 @@
 local util = require("chris468.util")
+local util_mason = require("chris468.util.mason")
 local M = {}
 
 local _lsp_package
@@ -296,23 +297,15 @@ function M.lspconfig(opts)
           local server_name = cache[name].server_name
           vim.lsp.config(server_name, config)
           vim.lsp.enable(server_name)
-          if package and not package:is_installed() then
-            local display =
-              string.format("%s%s", name, name == server_name and "" or string.format("(%s) ", server_name))
-            util.schedule_notify(string.format("Installing LSP %s...", display))
-            package
-              :once("install:success", function()
-                util.schedule_notify(string.format("Successfully installed LSP %s.", display))
-                raise_filetype(arg.buf)
-              end)
-              :once("install:failed", function()
-                util.schedule_notify(string.format("Error installing LSP %s.", display), vim.log.levels.WARN)
-                vim.lsp.disable(server_name)
-              end)
-            package:install()
-          else
+          util_mason.install(package, function()
             raise_filetype(arg.buf)
-          end
+          end, function()
+            vim.lsp.disable(server_name)
+          end, string.format(
+            "LSP %s%s",
+            name,
+            name == server_name and "" or string.format("(%s) ", server_name)
+          ))
         end
       end
     end,
