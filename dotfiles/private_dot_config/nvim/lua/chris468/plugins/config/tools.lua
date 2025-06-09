@@ -1,20 +1,6 @@
-local notify = require("chris468.util").schedule_notify
+local util = require("chris468.util")
+local util_mason = require("chris468.util.mason")
 local M = {}
-
-local _lsp_package
-
----@param lsp string
----@return string
-local function lsp_package(lsp)
-  if not _lsp_package then
-    _lsp_package = require("mason-lspconfig.mappings").get_mason_map().lspconfig_to_package
-  end
-
-  return _lsp_package[lsp]
-end
-
----@type { [string]: boolean }
-local installed_tools_for_filetype = {}
 
 ---@param bufnr integer
 local function raise_filetype(bufnr)
@@ -24,78 +10,7 @@ local function raise_filetype(bufnr)
     })
   end, 100)
 end
-
----@param package_name string
----@param install? chris468.config.ShouldInstallTool
----@return boolean
-local function should_install_tool(package_name, install)
-  local should_install, description
-  if install == nil then
-    should_install = true
-  elseif type(install) == "function" then
-    should_install, description = install()
-  else
-    should_install = install
-  end
-
-  if not should_install and description then
-    notify("Skipping " .. package_name .. "install: " .. description, vim.log.levels.WARN)
-  end
-
-  return should_install
-end
-
----@param bufnr integer
----@param package_name string
----@param install? chris468.config.ShouldInstallTool
----@param callback? fun()
-local function install_package(bufnr, package_name, install, callback)
-  local function complete()
-    raise_filetype(bufnr)
-    if callback then
-      callback()
-    end
-  end
-  local registry = require("mason-registry")
-  local ok, package = pcall(registry.get_package, package_name)
-  if not ok or package:is_installed() or not should_install_tool(package_name, install) then
-    complete()
-    return
-  end
-
-  notify("Installing " .. package_name .. "...")
-  package
-    :once("install:success", function()
-      notify("Successfully installed " .. package_name .. ".")
-      complete()
-    end)
-    :once("install:failed", function()
-      notify("Error installing " .. package_name .. ".", vim.log.levels.WARN)
-    end)
-  package:install()
-end
-
-local function map_lsps_to_filetypes()
-  _ = require("lspconfig")
-  local result = vim.defaulttable(function()
-    return {}
-  end)
-  --
-  for lsp, lsp_tool in pairs(Chris468.tools.lsps) do
-    if vim.lsp.config[lsp] then
-      local tool_config = type(lsp_tool.config) == "function" and lsp_tool.config() or lsp_tool.config
-      lsp_tool.config = tool_config
-      local tool_filetypes = (lsp_tool.config or {}).filetypes
-      local lspconfig_filetypes = vim.lsp.config[lsp].filetypes or {}
-      for _, filetype in ipairs(tool_filetypes or lspconfig_filetypes) do
-        table.insert(result[filetype], lsp)
-      end
-    end
-  end
-
-  return result
-end
-
+---
 ---@param config? vim.lsp.Config
 ---@return vim.lsp.Config?
 local function merge_completion_capabilities(config)
@@ -107,68 +22,7 @@ local function merge_completion_capabilities(config)
   return config
 end
 
----@param bufnr integer
----@param lsps string[]
-local function install_and_enable_lsps(bufnr, lsps)
-  for _, lsp in ipairs(lsps) do
-    vim.lsp.enable(lsp)
-    local lsp_tool = Chris468.tools.lsps[lsp]
-    local lsp_config = merge_completion_capabilities(lsp_tool.config)
-    if lsp_config then
-      vim.lsp.config(lsp, lsp_config)
-    end
-    install_package(bufnr, lsp_package(lsp), lsp_tool.install)
-  end
-end
-
----@param bufnr integer
----@param tools_for_filetype chris468.config.ToolsByFiletype
----@param filetype string
----@param callback? fun(bufnr: integer, tool: chris468.config.ToolSpec)
-local function install_tools_for_filetype(bufnr, tools_for_filetype, filetype, callback)
-  for _, tool in ipairs(tools_for_filetype[filetype] or {}) do
-    tool = type(tool) == "string" and { tool } or tool
-    local package = tool.package or tool[1]
-    local install = tool.install
-    install_package(bufnr, package, install, function()
-      if callback then
-        callback(bufnr, tool --[[@as chris468.config.ToolSpec)--]])
-      end
-    end)
-  end
-end
-
-local function install_linters(bufnr, filetype)
-  install_tools_for_filetype(bufnr, Chris468.tools.linters, filetype)
-end
-
-local function install_formatters(bufnr, filetype)
-  install_tools_for_filetype(bufnr, Chris468.tools.formatters, filetype, function(b, tool)
-    ---@diagnostic disable-next-line: undefined-field
-    if tool.format_on_save == false then
-      vim.b[b].format_on_save = false
-    end
-  end)
-end
-
----@type table<string, string[]>
-local lsps_by_ft
----@param bufnr integer
----@param filetype string
-local function install_tools(bufnr, filetype)
-  if not lsps_by_ft then
-    lsps_by_ft = map_lsps_to_filetypes()
-  end
-
-  if not installed_tools_for_filetype[filetype] then
-    installed_tools_for_filetype[filetype] = true
-    install_and_enable_lsps(bufnr, lsps_by_ft[filetype])
-    install_linters(bufnr, filetype)
-    install_formatters(bufnr, filetype)
-  end
-end
-
----@param bufnr integer
+---@pram bufnr integer
 ---@param client vim.lsp.Client
 local function configure_inlay_hints(bufnr, client)
   local bufutil = require("chris468.util.buffer")
@@ -209,26 +63,6 @@ local function register_dynamic_capability_handlers()
   end
 end
 
-function M.configure_lsp()
-  local group = vim.api.nvim_create_augroup("chris468.tools.lsp", { clear = true })
-  register_lsp_attach(group)
-
-  register_dynamic_capability_handlers()
-end
-
-function M.configure_tool_install()
-  vim.api.nvim_create_autocmd("FileType", {
-    group = vim.api.nvim_create_augroup("chris468.tools", { clear = true }),
-    callback = function(arg)
-      local filetype = arg.match
-      if not vim.list_contains(Chris468.tools.disable_filetypes, filetype) then
-        local buf = arg.buf
-        return install_tools(buf, filetype)
-      end
-    end,
-  })
-end
-
 ---@param linters string[]
 local function run_installed_linters(linters)
   local installed_linters = vim.tbl_filter(function(v)
@@ -243,7 +77,7 @@ local function run_installed_linters(linters)
 end
 
 ---@param linters_by_ft table<string, string[]>
-function M.register_lint(linters_by_ft)
+local function register_lint(linters_by_ft)
   vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
     group = vim.api.nvim_create_augroup("chris468.lint", { clear = true }),
     callback = function()
@@ -251,6 +85,147 @@ function M.register_lint(linters_by_ft)
       run_installed_linters(linters)
     end,
   })
+end
+
+---- SIMPLIFIED (?)
+--- @param opts chris468.config.LspConfig
+function M.lspconfig(opts)
+  local group = vim.api.nvim_create_augroup("chris468.tools.lsp", { clear = true })
+  register_lsp_attach(group)
+  register_dynamic_capability_handlers()
+
+  local _ = require("lspconfig")
+  local cache = {}
+
+  local configs = vim.iter(opts):fold({}, function(result, k, v)
+    if v.enabled ~= false then
+      result[k] = v
+    end
+    return result
+  end)
+
+  local handled_filetypes = util.make_set(Chris468.disable_filetypes)
+  vim.api.nvim_create_autocmd("FileType", {
+    group = group,
+    callback = function(arg)
+      local filetype = arg.match
+      if handled_filetypes[filetype] then
+        return
+      end
+
+      handled_filetypes[filetype] = true
+
+      for name, config in pairs(configs) do
+        if not cache[name] then
+          local package
+          if config.package ~= false then
+            local ok, p = pcall(require("mason-registry").get_package, name)
+            package = ok and p or nil
+          end
+
+          local server_name = config.name or vim.tbl_get(package or {}, "spec", "neovim", "lspconfig") or name
+          local filetypes =
+            util.make_set((config.lspconfig or {}).filetypes or vim.lsp.config[server_name].filetypes or {})
+          cache[name] = { server_name = server_name, filetypes = filetypes, package = package }
+        end
+
+        if cache[name].filetypes[filetype] then
+          local package = cache[name].package
+          local server_name = cache[name].server_name
+          vim.lsp.config(server_name, merge_completion_capabilities(config.lspconfig))
+          vim.lsp.enable(server_name)
+          util_mason.install(package, function()
+            raise_filetype(arg.buf)
+          end, function()
+            vim.lsp.disable(server_name)
+          end, string.format(
+            "LSP %s%s",
+            name,
+            name == server_name and "" or string.format("(%s) ", server_name)
+          ))
+        end
+      end
+    end,
+  })
+end
+
+---@param tools_by_ft chris468.config.FormattersByFileType
+---@param disabled_filetypes { [string]: true }
+---@return { tools_by_ft: {[string]: string[]}, config_by_ft: {[string]: chris468.config.Formatter[]}}
+local function normalize_tools_by_ft(tools_by_ft, disabled_filetypes)
+  return vim.iter(tools_by_ft):fold({ tools_by_ft = {}, config_by_ft = {} }, function(result, _, v)
+    for ft, tools in pairs(v) do
+      if not disabled_filetypes[ft] then
+        result.tools_by_ft[ft] = result.tools_by_ft[ft] or {}
+        result.config_by_ft[ft] = result.config_by_ft[ft] or {}
+        for _, tool in ipairs(tools) do
+          local is_string = type(tool) == "string"
+          if is_string or tool.enabled ~= false then
+            table.insert(result.tools_by_ft[ft], is_string and tool or tool[1])
+            table.insert(result.config_by_ft[ft], is_string and { tool } or tool)
+          end
+        end
+      end
+    end
+    return result
+  end)
+end
+
+---@param config_by_ft { [string]: chris468.config.Formatter[] }
+---@param disabled_filetypes { [string]: true }
+---@param tool_type string
+local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes, tool_type)
+  local handled_filetypes = disabled_filetypes
+  local cache = {}
+
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("chris468." .. tool_type, { clear = true }),
+    callback = function(arg)
+      local filetype = arg.match
+      if handled_filetypes[filetype] then
+        return
+      end
+      handled_filetypes[filetype] = true
+
+      for _, c in ipairs(config_by_ft[filetype] or {}) do
+        local name = c[1]
+        if not cache[name] then
+          local package
+          if c.package ~= false then
+            local ok, p = pcall(require("mason-registry").get_package, c.package or name)
+            package = ok and p or nil
+          end
+
+          cache[name] = { package = package, package_name = package and package.spec.name or name }
+        end
+
+        local package, package_name = cache[name].package, cache[name].package_name
+        util_mason.install(
+          package,
+          function()
+            raise_filetype(arg.buf)
+          end,
+          nil,
+          string.format("%s %s%s", tool_type, package_name, name == package_name and "" or string.format(" (%s)", name))
+        )
+      end
+    end,
+  })
+end
+
+function M.formatter_config(opts)
+  local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
+  local config = normalize_tools_by_ft(opts.formatters_by_ft, disabled_filetypes)
+  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.tools_by_ft }, opts))
+  lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "formatter")
+end
+
+function M.linter_config(opts)
+  local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
+  local config = normalize_tools_by_ft(opts.linters_by_ft, disabled_filetypes)
+  require("lint").linters_by_ft = config.tools_by_ft
+  lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "linter")
+  register_lint(config.tools_by_ft)
 end
 
 return M

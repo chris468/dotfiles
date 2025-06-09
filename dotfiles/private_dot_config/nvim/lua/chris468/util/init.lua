@@ -20,4 +20,13 @@ function M.wrap(fn, ...)
   end
 end
 
+---@param list any[]
+---@return table<any, true>
+function M.make_set(list)
+  return vim.iter(list):fold({}, function(result, v)
+    result[v] = true
+    return result
+  end)
+end
+
 return M
