@@ -175,10 +175,12 @@ function M.lspconfig(opts)
   lazily_install_lsps_by_filetype(opts, group)
 end
 
+---@alias chris468.config.NormalizedTools { tools_by_ft: {[string]: string[]}, config_by_ft: {[string]: chris468.config.Formatter[]}}
+
 ---@param tools_by_ft chris468.config.FormattersByFileType
 ---@param disabled_filetypes { [string]: true }
----@return { tools_by_ft: {[string]: string[]}, config_by_ft: {[string]: chris468.config.Formatter[]}}
-local function normalize_tools_by_ft(tools_by_ft, disabled_filetypes)
+---@return chris468.config.NormalizedTools
+function M.normalize_tools_by_ft(tools_by_ft, disabled_filetypes)
   return vim.iter(tools_by_ft):fold({ tools_by_ft = {}, config_by_ft = {} }, function(result, _, v)
     for ft, tools in pairs(v) do
       if not disabled_filetypes[ft] then
@@ -197,8 +199,18 @@ local function normalize_tools_by_ft(tools_by_ft, disabled_filetypes)
   end)
 end
 
-local function cached_tool_info(tool_type)
+---@class chris468.config.ToolInstallInfo
+---@field name string
+---@field package_name string
+---@field public package? Package
+---@field public display_name string
+
+---@param tool_type string
+---@return fun(chris468.config.Formatter) : chris468.config.ToolInstallInfo
+function M.cached_tool_info(tool_type)
   local cache = {}
+  ---@param config chris468.config.Formatter
+  ---@return chris468.config.ToolInstallInfo
   return function(config)
     local name = config[1]
     if not cache[name] then
@@ -218,12 +230,46 @@ local function cached_tool_info(tool_type)
   end
 end
 
+---@param tools chris468.config.Formatter[]
+---@param cache fun(chris468.config.Formatter): chris468.config.ToolInstallInfo
+---@param bufnr integer
+---@param callback? fun() Called when all installs have completed (successful or not). Not synchronized with the filetype event.
+---@param trigger_filetype? boolean Whether to trigger the FileType event, default true
+function M.install_tools(tools, cache, bufnr, callback, trigger_filetype)
+  trigger_filetype = trigger_filetype ~= false
+  callback = callback or function() end
+
+  local remaining = #tools
+  local function oncomplete(success)
+    remaining = remaining - 1
+
+    if success and trigger_filetype then
+      raise_filetype(bufnr)
+    end
+
+    if remaining == 0 then
+      callback()
+    end
+  end
+
+  for _, c in ipairs(tools) do
+    local info = cache(c)
+    util_mason.install(info.package, function()
+      oncomplete(true)
+    end, function()
+      oncomplete(false)
+    end, info.display_name)
+  end
+end
+
 ---@param config_by_ft { [string]: chris468.config.Formatter[] }
 ---@param disabled_filetypes { [string]: true }
 ---@param tool_type string
-local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes, tool_type)
+---@param callback? fun() Called when all installs have completed (successful or not). Not synchronized with the filetype event.
+---@param trigger_filetype? boolean Whether to trigger the FileType event, default true
+local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes, tool_type, callback, trigger_filetype)
   local handled_filetypes = disabled_filetypes
-  local cache = cached_tool_info(tool_type)
+  local cache = M.cached_tool_info(tool_type)
 
   vim.api.nvim_create_autocmd("FileType", {
     group = vim.api.nvim_create_augroup("chris468." .. tool_type, { clear = true }),
@@ -234,26 +280,22 @@ local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes
       end
       handled_filetypes[filetype] = true
 
-      for _, c in ipairs(config_by_ft[filetype] or {}) do
-        local info = cache(c)
-        util_mason.install(info.package, function()
-          raise_filetype(arg.buf)
-        end, nil, info.display_name)
-      end
+      local tools = config_by_ft[filetype] or {}
+      M.install_tools(tools, cache, arg.buf, callback, trigger_filetype)
     end,
   })
 end
 
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local config = normalize_tools_by_ft(opts.formatters_by_ft, disabled_filetypes)
+  local config = M.normalize_tools_by_ft(opts.formatters_by_ft, disabled_filetypes)
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.tools_by_ft }, opts))
   lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local config = normalize_tools_by_ft(opts.linters_by_ft, disabled_filetypes)
+  local config = M.normalize_tools_by_ft(opts.linters_by_ft, disabled_filetypes)
   require("lint").linters_by_ft = config.tools_by_ft
   lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "linter")
   register_lint(config.tools_by_ft)

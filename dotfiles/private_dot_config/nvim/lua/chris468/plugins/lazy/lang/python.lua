@@ -22,6 +22,16 @@ return {
     },
   },
   {
+    "nvim-dap",
+    opts = {
+      daps_by_ft = {
+        python = {
+          python = { { "python", package = "debugpy" } },
+        },
+      },
+    },
+  },
+  {
     "linux-cultist/venv-selector.nvim",
     branch = "regexp",
     enabled = true,

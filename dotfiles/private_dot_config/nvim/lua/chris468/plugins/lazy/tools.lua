@@ -120,4 +120,44 @@ return {
     },
     version = false,
   },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = "mason.nvim",
+    opts = {
+      ensure_installed = {},
+      handlers = {},
+    },
+  },
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = "mason-nvim-dap.nvim",
+    config = function(_, opts)
+      require("chris468.plugins.config.dap").setup(opts)
+    end,
+    keys = {
+      {
+        "<leader>db",
+        function()
+          require("dap").toggle_breakpoint()
+        end,
+        desc = "Toggle breakpoint",
+      },
+      {
+        "<leader>dc",
+        function()
+          local bufnr = vim.api.nvim_get_current_buf()
+          require("chris468.plugins.config.dap").install_daps_for_filetype(bufnr, function()
+            vim.defer_fn(require("dap").continue, 100)
+          end)
+        end,
+        desc = "Run/continue",
+      },
+    },
+    opts = {
+      -- Custom config arranges to install when starting a debug session
+      -- Outer map is to avoid conflicts, inner maps will be merged.
+      ---@type {string: chris468.config.FormattersByFileType}
+      daps_by_ft = {},
+    },
+  },
 }

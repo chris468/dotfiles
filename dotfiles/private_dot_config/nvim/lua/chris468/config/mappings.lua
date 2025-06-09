@@ -13,6 +13,7 @@ local mappings = {
   { "<leader>c", group = "Code" },
   { "<leader>cd", vim.diagnostic.setqflist, desc = "Diagnostics" },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
+  { "<leader>d", group = "Debug" },
   { "<leader>f", group = "Files" },
   { "<leader>g", group = "Git" },
   { "<leader>l", group = "Lua", icon = "󰢱" },
