@@ -87,46 +87,69 @@ local function register_lint(linters_by_ft)
   })
 end
 
----@class chris468.config._CachedLspConfig
----@field server_name string
+---@class chris468.config._CachedToolConfig
+---@field tool_name string
 ---@field filetypes { [string]: true }
 ---@field public package? Package
----@field lspconfig vim.lsp.Config
 ---@field display_name string
 
----@param opts chris468.config.LspConfig
----@return chris468.config._CachedLspConfig
-local function cached_lspconfig_info(opts)
+---@param tools { [string]: { [string]: chris468.config.Tool } }
+---@param tool_type string
+---@param additional_properties? string[] Additional properties to cache
+---@param look_up_filetypes? fun(name: string, tool_name: string, tool: chris468.config.Tool) : string[]
+---@return chris468.config._CachedToolConfig
+local function cached_tool_info(tools, tool_type, additional_properties, look_up_filetypes)
+  additional_properties = additional_properties or {}
+  look_up_filetypes = look_up_filetypes or function() end
   return setmetatable({}, {
     __index = function(tbl, name)
-      local config = opts[name]
-      if not config or config.enabled == false then
-        tbl[name] = { server_name = name, filetypes = {}, lspconfig = {}, "LSP " .. name }
+      local tool
+      for _, v in tools do
+        if v[name] then
+          if tool then
+            tool = vim.tbl_extend("keep", tool, v[name])
+            tool.filetypes = vim.list_extend(tool.filetypes or {}, v[name].filetypes or {})
+          else
+            tool = vim.deepcopy(tbl)
+          end
+        end
+      end
+
+      if not tool or tool.enabled == false then
+        tbl[name] = { server_name = name, filetypes = {}, lspconfig = {}, string.format("%s %s", tool_type, name) }
       else
         local package
-        if config.package ~= false then
+        if tool.package ~= false then
           local ok, p = pcall(require("mason-registry").get_package, name)
           package = ok and p or nil
         end
 
-        local server_name = config.name or vim.tbl_get(package or {}, "spec", "neovim", "lspconfig") or name
-        local filetypes =
-          util.make_set((config.lspconfig or {}).filetypes or vim.lsp.config[server_name].filetypes or {})
+        local tool_name = tool.name or vim.tbl_get(package or {}, "spec", "neovim", "lspconfig") or name
+        local filetypes = util.make_set(tool.filetypes or look_up_filetypes(name, tool_name, tool) or {})
         local display_name =
-          string.format("LSP %s%s", name, name == server_name and "" or string.format("(%s) ", server_name))
-
-        tbl[name] = {
-          server_name = server_name,
+          string.format("%s %s%s", tool_type, name, name == tool_name and "" or string.format("(%s) ", tool_name))
+        local tool_cache = {
+          server_name = tool_name,
           filetypes = filetypes,
           package = package,
-          lspconfig = config.lspconfig,
           display_name = display_name,
         }
+        for _, k in additional_properties do
+          tool_cache[k] = tool[k]
+        end
+
+        tbl[name] = tool_cache
       end
 
       return tbl[name]
     end,
   })
+end
+
+local function cached_lspconfig_info(opts)
+  return cached_tool_info({ lsp = opts }, "LSP", { "lspconfig" }, function(_, server_name, tool)
+    return vim.tbl_get(tool, "lspconfig", "filetypes") or vim.lsp.config[server_name].filetypes
+  end)
 end
 
 ---@param info chris468.config._CachedLspConfig
