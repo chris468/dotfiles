@@ -15,6 +15,11 @@ local cmd = require("chris468.util.keymap").cmd
 
 ---@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
 
+---@class chris468.config.Tool
+---@field filetypes? string[] FileTypes where this tool should be installed and enabled
+---@field enabled? boolean Whether to enable the formatter, default true
+---@field public name? string Tool (formatter/dap/etc) name, if different from the package name
+
 return {
   {
     "mason-org/mason.nvim",
@@ -68,10 +73,10 @@ return {
       default_format_opts = {
         lsp_format = "fallback",
       },
-      -- formatters_by_ft is custom - a map of key to map of filetype to plugins.
+      -- Formatters is custom, use it instead of tools.
       -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type {string: chris468.config.FormattersByFileType}
-      formatters_by_ft = {},
+      ---@type { [string]: { [string]: chris468.config.Tool } }
+      formatters = {},
       format_on_save = function(bufnr)
         if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
           return
@@ -89,10 +94,10 @@ return {
     dependencies = { "mason.nvim" },
     lazy = false,
     opts = {
-      -- linters_by_ft is custom - a map of key to map of filetype to plugins.
+      -- Linters is custom, use it instead of tools.
       -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type {string: chris468.config.FormattersByFileType}
-      linters_by_ft = {},
+      ---@type { [string]: { [string]: chris468.config.Tool } }
+      linters = {},
     },
     version = false,
   },
