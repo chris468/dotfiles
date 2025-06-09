@@ -1,11 +1,5 @@
 local have_terraform = vim.fn.executable("terraform") == 1
 
-local terraform_fmt = {
-  "terraform_fmt",
-  package = false,
-  enabled = have_terraform,
-}
-
 local terraform_validate = {
   "terraform_validate",
   package = false,
@@ -26,11 +20,13 @@ return {
   {
     "conform.nvim",
     opts = {
-      formatters_by_ft = {
+      foramtters = {
         terraform = {
-          terraform = { terraform_fmt },
-          ["terraform-vars"] = { terraform_fmt },
-          tf = { terraform_fmt },
+          terraform_fmt = {
+            package = false,
+            enabled = have_terraform,
+            filetypes = { "terraform", "terraform-vars", "tf" },
+          },
         },
       },
     },
@@ -38,10 +34,13 @@ return {
   {
     "nvim-lint",
     opts = {
-      linters_by_ft = {
+      linters = {
         terraform = {
-          terraform = { terraform_validate },
-          tf = { terraform_validate },
+          terraform_validate = {
+            package = false,
+            enabled = have_terraform,
+            filetypes = { "terraform", "tf" },
+          },
         },
       },
     },
