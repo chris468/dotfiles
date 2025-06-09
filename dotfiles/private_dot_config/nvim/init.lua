@@ -3,6 +3,13 @@ require("chris468.util.lazy").install()
 
 vim.filetype.add(Chris468.filetypes or {})
 
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("chris468.filetype.qf", {}),
+  callback = function(arg)
+    vim.bo[arg.buf].buflisted = false
+  end,
+})
+
 require("lazy").setup({
   spec = {
     { import = "chris468.plugins.lazy" },
