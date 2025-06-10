@@ -93,30 +93,41 @@ end
 ---@field public package? Package
 ---@field display_name string
 
+---@class chris468.config._ToolCache
+---@field get fun(name: string) : chris468.config._CachedToolConfig
+---@field by_ft fun() : {[string]: string[]}
+
 ---@param tools { [string]: { [string]: chris468.config.Tool } }
 ---@param tool_type string
+---@param disabled_file_types table<string, true>
 ---@param additional_properties? string[] Additional properties to cache
 ---@param look_up_filetypes? fun(name: string, tool_name: string, tool: chris468.config.Tool) : string[]
----@return chris468.config._CachedToolConfig
-local function cached_tool_info(tools, tool_type, additional_properties, look_up_filetypes)
+---@return chris468.config._ToolCache
+function M.cached_tool_info(tools, tool_type, disabled_file_types, additional_properties, look_up_filetypes)
   additional_properties = additional_properties or {}
   look_up_filetypes = look_up_filetypes or function() end
-  return setmetatable({}, {
-    __index = function(tbl, name)
+  local cache = {}
+  local by_ft
+  local m = {}
+
+  function m.get(name)
+    if not cache[name] then
       local tool
-      for _, v in tools do
+      for _, v in pairs(tools) do
         if v[name] then
+          print("found " .. name)
           if tool then
             tool = vim.tbl_extend("keep", tool, v[name])
             tool.filetypes = vim.list_extend(tool.filetypes or {}, v[name].filetypes or {})
           else
-            tool = vim.deepcopy(tbl)
+            tool = vim.deepcopy(v[name])
           end
         end
       end
 
       if not tool or tool.enabled == false then
-        tbl[name] = { server_name = name, filetypes = {}, lspconfig = {}, string.format("%s %s", tool_type, name) }
+        vim.notify("no tool " .. name)
+        cache[name] = { tool_name = name, filetypes = {}, string.format("%s %s", tool_type, name) }
       else
         local package
         if tool.package ~= false then
@@ -129,38 +140,67 @@ local function cached_tool_info(tools, tool_type, additional_properties, look_up
         local display_name =
           string.format("%s %s%s", tool_type, name, name == tool_name and "" or string.format("(%s) ", tool_name))
         local tool_cache = {
-          server_name = tool_name,
+          tool_name = tool_name,
           filetypes = filetypes,
           package = package,
           display_name = display_name,
         }
-        for _, k in additional_properties do
+        for _, k in ipairs(additional_properties) do
           tool_cache[k] = tool[k]
         end
 
-        tbl[name] = tool_cache
+        cache[name] = tool_cache
       end
+    end
 
-      return tbl[name]
-    end,
-  })
+    return cache[name]
+  end
+
+  function m.by_ft()
+    if not by_ft then
+      by_ft = {}
+      local visited = {
+        tools = {},
+        fts = {},
+      }
+      for _, v in pairs(tools) do
+        for name, _ in pairs(v) do
+          if not visited.tools[name] then
+            visited.tools[name] = true
+            local tool = m.get(name)
+            for ft, _ in pairs(tool.filetypes) do
+              if not disabled_file_types[ft] and not visited.fts[ft][tool] then
+                visited.fts[ft][tool] = true
+                by_ft[ft] = by_ft[ft] or {}
+                table.insert(by_ft[ft], tool.tool_name)
+              end
+            end
+          end
+        end
+      end
+    end
+
+    return by_ft
+  end
+
+  return m
 end
 
-local function cached_lspconfig_info(opts)
-  return cached_tool_info({ lsp = opts }, "LSP", { "lspconfig" }, function(_, server_name, tool)
+local function cached_lspconfig_info(opts, disabled_filetypes)
+  return M.cached_tool_info({ lsp = opts }, "LSP", disabled_filetypes, { "lspconfig" }, function(_, server_name, tool)
     return vim.tbl_get(tool, "lspconfig", "filetypes") or vim.lsp.config[server_name].filetypes
   end)
 end
 
----@param info chris468.config._CachedLspConfig
+---@param info chris468.config._CachedToolConfig|{ lspconfig: vim.lsp.Config }
 ---@param bufnr integer
 local function enable_and_install_lsp(info, bufnr)
-  vim.lsp.config(info.server_name, merge_completion_capabilities(info.lspconfig))
-  vim.lsp.enable(info.server_name)
+  vim.lsp.config(info.tool_name, merge_completion_capabilities(info.lspconfig))
+  vim.lsp.enable(info.tool_name)
   util_mason.install(info.package, function()
     raise_filetype(bufnr)
   end, function()
-    vim.lsp.disable(info.server_name)
+    vim.lsp.disable(info.tool_name)
   end, info.display_name)
 end
 
@@ -168,8 +208,8 @@ end
 --- @param group integer
 local function lazily_install_lsps_by_filetype(opts, group)
   local _ = require("lspconfig")
-  local infos = cached_lspconfig_info(opts)
   local handled_filetypes = util.make_set(Chris468.disable_filetypes)
+  local infos = cached_lspconfig_info(opts, handled_filetypes)
   vim.api.nvim_create_autocmd("FileType", {
     group = group,
     callback = function(arg)
@@ -181,7 +221,7 @@ local function lazily_install_lsps_by_filetype(opts, group)
       handled_filetypes[filetype] = true
 
       for name, _ in pairs(opts) do
-        local info = infos[name]
+        local info = infos.get(name)
         if info.filetypes[filetype] then
           enable_and_install_lsp(info, arg.buf)
         end
@@ -198,55 +238,11 @@ function M.lspconfig(opts)
   lazily_install_lsps_by_filetype(opts, group)
 end
 
----@param tools_by_ft chris468.config.FormattersByFileType
----@param disabled_filetypes { [string]: true }
----@return { tools_by_ft: {[string]: string[]}, config_by_ft: {[string]: chris468.config.Formatter[]}}
-local function normalize_tools_by_ft(tools_by_ft, disabled_filetypes)
-  return vim.iter(tools_by_ft):fold({ tools_by_ft = {}, config_by_ft = {} }, function(result, _, v)
-    for ft, tools in pairs(v) do
-      if not disabled_filetypes[ft] then
-        result.tools_by_ft[ft] = result.tools_by_ft[ft] or {}
-        result.config_by_ft[ft] = result.config_by_ft[ft] or {}
-        for _, tool in ipairs(tools) do
-          local is_string = type(tool) == "string"
-          if is_string or tool.enabled ~= false then
-            table.insert(result.tools_by_ft[ft], is_string and tool or tool[1])
-            table.insert(result.config_by_ft[ft], is_string and { tool } or tool)
-          end
-        end
-      end
-    end
-    return result
-  end)
-end
-
-local function cached_tool_info(tool_type)
-  local cache = {}
-  return function(config)
-    local name = config[1]
-    if not cache[name] then
-      local package
-      if config.package ~= false then
-        local ok, p = pcall(require("mason-registry").get_package, config.package or name)
-        package = ok and p or nil
-      end
-
-      local package_name = package and package.spec.name or name
-      local display_name =
-        string.format("%s %s%s", tool_type, package_name, name == package_name and "" or string.format(" (%s)", name))
-      cache[name] = { name = name, package = package, package_name = package_name, display_name = display_name }
-    end
-
-    return cache[name]
-  end
-end
-
----@param config_by_ft { [string]: chris468.config.Formatter[] }
+---@param cache chris468.config._ToolCache
 ---@param disabled_filetypes { [string]: true }
 ---@param tool_type string
-local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes, tool_type)
+local function lazily_install_tools_by_filetype(cache, disabled_filetypes, tool_type)
   local handled_filetypes = disabled_filetypes
-  local cache = cached_tool_info(tool_type)
 
   vim.api.nvim_create_autocmd("FileType", {
     group = vim.api.nvim_create_augroup("chris468." .. tool_type, { clear = true }),
@@ -257,7 +253,7 @@ local function lazily_install_tools_by_filetype(config_by_ft, disabled_filetypes
       end
       handled_filetypes[filetype] = true
 
-      for _, c in ipairs(config_by_ft[filetype] or {}) do
+      for _, c in ipairs(cache.by_ft()[filetype] or {}) do
         local info = cache(c)
         util_mason.install(info.package, function()
           raise_filetype(arg.buf)
@@ -269,17 +265,16 @@ end
 
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local config = normalize_tools_by_ft(opts.formatters_by_ft, disabled_filetypes)
-  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = config.tools_by_ft }, opts))
-  lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "formatter")
+  local cache = M.cached_tool_info(opts.formatters, "formatter", disabled_filetypes)
+  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = cache.by_ft() }, opts))
+  lazily_install_tools_by_filetype(cache, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local config = normalize_tools_by_ft(opts.linters_by_ft, disabled_filetypes)
-  require("lint").linters_by_ft = config.tools_by_ft
-  lazily_install_tools_by_filetype(config.config_by_ft, disabled_filetypes, "linter")
-  register_lint(config.tools_by_ft)
+  local cache = M.cached_tool_info(opts.linters, "linter", disabled_filetypes)
+  register_lint(cache.by_ft())
+  lazily_install_tools_by_filetype(cache, disabled_filetypes, "linter")
 end
 
 return M
