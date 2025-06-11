@@ -6,7 +6,7 @@ local function noop() end
 
 ---@module "mason-core.package"
 
----@param package? Package The package to install. If null, assume already installed and run the callback.
+---@param package? Package|false The package to install. If nil or false, assume already installed and run the callback.
 ---@param installed_callback? fun() Called if the package is already or successfully installed
 ---@param failed_callback? fun() Called if the install fails
 ---@param display? string Display name to use in notifiecations. Defaults to package name.

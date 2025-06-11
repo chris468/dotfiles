@@ -2,18 +2,31 @@ local AbstractTool = require("chris468.plugins.config.tools.abstract_tool")
 
 ---@class Tool : AbstractTool
 ---@field protected super AbstractTool
----@field new fun(self: Tool, name: string, enabled?: boolean, package?: string|boolean, filetypes?: string[], ...: table) : Tool
+---@field private _tool_name string?
+---@field new fun(self: Tool, tool_type: string, name: string, enabled?: boolean, package?: boolean, filetypes?: string[], tool_name?: string) : Tool
 local Tool = AbstractTool:extend("Tool")
+function Tool:new(tool_type, name, enabled, package, filetypes, tool_name)
+  return Tool.super.new(self, tool_type, name, enabled, package, filetypes, { _tool_name = tool_name }) --[[ @as Tool ]]
+end
+
+function Tool:name()
+  return self._tool_name or self._package_name
+end
 
 ---@class LspTool : AbstractTool
 ---@field protected super AbstractTool
----@field private _lspconfig vim.lsp.Config
----@field new fun(self: LspTool, name: string, enabled?: boolean, package?: string|boolean, filetypes?: string[], lspconfig?: vim.lsp.Config) : LspTool
+---@field lspconfig vim.lsp.Config
+---@field new fun(self: LspTool, name: string, enabled?: boolean, package?: boolean, lspconfig?: vim.lsp.Config, ...: table) : LspTool
 local LspTool = AbstractTool:extend("LspTool")
-function LspTool:new(name, enabled, package, filetypes, lspconfig)
-  return LspTool.super.new(self, name, enabled, package, filetypes, { _lspconfig = lspconfig }) --[[ @as LspTool ]]
+function LspTool:new(name, enabled, package, lspconfig)
+  return LspTool.super.new(self, "LSP", name, enabled, package, nil, { _lspconfig = lspconfig }) --[[ @as LspTool ]]
 end
 
 function LspTool:_tool_filetypes()
-  return (self._lspconfig or {}).filetypes or vim.config[self._name].filetypes
+  return (self.lspconfig or {}).filetypes or (vim.config[self:name()] or {}).filetypes
 end
+
+return {
+  Tool = Tool,
+  LspTool = LspTool,
+}
