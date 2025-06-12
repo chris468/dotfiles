@@ -195,20 +195,15 @@ local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes,
   })
 end
 
----@param name string
----@param config chris468.config.Tool
----@return Tool
-local function create_formatter(name, config)
-  local Tool = require("chris468.plugins.config.tools.tool").Tool
-  return Tool:new("formatter", name, config.enabled, true, config.filetypes, config.name)
-end
-
----@param name string
----@param config chris468.config.Tool
----@return Tool
-local function create_linter(name, config)
-  local Tool = require("chris468.plugins.config.tools.tool").Tool
-  return Tool:new("linter", name, config.enabled, true, config.filetypes, config.name)
+---@param type string
+local function create_tool(type)
+  ---@param name string
+  ---@param config chris468.config.Tool
+  ---@return Tool
+  return function(name, config)
+    local Tool = require("chris468.plugins.config.tools.tool").Tool
+    return Tool:new(type, name, config.enabled, true, config.filetypes, config.name)
+  end
 end
 
 ---@param tools_by_ft { [string]: Tool[] }
@@ -230,14 +225,14 @@ end
 ---@param opts { [string]: { [string]: chris468.config.Tool } }
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts.formatters, create_formatter)
+  local tools = map_tools_by_filetype(opts.formatters, create_tool("formatter"))
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = map_names_by_ft(tools) }, opts))
   lazily_install_tools_by_filetype(tools, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts.linters, create_linter)
+  local tools = map_tools_by_filetype(opts.linters, create_tool("linter"))
   require("lint").linters_by_ft = map_names_by_ft(tools)
   lazily_install_tools_by_filetype(tools, disabled_filetypes, "linter")
   register_lint(tools)
