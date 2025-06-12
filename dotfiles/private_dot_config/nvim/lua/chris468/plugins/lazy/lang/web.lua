@@ -54,7 +54,7 @@ return {
     opts = {
       linters = {
         web = {
-          phpcs = { "php" },
+          phpcs = { filetypes = { "php" } },
         },
       },
     },

@@ -11,7 +11,7 @@ return {
     opts = {
       linters = {
         docker = {
-          hadolint = { "dockerfile" },
+          hadolint = { filetypes = { "dockerfile" } },
         },
       },
     },
