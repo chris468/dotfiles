@@ -56,7 +56,7 @@ function M.AbstractTool:display_name()
       "%s %s%s",
       self._tool_type,
       self._package_name,
-      self._package_name == self:name() and "" or ("(%s)"):format(self:name())
+      self._package_name == self:name() and "" or (" (%s)"):format(self:name())
     )
 
   return self._display_name
