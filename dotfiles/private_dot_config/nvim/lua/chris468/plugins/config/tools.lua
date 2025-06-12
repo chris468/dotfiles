@@ -22,7 +22,7 @@ local function merge_completion_capabilities(config)
   return config
 end
 
----@pram bufnr integer
+---@param bufnr integer
 ---@param client vim.lsp.Client
 local function configure_inlay_hints(bufnr, client)
   local bufutil = require("chris468.util.buffer")
