@@ -9,10 +9,12 @@ local M = {}
 ---@field enabled? boolean
 ---@field public package? boolean
 ---@field filetypes? string[]
+---@field tool_name? string
 
 ---@class AbstractTool : chris468.Object
 ---@field protected super chris468.Object
 ---@field protected _package_name string
+---@field protected _tool_name string
 ---@field private _package boolean|Package
 ---@field private _filetypes? string[]
 ---@field private _tool_type string
@@ -33,6 +35,7 @@ function M.AbstractTool:new(tool_type, name, opts, ...)
     _package = opts.package ~= false,
     enabled = opts.enabled ~= false,
     _filetypes = opts.filetypes,
+    _tool_name = opts.tool_name,
   }, ...) --[[ @as AbstractTool ]]
 end
 
@@ -47,7 +50,7 @@ end
 function M.AbstractTool:_tool_filetypes() end
 
 function M.AbstractTool:name()
-  return self._package_name
+  return self._tool_name or self._package_name
 end
 
 function M.AbstractTool:display_name()
