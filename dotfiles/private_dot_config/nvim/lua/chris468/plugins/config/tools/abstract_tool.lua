@@ -1,4 +1,4 @@
-local Object = require("chris468.object")
+local Object = require("chris468.util.object")
 local registry = require("mason-registry")
 
 local M = {}
@@ -18,7 +18,7 @@ local M = {}
 ---@field protected _tool_filetypes fun(self: AbstractTool) : string[]|nil
 ---@field public package fun(self: AbstractTool) : Package|false
 ---@field display_name fun(self:AbstractTool) : string
-M.AbstractTool = Object:extend("AbstractTool")
+M.AbstractTool = Object:extend("AbstractTool") --[[ @as AbstractTool]]
 
 function M.AbstractTool:new(tool_type, name, enabled, package, filetypes, ...)
   return Object.new(self, {
@@ -27,7 +27,7 @@ function M.AbstractTool:new(tool_type, name, enabled, package, filetypes, ...)
     _package = package ~= false,
     enabled = enabled ~= false,
     _filetypes = filetypes,
-  }, ...)
+  }, ...) --[[ @as AbstractTool ]]
 end
 
 function M.AbstractTool:filetypes()
@@ -63,3 +63,5 @@ function M.AbstractTool:package()
   end
   return self._package
 end
+
+return M
