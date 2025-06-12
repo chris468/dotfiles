@@ -28,7 +28,7 @@ return {
     opts = {
       formatters = {
         lua = {
-          stylua = { "lua" },
+          stylua = { filetypes = { "lua" } },
         },
       },
     },

@@ -17,7 +17,7 @@ return {
     "conform.nvim",
     opts = {
       formatters = {
-        python = { black = { "python" } },
+        python = { black = { filetypes = { "python" } } },
       },
     },
   },
