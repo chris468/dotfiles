@@ -134,7 +134,7 @@ end
 ---@return LspTool
 local function create_lsp_tool(name, config)
   local LspTool = require("chris468.plugins.config.tools.tool").LspTool
-  return LspTool:new(name, config.enabled, config.package, config.lspconfig)
+  return LspTool:new(name, { enabled = config.enabled, package = config.package, lspconfig = config.lspconfig })
 end
 
 --- @param opts chris468.config.LspConfig
@@ -202,7 +202,11 @@ local function create_tool(type)
   ---@return Tool
   return function(name, config)
     local Tool = require("chris468.plugins.config.tools.tool").Tool
-    return Tool:new(type, name, config.enabled, true, config.filetypes, config.name)
+    return Tool:new(
+      type,
+      name,
+      { enabled = config.enabled, package = config.package, filetypes = config.filetypes, tool_name = config.name }
+    )
   end
 end
 
