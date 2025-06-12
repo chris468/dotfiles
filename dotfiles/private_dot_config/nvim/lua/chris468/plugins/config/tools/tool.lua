@@ -1,20 +1,12 @@
 local AbstractTool = require("chris468.plugins.config.tools.abstract_tool").AbstractTool
 
----@class Tool.Options : AbstractTool.Options
----@field tool_name? string
-
 ---@class Tool : AbstractTool
 ---@field protected super AbstractTool
----@field private _tool_name string?
----@field new fun(self: Tool, tool_type: string, name: string, opts?: Tool.Options) : Tool
+---@field new fun(self: Tool, tool_type: string, name: string, opts?: AbstractTool.Options) : Tool
 local Tool = AbstractTool:extend("Tool") --[[ @as Tool ]]
 function Tool:new(tool_type, name, opts)
   opts = opts or {}
-  return Tool.super.new(self, tool_type, name, opts, { _tool_name = opts.tool_name }) --[[ @as Tool ]]
-end
-
-function Tool:name()
-  return self._tool_name or self._package_name
+  return Tool.super.new(self, tool_type, name, opts) --[[ @as Tool ]]
 end
 
 ---@class LspTool.Options
