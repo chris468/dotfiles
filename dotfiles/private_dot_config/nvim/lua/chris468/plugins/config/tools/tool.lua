@@ -29,7 +29,7 @@ end
 local LspTool = AbstractTool:extend("LspTool") --[[ @as LspTool ]]
 function LspTool:new(name, opts)
   opts = opts or {}
-  return LspTool.super.new(self, "LSP", name, opts --[[ @as AbstractTool.Options ]], { _lspconfig = opts.lspconfig }) --[[ @as LspTool ]]
+  return LspTool.super.new(self, "LSP", name, opts --[[ @as AbstractTool.Options ]], { lspconfig = opts.lspconfig }) --[[ @as LspTool ]]
 end
 
 function LspTool:_tool_filetypes()
