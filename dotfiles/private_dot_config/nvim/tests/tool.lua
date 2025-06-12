@@ -1,4 +1,4 @@
----@module "plenary.test"
+---@module "plenary.busted"
 
 local registry = { _packages = {} }
 package.loaded["mason-registry"] = registry
@@ -48,8 +48,8 @@ describe("tool", function()
     registry._packages = { ["test tool"] = test_tool }
   end)
 
-  describe("name", function()
-    all_tools(function(spec)
+  all_tools(function(spec)
+    describe("name", function()
       it("should be name when tool_name is unset", function()
         local t = spec.factory("test tool")
         assert.are.equal("test tool", t:name())
@@ -64,61 +64,96 @@ describe("tool", function()
     end)
 
     describe("enabled", function()
-      all_tools(function(spec)
-        it("should be enabled when enabled is unset", function()
-          local t = spec.factory("test tool")
-          assert.are.equal(true, t.enabled)
-        end)
-        it("should be enabled when enabled is true", function()
-          local t = spec.factory("test tool", { enabled = true })
-          assert.are.equal(true, t.enabled)
-        end)
-        it("should be disabled when enabled is false", function()
-          local t = spec.factory("test tool", { enabled = false })
-          assert.are.equal(false, t.enabled)
-        end)
+      it("should be enabled when enabled is unset", function()
+        local t = spec.factory("test tool")
+        assert.are.equal(true, t.enabled)
+      end)
+      it("should be enabled when enabled is true", function()
+        local t = spec.factory("test tool", { enabled = true })
+        assert.are.equal(true, t.enabled)
+      end)
+      it("should be disabled when enabled is false", function()
+        local t = spec.factory("test tool", { enabled = false })
+        assert.are.equal(false, t.enabled)
       end)
     end)
 
     describe("package", function()
-      all_tools(function(spec)
-        it("should return package", function()
-          local t = spec.factory("test tool")
+      it("should return package", function()
+        local t = spec.factory("test tool")
+        assert.are.equal(test_tool, t:package())
+      end)
+
+      it("should return false when set to false", function()
+        local t = spec.factory("test tool", { package = false })
+        assert.are.equal(false, t:package())
+      end)
+
+      it("should return false if package does not exist", function()
+        local t = spec.factory("missing tool")
+        assert.are.equal(false, t:package())
+      end)
+
+      if spec.supports_custom_name then
+        it("should return package if tool name is different", function()
+          local t = spec.factory("test tool", { tool_name = "different" })
           assert.are.equal(test_tool, t:package())
         end)
-
-        it("should return false when set to false", function()
-          local t = spec.factory("test tool", { package = false })
-          assert.are.equal(false, t:package())
-        end)
-
-        it("should return false if package does not exist", function()
-          local t = spec.factory("missing tool")
-          assert.are.equal(false, t:package())
-        end)
-
-        if spec.supports_custom_name then
-          it("should return package if tool name is different", function()
-            local t = tool.Tool:new("test type", "missing tool", { tool_name = "different" })
-            assert.are.equal(false, t:package())
-          end)
-        end
-      end)
+      end
     end)
 
     describe("display name", function()
-      all_tools(function(spec)
-        it("should have type and name", function()
-          local t = spec.factory("test tool")
-          assert.are.equal(spec.display_type .. " test tool", t:display_name())
-        end)
+      it("should have type and name", function()
+        local t = spec.factory("test tool")
+        assert.are.equal(spec.display_type .. " test tool", t:display_name())
+      end)
 
-        if spec.supports_custom_name then
-          it("should have type, package name, and tool name", function()
-            local t = spec.factory("test tool", { tool_name = "different" })
-            assert.are.equal(spec.display_type .. " test tool (different)", t:display_name())
-          end)
-        end
+      if spec.supports_custom_name then
+        it("should have type, package name, and tool name", function()
+          local t = spec.factory("test tool", { tool_name = "different" })
+          assert.are.equal(spec.display_type .. " test tool (different)", t:display_name())
+        end)
+      end
+    end)
+  end)
+
+  describe("Tool", function()
+    describe("filetypes", function()
+      it("should return filetypes when set", function()
+        local filetypes = { "f1", "f2" }
+        local t = tool_specs.Tool.factory("test tool", { filetypes = filetypes })
+        assert.are.equal(filetypes, t:filetypes())
+      end)
+
+      it("should return empty when unset", function()
+        local t = tool_specs.Tool.factory("test tool")
+        assert.are.same({}, t:filetypes())
+      end)
+    end)
+  end)
+
+  describe("LspTool", function()
+    local config_filetypes = { "ft1", "ft2" }
+    local lsp_filetypes = { "ft3", "ft4" }
+    local lsp_config = { filetypes = lsp_filetypes }
+    vim.lsp.config["test_tool"] = { filetypes = lsp_filetypes }
+
+    describe("lspconfig", function()
+      it("should return lspconfig", function()
+        local t = tool.LspTool:new("test tool", { lspconfig = lsp_config })
+        assert.are.equal(lsp_config, t.lspconfig)
+      end)
+    end)
+
+    describe("filetypes", function()
+      it("should take filetypes from tool", function()
+        local t = tool.LspTool:new("test tool", { filetypes = config_filetypes, lspconfig = lsp_config })
+        assert.are.equal(config_filetypes, t:filetypes())
+      end)
+
+      it("should take filetypes from lsp", function()
+        local t = tool.LspTool:new("test tool", { lspconfig = lsp_config })
+        assert.are.equal(lsp_filetypes, t:filetypes())
       end)
     end)
   end)
