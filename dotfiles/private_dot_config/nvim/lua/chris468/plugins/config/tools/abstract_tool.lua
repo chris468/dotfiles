@@ -5,6 +5,11 @@ local M = {}
 
 ---@module "mason-registry"
 
+---@class AbstractTool.Options
+---@field enabled? boolean
+---@field public package? boolean
+---@field filetypes? string[]
+
 ---@class AbstractTool : chris468.Object
 ---@field protected super chris468.Object
 ---@field protected _package_name string
@@ -13,20 +18,21 @@ local M = {}
 ---@field private _tool_type string
 ---@field private _display_name string?
 ---@field enabled? boolean
----@field new fun(self: AbstractTool, tool_type: string, name: string, enabled?: boolean, package?: boolean, filetypes?: string[], ...: table) : AbstractTool
+---@field new fun(self: AbstractTool, tool_type: string, name: string, opts?: AbstractTool.Options, ...: table) : AbstractTool
 ---@field filetypes fun(self: AbstractTool) : string[]
 ---@field protected _tool_filetypes fun(self: AbstractTool) : string[]|nil
 ---@field public package fun(self: AbstractTool) : Package|false
 ---@field display_name fun(self:AbstractTool) : string
 M.AbstractTool = Object:extend("AbstractTool") --[[ @as AbstractTool]]
 
-function M.AbstractTool:new(tool_type, name, enabled, package, filetypes, ...)
+function M.AbstractTool:new(tool_type, name, opts, ...)
+  opts = opts or {}
   return Object.new(self, {
     _tool_type = tool_type,
     _package_name = name,
-    _package = package ~= false,
-    enabled = enabled ~= false,
-    _filetypes = filetypes,
+    _package = opts.package ~= false,
+    enabled = opts.enabled ~= false,
+    _filetypes = opts.filetypes,
   }, ...) --[[ @as AbstractTool ]]
 end
 
