@@ -8,17 +8,11 @@ local cmd = require("chris468.util.keymap").cmd
 
 ---@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
 
----@class chris468.config.Formatter
----@field [1] string Formatter name
----@field enabled? boolean Whether to enable the formatter, default true
----@field public package? string Package name, if different than formatter, or false for no package
-
----@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
-
 ---@class chris468.config.Tool
 ---@field filetypes? string[] FileTypes where this tool should be installed and enabled
 ---@field enabled? boolean Whether to enable the formatter, default true
----@field public name? string Tool (formatter/dap/etc) name, if different from the package name
+---@field public package? boolean Whether there is a package associated with the tool
+---@field name? string Tool (formatter/dap/etc) name, if different from the package name
 
 return {
   {
