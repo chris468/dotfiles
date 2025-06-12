@@ -118,7 +118,7 @@ local function map_tools_by_filetype(opts, create_tool)
   for _, configs in pairs(opts) do
     for name, config in pairs(configs) do
       local tool = create_tool(name, config)
-      if tool:enabled() then
+      if tool.enabled then
         for _, ft in ipairs(tool:filetypes()) do
           table.insert(result[ft], tool)
         end
@@ -195,36 +195,49 @@ local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes,
   })
 end
 
----@param type string
-local function create_tool(type)
-  ---@param name string
-  ---@param config chris468.config.Tool
-  ---@return Tool
-  return function(name, config)
-    local Tool = require("chris468.plugins.config.tools.tool").Tool
-    return Tool:new(type, name, config.enabled, true, config.filetypes, config.name)
-  end
+---@param name string
+---@param config chris468.config.Tool
+---@return Tool
+local function create_formatter(name, config)
+  local Tool = require("chris468.plugins.config.tools.tool").Tool
+  return Tool:new("formatter", name, config.enabled, true, config.filetypes, config.name)
+end
+
+---@param name string
+---@param config chris468.config.Tool
+---@return Tool
+local function create_linter(name, config)
+  local Tool = require("chris468.plugins.config.tools.tool").Tool
+  return Tool:new("linter", name, config.enabled, true, config.filetypes, config.name)
 end
 
 ---@param tools_by_ft { [string]: Tool[] }
 local function map_names_by_ft(tools_by_ft)
-  return vim.iter(tools_by_ft):fold({}, function(result, k, v)
-    result[k] = v:name()
-    return result
+  local result = vim.defaulttable(function()
+    return {}
   end)
+  for ft, tools in pairs(tools_by_ft) do
+    for _, tool in ipairs(tools) do
+      result[ft][tool:name()] = true
+    end
+  end
+  for ft, names in pairs(result) do
+    result[ft] = vim.tbl_keys(names)
+  end
+  return result
 end
 
 ---@param opts { [string]: { [string]: chris468.config.Tool } }
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts, create_tool("formatter"))
+  local tools = map_tools_by_filetype(opts.formatters, create_formatter)
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = map_names_by_ft(tools) }, opts))
   lazily_install_tools_by_filetype(tools, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts, create_tool("liinter"))
+  local tools = map_tools_by_filetype(opts.linters, create_linter)
   require("lint").linters_by_ft = map_names_by_ft(tools)
   lazily_install_tools_by_filetype(tools, disabled_filetypes, "linter")
   register_lint(tools)
