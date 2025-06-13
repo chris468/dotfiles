@@ -17,7 +17,7 @@ local tool_specs = {
   Tool = {
     display_type = "test_type",
     supports_custom_name = true,
-    ---@type fun(...) : AbstractTool
+    ---@type fun(...) : BaseTool
     factory = function(...)
       return tool.Tool:new("test_type", ...)
     end,
@@ -25,7 +25,7 @@ local tool_specs = {
   LspTool = {
     display_type = "LSP",
     supports_custom_name = false,
-    ---@type fun(...) : AbstractTool
+    ---@type fun(...) : BaseTool
     factory = function(...)
       return tool.LspTool:new(...)
     end,

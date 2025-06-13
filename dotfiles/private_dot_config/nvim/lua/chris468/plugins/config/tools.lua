@@ -107,7 +107,7 @@ local function enable_and_install_lsp(tool, bufnr)
 end
 
 ---@generic TConfig
----@generic TTool : AbstractTool
+---@generic TTool : BaseTool
 ---@param opts  { [string]: { [string]: TConfig } }
 ---@param create_tool fun(name: string,config: TConfig) : TTool
 ---@return { [string]: TTool }
@@ -171,7 +171,7 @@ function M.lspconfig(opts)
   lazily_install_lsps_by_filetype(opts, group)
 end
 
----@param tools_by_ft { [string]: AbstractTool[] }
+---@param tools_by_ft { [string]: BaseTool[] }
 ---@param disabled_filetypes { [string]: true }
 ---@param tool_type string
 local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, tool_type)
