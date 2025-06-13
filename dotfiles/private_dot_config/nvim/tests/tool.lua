@@ -18,7 +18,7 @@ local tool_specs = {
     display_type = "formatter",
     supports_custom_name = true,
     supports_custom_filetypes = true,
-    ---@type fun(...) : BaseTool
+    ---@type fun(...) : Tool
     factory = function(...)
       return tool.FormatterTool:new(...)
     end,
@@ -27,7 +27,7 @@ local tool_specs = {
     display_type = "linter",
     supports_custom_name = true,
     supports_custom_filetypes = true,
-    ---@type fun(...) : BaseTool
+    ---@type fun(...) : Tool
     factory = function(...)
       return tool.LinterTool:new(...)
     end,
@@ -36,7 +36,7 @@ local tool_specs = {
     display_type = "LSP",
     supports_custom_name = false,
     supports_custom_filetypes = false,
-    ---@type fun(...) : BaseTool
+    ---@type fun(...) : Tool
     factory = function(...)
       return tool.LspTool:new(...)
     end,
