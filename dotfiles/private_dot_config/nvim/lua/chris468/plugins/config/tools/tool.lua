@@ -21,7 +21,18 @@ end
 local LspTool = AbstractTool:extend("LspTool") --[[ @as LspTool ]]
 function LspTool:new(name, opts)
   opts = opts or {}
-  return LspTool.super.new(self, "LSP", name, opts --[[ @as AbstractTool.Options ]], { lspconfig = opts.lspconfig }) --[[ @as LspTool ]]
+  return LspTool.super.new(self, "LSP", name, {
+    enabled = opts.enabled,
+    package = opts.package,
+  }, { lspconfig = opts.lspconfig }) --[[ @as LspTool ]]
+end
+
+function LspTool:name()
+  if not self._tool_name then
+    self._tool_name = vim.tbl_get(self:package() or {}, "spec", "neovim", "lspconfig")
+  end
+
+  return LspTool.super.name(self)
 end
 
 function LspTool:_tool_filetypes()

@@ -50,7 +50,7 @@ describe("tool", function()
 
   all_tools(function(spec)
     describe("name", function()
-      it("should be name when tool_name is unset", function()
+      it("should be package name when tool_name is unset", function()
         local t = spec.factory("test tool")
         assert.are.equal("test tool", t:name())
       end)
@@ -135,8 +135,17 @@ describe("tool", function()
   describe("LspTool", function()
     local config_filetypes = { "ft1", "ft2" }
     local lsp_filetypes = { "ft3", "ft4" }
-    local lsp_config = { filetypes = lsp_filetypes }
-    vim.lsp.config["test_tool"] = { filetypes = lsp_filetypes }
+    local lsp_config = { filetypes = config_filetypes }
+    vim.lsp.config["test tool"] = { filetypes = lsp_filetypes }
+
+    describe("name", function()
+      it("should be lspconfig name when present", function()
+        registry._packages.lsp = { spec = { name = "lsp", neovim = { lspconfig = "test tool" } } }
+        local t = tool_specs.LspTool.factory("lsp", { lspconfig = {} })
+        assert.is.truthy(t:package())
+        assert.are.equal("test tool", t:name())
+      end)
+    end)
 
     describe("lspconfig", function()
       it("should return lspconfig", function()
@@ -147,12 +156,12 @@ describe("tool", function()
 
     describe("filetypes", function()
       it("should take filetypes from tool", function()
-        local t = tool.LspTool:new("test tool", { filetypes = config_filetypes, lspconfig = lsp_config })
+        local t = tool.LspTool:new("test tool", { lspconfig = lsp_config })
         assert.are.equal(config_filetypes, t:filetypes())
       end)
 
       it("should take filetypes from lsp", function()
-        local t = tool.LspTool:new("test tool", { lspconfig = lsp_config })
+        local t = tool.LspTool:new("test tool", { lspconfig = {} })
         assert.are.equal(lsp_filetypes, t:filetypes())
       end)
     end)
