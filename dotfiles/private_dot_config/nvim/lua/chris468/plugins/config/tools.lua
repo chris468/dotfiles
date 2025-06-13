@@ -111,7 +111,7 @@ local function cached_lspconfig_info(opts)
 
         local server_name = config.name or vim.tbl_get(package or {}, "spec", "neovim", "lspconfig") or name
         local filetypes =
-          util.make_set((config.lspconfig or {}).filetypes or vim.lsp.config[server_name].filetypes or {})
+          util.make_set((config.lspconfig or {}).filetypes or (vim.lsp.config[server_name] or {}).filetypes or {})
         local display_name =
           string.format("LSP %s%s", name, name == server_name and "" or string.format("(%s) ", server_name))
 
