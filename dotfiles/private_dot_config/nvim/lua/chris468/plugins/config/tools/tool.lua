@@ -18,14 +18,19 @@ local registry = require("mason-registry")
 ---@field private _tool_type string
 ---@field private _display_name string?
 ---@field enabled? boolean
----@field new fun(self: Tool, tool_type: string, name: string, opts?: Tool.Options, ...: table) : Tool
+---@field new fun(name: string, opts?: Tool.Options) : Tool
+---@field protected _new fun(self: Tool, tool_type: string, name: string, opts?: Tool.Options, ...: table) : Tool
 ---@field filetypes fun(self: Tool) : string[]
 ---@field protected _tool_filetypes fun(self: Tool) : string[]|nil
 ---@field public package fun(self: Tool) : Package|false
 ---@field display_name fun(self:Tool) : string
 Tool = Object:extend("Tool") --[[ @as Tool]]
 
-function Tool:new(tool_type, name, opts, ...)
+function Tool:new(name, opts)
+  self:_abstract("new")
+end
+
+function Tool:_new(tool_type, name, opts, ...)
   opts = opts or {}
   return Object.new(self, {
     _tool_type = tool_type,
@@ -77,7 +82,7 @@ end
 local FormatterTool = Tool:extend("FormatterTool") --[[ @as FormatterTool ]]
 function FormatterTool:new(name, opts)
   opts = opts or {}
-  return FormatterTool.super.new(self, "formatter", name, opts) --[[ @as FormatterTool ]]
+  return self:_new("formatter", name, opts) --[[ @as FormatterTool ]]
 end
 
 ---@class LinterTool : Tool
@@ -86,7 +91,7 @@ end
 local LinterTool = Tool:extend("LinterTool") --[[ @as LinterTool ]]
 function LinterTool:new(name, opts)
   opts = opts or {}
-  return LinterTool.super.new(self, "linter", name, opts) --[[ @as LinterTool ]]
+  return self:_new("linter", name, opts) --[[ @as LinterTool ]]
 end
 
 ---@class LspTool.Options
@@ -101,7 +106,7 @@ end
 local LspTool = Tool:extend("LspTool") --[[ @as LspTool ]]
 function LspTool:new(name, opts)
   opts = opts or {}
-  return LspTool.super.new(self, "LSP", name, {
+  return self:_new("LSP", name, {
     enabled = opts.enabled,
     package = opts.package,
   }, { lspconfig = opts.lspconfig or {} }) --[[ @as LspTool ]]
