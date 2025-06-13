@@ -14,17 +14,28 @@ local tool = require("chris468.plugins.config.tools.tool")
 
 ---@class ToolSpec
 local tool_specs = {
-  Tool = {
-    display_type = "test_type",
+  FormatterTool = {
+    display_type = "formatter",
     supports_custom_name = true,
+    supports_custom_filetypes = true,
     ---@type fun(...) : BaseTool
     factory = function(...)
-      return tool.Tool:new("test_type", ...)
+      return tool.FormatterTool:new(...)
+    end,
+  },
+  LinterTool = {
+    display_type = "linter",
+    supports_custom_name = true,
+    supports_custom_filetypes = true,
+    ---@type fun(...) : BaseTool
+    factory = function(...)
+      return tool.LinterTool:new(...)
     end,
   },
   LspTool = {
     display_type = "LSP",
     supports_custom_name = false,
+    supports_custom_filetypes = false,
     ---@type fun(...) : BaseTool
     factory = function(...)
       return tool.LspTool:new(...)
@@ -57,7 +68,7 @@ describe("tool", function()
 
       if spec.supports_custom_name then
         it("should be tool_name when specified", function()
-          local t = tool.Tool:new("test type", "test tool", { tool_name = "test tool name" })
+          local t = spec.factory("test tool", { tool_name = "test tool name" })
           assert.are.equal("test tool name", t:name())
         end)
       end
@@ -102,6 +113,21 @@ describe("tool", function()
       end
     end)
 
+    if spec.supports_custom_name then
+      describe("filetypes", function()
+        it("should return filetypes when set", function()
+          local filetypes = { "f1", "f2" }
+          local t = spec.factory("test tool", { filetypes = filetypes })
+          assert.are.equal(filetypes, t:filetypes())
+        end)
+
+        it("should return empty when unset", function()
+          local t = spec.factory("test tool")
+          assert.are.same({}, t:filetypes())
+        end)
+      end)
+    end
+
     describe("display name", function()
       it("should have type and name", function()
         local t = spec.factory("test tool")
@@ -114,21 +140,6 @@ describe("tool", function()
           assert.are.equal(spec.display_type .. " test tool (different)", t:display_name())
         end)
       end
-    end)
-  end)
-
-  describe("Tool", function()
-    describe("filetypes", function()
-      it("should return filetypes when set", function()
-        local filetypes = { "f1", "f2" }
-        local t = tool_specs.Tool.factory("test tool", { filetypes = filetypes })
-        assert.are.equal(filetypes, t:filetypes())
-      end)
-
-      it("should return empty when unset", function()
-        local t = tool_specs.Tool.factory("test tool")
-        assert.are.same({}, t:filetypes())
-      end)
     end)
   end)
 
@@ -151,6 +162,11 @@ describe("tool", function()
       it("should return lspconfig", function()
         local t = tool.LspTool:new("test tool", { lspconfig = lsp_config })
         assert.are.equal(lsp_config, t.lspconfig)
+      end)
+
+      it("should return empty when unset", function()
+        local t = tool.LspTool:new("test tool", {})
+        assert.are.same({}, t.lspconfig)
       end)
     end)
 

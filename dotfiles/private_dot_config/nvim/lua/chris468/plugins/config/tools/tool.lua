@@ -25,9 +25,9 @@ local M = {}
 ---@field protected _tool_filetypes fun(self: BaseTool) : string[]|nil
 ---@field public package fun(self: BaseTool) : Package|false
 ---@field display_name fun(self:BaseTool) : string
-M.BaseTool = Object:extend("BaseTool") --[[ @as BaseTool]]
+BaseTool = Object:extend("BaseTool") --[[ @as BaseTool]]
 
-function M.BaseTool:new(tool_type, name, opts, ...)
+function BaseTool:new(tool_type, name, opts, ...)
   opts = opts or {}
   return Object.new(self, {
     _tool_type = tool_type,
@@ -39,7 +39,7 @@ function M.BaseTool:new(tool_type, name, opts, ...)
   }, ...) --[[ @as BaseTool ]]
 end
 
-function M.BaseTool:filetypes()
+function BaseTool:filetypes()
   if not self._filetypes then
     self._filetypes = self:_tool_filetypes() or {}
   end
@@ -47,13 +47,13 @@ function M.BaseTool:filetypes()
   return self._filetypes
 end
 
-function M.BaseTool:_tool_filetypes() end
+function BaseTool:_tool_filetypes() end
 
-function M.BaseTool:name()
+function BaseTool:name()
   return self._tool_name or self._package_name
 end
 
-function M.BaseTool:display_name()
+function BaseTool:display_name()
   self._display_name = self._display_name
     or string.format(
       "%s %s%s",
@@ -65,7 +65,7 @@ function M.BaseTool:display_name()
   return self._display_name
 end
 
-function M.BaseTool:package()
+function BaseTool:package()
   if self._package == true then
     local ok, p = pcall(registry.get_package, self._package_name)
     self._package = ok and p or false
@@ -73,13 +73,22 @@ function M.BaseTool:package()
   return self._package
 end
 
----@class Tool : BaseTool
+---@class FormatterTool : BaseTool
 ---@field protected super BaseTool
----@field new fun(self: Tool, tool_type: string, name: string, opts?: BaseTool.Options) : Tool
-local Tool = M.BaseTool:extend("Tool") --[[ @as Tool ]]
-function Tool:new(tool_type, name, opts)
+---@field new fun(self: FormatterTool, name: string, opts?: BaseTool.Options) : FormatterTool
+local FormatterTool = BaseTool:extend("FormatterTool") --[[ @as FormatterTool ]]
+function FormatterTool:new(name, opts)
   opts = opts or {}
-  return Tool.super.new(self, tool_type, name, opts) --[[ @as Tool ]]
+  return FormatterTool.super.new(self, "formatter", name, opts) --[[ @as FormatterTool ]]
+end
+
+---@class LinterTool : BaseTool
+---@field protected super BaseTool
+---@field new fun(self: LinterTool, name: string, opts?: BaseTool.Options) : LinterTool
+local LinterTool = BaseTool:extend("LinterTool") --[[ @as LinterTool ]]
+function LinterTool:new(name, opts)
+  opts = opts or {}
+  return LinterTool.super.new(self, "linter", name, opts) --[[ @as LinterTool ]]
 end
 
 ---@class LspTool.Options
@@ -91,13 +100,13 @@ end
 ---@field protected super BaseTool
 ---@field lspconfig vim.lsp.Config
 ---@field new fun(self: LspTool, name: string, opts?: LspTool.Options, ...: table) : LspTool
-local LspTool = M.BaseTool:extend("LspTool") --[[ @as LspTool ]]
+local LspTool = BaseTool:extend("LspTool") --[[ @as LspTool ]]
 function LspTool:new(name, opts)
   opts = opts or {}
   return LspTool.super.new(self, "LSP", name, {
     enabled = opts.enabled,
     package = opts.package,
-  }, { lspconfig = opts.lspconfig }) --[[ @as LspTool ]]
+  }, { lspconfig = opts.lspconfig or {} }) --[[ @as LspTool ]]
 end
 
 function LspTool:name()
@@ -113,6 +122,8 @@ function LspTool:_tool_filetypes()
 end
 
 return {
-  Tool = Tool,
+  BaseTool = BaseTool,
+  FormatterTool = FormatterTool,
+  LinterTool = LinterTool,
   LspTool = LspTool,
 }
