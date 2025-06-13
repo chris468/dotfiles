@@ -107,7 +107,7 @@ local function enable_and_install_lsp(tool, bufnr)
 end
 
 ---@generic TConfig
----@generic TTool : BaseTool
+---@generic TTool : Tool
 ---@param opts  { [string]: { [string]: TConfig } }
 ---@param create_tool fun(name: string,config: TConfig) : TTool
 ---@return { [string]: TTool }
@@ -171,7 +171,7 @@ function M.lspconfig(opts)
   lazily_install_lsps_by_filetype(opts, group)
 end
 
----@param tools_by_ft { [string]: BaseTool[] }
+---@param tools_by_ft { [string]: Tool[] }
 ---@param disabled_filetypes { [string]: true }
 ---@param tool_type string
 local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, tool_type)
@@ -198,15 +198,11 @@ end
 ---@param type string
 local function create_tool(type)
   ---@param name string
-  ---@param config chris468.config.Tool
-  ---@return Tool
+  ---@param config chris468.config.Tool|LspTool.Options
+  ---@return BaseTool
   return function(name, config)
-    local Tool = require("chris468.plugins.config.tools.tool").Tool
-    return Tool:new(
-      type,
-      name,
-      { enabled = config.enabled, package = config.package, filetypes = config.filetypes, tool_name = config.name }
-    )
+    local Tool = require("chris468.plugins.config.tools.tool")[type]
+    return Tool:new(name, config)
   end
 end
 
@@ -229,14 +225,14 @@ end
 ---@param opts { [string]: { [string]: chris468.config.Tool } }
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts.formatters, create_tool("formatter"))
+  local tools = map_tools_by_filetype(opts.formatters, create_tool("FormatterTool"))
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = map_names_by_ft(tools) }, opts))
   lazily_install_tools_by_filetype(tools, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts.linters, create_tool("linter"))
+  local tools = map_tools_by_filetype(opts.linters, create_tool("LinterTool"))
   require("lint").linters_by_ft = map_names_by_ft(tools)
   lazily_install_tools_by_filetype(tools, disabled_filetypes, "linter")
   register_lint(tools)
