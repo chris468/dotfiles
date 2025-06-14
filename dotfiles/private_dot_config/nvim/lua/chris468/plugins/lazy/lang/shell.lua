@@ -16,9 +16,11 @@ return {
   {
     "conform.nvim",
     opts = {
-      formatters = {
+      formatters_by_ft = {
         shell = {
-          shfmt = { filetypes = { "bash", "sh", "zsh" } },
+          bash = { "shfmt" },
+          sh = { "shfmt" },
+          zsh = { "shfmt" },
         },
       },
     },
