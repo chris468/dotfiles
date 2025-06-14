@@ -30,10 +30,11 @@ local function by_ft_mt(eq)
   return mt
 end
 
----@class TestTool : Tool
+---@class TestTool : chris468.tools.Tool
 local TestTool = Tool:extend("TestTool") --[[ @as TestTool]]
+TestTool.type = "test"
 function TestTool:new(name, opts)
-  return self:_new("test", name, opts)
+  return self:_new(name, opts)
 end
 
 local function create_tools(config)
