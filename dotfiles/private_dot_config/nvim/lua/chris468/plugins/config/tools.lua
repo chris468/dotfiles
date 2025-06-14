@@ -1,5 +1,7 @@
 local util = require("chris468.util")
 local util_mason = require("chris468.util.mason")
+local installer = require("chris468.plugins.config.tools.installer")
+local tool = require("chris468.plugins.config.tool.tool")
 local M = {}
 
 ---@param bufnr integer
@@ -94,16 +96,16 @@ end
 ---@field lspconfig vim.lsp.Config
 ---@field display_name string
 
----@param tool LspTool
+---@param t LspTool
 ---@param bufnr integer
-local function enable_and_install_lsp(tool, bufnr)
-  vim.lsp.config(tool:name(), merge_completion_capabilities(tool.lspconfig))
-  vim.lsp.enable(tool:name())
-  util_mason.install(tool:package(), function()
+local function enable_and_install_lsp(t, bufnr)
+  vim.lsp.config(t:name(), merge_completion_capabilities(t.lspconfig))
+  vim.lsp.enable(t:name())
+  util_mason.install(t:package(), function()
     raise_filetype(bufnr)
   end, function()
-    vim.lsp.disable(tool:name())
-  end, tool:display_name())
+    vim.lsp.disable(t:name())
+  end, t:display_name())
 end
 
 ---@generic TConfig
@@ -117,10 +119,10 @@ local function map_tools_by_filetype(opts, create_tool)
   end)
   for _, configs in pairs(opts) do
     for name, config in pairs(configs) do
-      local tool = create_tool(name, config)
-      if tool.enabled then
-        for _, ft in ipairs(tool:filetypes()) do
-          table.insert(result[ft], tool)
+      local t = create_tool(name, config)
+      if t.enabled then
+        for _, ft in ipairs(t:filetypes()) do
+          table.insert(result[ft], t)
         end
       end
     end
@@ -156,8 +158,8 @@ local function lazily_install_lsps_by_filetype(opts, group)
 
       lsps_by_ft = lsps_by_ft or map_tools_by_filetype({ lsp = opts }, create_lsp_tool)
 
-      for _, tool in ipairs(lsps_by_ft[filetype] or {}) do
-        enable_and_install_lsp(tool, arg.buf)
+      for _, t in ipairs(lsps_by_ft[filetype] or {}) do
+        enable_and_install_lsp(t, arg.buf)
       end
     end,
   })
@@ -186,56 +188,29 @@ local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes,
       end
       handled_filetypes[filetype] = true
 
-      for _, tool in ipairs(tools_by_ft[filetype] or {}) do
-        util_mason.install(tool:package(), function()
+      for _, t in ipairs(tools_by_ft[filetype] or {}) do
+        util_mason.install(t:package(), function()
           raise_filetype(arg.buf)
-        end, nil, tool:display_name())
+        end, nil, t:display_name())
       end
     end,
   })
 end
 
----@param type string
-local function create_tool(type)
-  ---@param name string
-  ---@param config chris468.config.Tool|LspTool.Options
-  ---@return BaseTool
-  return function(name, config)
-    local Tool = require("chris468.plugins.config.tools.tool")[type]
-    return Tool:new(name, config)
-  end
-end
-
----@param tools_by_ft { [string]: Tool[] }
-local function map_names_by_ft(tools_by_ft)
-  local result = vim.defaulttable(function()
-    return {}
-  end)
-  for ft, tools in pairs(tools_by_ft) do
-    for _, tool in ipairs(tools) do
-      result[ft][tool:name()] = true
-    end
-  end
-  for ft, names in pairs(result) do
-    result[ft] = vim.tbl_keys(names)
-  end
-  return result
-end
-
 ---@param opts { [string]: { [string]: chris468.config.Tool } }
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts.formatters, create_tool("FormatterTool"))
-  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = map_names_by_ft(tools) }, opts))
-  lazily_install_tools_by_filetype(tools, disabled_filetypes, "formatter")
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, tool.FormatterTool)
+  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = names_by_ft }, opts))
+  lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools = map_tools_by_filetype(opts.linters, create_tool("LinterTool"))
-  require("lint").linters_by_ft = map_names_by_ft(tools)
-  lazily_install_tools_by_filetype(tools, disabled_filetypes, "linter")
-  register_lint(tools)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, tool.LinterTool)
+  require("lint").linters_by_ft = names_by_ft
+  lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "linter")
+  register_lint(tools_by_ft)
 end
 
 return M
