@@ -96,7 +96,7 @@ end
 ---@field lspconfig vim.lsp.Config
 ---@field display_name string
 
----@param t LspTool
+---@param t Lsp
 ---@param bufnr integer
 local function enable_and_install_lsp(t, bufnr)
   vim.lsp.config(t:name(), merge_completion_capabilities(t.lspconfig))
@@ -133,17 +133,17 @@ end
 
 ---@param name string
 ---@param config chris468.config.LspServer
----@return LspTool
+---@return Lsp
 local function create_lsp_tool(name, config)
-  local LspTool = require("chris468.plugins.config.tools.tool").LspTool
-  return LspTool:new(name, { enabled = config.enabled, package = config.package, lspconfig = config.lspconfig })
+  local Lsp = require("chris468.plugins.config.tools.tool").Lsp
+  return Lsp:new(name, { enabled = config.enabled, package = config.package, lspconfig = config.lspconfig })
 end
 
 --- @param opts chris468.config.LspConfig
 --- @param group integer
 local function lazily_install_lsps_by_filetype(opts, group)
   local _ = require("lspconfig")
-  ---@type { [string]: LspTool[] }?
+  ---@type { [string]: Lsp[] }?
   local lsps_by_ft
   local handled_filetypes = util.make_set(Chris468.disable_filetypes)
   vim.api.nvim_create_autocmd("FileType", {
@@ -200,14 +200,14 @@ end
 ---@param opts { [string]: { [string]: chris468.config.Tool } }
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, tool.FormatterTool)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, tool.Formatter)
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = names_by_ft }, opts))
   lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, tool.LinterTool)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, tool.Linter)
   require("lint").linters_by_ft = names_by_ft
   lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "linter")
   register_lint(tools_by_ft)
