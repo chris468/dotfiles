@@ -41,10 +41,10 @@ return {
   {
     "conform.nvim",
     opts = {
-      formatters = {
+      formatters_by_ft = {
         web = {
-          prettier = { filetypes = { "htmlangular" } },
-          ["php-cs-fixer"] = { name = "php_cs_fixer", filetypes = { "php" } },
+          htmlangular = { "prettier" },
+          php = { { "php_cs_fixer", package = "php-cs-fixer" } },
         },
       },
     },
@@ -52,9 +52,9 @@ return {
   {
     "nvim-lint",
     opts = {
-      linters = {
+      linters_by_ft = {
         web = {
-          phpcs = { filetypes = { "php" } },
+          php = { "phpcs" },
         },
       },
     },

@@ -8,10 +8,9 @@ return {
   {
     "conform.nvim",
     opts = {
-      formatters = {
+      formatters_by_ft = {
         go = {
-          goimports = { filetypes = { "go" } },
-          gofumpt = { filetypes = { "go" } },
+          go = { "goimports", "gofumpt" },
         },
       },
     },
