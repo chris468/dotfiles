@@ -120,4 +120,158 @@ return {
     },
     version = false,
   },
+  {
+    "mfussenegger/nvim-dap",
+    keys = {
+      {
+        "<leader>db",
+        function()
+          require("dap").toggle_breakpoint()
+        end,
+        desc = "Toggle breakpoint",
+      },
+      {
+        "<leader>dh",
+        function()
+          require("dap.ui.widgets").hover()
+        end,
+        mode = { "n", "v" },
+        desc = "Hover",
+      },
+      {
+        "<leader>di",
+        function()
+          require("dap").step_into()
+        end,
+        desc = "Step in",
+      },
+      {
+        "<leader>dl",
+        function()
+          require("dap").run_last()
+        end,
+        desc = "Run last configuration",
+      },
+      {
+        "<leader>do",
+        function()
+          require("dap").step_over()
+        end,
+        desc = "Step over",
+      },
+      {
+        "<leader>dO",
+        function()
+          require("dap").step_out()
+        end,
+        desc = "Step out",
+      },
+      {
+        "<leader>dp",
+        function()
+          require("dap.ui.widgets").preview()
+        end,
+        mode = { "n", "v" },
+        desc = "Preview",
+      },
+      {
+        "<leader>dr",
+        function()
+          require("dap").continue()
+        end,
+        desc = "Run/Continue",
+      },
+      {
+        "<leader>dR",
+        function()
+          require("dap").repl_toggle()
+        end,
+        desc = "Toggle REPL",
+      },
+      {
+        "<leader>df",
+        function()
+          local widgets = require("dap.ui.widgets")
+          widgets.float(widgets.frames)
+        end,
+        desc = "Frames",
+      },
+      {
+        "<leader>dS",
+        function()
+          local widgets = require("dap.ui.widgets")
+          widgets.float(widgets.scopes)
+        end,
+        desc = "Scopes",
+      },
+    },
+  },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = { "mason.nvim" },
+    cmd = {
+      "DapInstall",
+      "DapUninstall",
+    },
+  },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "plenary.nvim",
+      "nvim-treesitter",
+      "nvim-neotest/neotest-plenary",
+    },
+    keys = {
+      {
+        "<leader>te",
+        function()
+          require("neotest").summary.toggle()
+        end,
+        desc = "Toggle explorer",
+      },
+      {
+        "<leader>tf",
+        function()
+          require("neotest").run.run(vim.fn.expand("%"))
+        end,
+        desc = "Run current file",
+      },
+      {
+        "<leader>tl",
+        function()
+          require("neotest").run.run_last()
+        end,
+        desc = "Run last",
+      },
+      {
+        "<leader>tn",
+        function()
+          require("neotest").run.run()
+        end,
+        desc = "Run nearest test",
+      },
+      {
+        "<leader>to",
+        function()
+          require("neotest").output_panel.toggle()
+        end,
+        desc = "Toggle output",
+      },
+      {
+        "<leader>tt",
+        function()
+          require("neotest").run.run(vim.fn.getcwd())
+        end,
+        desc = "Run all",
+      },
+    },
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts, {
+        adapters = {
+          require("neotest-plenary"),
+        },
+      })
+    end,
+  },
 }
