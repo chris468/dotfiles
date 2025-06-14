@@ -136,6 +136,8 @@ vim.api.nvim_create_autocmd("FileType", {
     "TelescopePrompt",
     "help",
     "oil",
+    "neotest-summary",
+    "neotest-output-panel",
     "qf",
   },
 })
