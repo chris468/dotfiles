@@ -8,11 +8,12 @@ local cmd = require("chris468.util.keymap").cmd
 
 ---@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
 
----@class chris468.config.Tool
----@field filetypes? string[] FileTypes where this tool should be installed and enabled
+---@class chris468.config.Formatter
+---@field [1] string Formatter name
 ---@field enabled? boolean Whether to enable the formatter, default true
----@field public package? boolean Whether there is a package associated with the tool
----@field name? string Tool (formatter/dap/etc) name, if different from the package name
+---@field public package? string Package name, if different than formatter, or false for no package
+
+---@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
 
 return {
   {
@@ -67,10 +68,10 @@ return {
       default_format_opts = {
         lsp_format = "fallback",
       },
-      -- Formatters is custom, use it instead of tools.
+      -- formatters_by_ft is custom - a map of key to map of filetype to plugins.
       -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type { [string]: { [string]: chris468.config.Tool } }
-      formatters = {},
+      ---@type {string: chris468.config.FormattersByFileType}
+      formatters_by_ft = {},
       format_on_save = function(bufnr)
         if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
           return
@@ -88,10 +89,10 @@ return {
     dependencies = { "mason.nvim" },
     lazy = false,
     opts = {
-      -- Linters is custom, use it instead of tools.
+      -- linters_by_ft is custom - a map of key to map of filetype to plugins.
       -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type { [string]: { [string]: chris468.config.Tool } }
-      linters = {},
+      ---@type {string: chris468.config.FormattersByFileType}
+      linters_by_ft = {},
     },
     version = false,
   },

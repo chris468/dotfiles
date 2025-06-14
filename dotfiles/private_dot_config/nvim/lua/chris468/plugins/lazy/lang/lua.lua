@@ -26,9 +26,9 @@ return {
   {
     "conform.nvim",
     opts = {
-      formatters = {
+      formatters_by_ft = {
         lua = {
-          stylua = { filetypes = { "lua" } },
+          lua = { "stylua" },
         },
       },
     },
