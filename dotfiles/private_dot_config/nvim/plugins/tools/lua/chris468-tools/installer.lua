@@ -1,7 +1,7 @@
 local M = {}
 
 ---@generic TConfig
----@generic TTool : Tool
+---@generic TTool : chris468.tools.Tool
 ---@param opts  { [string]: { [string]: TConfig } }
 ---@param Tool TTool
 ---@return { [string]: TTool[] } tools_by_ft, { [string] : string[] } names_by_ft

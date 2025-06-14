@@ -18,7 +18,7 @@ local tool_specs = {
     display_type = "formatter",
     supports_custom_name = true,
     supports_custom_filetypes = true,
-    ---@type fun(...) : Tool
+    ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
       return tool.Formatter:new(...)
     end,
@@ -27,7 +27,7 @@ local tool_specs = {
     display_type = "linter",
     supports_custom_name = true,
     supports_custom_filetypes = true,
-    ---@type fun(...) : Tool
+    ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
       return tool.Linter:new(...)
     end,
@@ -36,7 +36,7 @@ local tool_specs = {
     display_type = "LSP",
     supports_custom_name = false,
     supports_custom_filetypes = false,
-    ---@type fun(...) : Tool
+    ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
       return tool.Lsp:new(...)
     end,
