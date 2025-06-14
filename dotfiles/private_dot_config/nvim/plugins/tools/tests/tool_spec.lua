@@ -10,7 +10,7 @@ function registry.get_package(name)
   return registry._packages[name]
 end
 
-local tool = require("chris468.tools.tool")
+local tool = require("chris468-tools.tool")
 
 ---@class ToolSpec
 local tool_specs = {

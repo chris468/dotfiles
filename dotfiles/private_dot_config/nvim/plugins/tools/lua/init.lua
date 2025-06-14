@@ -1,7 +1,7 @@
 local util = require("chris468.util")
 local util_mason = require("chris468.util.mason")
-local installer = require("chris468.tools.installer")
-local tool = require("chris468.tools.tool")
+local installer = require("chris468-tools.installer")
+local tool = require("chris468-tools.tool")
 local M = {}
 
 ---@param bufnr integer
@@ -135,7 +135,7 @@ end
 ---@param config chris468.config.LspServer
 ---@return Lsp
 local function create_lsp_tool(name, config)
-  local Lsp = require("chris468.tools.tool").Lsp
+  local Lsp = require("chris468-tools.tool").Lsp
   return Lsp:new(name, { enabled = config.enabled, package = config.package, lspconfig = config.lspconfig })
 end
 
@@ -167,7 +167,7 @@ end
 
 --- @param opts chris468.config.LspConfig
 function M.lspconfig(opts)
-  local group = vim.api.nvim_create_augroup("chris468.tools.lsp", { clear = true })
+  local group = vim.api.nvim_create_augroup("chris468-tools.lsp", { clear = true })
   register_lsp_attach(group)
   register_dynamic_capability_handlers()
   lazily_install_lsps_by_filetype(opts, group)

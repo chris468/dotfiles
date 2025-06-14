@@ -3,9 +3,9 @@
 local registry = { _packages = {} }
 package.loaded["mason-registry"] = registry
 
-local Tool = require("chris468.tools.tool").Tool
+local Tool = require("chris468-tools.tool").Tool
 
-local installer = require("chris468.tools.installer")
+local installer = require("chris468-tools.installer")
 
 local function tool_eq(a, b)
   return a:name() == b:name()
