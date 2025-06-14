@@ -3,9 +3,9 @@
 local registry = { _packages = {} }
 package.loaded["mason-registry"] = registry
 
-local Tool = require("chris468.plugins.config.tools.tool").Tool
+local Tool = require("chris468.tools.tool").Tool
 
-local installer = require("chris468.plugins.config.tools.installer")
+local installer = require("chris468.tools.installer")
 
 local function tool_eq(a, b)
   return a:name() == b:name()
@@ -46,14 +46,6 @@ local function create_tools(config)
   end
   return result
 end
-
-describe("setup", function()
-  it("is set up", function()
-    assert.is.truthy(Tool)
-    assert.is.truthy(Tool.new)
-    assert.are.equal(nil, Tool)
-  end)
-end)
 
 describe("installer", function()
   local config

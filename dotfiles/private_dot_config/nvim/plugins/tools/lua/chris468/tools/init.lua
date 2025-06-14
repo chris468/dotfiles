@@ -1,7 +1,7 @@
 local util = require("chris468.util")
 local util_mason = require("chris468.util.mason")
-local installer = require("chris468.plugins.config.tools.installer")
-local tool = require("chris468.plugins.config.tool.tool")
+local installer = require("chris468.tools.installer")
+local tool = require("chris468.tools.tool")
 local M = {}
 
 ---@param bufnr integer
@@ -135,7 +135,7 @@ end
 ---@param config chris468.config.LspServer
 ---@return Lsp
 local function create_lsp_tool(name, config)
-  local Lsp = require("chris468.plugins.config.tools.tool").Lsp
+  local Lsp = require("chris468.tools.tool").Lsp
   return Lsp:new(name, { enabled = config.enabled, package = config.package, lspconfig = config.lspconfig })
 end
 
