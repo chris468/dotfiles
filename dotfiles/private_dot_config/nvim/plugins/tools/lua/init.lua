@@ -1,5 +1,4 @@
-local util = require("chris468.util")
-local util_mason = require("chris468.util.mason")
+local util = require("chris468-tools._util")
 local installer = require("chris468-tools.installer")
 local tool = require("chris468-tools.tool")
 local M = {}
@@ -16,7 +15,7 @@ end
 ---@param config? vim.lsp.Config
 ---@return vim.lsp.Config?
 local function merge_completion_capabilities(config)
-  if require("chris468.util.lazy").has_plugin("blink.cmp") then
+  if util.has_plugin("blink.cmp") then
     config = config or {}
     config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities, true)
   end
@@ -27,8 +26,11 @@ end
 ---@param bufnr integer
 ---@param client vim.lsp.Client
 local function configure_inlay_hints(bufnr, client)
-  local bufutil = require("chris468.util.buffer")
-  if bufutil.valid_normal(bufnr) and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr) then
+  if
+    vim.api.nvim_buf_is_valid(bufnr)
+    and vim.bo[bufnr].buftype == ""
+    and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr)
+  then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 end
@@ -101,7 +103,7 @@ end
 local function enable_and_install_lsp(t, bufnr)
   vim.lsp.config(t:name(), merge_completion_capabilities(t.lspconfig))
   vim.lsp.enable(t:name())
-  util_mason.install(t:package(), function()
+  util.install(t:package(), function()
     raise_filetype(bufnr)
   end, function()
     vim.lsp.disable(t:name())
@@ -189,7 +191,7 @@ local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes,
       handled_filetypes[filetype] = true
 
       for _, t in ipairs(tools_by_ft[filetype] or {}) do
-        util_mason.install(t:package(), function()
+        util.install(t:package(), function()
           raise_filetype(arg.buf)
         end, nil, t:display_name())
       end

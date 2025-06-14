@@ -1,45 +1,59 @@
-local Object = require("chris468.util.object")
+local Object = require("plenary").class
 local registry = require("mason-registry")
 
 ---@module "mason-registry"
 
----@class Tool.Options
+---@class chris468.tools.Tool.Options
 ---@field enabled? boolean
 ---@field public package? boolean
 ---@field filetypes? string[]
 ---@field tool_name? string
 
----@class Tool : chris468.Object
----@field protected super chris468.Object
+---@class chris468.tools.Tool
 ---@field protected _package_name string
 ---@field protected _tool_name string
 ---@field private _package boolean|Package
----@field private _filetypes? string[]
 ---@field private _tool_type string
 ---@field private _display_name string?
+---@field protected super Object
+---@field protected _abstract fun(self: chris468.tools.Tool, method: string)
+---@field extend fun(self: chris468.tools.Tool) : chris468.tools.Tool
 ---@field enabled? boolean
----@field new fun(name: string, opts?: Tool.Options) : Tool
----@field protected _new fun(self: Tool, tool_type: string, name: string, opts?: Tool.Options, ...: table) : Tool
----@field filetypes fun(self: Tool) : string[]
----@field protected _tool_filetypes fun(self: Tool) : string[]|nil
----@field public package fun(self: Tool) : Package|false
----@field display_name fun(self:Tool) : string
-Tool = Object:extend("Tool") --[[ @as Tool]]
+---@field new fun(name: string, opts?: chris468.tools.Tool.Options, ...: table) : chris468.tools.Tool
+---@field protected _new fun(self: chris468.tools.Tool, name: string, opts?: chris468.tools.Tool.Options, ...: table) : chris468.tools.Tool
+---@field filetypes fun(self: chris468.tools.Tool) : string[]
+---@field protected _tool_filetypes fun(self: chris468.tools.Tool) : string[]|nil
+---@field public package fun(self: chris468.tools.Tool) : Package|false
+---@field display_name fun(self: chris468.tools.Tool) : string
+Tool = Object:extend() --[[ @as chris468.tools.Tool]]
+Tool.type = "tool"
 
-function Tool:new(name, opts)
-  self:_abstract("new")
+function Tool:__tostring()
+  return self.type
 end
 
-function Tool:_new(tool_type, name, opts, ...)
-  opts = opts or {}
-  return Object.new(self, {
-    _tool_type = tool_type,
+---@param method string
+function Tool:_abstract(method)
+  error(("call to abstract method %s.%s"):format(self.type, method))
+end
+
+function Tool:new(_, _)
+  self:_abstract("new")
+  ---@diagnostic disable-next-line: return-type-mismatch
+end
+
+function Tool:_new(name, opts, ...)
+  local o = {
     _package_name = name,
     _package = opts.package ~= false,
     enabled = opts.enabled ~= false,
     _filetypes = opts.filetypes,
     _tool_name = opts.tool_name,
-  }, ...) --[[ @as Tool ]]
+  }
+  if select("#", ...) > 0 then
+    o = vim.tbl_extend("error", o, ...)
+  end
+  return setmetatable(o, self)
 end
 
 function Tool:filetypes()
@@ -60,7 +74,7 @@ function Tool:display_name()
   self._display_name = self._display_name
     or string.format(
       "%s %s%s",
-      self._tool_type,
+      self.type,
       self._package_name,
       self._package_name == self:name() and "" or (" (%s)"):format(self:name())
     )
@@ -76,40 +90,43 @@ function Tool:package()
   return self._package
 end
 
----@class Formatter : Tool
----@field protected super Tool
----@field new fun(self: Formatter, name: string, opts?: Tool.Options) : Formatter
-local Formatter = Tool:extend("Formatter") --[[ @as Formatter ]]
+---@class chris468.tools.Formatter : chris468.tools.Tool
+---@field protected super chris468.tools.Tool
+---@field new fun(self: chris468.tools.Formatter, name: string, opts?: chris468.tools.Tool.Options) : chris468.tools.Formatter
+local Formatter = Tool:extend() --[[ @as chris468.tools.Formatter ]]
+Formatter.type = "formatter"
 function Formatter:new(name, opts)
   opts = opts or {}
-  return self:_new("formatter", name, opts) --[[ @as Formatter ]]
+  return self:_new(name, opts) --[[ @as chris468.tools.Formatter ]]
 end
 
----@class Linter : Tool
----@field protected super Tool
----@field new fun(self: Linter, name: string, opts?: Tool.Options) : Linter
-local Linter = Tool:extend("Linter") --[[ @as Linter ]]
+---@class chris468.tools.Linter : chris468.tools.Tool
+---@field protected super chris468.tools.Tool
+---@field new fun(self: chris468.tools.Linter, name: string, opts?: chris468.tools.Tool.Options) : chris468.tools.Linter
+local Linter = Tool:extend() --[[ @as chris468.tools.Linter ]]
+Linter.type = "linter"
 function Linter:new(name, opts)
   opts = opts or {}
-  return self:_new("linter", name, opts) --[[ @as Linter ]]
+  return self:_new(name, opts) --[[ @as chris468.tools.Linter ]]
 end
 
----@class Lsp.Options
+---@class chris468.tools.Lsp.Options
 ---@field enabled? boolean
 ---@field public package? boolean
 ---@field lspconfig? vim.lsp.Config
 
----@class Lsp : Tool
----@field protected super Tool
+---@class chris468.tools.Lsp : chris468.tools.Tool
+---@field protected super chris468.tools.Tool
 ---@field lspconfig vim.lsp.Config
----@field new fun(self: Lsp, name: string, opts?: Lsp.Options, ...: table) : Lsp
-local Lsp = Tool:extend("Lsp") --[[ @as Lsp ]]
+---@field new fun(self: chris468.tools.Lsp, name: string, opts?: chris468.tools.Lsp.Options, ...: table) : chris468.tools.Lsp
+local Lsp = Tool:extend() --[[ @as chris468.tools.Lsp ]]
+Lsp.type = "LSP"
 function Lsp:new(name, opts)
   opts = opts or {}
-  return self:_new("LSP", name, {
+  return self:_new(name, {
     enabled = opts.enabled,
     package = opts.package,
-  }, { lspconfig = opts.lspconfig or {} }) --[[ @as Lsp ]]
+  }, { lspconfig = opts.lspconfig or {} }) --[[ @as chris468.tools.Lsp ]]
 end
 
 function Lsp:name()
