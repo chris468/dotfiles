@@ -76,57 +76,57 @@ function Tool:package()
   return self._package
 end
 
----@class FormatterTool : Tool
+---@class Formatter : Tool
 ---@field protected super Tool
----@field new fun(self: FormatterTool, name: string, opts?: Tool.Options) : FormatterTool
-local FormatterTool = Tool:extend("FormatterTool") --[[ @as FormatterTool ]]
-function FormatterTool:new(name, opts)
+---@field new fun(self: Formatter, name: string, opts?: Tool.Options) : Formatter
+local Formatter = Tool:extend("Formatter") --[[ @as Formatter ]]
+function Formatter:new(name, opts)
   opts = opts or {}
-  return self:_new("formatter", name, opts) --[[ @as FormatterTool ]]
+  return self:_new("formatter", name, opts) --[[ @as Formatter ]]
 end
 
----@class LinterTool : Tool
+---@class Linter : Tool
 ---@field protected super Tool
----@field new fun(self: LinterTool, name: string, opts?: Tool.Options) : LinterTool
-local LinterTool = Tool:extend("LinterTool") --[[ @as LinterTool ]]
-function LinterTool:new(name, opts)
+---@field new fun(self: Linter, name: string, opts?: Tool.Options) : Linter
+local Linter = Tool:extend("Linter") --[[ @as Linter ]]
+function Linter:new(name, opts)
   opts = opts or {}
-  return self:_new("linter", name, opts) --[[ @as LinterTool ]]
+  return self:_new("linter", name, opts) --[[ @as Linter ]]
 end
 
----@class LspTool.Options
+---@class Lsp.Options
 ---@field enabled? boolean
 ---@field public package? boolean
 ---@field lspconfig? vim.lsp.Config
 
----@class LspTool : Tool
+---@class Lsp : Tool
 ---@field protected super Tool
 ---@field lspconfig vim.lsp.Config
----@field new fun(self: LspTool, name: string, opts?: LspTool.Options, ...: table) : LspTool
-local LspTool = Tool:extend("LspTool") --[[ @as LspTool ]]
-function LspTool:new(name, opts)
+---@field new fun(self: Lsp, name: string, opts?: Lsp.Options, ...: table) : Lsp
+local Lsp = Tool:extend("Lsp") --[[ @as Lsp ]]
+function Lsp:new(name, opts)
   opts = opts or {}
   return self:_new("LSP", name, {
     enabled = opts.enabled,
     package = opts.package,
-  }, { lspconfig = opts.lspconfig or {} }) --[[ @as LspTool ]]
+  }, { lspconfig = opts.lspconfig or {} }) --[[ @as Lsp ]]
 end
 
-function LspTool:name()
+function Lsp:name()
   if not self._tool_name then
     self._tool_name = vim.tbl_get(self:package() or {}, "spec", "neovim", "lspconfig")
   end
 
-  return LspTool.super.name(self)
+  return Lsp.super.name(self)
 end
 
-function LspTool:_tool_filetypes()
+function Lsp:_tool_filetypes()
   return (self.lspconfig or {}).filetypes or (vim.lsp.config[self:name()] or {}).filetypes
 end
 
 return {
   Tool = Tool,
-  FormatterTool = FormatterTool,
-  LinterTool = LinterTool,
-  LspTool = LspTool,
+  Formatter = Formatter,
+  Linter = Linter,
+  Lsp = Lsp,
 }
