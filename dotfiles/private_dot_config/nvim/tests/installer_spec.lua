@@ -47,6 +47,14 @@ local function create_tools(config)
   return result
 end
 
+describe("setup", function()
+  it("is set up", function()
+    assert.is.truthy(Tool)
+    assert.is.truthy(Tool.new)
+    assert.are.equal(nil, Tool)
+  end)
+end)
+
 describe("installer", function()
   local config
   local tools
