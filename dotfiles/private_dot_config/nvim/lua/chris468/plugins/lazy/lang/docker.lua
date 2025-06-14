@@ -9,9 +9,9 @@ return {
   {
     "nvim-lint",
     opts = {
-      linters = {
+      linters_by_ft = {
         docker = {
-          hadolint = { filetypes = { "dockerfile" } },
+          dockerfile = { "hadolint" },
         },
       },
     },

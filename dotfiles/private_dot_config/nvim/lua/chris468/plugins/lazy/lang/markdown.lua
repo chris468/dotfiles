@@ -8,9 +8,10 @@ return {
   {
     "conform.nvim",
     opts = {
-      formatters = {
+      formatters_by_ft = {
         markdown = {
-          prettier = { filetypes = { "markdown", "markdown.mdx" } },
+          markdown = { "prettier" },
+          ["markdown.mdx"] = { "prettier" },
         },
       },
     },
@@ -18,9 +19,10 @@ return {
   {
     "nvim-lint",
     opts = {
-      linters = {
+      linters_by_ft = {
         markdown = {
-          ["markdownlint-cli2"] = { filetypes = { "markdown", "markdown.mdx" } },
+          markdown = { "markdownlint-cli2" },
+          ["markdown.mdx"] = { "markdownlint-cli2" },
         },
       },
     },
