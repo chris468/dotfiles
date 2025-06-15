@@ -80,7 +80,7 @@ local function run_installed_linters(linters)
   end
 end
 
----@param linters_by_ft table<string, Tool[]>
+---@param linters_by_ft table<string, chris468.tools.Tool[]>
 local function register_lint(linters_by_ft)
   vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
     group = vim.api.nvim_create_augroup("chris468.lint", { clear = true }),
@@ -98,7 +98,7 @@ end
 ---@field lspconfig vim.lsp.Config
 ---@field display_name string
 
----@param t Lsp
+---@param t chris468.tools.Lsp
 ---@param bufnr integer
 local function enable_and_install_lsp(t, bufnr)
   vim.lsp.config(t:name(), merge_completion_capabilities(t.lspconfig))
@@ -111,7 +111,7 @@ local function enable_and_install_lsp(t, bufnr)
 end
 
 ---@generic TConfig
----@generic TTool : Tool
+---@generic TTool : chris468.tools.Tool
 ---@param opts  { [string]: { [string]: TConfig } }
 ---@param create_tool fun(name: string,config: TConfig) : TTool
 ---@return { [string]: TTool }
@@ -135,7 +135,7 @@ end
 
 ---@param name string
 ---@param config chris468.config.LspServer
----@return Lsp
+---@return chris468.tools.Lsp
 local function create_lsp_tool(name, config)
   local Lsp = require("chris468-tools.tool").Lsp
   return Lsp:new(name, { enabled = config.enabled, package = config.package, lspconfig = config.lspconfig })
@@ -145,7 +145,7 @@ end
 --- @param group integer
 local function lazily_install_lsps_by_filetype(opts, group)
   local _ = require("lspconfig")
-  ---@type { [string]: Lsp[] }?
+  ---@type { [string]: chris468.tools.Lsp[] }?
   local lsps_by_ft
   local handled_filetypes = util.make_set(Chris468.disable_filetypes)
   vim.api.nvim_create_autocmd("FileType", {
@@ -175,7 +175,7 @@ function M.lspconfig(opts)
   lazily_install_lsps_by_filetype(opts, group)
 end
 
----@param tools_by_ft { [string]: Tool[] }
+---@param tools_by_ft { [string]: chris468.tools.Tool[] }
 ---@param disabled_filetypes { [string]: true }
 ---@param tool_type string
 local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, tool_type)
@@ -199,7 +199,7 @@ local function lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes,
   })
 end
 
----@param opts { [string]: { [string]: chris468.config.Tool } }
+---@param opts { [string]: { [string]: chris468.tools.Tool } }
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
   local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, tool.Formatter)
