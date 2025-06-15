@@ -38,8 +38,8 @@ function Tool:_abstract(method)
 end
 
 function Tool:new(_, _)
+  ---@diagnostic disable-next-line: missing-return
   self:_abstract("new")
-  ---@diagnostic disable-next-line: return-type-mismatch
 end
 
 function Tool:_new(name, opts, ...)
