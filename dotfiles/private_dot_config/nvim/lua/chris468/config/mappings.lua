@@ -16,6 +16,11 @@ local mappings = {
     "<cmd>Trouble diagnostics<CR>",
     desc = "Diagnostics (Trouble)",
   },
+  {
+    "<leader>cD",
+    "<cmd>Trouble diagnostics filter.buf=0<CR>",
+    desc = "Diagnostics (Trouble)",
+  },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
   { "<leader>f", group = "Files" },
   { "<leader>g", group = "Git" },
@@ -82,7 +87,7 @@ local lsp_mappings = {
 
 whichkey.add(mappings)
 
-snacks.toggle.diagnostics({ name = "diagnostics" }):map("<leader>cD")
+snacks.toggle.diagnostics({ name = "diagnostics" }):map("<leader>c<C-D>")
 
 snacks.toggle
   .new({
