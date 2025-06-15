@@ -14,12 +14,12 @@ local mappings = {
   {
     "<leader>cd",
     "<cmd>Trouble diagnostics<CR>",
-    desc = "Diagnostics (Trouble)",
+    desc = "Diagnostics",
   },
   {
     "<leader>cD",
     "<cmd>Trouble diagnostics filter.buf=0<CR>",
-    desc = "Diagnostics (Trouble)",
+    desc = "Buffer diagnostics",
   },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
   { "<leader>f", group = "Files" },
@@ -41,12 +41,12 @@ local lsp_mappings = {
   {
     "<leader>ci",
     "<cmd>Trouble lsp_incoming_calls first<CR>",
-    desc = "Incoming calls (Trouble)",
+    desc = "Incoming calls",
   },
   {
     "<leader>co",
     "<cmd>Trouble lsp_outgoing_calls first<CR>",
-    desc = "Outgoing calls (Trouble)",
+    desc = "Outgoing calls",
   },
   {
     "<leader>cs",
@@ -61,32 +61,32 @@ local lsp_mappings = {
   {
     "<leader>cx",
     "<cmd>Trouble close<CR>",
-    desc = "Close Trouble",
+    desc = "Close all",
   },
   {
     "gd",
     "<cmd>Trouble lsp_definitions first<CR>",
-    desc = "Go to definition (Trouble)",
+    desc = "Go to definition)",
   },
   {
     "gD",
     "<cmd>Trouble lsp_declarations first<CR>",
-    desc = "Go to declarations (Trouble)",
+    desc = "Go to declarations)",
   },
   {
     "gI",
     "<cmd>Trouble lsp_implementations first<CR>",
-    desc = "Go to implementation (Trouble)",
+    desc = "Go to implementation",
   },
   {
     "gr",
     "<cmd>Trouble lsp_references first<CR>",
-    desc = "Find references (Trouble)",
+    desc = "Find references",
   },
   {
     "gy",
     "<cmd>Trouble lsp_type_definitions first<CR>",
-    desc = "Go to type definition (Trouble)",
+    desc = "Go to type definition",
   },
 }
 
