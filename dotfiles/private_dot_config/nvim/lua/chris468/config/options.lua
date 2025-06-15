@@ -18,6 +18,15 @@ vim.opt.scrolloff = 4
 vim.opt.sidescrolloff = 8
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.opt.fillchars:append({
+  horiz = "─",
+  horizdown = "┬",
+  horizup = "┴",
+  vert = "│",
+  vertleft = "┤",
+  vertright = "├",
+  verthoriz = "┼",
+})
 
 -- indention
 vim.opt.breakindent = true

@@ -7,14 +7,20 @@ local theme = {
 return {
   {
     "folke/tokyonight.nvim",
-    config = function()
-      require("tokyonight").setup()
+    config = function(_, opts)
+      require("tokyonight").setup(opts)
       if theme.tokyonight then
         vim.cmd.colorscheme(Chris468.options.theme)
       end
     end,
     event = "VeryLazy",
     lazy = not theme.tokyonight,
+    opts = {
+      on_highlights = function(hl, c)
+        hl.WinSeparator = hl.WinSeparator or {}
+        hl.WinSeparator.fg = c.comment
+      end,
+    },
     version = false,
   },
   {
