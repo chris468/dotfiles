@@ -11,7 +11,16 @@ local mappings = {
   { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
   { "<leader>bo", snacks.bufdelete.other, desc = "Delete buffer" },
   { "<leader>c", group = "Code" },
-  { "<leader>cd", vim.diagnostic.setqflist, desc = "Diagnostics" },
+  {
+    "<leader>cd",
+    "<cmd>Trouble diagnostics<CR>",
+    desc = "Diagnostics",
+  },
+  {
+    "<leader>cD",
+    "<cmd>Trouble diagnostics filter.buf=0<CR>",
+    desc = "Buffer diagnostics",
+  },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
   { "<leader>f", group = "Files" },
   { "<leader>g", group = "Git" },
@@ -31,12 +40,12 @@ local mappings = {
 local lsp_mappings = {
   {
     "<leader>ci",
-    vim.lsp.buf.incoming_calls,
+    "<cmd>Trouble lsp_incoming_calls first<CR>",
     desc = "Incoming calls",
   },
   {
     "<leader>co",
-    vim.lsp.buf.outgoing_calls,
+    "<cmd>Trouble lsp_outgoing_calls first<CR>",
     desc = "Outgoing calls",
   },
   {
@@ -45,35 +54,45 @@ local lsp_mappings = {
     desc = "Find symbol",
   },
   {
+    "<leader>cS",
+    cmd("Trouble lsp_document_symbols"),
+    desc = "Document symbols",
+  },
+  {
+    "<leader>cx",
+    "<cmd>Trouble close<CR>",
+    desc = "Close all",
+  },
+  {
     "gd",
-    vim.lsp.buf.definition,
-    desc = "Go to definition",
+    "<cmd>Trouble lsp_definitions first<CR>",
+    desc = "Go to definition)",
   },
   {
     "gD",
-    vim.lsp.buf.declaration,
-    desc = "Go to declaration",
+    "<cmd>Trouble lsp_declarations first<CR>",
+    desc = "Go to declarations)",
   },
   {
     "gI",
-    vim.lsp.buf.implementation,
+    "<cmd>Trouble lsp_implementations first<CR>",
     desc = "Go to implementation",
   },
   {
     "gr",
-    vim.lsp.buf.references,
+    "<cmd>Trouble lsp_references first<CR>",
     desc = "Find references",
   },
   {
     "gy",
-    vim.lsp.buf.type_definition,
+    "<cmd>Trouble lsp_type_definitions first<CR>",
     desc = "Go to type definition",
   },
 }
 
 whichkey.add(mappings)
 
-snacks.toggle.diagnostics({ name = "diagnostics" }):map("<leader>cD")
+snacks.toggle.diagnostics({ name = "diagnostics" }):map("<leader>c<C-D>")
 
 snacks.toggle
   .new({
