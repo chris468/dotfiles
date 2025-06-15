@@ -11,7 +11,11 @@ local mappings = {
   { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
   { "<leader>bo", snacks.bufdelete.other, desc = "Delete buffer" },
   { "<leader>c", group = "Code" },
-  { "<leader>cd", vim.diagnostic.setqflist, desc = "Diagnostics" },
+  {
+    "<leader>cd",
+    "<cmd>Trouble diagnostics<CR>",
+    desc = "Diagnostics (Trouble)",
+  },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
   { "<leader>f", group = "Files" },
   { "<leader>g", group = "Git" },
@@ -31,13 +35,13 @@ local mappings = {
 local lsp_mappings = {
   {
     "<leader>ci",
-    vim.lsp.buf.incoming_calls,
-    desc = "Incoming calls",
+    "<cmd>Trouble lsp_incoming_calls first<CR>",
+    desc = "Incoming calls (Trouble)",
   },
   {
     "<leader>co",
-    vim.lsp.buf.outgoing_calls,
-    desc = "Outgoing calls",
+    "<cmd>Trouble lsp_outgoing_calls first<CR>",
+    desc = "Outgoing calls (Trouble)",
   },
   {
     "<leader>cs",
@@ -45,29 +49,34 @@ local lsp_mappings = {
     desc = "Find symbol",
   },
   {
+    "<leader>cx",
+    "<cmd>Trouble close<CR>",
+    desc = "Close Trouble",
+  },
+  {
     "gd",
-    vim.lsp.buf.definition,
-    desc = "Go to definition",
+    "<cmd>Trouble lsp_definitions first<CR>",
+    desc = "Go to definition (Trouble)",
   },
   {
     "gD",
-    vim.lsp.buf.declaration,
-    desc = "Go to declaration",
+    "<cmd>Trouble lsp_declarations first<CR>",
+    desc = "Go to declarations (Trouble)",
   },
   {
     "gI",
-    vim.lsp.buf.implementation,
-    desc = "Go to implementation",
+    "<cmd>Trouble lsp_implementations first<CR>",
+    desc = "Go to implementation (Trouble)",
   },
   {
     "gr",
-    vim.lsp.buf.references,
-    desc = "Find references",
+    "<cmd>Trouble lsp_references first<CR>",
+    desc = "Find references (Trouble)",
   },
   {
     "gy",
-    vim.lsp.buf.type_definition,
-    desc = "Go to type definition",
+    "<cmd>Trouble lsp_type_definitions first<CR>",
+    desc = "Go to type definition (Trouble)",
   },
 }
 
