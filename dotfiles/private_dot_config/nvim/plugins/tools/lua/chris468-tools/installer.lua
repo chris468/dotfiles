@@ -14,6 +14,7 @@ function M.map_tools_by_filetype(opts, Tool)
 
   for _, configs in pairs(opts) do
     for name, config in pairs(configs) do
+      ---@diagnostic disable-next-line: undefined-field
       local tool = Tool:new(name, config)
       if tool.enabled then
         for _, ft in ipairs(tool:filetypes()) do
