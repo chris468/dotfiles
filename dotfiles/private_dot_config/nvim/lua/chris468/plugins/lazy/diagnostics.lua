@@ -20,6 +20,15 @@ return {
         },
         diagnostics = {
           follow = true,
+          auto_preview = false,
+        },
+        lsp_document_symbols = {
+          auto_preview = false,
+          format = "{kind_icon} {symbol.name} {pos}",
+          win = {
+            position = "right",
+            size = 0.3,
+          },
         },
       },
       win = {

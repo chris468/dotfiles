@@ -54,6 +54,11 @@ local lsp_mappings = {
     desc = "Find symbol",
   },
   {
+    "<leader>cS",
+    cmd("Trouble lsp_document_symbols"),
+    desc = "Document symbols",
+  },
+  {
     "<leader>cx",
     "<cmd>Trouble close<CR>",
     desc = "Close Trouble",
