@@ -1,4 +1,6 @@
 local Tool = require("chris468-tools.tool").Tool
+local util = require("chris468-tools._util")
+local installer = require("chris468-tools.installer")
 
 local M = {}
 
@@ -10,6 +12,14 @@ M.Formatter.type = "formatter"
 function M.Formatter:new(name, opts)
   opts = opts or {}
   return self:_new(name, opts) --[[ @as chris468.tools.Formatter ]]
+end
+
+---@param opts { [string]: { [string]: chris468.tools.Tool } }
+function M.setup(opts)
+  local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, M.Formatter)
+  require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = names_by_ft }, opts))
+  lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "formatter")
 end
 
 return M
