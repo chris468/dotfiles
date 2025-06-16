@@ -13,7 +13,7 @@ end
 ---@param disabled_filetypes string[]
 ---@return { [string]: TTool[] } tools_by_ft, { [string] : string[] } names_by_ft
 function M.map_tools_by_filetype(opts, Tool, disabled_filetypes)
-  disabled_filetypes = util.make_set(disabled_filetypes)
+  disabled_filetypes = util.make_set(disabled_filetypes or {})
   local function empty()
     return {}
   end
