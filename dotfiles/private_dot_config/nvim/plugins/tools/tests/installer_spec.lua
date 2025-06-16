@@ -87,6 +87,19 @@ describe("installer", function()
       assert.are.equal(expected, actual)
     end)
 
+    it("excludes tools for disabled filetypes", function()
+      local mt = by_ft_mt(tool_eq)
+      local expected = setmetatable({
+        ft1 = { tools.group1.tool1, tools.group2.tool3 },
+        ft4 = { tools.group2.tool3 },
+      }, mt)
+
+      local actual, _ = installer.map_tools_by_filetype(config, TestTool, { "ft2", "ft3" })
+      setmetatable(actual, mt)
+
+      assert.are.equal(expected, actual)
+    end)
+
     it("returns map of filetype to names", function()
       local mt = by_ft_mt()
       local expected = setmetatable({
@@ -97,6 +110,19 @@ describe("installer", function()
       }, mt)
 
       local _, actual = installer.map_tools_by_filetype(config, TestTool)
+      setmetatable(actual, mt)
+
+      assert.are.equal(expected, actual)
+    end)
+
+    it("excludes names of tools for disabled filetypes", function()
+      local mt = by_ft_mt()
+      local expected = setmetatable({
+        ft1 = { tools.group1.tool1:name(), tools.group2.tool3:name() },
+        ft4 = { tools.group2.tool3:name() },
+      }, mt)
+
+      local _, actual = installer.map_tools_by_filetype(config, TestTool, { "ft2", "ft3" })
       setmetatable(actual, mt)
 
       assert.are.equal(expected, actual)
