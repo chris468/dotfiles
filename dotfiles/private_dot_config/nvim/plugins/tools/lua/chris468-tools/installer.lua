@@ -1,3 +1,5 @@
+local util = require("chris468-tools._util")
+
 local M = {}
 
 local function notify(...)
@@ -8,8 +10,10 @@ end
 ---@generic TTool : chris468.tools.Tool
 ---@param opts  { [string]: { [string]: TConfig } }
 ---@param Tool TTool
+---@param disabled_filetypes string[]
 ---@return { [string]: TTool[] } tools_by_ft, { [string] : string[] } names_by_ft
-function M.map_tools_by_filetype(opts, Tool)
+function M.map_tools_by_filetype(opts, Tool, disabled_filetypes)
+  disabled_filetypes = util.make_set(disabled_filetypes)
   local function empty()
     return {}
   end
@@ -22,8 +26,10 @@ function M.map_tools_by_filetype(opts, Tool)
       local tool = Tool:new(name, config)
       if tool.enabled then
         for _, ft in ipairs(tool:filetypes()) do
-          table.insert(tools_by_ft[ft], tool)
-          table.insert(names_by_ft[ft], tool:name())
+          if not disabled_filetypes[ft] then
+            table.insert(tools_by_ft[ft], tool)
+            table.insert(names_by_ft[ft], tool:name())
+          end
         end
       end
     end
@@ -64,6 +70,25 @@ function M.install(tools, bufnr)
       install(tool, bufnr)
     end
   end
+end
+
+---@param tools_by_ft { [string]: chris468.tools.Tool[] }
+---@param augroup string
+function M.install_on_filetype(tools_by_ft, augroup)
+  local handled_filetypes = {}
+
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup(augroup, { clear = true }),
+    callback = function(arg)
+      local filetype = arg.match
+      if handled_filetypes[filetype] or not tools_by_ft[filetype] then
+        return
+      end
+      handled_filetypes[filetype] = true
+
+      M.install(tools_by_ft[filetype], arg.buf)
+    end,
+  })
 end
 
 return M
