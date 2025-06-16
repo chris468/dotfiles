@@ -44,6 +44,7 @@ function M.install(package, installed_callback, failed_callback, display)
   end
 end
 
+---@module "lazy"
 ---@param name string
 ---@return LazyPlugin
 local function plugin(name)

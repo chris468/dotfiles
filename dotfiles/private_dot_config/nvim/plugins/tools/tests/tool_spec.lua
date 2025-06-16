@@ -10,7 +10,7 @@ function registry.get_package(name)
   return registry._packages[name]
 end
 
-local tool = require("chris468-tools.tool")
+local tools = require("chris468-tools")
 
 ---@class ToolSpec
 local tool_specs = {
@@ -20,7 +20,7 @@ local tool_specs = {
     supports_custom_filetypes = true,
     ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
-      return tool.Formatter:new(...)
+      return tools.formatter.Formatter:new(...)
     end,
   },
   Linter = {
@@ -29,7 +29,7 @@ local tool_specs = {
     supports_custom_filetypes = true,
     ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
-      return tool.Linter:new(...)
+      return tools.linter.Linter:new(...)
     end,
   },
   Lsp = {
@@ -38,7 +38,7 @@ local tool_specs = {
     supports_custom_filetypes = false,
     ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
-      return tool.Lsp:new(...)
+      return tools.lsp.Lsp:new(...)
     end,
   },
 }
@@ -160,24 +160,24 @@ describe("tool", function()
 
     describe("lspconfig", function()
       it("should return lspconfig", function()
-        local t = tool.Lsp:new("test tool", { lspconfig = lsp_config })
+        local t = tools.lsp.Lsp:new("test tool", { lspconfig = lsp_config })
         assert.are.equal(lsp_config, t.lspconfig)
       end)
 
       it("should return empty when unset", function()
-        local t = tool.Lsp:new("test tool", {})
+        local t = tools.lsp.Lsp:new("test tool", {})
         assert.are.same({}, t.lspconfig)
       end)
     end)
 
     describe("filetypes", function()
       it("should take filetypes from tool", function()
-        local t = tool.Lsp:new("test tool", { lspconfig = lsp_config })
+        local t = tools.lsp.Lsp:new("test tool", { lspconfig = lsp_config })
         assert.are.equal(config_filetypes, t:filetypes())
       end)
 
       it("should take filetypes from lsp", function()
-        local t = tool.Lsp:new("test tool", { lspconfig = {} })
+        local t = tools.lsp.Lsp:new("test tool", { lspconfig = {} })
         assert.are.equal(lsp_filetypes, t:filetypes())
       end)
     end)

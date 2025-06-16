@@ -96,60 +96,6 @@ function Tool:on_installed(_) end
 
 function Tool:on_install_failed(_) end
 
----@class chris468.tools.Formatter : chris468.tools.Tool
----@field protected super chris468.tools.Tool
----@field new fun(self: chris468.tools.Formatter, name: string, opts?: chris468.tools.Tool.Options) : chris468.tools.Formatter
-local Formatter = Tool:extend() --[[ @as chris468.tools.Formatter ]]
-Formatter.type = "formatter"
-function Formatter:new(name, opts)
-  opts = opts or {}
-  return self:_new(name, opts) --[[ @as chris468.tools.Formatter ]]
-end
-
----@class chris468.tools.Linter : chris468.tools.Tool
----@field protected super chris468.tools.Tool
----@field new fun(self: chris468.tools.Linter, name: string, opts?: chris468.tools.Tool.Options) : chris468.tools.Linter
-local Linter = Tool:extend() --[[ @as chris468.tools.Linter ]]
-Linter.type = "linter"
-function Linter:new(name, opts)
-  opts = opts or {}
-  return self:_new(name, opts) --[[ @as chris468.tools.Linter ]]
-end
-
----@class chris468.tools.Lsp.Options
----@field enabled? boolean
----@field public package? boolean
----@field lspconfig? vim.lsp.Config
-
----@class chris468.tools.Lsp : chris468.tools.Tool
----@field protected super chris468.tools.Tool
----@field lspconfig vim.lsp.Config
----@field new fun(self: chris468.tools.Lsp, name: string, opts?: chris468.tools.Lsp.Options, ...: table) : chris468.tools.Lsp
-local Lsp = Tool:extend() --[[ @as chris468.tools.Lsp ]]
-Lsp.type = "LSP"
-function Lsp:new(name, opts)
-  opts = opts or {}
-  return self:_new(name, {
-    enabled = opts.enabled,
-    package = opts.package,
-  }, { lspconfig = opts.lspconfig or {} }) --[[ @as chris468.tools.Lsp ]]
-end
-
-function Lsp:name()
-  if not self._tool_name then
-    self._tool_name = vim.tbl_get(self:package() or {}, "spec", "neovim", "lspconfig")
-  end
-
-  return Lsp.super.name(self)
-end
-
-function Lsp:_tool_filetypes()
-  return (self.lspconfig or {}).filetypes or (vim.lsp.config[self:name()] or {}).filetypes
-end
-
 return {
   Tool = Tool,
-  Formatter = Formatter,
-  Linter = Linter,
-  Lsp = Lsp,
 }
