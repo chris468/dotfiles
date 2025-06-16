@@ -1,6 +1,6 @@
 local util = require("chris468-tools._util")
 local installer = require("chris468-tools.installer")
-local tool = require("chris468-tools.tool")
+local tools = require("chris468-tools")
 local M = {}
 
 ---@param bufnr integer
@@ -137,7 +137,7 @@ end
 ---@param config chris468.config.LspServer
 ---@return chris468.tools.Lsp
 local function create_lsp_tool(name, config)
-  local Lsp = require("chris468-tools.tool").Lsp
+  local Lsp = tools.lsp.Lsp
   return Lsp:new(name, { enabled = config.enabled, package = config.package, lspconfig = config.lspconfig })
 end
 
@@ -202,14 +202,14 @@ end
 ---@param opts { [string]: { [string]: chris468.tools.Tool } }
 function M.formatter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, tool.Formatter)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, tools.formatter.Formatter)
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = names_by_ft }, opts))
   lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "formatter")
 end
 
 function M.linter_config(opts)
   local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, tool.Linter)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, tools.linter.Linter)
   require("lint").linters_by_ft = names_by_ft
   lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "linter")
   register_lint(tools_by_ft)
