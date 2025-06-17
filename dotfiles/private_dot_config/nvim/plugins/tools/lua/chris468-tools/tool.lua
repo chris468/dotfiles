@@ -27,6 +27,7 @@ local registry = require("mason-registry")
 ---@field display_name fun(self: chris468.tools.Tool) : string
 ---@field on_installed fun(self:chris468.tools.Tool, bufnr: integer)
 ---@field on_install_failed fun(self:chris468.tools.Tool, bufnr: integer)
+---@field before_install fun(self:chris468.tools.Tool)
 Tool = Object:extend() --[[ @as chris468.tools.Tool]]
 Tool.type = "tool"
 
@@ -95,6 +96,8 @@ end
 function Tool:on_installed(_) end
 
 function Tool:on_install_failed(_) end
+
+function Tool:before_install() end
 
 return {
   Tool = Tool,

@@ -46,6 +46,19 @@ local function merge_completion_capabilities(config)
   return config
 end
 
+function M.Lsp:before_install()
+  vim.lsp.config(self:name(), merge_completion_capabilities(self.lspconfig))
+  vim.lsp.enable(self:name())
+end
+
+function M.Lsp:on_installed(bufnr)
+  util.raise_filetype(bufnr)
+end
+
+function M.Lsp:on_install_failed(_)
+  vim.lsp.disable(self:name())
+end
+
 ---@param bufnr integer
 ---@param client vim.lsp.Client
 local function configure_inlay_hints(bufnr, client)
@@ -90,24 +103,13 @@ local function register_dynamic_capability_handlers()
   end
 end
 
----@param t chris468.tools.Lsp
----@param bufnr integer
-local function enable_and_install_lsp(t, bufnr)
-  vim.lsp.config(t:name(), merge_completion_capabilities(t.lspconfig))
-  vim.lsp.enable(t:name())
-  util.install(t:package(), function()
-    raise_filetype(bufnr)
-  end, function()
-    vim.lsp.disable(t:name())
-  end, t:display_name())
-end
-
 --- @param opts chris468.config.LspConfig
 function M.setup(opts)
   local group = vim.api.nvim_create_augroup("chris468-tools.lsp", { clear = true })
   register_lsp_attach(group)
   register_dynamic_capability_handlers()
-  lazily_install_lsps_by_filetype(opts, group)
+  local tools = installer.map_tools_by_filetype(opts, M.Lsp, opts.disabled_filetypes)(opts, group)
+  installer.install_on_filetype(tools.tools_by_ft, group)
 end
 
 return M
