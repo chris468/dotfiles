@@ -43,6 +43,8 @@ end
 ---@param tool chris468.tools.Tool The tool to install.
 ---@param bufnr integer buffer that triggered the install
 local function install(tool, bufnr)
+  tool:before_install()
+
   local package = tool:package()
   if package and not package:is_installed() then
     local display = tool:display_name()
@@ -73,7 +75,7 @@ function M.install(tools, bufnr)
 end
 
 ---@param tools_by_ft { [string]: chris468.tools.Tool[] }
----@param augroup string
+---@param augroup integer
 function M.install_on_filetype(tools_by_ft, augroup)
   local handled_filetypes = {}
 

@@ -14,12 +14,15 @@ function M.Formatter:new(name, opts)
   return self:_new(name, opts) --[[ @as chris468.tools.Formatter ]]
 end
 
+function M.Formatter.on_installed(bufnr)
+  util.raise_filetype(bufnr)
+end
+
 ---@param opts { [string]: { [string]: chris468.tools.Tool } }
 function M.setup(opts)
-  local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, M.Formatter)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts, M.Formatter, opts.disabled_filetype)
   require("conform").setup(vim.tbl_extend("keep", { formatters_by_ft = names_by_ft }, opts))
-  lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "formatter")
+  M.install_on_filetype(tools_by_ft, vim.api.nvim_create_augroup("chris468-tools.formatter", { clear = true }))
 end
 
 return M

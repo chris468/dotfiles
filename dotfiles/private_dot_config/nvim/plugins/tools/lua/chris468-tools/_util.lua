@@ -57,4 +57,13 @@ function M.has_plugin(name)
   return plugin(name) ~= nil
 end
 
+---@param bufnr integer
+function M.raise_filetype(bufnr)
+  vim.defer_fn(function()
+    vim.api.nvim_exec_autocmds("FileType", {
+      buffer = bufnr,
+    })
+  end, 100)
+end
+
 return M
