@@ -1,4 +1,4 @@
-local Tool = require("chris468-tools.tool").Tool
+local Tool = require("chris468-tools.tool")
 local util = require("chris468-tools._util")
 local installer = require("chris468-tools.installer")
 

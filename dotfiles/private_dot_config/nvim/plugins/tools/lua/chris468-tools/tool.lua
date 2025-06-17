@@ -99,6 +99,4 @@ function Tool:on_install_failed(_) end
 
 function Tool:before_install() end
 
-return {
-  Tool = Tool,
-}
+return Tool

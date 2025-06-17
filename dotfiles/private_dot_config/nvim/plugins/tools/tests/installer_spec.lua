@@ -3,7 +3,7 @@
 local registry = { _packages = {} }
 package.loaded["mason-registry"] = registry
 
-local Tool = require("chris468-tools.tool").Tool
+local Tool = require("chris468-tools.tool")
 
 local installer = require("chris468-tools.installer")
 
