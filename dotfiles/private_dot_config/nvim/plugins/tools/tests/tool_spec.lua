@@ -38,7 +38,7 @@ local tool_specs = {
     supports_custom_filetypes = false,
     ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
-      return tools.lsp.Lsp:new(...)
+      return tools.lsp:new(...)
     end,
   },
 }
@@ -160,24 +160,24 @@ describe("tool", function()
 
     describe("lspconfig", function()
       it("should return lspconfig", function()
-        local t = tools.lsp.Lsp:new("test tool", { lspconfig = lsp_config })
+        local t = tools.lsp:new("test tool", { lspconfig = lsp_config })
         assert.are.equal(lsp_config, t.lspconfig)
       end)
 
       it("should return empty when unset", function()
-        local t = tools.lsp.Lsp:new("test tool", {})
+        local t = tools.lsp:new("test tool", {})
         assert.are.same({}, t.lspconfig)
       end)
     end)
 
     describe("filetypes", function()
       it("should take filetypes from tool", function()
-        local t = tools.lsp.Lsp:new("test tool", { lspconfig = lsp_config })
+        local t = tools.lsp:new("test tool", { lspconfig = lsp_config })
         assert.are.equal(config_filetypes, t:filetypes())
       end)
 
       it("should take filetypes from lsp", function()
-        local t = tools.lsp.Lsp:new("test tool", { lspconfig = {} })
+        local t = tools.lsp:new("test tool", { lspconfig = {} })
         assert.are.equal(lsp_filetypes, t:filetypes())
       end)
     end)
