@@ -1,19 +1,13 @@
+---@class chris468.tools
+---@field formatter chris468.tools.Formatter
+---@field linter chris468.tools.Linter
+---@field lsp chris468.tools.Lsp
 local M = {}
+local mt = {}
 
-local function lazy_load(module)
-  module = "chris468-tools." .. module
-  return setmetatable({}, {
-    __index = function(_, key)
-      return require(module)[key]
-    end,
-    __call = function(...)
-      return require(module)(...)
-    end,
-  })
+function mt.__index(tbl, key)
+  tbl[key] = require("chris468-tools." .. key)
+  return tbl[key]
 end
 
-M.formatter = lazy_load("formatter")
-M.linter = lazy_load("linter")
-M.lsp = lazy_load("lsp")
-
-return M
+return setmetatable(M, mt)
