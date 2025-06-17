@@ -18,7 +18,7 @@ return {
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewLog" },
     keys = {
       { "<leader>gd", cmd("DiffviewOpen -- %"), desc = "Diff current buffer" },
-      { "<leader>gg", cmd("DiffviewOpen"), desc = "Git (diffview)" },
+      { "<leader>gG", cmd("DiffviewOpen"), desc = "Git (diffview)" },
       { "<leader>gl", cmd("DiffviewFileHistory %"), desc = "Log (current file)" },
       { "<leader>gL", cmd("DiffviewFileHistory"), desc = "Log" },
     },
@@ -39,7 +39,7 @@ return {
       remember_settings = false,
     },
     keys = {
-      { "<leader>gG", cmd("Neogit"), desc = "Neogit" },
+      { "<leader>gg", cmd("Neogit"), desc = "Neogit" },
       { "<leader>gP", cmd("Neogit push"), desc = "Push" },
       { "<leader>gc", cmd("Neogit commit"), desc = "Commit" },
       { "<leader>gp", cmd("Neogit pull"), desc = "Pull" },
