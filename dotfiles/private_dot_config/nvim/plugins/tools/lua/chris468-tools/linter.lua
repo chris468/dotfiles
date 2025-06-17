@@ -39,11 +39,10 @@ local function register_lint(linters_by_ft)
 end
 
 function M.setup(opts)
-  local disabled_filetypes = util.make_set(Chris468.disable_filetypes)
-  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, M.Linter)
+  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, M.Linter, opts.disabled_filetypes)
   require("lint").linters_by_ft = names_by_ft
-  lazily_install_tools_by_filetype(tools_by_ft, disabled_filetypes, "linter")
   register_lint(tools_by_ft)
+  installer.install_on_filetype(tools_by_ft, vim.api.nvim_create_augroup("chris468-tools.formatter", { clear = true }))
 end
 
 return M
