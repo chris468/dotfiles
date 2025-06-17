@@ -84,6 +84,8 @@ return {
       { "<leader>gU", cmd("Gitsigns unstage_buffer"), desc = "Untage buffer" },
       { "<leader>gb", cmd("Gitsigns blame_line"), desc = "Blame line" },
       { "<leader>gp", cmd("Gitsigns preview_hunk_inline"), desc = "Preview hunk" },
+      { "<leader>gR", cmd("Gitsigns reset_hunk"), desc = "Reset hunk" },
+      { "<leader>g<C-R>", cmd("Gitsigns reset_buffer"), desc = "Reset buffer" },
       { "<leader>gs", cmd("Gitsigns stage_hunk"), desc = "Stage hunk" },
       { "<leader>gu", cmd("Gitsigns unstage_hunk"), desc = "Untage hunk" },
       { "[g", cmd("Gitsigns prev_hunk"), desc = "Previous git hunk" },
