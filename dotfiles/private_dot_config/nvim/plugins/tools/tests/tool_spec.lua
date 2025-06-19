@@ -20,7 +20,7 @@ local tool_specs = {
     supports_custom_filetypes = true,
     ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
-      return tools.formatter.Formatter:new(...)
+      return tools.formatter:new(...)
     end,
   },
   Linter = {
@@ -29,7 +29,7 @@ local tool_specs = {
     supports_custom_filetypes = true,
     ---@type fun(...) : chris468.tools.Tool
     factory = function(...)
-      return tools.linter.Linter:new(...)
+      return tools.linter:new(...)
     end,
   },
   Lsp = {
