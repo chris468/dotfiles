@@ -1,0 +1,33 @@
+local M = {
+  names = {
+    test_tool = {
+      name = "test_tool",
+    },
+    lsp = {
+      name = "lsp",
+    },
+    lsp_with_name = {
+      name = "lsp_with_name",
+      tool_name = "lsp_name",
+    },
+  },
+}
+
+function M.create(name, opts)
+  return vim.tbl_deep_extend("keep", opts or {}, {
+    name = name,
+    description = ("This is a fake %s package."):format(name),
+    homepage = "https://example.com",
+    licenses = { "MIT" },
+    languages = { "DummyLang" },
+    categories = { "LSP" },
+    source = {
+      id = ("pkg:mason/%s@1.0.0"):format(name),
+      ---@async
+      ---@param ctx InstallContext
+      install = function(ctx) end,
+    },
+  })
+end
+
+return M
