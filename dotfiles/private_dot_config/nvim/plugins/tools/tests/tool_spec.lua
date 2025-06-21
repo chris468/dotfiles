@@ -1,5 +1,7 @@
+---@module "plenary.busted"
+---
 local Tool = require("chris468-tools.tool")
-local FakeRegistry = require("tests.utils.fake_registry")
+local mason_registry = require("mason-registry")
 
 local TestTool = Tool:extend()
 TestTool.type = "TestType"
@@ -8,23 +10,9 @@ function TestTool:new(name, opts)
   return self:_new(name, opts)
 end
 
+local package_name = "test_tool"
+
 describe("tool", function()
-  local tool_package
-  local package_name
-  local registry = FakeRegistry()
-
-  before_each(function()
-    package_name = "test tool"
-    tool_package = registry:add_package(package_name)
-    registry:register()
-  end)
-
-  after_each(function()
-    tool_package = nil
-    registry:unregister()
-    registry:clear()
-  end)
-
   describe("name", function()
     it("should be package name when tool_name is unset", function()
       local t = TestTool:new(package_name)
@@ -55,8 +43,11 @@ describe("tool", function()
 
   describe("package", function()
     it("should return package", function()
+      local expected_package = mason_registry.get_package(package_name)
+      assert.is.truthy(expected_package)
+
       local t = TestTool:new(package_name)
-      assert.are.equal(tool_package, t:package())
+      assert.are.equal(expected_package, t:package())
     end)
 
     it("should return false when set to false", function()
@@ -70,8 +61,11 @@ describe("tool", function()
     end)
 
     it("should return package if tool name is different", function()
+      local expected_package = mason_registry.get_package(package_name)
+      assert.is.truthy(expected_package)
+
       local t = TestTool:new(package_name, { tool_name = "different" })
-      assert.are.equal(tool_package, t:package())
+      assert.are.equal(expected_package, t:package())
     end)
   end)
 
