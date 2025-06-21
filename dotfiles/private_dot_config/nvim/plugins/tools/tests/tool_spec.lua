@@ -10,7 +10,7 @@ function TestTool:new(name, opts)
   return self:_new(name, opts)
 end
 
-local package_name = "test_tool"
+local package_name = "tool1"
 
 describe("tool", function()
   describe("name", function()
