@@ -1,40 +1,26 @@
-local FakeRegistry = require("tests.utils.fake_registry")
-
-Lsp = require("chris468-tools.lsp")
+local registry = require("tests.utils.lua_registry")
+local Lsp = require("chris468-tools.lsp")
 
 describe("Lsp", function()
-  local tool_package
-  local package_name
-  local registry = FakeRegistry()
-
-  before_each(function()
-    package_name = "test tool"
-    tool_package = registry:add_package(package_name)
-    registry:register()
-  end)
-
-  after_each(function()
-    tool_package = nil
-    registry:unregister()
-    registry:clear()
-  end)
-
   it("should have type lsp", function()
     assert.are.equal("LSP", Lsp.type)
   end)
 
   describe("name", function()
     it("should return lspconfig name from package", function()
-      local expected_name = "lsptool"
-      tool_package.spec.neovim = { lspconfig = expected_name }
-      local t = Lsp:new(package_name, {})
+      local spec = registry.names.lsp_with_name
+      local expected_name = spec.tool_name
+
+      local t = Lsp:new(spec.name, {})
       assert.are.equal(expected_name, t:name())
     end)
   end)
 
   describe("filetypes", function()
+    local package_name = registry.names.lsp.name
     local lsp_filetypes = { "lspft1", "lspft2" }
     local lspconfig_filetypes = { "lspconfigft1", "lspconfigft2" }
+
     before_each(function()
       vim.lsp.config[package_name] = { filetypes = lsp_filetypes }
     end)
