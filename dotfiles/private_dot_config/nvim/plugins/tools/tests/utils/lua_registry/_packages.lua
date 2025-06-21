@@ -1,7 +1,13 @@
 local M = {
   names = {
-    test_tool = {
-      name = "test_tool",
+    tool1 = {
+      name = "tool1",
+    },
+    tool2 = {
+      name = "tool2",
+    },
+    tool3 = {
+      name = "tool3",
     },
     lsp = {
       name = "lsp",
