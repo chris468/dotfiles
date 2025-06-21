@@ -1,5 +1,4 @@
 local Object = require("plenary").class
-local registry = require("mason-registry")
 
 ---@module "mason-registry"
 
@@ -87,6 +86,7 @@ end
 
 function Tool:package()
   if self._package == true then
+    local registry = require("mason-registry")
     local ok, p = pcall(registry.get_package, self._package_name)
     self._package = ok and p or false
   end
