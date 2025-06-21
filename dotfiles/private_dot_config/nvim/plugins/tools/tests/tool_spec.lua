@@ -1,5 +1,5 @@
 local Tool = require("chris468-tools.tool")
-local FakeRegistry = require("tests.fake_registry")
+local FakeRegistry = require("tests.utils.fake_registry")
 
 local TestTool = Tool:extend()
 TestTool.type = "TestType"

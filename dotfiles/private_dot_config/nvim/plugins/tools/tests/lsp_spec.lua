@@ -1,4 +1,4 @@
-local FakeRegistry = require("tests.fake_registry")
+local FakeRegistry = require("tests.utils.fake_registry")
 
 Lsp = require("chris468-tools.lsp")
 
