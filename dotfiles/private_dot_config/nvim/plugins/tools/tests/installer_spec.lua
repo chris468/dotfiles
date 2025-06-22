@@ -182,6 +182,34 @@ describe("installer", function()
       snapshot:revert()
     end)
 
+    it("gets filetype event from setting filetype", function()
+      local cb = spy.new()
+      vim.api.nvim_create_autocmd("FileType", {
+        group = augroup,
+        callback = function()
+          cb(a)
+        end,
+      })
+
+      vim.bo[bufnr].filetype = "ft"
+
+      assert.spy(cb).called(1)
+    end)
+
+    it("gets filetype event from raising filetype", function()
+      local cb = spy.new()
+      vim.api.nvim_create_autocmd("FileType", {
+        group = augroup,
+        callback = function()
+          cb(a)
+        end,
+      })
+
+      vim.api.nvim_exec_autocmds("FileType", { buffer = bufnr })
+
+      assert.spy(cb).called(1)
+    end)
+
     describe("needs install", function()
       before_each(function()
         local InstallLocation = require("mason-core.installer.InstallLocation")
