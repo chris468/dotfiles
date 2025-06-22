@@ -349,5 +349,13 @@ describe("installer", function()
         assert.spy(on_installed).called_with(tool, bufnr)
       end)
     end)
+
+    describe("multiple tools", function()
+      it("installs all tools", function()
+        installer.install_on_filetype(tools_by_ft, augroup)
+
+        wait_for_install("ft3", bufnr, "tool2", "tool3")
+      end)
+    end)
   end)
 end)
