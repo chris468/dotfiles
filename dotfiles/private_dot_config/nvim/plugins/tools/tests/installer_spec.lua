@@ -37,26 +37,23 @@ local function wait_for_install(package_name)
   end)
 end
 
-local function create_test_tool()
-  local TestTool = Tool:extend("TestTool")
-  TestTool.type = "test"
+---@class TestTool : chris468.tools.Tool
+local TestTool = Tool:extend("TestTool") --[[ @as TestTool]]
+TestTool.type = "test"
 
-  function TestTool:new(name, opts)
-    return self:_new(name, opts)
-  end
-
-  function TestTool:__eq(other)
-    return self:name() == other:name()
-  end
-
-  return TestTool
+function TestTool:new(name, opts)
+  return self:_new(name, opts)
 end
 
-local function create_tools(cfg, TestTool)
+function TestTool:__eq(other)
+  return self:name() == other:name()
+end
+
+local function create_tools(config)
   local result = {}
-  for group, ts in pairs(cfg) do
+  for group, tools in pairs(config) do
     result[group] = {}
-    for name, opts in pairs(ts) do
+    for name, opts in pairs(tools) do
       result[group][name] = TestTool:new(name, opts)
     end
   end
@@ -64,13 +61,10 @@ local function create_tools(cfg, TestTool)
 end
 
 describe("installer", function()
-  local TestTool
   local config
   local tools
 
   before_each(function()
-    TestTool = create_test_tool()
-
     config = {
       group1 = {
         tool1 = {
@@ -87,7 +81,7 @@ describe("installer", function()
       },
     }
 
-    tools = create_tools(config, TestTool)
+    tools = create_tools(config)
   end)
 
   describe("map_tools_by_filetype", function()
@@ -148,7 +142,7 @@ describe("installer", function()
       before_each(function()
         config.group1.tool2.enabled = false
         config.group2.tool3.enabled = false
-        tools = create_tools(config, TestTool)
+        tools = create_tools(config)
       end)
 
       it("omits tools", function()
@@ -182,10 +176,13 @@ describe("installer", function()
     local bufnr
     local augroup
 
+    local tool
+
     before_each(function()
       snapshot = assert.snapshot()
       bufnr = vim.api.nvim_create_buf(true, false)
       augroup = vim.api.nvim_create_augroup("chris468-tools-test", { clear = true })
+      tool = tools.group1.tool1
     end)
 
     after_each(function()
@@ -235,7 +232,7 @@ describe("installer", function()
         local install = spy.new()
         stub(tool1_spec.source, "install", install)
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
@@ -243,31 +240,31 @@ describe("installer", function()
       end)
 
       it("should call before install callback", function()
-        local before_install = spy.on(TestTool, "before_install")
+        local before_install = spy.on(tool, "before_install")
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
         assert.spy(before_install).called(1)
-        assert.spy(before_install).called_with(tools.group1.tool1)
+        assert.spy(before_install).called_with(tool)
       end)
 
       it("should call success callback", function()
-        local on_installed = spy.on(TestTool, "on_installed")
+        local on_installed = spy.on(tool, "on_installed")
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
         assert.spy(on_installed).called(1)
-        assert.spy(on_installed).called_with(tools.group1.tool1, bufnr)
+        assert.spy(on_installed).called_with(tool, bufnr)
       end)
 
       it("should not call failed callback", function()
-        local on_install_failed = spy.on(TestTool, "on_install_failed")
+        local on_install_failed = spy.on(tool, "on_install_failed")
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
@@ -279,14 +276,14 @@ describe("installer", function()
         stub(tool1_spec.source, "install", function()
           error("install failed")
         end)
-        local on_install_failed = spy.on(TestTool, "on_install_failed")
+        local on_install_failed = spy.on(tool, "on_install_failed")
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
         assert.spy(on_install_failed).called(1)
-        assert.spy(on_install_failed).called_with(tools.group1.tool1, bufnr)
+        assert.spy(on_install_failed).called_with(tool, bufnr)
       end)
 
       it("should not call success callback", function()
@@ -294,9 +291,9 @@ describe("installer", function()
         stub(tool1_spec.source, "install", function()
           error("install failed")
         end)
-        local on_installed = spy.on(TestTool, "on_installed")
+        local on_installed = spy.on(tool, "on_installed")
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
@@ -306,7 +303,7 @@ describe("installer", function()
 
     describe("already installed", function()
       before_each(function()
-        stub(tools.group1.tool1:package(), "is_installed", true)
+        stub(tool:package(), "is_installed", true)
       end)
 
       it("should not install package", function()
@@ -314,7 +311,7 @@ describe("installer", function()
         local install = spy.new()
         stub(tool1_spec.source, "install", install)
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
 
         assert_utils.wait_for(function()
@@ -323,23 +320,23 @@ describe("installer", function()
       end)
 
       it("should call before install callback", function()
-        local before_install = spy.on(TestTool, "before_install")
+        local before_install = spy.on(tool, "before_install")
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
 
         assert.spy(before_install).called(1)
-        assert.spy(before_install).called_with(tools.group1.tool1)
+        assert.spy(before_install).called_with(tool)
       end)
 
       it("should call success callback", function()
-        local on_installed = spy.on(TestTool, "on_installed")
+        local on_installed = spy.on(tool, "on_installed")
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
 
         assert.spy(on_installed).called(1)
-        assert.spy(on_installed).called_with(tools.group1.tool1, bufnr)
+        assert.spy(on_installed).called_with(tool, bufnr)
       end)
     end)
   end)
