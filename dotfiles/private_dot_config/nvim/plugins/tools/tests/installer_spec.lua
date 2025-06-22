@@ -50,19 +50,28 @@ function TestTool:__eq(other)
 end
 
 local function create_tools(config)
-  local result = {}
-  for group, tools in pairs(config) do
-    result[group] = {}
-    for name, opts in pairs(tools) do
-      result[group][name] = TestTool:new(name, opts)
+  local tools = {}
+  local tools_by_ft = vim.defaulttable(function()
+    return {}
+  end)
+
+  for group, ts in pairs(config) do
+    tools[group] = {}
+    for name, opts in pairs(ts) do
+      local t = TestTool:new(name, opts)
+      tools[group][name] = t
+      for _, ft in ipairs(t:filetypes()) do
+        table.insert(tools_by_ft[ft], t)
+      end
     end
   end
-  return result
+  return tools, setmetatable(tools_by_ft, by_ft_mt)
 end
 
 describe("installer", function()
   local config
   local tools
+  local tools_by_ft
 
   before_each(function()
     config = {
@@ -81,22 +90,15 @@ describe("installer", function()
       },
     }
 
-    tools = create_tools(config)
+    tools, tools_by_ft = create_tools(config)
   end)
 
   describe("map_tools_by_filetype", function()
     it("returns map of filetype to tools", function()
-      local expected = setmetatable({
-        ft1 = { tools.group1.tool1, tools.group2.tool3 },
-        ft2 = { tools.group1.tool1, tools.group1.tool2 },
-        ft3 = { tools.group1.tool2, tools.group2.tool3 },
-        ft4 = { tools.group2.tool3 },
-      }, by_ft_mt)
-
       local actual, _ = installer.map_tools_by_filetype(config, TestTool)
       setmetatable(actual, by_ft_mt)
 
-      assert.are.equal(expected, actual)
+      assert.are.equal(tools_by_ft, actual)
     end)
 
     it("excludes tools for disabled filetypes", function()
@@ -142,7 +144,7 @@ describe("installer", function()
       before_each(function()
         config.group1.tool2.enabled = false
         config.group2.tool3.enabled = false
-        tools = create_tools(config)
+        tools, tools_by_ft = create_tools(config)
       end)
 
       it("omits tools", function()
