@@ -42,7 +42,7 @@ end
 
 ---@param tool chris468.tools.Tool The tool to install.
 ---@param bufnr integer buffer that triggered the install
-local function install_tool(tool, bufnr)
+function M._install_tool(tool, bufnr)
   tool:before_install()
 
   local package = tool:package()
@@ -69,7 +69,7 @@ end
 local function install_tools(tools, bufnr)
   for _, tool in ipairs(tools) do
     if tool:enabled() then
-      install_tool(tool, bufnr)
+      M._install_tool(tool, bufnr)
     end
   end
 end
