@@ -42,7 +42,7 @@ end
 
 ---@param tool chris468.tools.Tool The tool to install.
 ---@param bufnr integer buffer that triggered the install
-function M._install_tool(tool, bufnr)
+local function install_tool(tool, bufnr)
   tool:before_install()
 
   local package = tool:package()
@@ -66,10 +66,10 @@ end
 
 ---@param tools chris468.tools.Tool[]
 ---@param bufnr integer buffer that triggered the install
-function M._install_tools(tools, bufnr)
+local function install_tools(tools, bufnr)
   for _, tool in ipairs(tools) do
     if tool.enabled then
-      M._install_tool(tool, bufnr)
+      install_tool(tool, bufnr)
     end
   end
 end
@@ -88,7 +88,7 @@ function M.install_on_filetype(tools_by_ft, augroup)
       end
       handled_filetypes[filetype] = true
 
-      M._install_tools(tools_by_ft[filetype], arg.buf)
+      install_tools(tools_by_ft[filetype], arg.buf)
     end,
   })
 end
