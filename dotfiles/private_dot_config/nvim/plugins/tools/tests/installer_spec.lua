@@ -192,23 +192,15 @@ describe("installer", function()
         local install = spy.new()
         stub(tool1_spec.source, "install", install)
 
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
-        vim.bo[bufnr].filetype = "ft"
-
-        vim.wait(1000, function()
-          pcall(assert.spy(install).called, 1)
-        end)
+        installer._install_tool(tools.group1.tool1, bufnr)
+        wait_for_install("tool1")
 
         assert.spy(install).called(1)
       end)
 
       it("should call before install callback", function()
-        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
-        vim.bo[bufnr].filetype = "ft"
-
-        vim.wait(1000, function()
-          pcall(assert.spy(TestTool.before_install).called, 1)
-        end)
+        installer._install_tool(tools.group1.tool1, bufnr)
+        wait_for_install("tool1")
 
         assert.spy(TestTool.before_install).called(1)
         assert.spy(TestTool.before_install).called_with(tools.group1.tool1)
