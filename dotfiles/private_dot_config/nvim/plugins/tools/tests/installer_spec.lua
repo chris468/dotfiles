@@ -7,6 +7,8 @@ local stub = require("luassert.stub")
 local Tool = require("chris468-tools.tool")
 local installer = require("chris468-tools.installer")
 
+local assert_utils = require("tests.utils.assert")
+
 local by_ft_mt = {}
 function by_ft_mt:__eq(other)
   return #vim.tbl_keys(self) == #vim.tbl_keys(other)
@@ -18,6 +20,14 @@ function by_ft_mt:__eq(other)
           end)
       end)
     end)
+end
+
+local function wait_for_install(package_name)
+  local package = require("mason-registry").get_package(package_name)
+  assert_utils.wait_for(function()
+    assert(not package:is_installing(), "package should finish installing")
+    assert(package:is_installed(), "package should be installed")
+  end)
 end
 
 ---@class TestTool : chris468.tools.Tool
@@ -207,6 +217,8 @@ describe("installer", function()
       it("should call success callback", function()
         installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
         vim.bo[bufnr].filetype = "ft"
+
+        wait_for_install("tool1")
 
         assert.spy(TestTool.on_installed).called(1)
         assert.spy(TestTool.on_installed).called_with(tools.group1.tool1, bufnr)
