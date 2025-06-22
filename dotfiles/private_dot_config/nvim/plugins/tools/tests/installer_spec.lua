@@ -3,6 +3,8 @@
 local assert = require("luassert.assert")
 local spy = require("luassert.spy")
 local stub = require("luassert.stub")
+local async = require("plenary").async
+local a = require("plenary").async.tests
 
 local Tool = require("chris468-tools.tool")
 local installer = require("chris468-tools.installer")
@@ -251,14 +253,16 @@ describe("installer", function()
         local install = spy.new()
         stub(tool1_spec.source, "install", install)
 
-        installer._install_tool(tools.group1.tool1, bufnr)
+        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
         assert.spy(install).called(1)
       end)
 
       it("should call before install callback", function()
-        installer._install_tool(tools.group1.tool1, bufnr)
+        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        vim.bo[bufnr].filetype = "ft"
         wait_for_install("tool1")
 
         assert.spy(TestTool.before_install).called(1)
@@ -294,7 +298,7 @@ describe("installer", function()
         stub(tools.group1.tool1:package(), "is_installed", true)
       end)
 
-      it("should not install package", function()
+      a.it("should not install package", function()
         local tool1_spec = require("tests.utils.lua_registry.tool1")
         local install = spy.new()
         stub(tool1_spec.source, "install", install)
@@ -302,6 +306,7 @@ describe("installer", function()
         installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
         vim.bo[bufnr].filetype = "ft"
 
+        async.util.sleep(200)
         assert.spy(install).called(0)
       end)
 
@@ -317,9 +322,6 @@ describe("installer", function()
         installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
         vim.bo[bufnr].filetype = "ft"
 
-        vim.wait(1000, function()
-          pcall(assert.spy(TestTool.on_installed).called, 1)
-        end)
         assert.spy(TestTool.on_installed).called(1)
         assert.spy(TestTool.on_installed).called_with(tools.group1.tool1, bufnr)
       end)
