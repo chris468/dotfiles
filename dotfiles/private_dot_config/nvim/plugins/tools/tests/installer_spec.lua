@@ -231,6 +231,21 @@ describe("installer", function()
         end)
       end)
 
+      it("should call install", function()
+        local install = spy.new()
+        stub(installer, "_install_tool", function(...)
+          install(...)
+        end)
+
+        installer.install_on_filetype({ ft = { tools.group1.tool1 } }, augroup)
+        vim.bo[bufnr].filetype = "ft"
+
+        assert_utils.wait_for(function()
+          assert.spy(install).called(1)
+          assert.spy(install).called_with(tools.group1.tool1, bufnr)
+        end)
+      end)
+
       it("should install package", function()
         local tool1_spec = require("tests.utils.lua_registry.tool1")
         local install = spy.new()

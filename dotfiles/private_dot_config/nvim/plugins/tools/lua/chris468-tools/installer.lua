@@ -68,7 +68,7 @@ end
 ---@param bufnr integer buffer that triggered the install
 function M._install_tools(tools, bufnr)
   for _, tool in ipairs(tools) do
-    if tool:enabled() then
+    if tool.enabled then
       M._install_tool(tool, bufnr)
     end
   end
