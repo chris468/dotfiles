@@ -20,20 +20,32 @@ function by_ft_mt:__eq(other)
     end)
 end
 
-local function wait_for_install(package_name)
-  local package = require("mason-registry").get_package(package_name)
-  assert(not package:is_installed(), "package should not already be installed")
+local function wait_for_install(package_names)
+  package_names = type(package_names) == "string" and { package_names } or package_names
+  local complete = {}
 
-  local finished = spy.new()
-  package
-    :once("install:success", function()
-      finished()
-    end)
-    :once("install:failed", function()
-      finished()
-    end)
+  for _, package_name in ipairs(package_names) do
+    local package = require("mason-registry").get_package(package_name)
+    assert(not package:is_installed(), package_name .. " should not already be installed")
+
+    complete[package_name] = false
+
+    package
+      :once("install:success", function()
+        complete[package_name] = true
+      end)
+      :once("install:failed", function()
+        complete[package_name] = true
+      end)
+  end
+
   assert_utils.wait_for(function()
-    assert.spy(finished).called()
+    assert(
+      vim.iter(complete):all(function(_, v)
+        return v
+      end),
+      "install incomplete: " .. vim.inspect(complete)
+    )
   end)
 end
 
