@@ -20,8 +20,11 @@ function by_ft_mt:__eq(other)
     end)
 end
 
-local function wait_for_install(package_names)
-  package_names = type(package_names) == "string" and { package_names } or package_names
+---@param filetype string
+---@param bufnr integer
+---@param ... string
+local function wait_for_install(filetype, bufnr, ...)
+  local package_names = { ... }
   local complete = {}
 
   for _, package_name in ipairs(package_names) do
@@ -38,6 +41,8 @@ local function wait_for_install(package_names)
         complete[package_name] = true
       end)
   end
+
+  vim.bo[bufnr].filetype = filetype
 
   assert_utils.wait_for(function()
     assert(
@@ -197,6 +202,9 @@ describe("installer", function()
       bufnr = vim.api.nvim_create_buf(true, false)
       augroup = vim.api.nvim_create_augroup("chris468-tools-test", { clear = true })
       tool = tools.group1.tool1
+
+      local InstallLocation = require("mason-core.installer.InstallLocation")
+      stub(InstallLocation, "global", InstallLocation:new(vim.fn.tempname()))
     end)
 
     after_each(function()
@@ -204,6 +212,7 @@ describe("installer", function()
       vim.api.nvim_buf_delete(bufnr, { force = true })
       bufnr = nil
       require("mason-core.terminator").terminate(10)
+
       snapshot:revert()
     end)
 
@@ -236,29 +245,17 @@ describe("installer", function()
     end)
 
     describe("needs install", function()
-      before_each(function()
-        local InstallLocation = require("mason-core.installer.InstallLocation")
-        stub(InstallLocation, "global", InstallLocation:new(vim.fn.tempname()))
-      end)
-
       it("should install package", function()
-        local tool1_spec = require("tests.utils.lua_registry.tool1")
-        local install = spy.new()
-        stub(tool1_spec.source, "install", install)
-
         installer.install_on_filetype({ ft = { tool } }, augroup)
-        vim.bo[bufnr].filetype = "ft"
-        wait_for_install("tool1")
 
-        assert.spy(install).called(1)
+        wait_for_install("ft", bufnr, "tool1")
       end)
 
       it("should call before install callback", function()
         local before_install = spy.on(tool, "before_install")
 
         installer.install_on_filetype({ ft = { tool } }, augroup)
-        vim.bo[bufnr].filetype = "ft"
-        wait_for_install("tool1")
+        wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(before_install).called(1)
         assert.spy(before_install).called_with(tool)
@@ -269,7 +266,7 @@ describe("installer", function()
 
         installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
-        wait_for_install("tool1")
+        wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_installed).called(1)
         assert.spy(on_installed).called_with(tool, bufnr)
@@ -279,8 +276,7 @@ describe("installer", function()
         local on_install_failed = spy.on(tool, "on_install_failed")
 
         installer.install_on_filetype({ ft = { tool } }, augroup)
-        vim.bo[bufnr].filetype = "ft"
-        wait_for_install("tool1")
+        wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_install_failed).called(0)
       end)
@@ -294,7 +290,7 @@ describe("installer", function()
 
         installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
-        wait_for_install("tool1")
+        wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_install_failed).called(1)
         assert.spy(on_install_failed).called_with(tool, bufnr)
@@ -309,7 +305,7 @@ describe("installer", function()
 
         installer.install_on_filetype({ ft = { tool } }, augroup)
         vim.bo[bufnr].filetype = "ft"
-        wait_for_install("tool1")
+        wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_installed).called(0)
       end)
