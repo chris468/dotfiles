@@ -1,5 +1,3 @@
----@module "plenary.busted"
-
 local assert = require("luassert.assert")
 local spy = require("luassert.spy")
 local stub = require("luassert.stub")
@@ -176,6 +174,7 @@ describe("installer", function()
     local snapshot
     local bufnr
     local augroup
+
     before_each(function()
       snapshot = assert.snapshot()
       bufnr = vim.api.nvim_create_buf(true, false)
@@ -186,6 +185,7 @@ describe("installer", function()
       vim.api.nvim_buf_delete(bufnr, { force = true })
       bufnr = nil
       snapshot:revert()
+      require("mason-core.terminator").terminate(10)
     end)
 
     it("gets filetype event from setting filetype", function()
