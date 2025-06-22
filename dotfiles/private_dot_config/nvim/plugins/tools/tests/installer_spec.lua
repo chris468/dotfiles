@@ -356,6 +356,16 @@ describe("installer", function()
 
         wait_for_install("ft3", bufnr, "tool2", "tool3")
       end)
+
+      it("installs all tools when some fail", function()
+        local tool2_spec = require("tests.utils.lua_registry.tool2")
+        stub(tool2_spec.source, "install", function()
+          error("install failed")
+        end)
+        installer.install_on_filetype(tools_by_ft, augroup)
+
+        wait_for_install("ft3", bufnr, "tool2", "tool3")
+      end)
     end)
   end)
 end)
