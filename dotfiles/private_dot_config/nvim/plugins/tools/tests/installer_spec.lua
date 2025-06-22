@@ -185,7 +185,7 @@ describe("installer", function()
     end)
   end)
 
-  describe("install_tool", function()
+  describe("installer", function()
     local snapshot
     local bufnr
     local augroup
