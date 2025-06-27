@@ -54,6 +54,7 @@ return {
         { "<leader>fr", cmd("Telescope oldfiles"), desc = "Recent files" },
         { "<leader>r", cmd("Telescope resume"), desc = "Resume last search" },
         { "<leader>sh", cmd("Telescope help_tags"), desc = "Help" },
+        { "<leader>sl", cmd("Telescope lazy"), desc = "Lazy" },
         { "<leader>sH", cmd("Telescope highlights"), desc = "Highlights" },
         { "<leader>sk", cmd("Telescope keymaps"), desc = "Key maps" },
         { "<leader>sT", cmd("Telescope terraform_doc"), desc = "Terraform docs" },
@@ -107,7 +108,17 @@ return {
         noice = {
           enabled = util_lazy.has_plugin("noice.nvim"),
         },
-        lazy = {},
+        lazy = {
+          mappings = {
+            change_cwd_to_plugin = "<C-w>",
+            open_plugins_picker = "<C-o>",
+          },
+          actions_opts = {
+            change_cwd_to_plugin = {
+              auto_close = true,
+            },
+          },
+        },
         terraform_doc = {},
         ["ui-select"] = {
           layout_strategy = "center",

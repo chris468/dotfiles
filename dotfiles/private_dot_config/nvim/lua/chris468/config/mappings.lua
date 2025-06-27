@@ -27,6 +27,7 @@ local mappings = {
   { "<leader>l", group = "Lua", icon = "󰢱" },
   { "<leader>lx", util_lua.run_selection, desc = "Run selected", mode = { "n", "x" } },
   { "<leader>s", group = "Search" },
+  { "<leader>t", group = "Test" },
   { "<leader>u", group = "UI" },
   { "<leader><Tab>", group = "Tab" },
   { "<leader><Tab>n", cmd("tabnew"), desc = "New" },
@@ -37,11 +38,34 @@ local mappings = {
   { "k", "gk", hidden = true },
 }
 
+-- lhs: string|{lhs: string, mode?: string|string[] }
+local remove_mappings = {
+  { "gra", { "n", "x" } }, -- -> <leader>ca
+  "gri", -- -> gI go to implementation
+  "grn", -- -> cn rename
+  "grr", -- -> gr find references
+}
+
 local lsp_mappings = {
+  {
+    "<leader>ca",
+    function()
+      vim.lsp.buf.code_action()
+    end,
+    desc = "Code action",
+    mode = { "n", "x" },
+  },
   {
     "<leader>ci",
     "<cmd>Trouble lsp_incoming_calls first<CR>",
     desc = "Incoming calls",
+  },
+  {
+    "<leader>cn",
+    function()
+      vim.lsp.buf.rename()
+    end,
+    desc = "Rename",
   },
   {
     "<leader>co",
@@ -89,6 +113,13 @@ local lsp_mappings = {
     desc = "Go to type definition",
   },
 }
+
+for _, spec in ipairs(remove_mappings) do
+  if type(spec) ~= "table" then
+    spec = { spec }
+  end
+  vim.keymap.del(spec[2] or "n", spec[1])
+end
 
 whichkey.add(mappings)
 
