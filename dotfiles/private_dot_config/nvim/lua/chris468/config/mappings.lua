@@ -3,6 +3,26 @@ local whichkey = require("which-key")
 local util_lua = require("chris468.util.lua")
 local cmd = require("chris468.util.keymap").cmd
 
+local function wrap(fn, ...)
+  local arg = { ... }
+  return function()
+    return fn(unpack(arg))
+  end
+end
+
+local function trouble_open_or_replace(mode, opts)
+  local trouble = require("trouble")
+  local trouble_view = require("trouble.view")
+  local views = trouble_view.get({ open = true })
+  for _, view in ipairs(views or {}) do
+    if view.mode ~= "lsp_document_symbols" and view.mode ~= mode then
+      view.view:close()
+    end
+  end
+
+  trouble.first(vim.tbl_extend("force", { mode = mode, refresh = true }, opts or {}))
+end
+
 local mappings = {
   { "<Esc>", cmd("nohlsearch"), desc = "Clear search hilight" },
   { "<leader>L", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
@@ -13,12 +33,12 @@ local mappings = {
   { "<leader>c", group = "Code" },
   {
     "<leader>cd",
-    "<cmd>Trouble diagnostics<CR>",
+    wrap(trouble_open_or_replace, "diagnostics"),
     desc = "Diagnostics",
   },
   {
     "<leader>cD",
-    "<cmd>Trouble diagnostics filter.buf=0<CR>",
+    wrap(trouble_open_or_replace, "diagnostics", { filter = { buf = 0 } }),
     desc = "Buffer diagnostics",
   },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
@@ -57,7 +77,7 @@ local lsp_mappings = {
   },
   {
     "<leader>ci",
-    "<cmd>Trouble lsp_incoming_calls first<CR>",
+    wrap(trouble_open_or_replace, "lsp_incoming_calls"),
     desc = "Incoming calls",
   },
   {
@@ -69,7 +89,7 @@ local lsp_mappings = {
   },
   {
     "<leader>co",
-    "<cmd>Trouble lsp_outgoing_calls first<CR>",
+    wrap(trouble_open_or_replace, "lsp_outgoing_calls"),
     desc = "Outgoing calls",
   },
   {
@@ -90,26 +110,22 @@ local lsp_mappings = {
   {
     "gd",
     "<cmd>Trouble lsp_definitions first<CR>",
+    wrap(trouble_open_or_replace, "lsp_definitions"),
     desc = "Go to definition)",
   },
   {
-    "gD",
-    "<cmd>Trouble lsp_declarations first<CR>",
-    desc = "Go to declarations)",
-  },
-  {
     "gI",
-    "<cmd>Trouble lsp_implementations first<CR>",
+    wrap(trouble_open_or_replace, "lsp_implementations"),
     desc = "Go to implementation",
   },
   {
     "gr",
-    "<cmd>Trouble lsp_references first<CR>",
+    wrap(trouble_open_or_replace, "lsp_references"),
     desc = "Find references",
   },
   {
     "gy",
-    "<cmd>Trouble lsp_type_definitions first<CR>",
+    wrap(trouble_open_or_replace, "lsp_type_definitions"),
     desc = "Go to type definition",
   },
 }
