@@ -3,15 +3,9 @@ return {
     "chris468-tools",
     opts = {
       lsps = { marksman = {} },
-    },
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
+      formatters = {
         markdown = {
-          markdown = { "prettier" },
-          ["markdown.mdx"] = { "prettier" },
+          prettier = { filetypes = { "markdown", "markdown.mdx" } },
         },
       },
     },

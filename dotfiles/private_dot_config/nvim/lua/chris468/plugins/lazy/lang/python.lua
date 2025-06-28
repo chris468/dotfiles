@@ -13,13 +13,10 @@ return {
         pyright = {},
         ruff = {},
       },
-    },
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        python = { python = { "black" } },
+      formatters = {
+        python = {
+          black = { filetypes = { "python" } },
+        },
       },
     },
   },

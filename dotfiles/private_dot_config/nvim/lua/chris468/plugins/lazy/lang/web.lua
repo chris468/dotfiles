@@ -6,6 +6,12 @@ return {
         ["angular-language-server"] = {},
         phpactor = {},
       },
+      formatters = {
+        web = {
+          prettier = { filetypes = { "htmlangular" } },
+          php_cs_fixer = { filetypes = { "php" }, package = "php-cs-fixer" },
+        },
+      },
     },
   },
   {
@@ -58,17 +64,6 @@ return {
 
       return opts
     end,
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        web = {
-          htmlangular = { "prettier" },
-          php = { { "php_cs_fixer", package = "php-cs-fixer" } },
-        },
-      },
-    },
   },
   {
     "nvim-lint",

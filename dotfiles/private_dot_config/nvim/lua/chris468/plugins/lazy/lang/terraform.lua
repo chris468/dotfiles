@@ -23,16 +23,9 @@ return {
           },
         },
       },
-    },
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
+      formatters = {
         terraform = {
-          terraform = { terraform_fmt },
-          ["terraform-vars"] = { terraform_fmt },
-          tf = { terraform_fmt },
+          terraform_fmt = { filetypes = { "terraform", "terraform-vars", "tf" } },
         },
       },
     },
