@@ -53,9 +53,6 @@ return {
   {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim" },
-    config = function(_, opts)
-      require("chris468.plugins.config.tools").formatter_config(opts)
-    end,
     lazy = false,
     keys = {
       {
@@ -67,22 +64,21 @@ return {
       },
       { "<leader>cF", cmd("ConformInfo"), desc = "Formatter info" },
     },
-    opts = {
-      default_format_opts = {
-        lsp_format = "fallback",
-      },
-      -- formatters_by_ft is custom - a map of key to map of filetype to plugins.
-      -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type {string: chris468.config.FormattersByFileType}
-      formatters_by_ft = {},
-      format_on_save = function(bufnr)
-        if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
-          return
-        end
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts or {}, {
+        default_format_opts = {
+          lsp_format = "fallback",
+        },
+        formatters_by_ft = require("chris468-tools").formatter.names_by_ft,
+        format_on_save = function(bufnr)
+          if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
+            return
+          end
 
-        return { timeout_ms = 500 }
-      end,
-    },
+          return { timeout_ms = 500 }
+        end,
+      })
+    end,
   },
   {
     "mfussenegger/nvim-lint",

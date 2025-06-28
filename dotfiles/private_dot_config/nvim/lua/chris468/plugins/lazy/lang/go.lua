@@ -3,14 +3,10 @@ return {
     "chris468-tools",
     opts = {
       lsps = { gopls = {} },
-    },
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
+      formatters = {
         go = {
-          go = { "goimports", "gofumpt" },
+          goimports = { filetypes = { "go" } },
+          gofumpt = { filetypes = { "go" } },
         },
       },
     },
