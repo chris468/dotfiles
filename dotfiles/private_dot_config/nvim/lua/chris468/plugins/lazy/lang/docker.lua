@@ -1,9 +1,11 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      ["dockerfile-language-server"] = {},
-      ["docker-compose-language-service"] = {},
+      lsps = {
+        ["dockerfile-language-server"] = {},
+        ["docker-compose-language-service"] = {},
+      },
     },
   },
   {

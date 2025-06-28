@@ -35,22 +35,20 @@ return {
   },
   {
     "chris468-tools",
+    dependencies = { "mason.nvim" },
     dir = vim.fn.stdpath("config") .. "/plugins/tools",
+    opts = {},
   },
   {
     "neovim/nvim-lspconfig",
-    config = function(_, opts)
-      local lsp = require("chris468-tools.lsp")
-      lsp.setup(opts)
-    end,
-    dependencies = { "blink.cmp", optional = true },
+    dependencies = {
+      "chris468-tools",
+      { "blink.cmp", optional = true },
+    },
     lazy = false,
     keys = {
       { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
     },
-    -- This is custom config (nvim-lspconfig is just data and has no setup)
-    ---@type table<string, chris468.tools.Lsp.Options>
-    opts = {},
   },
   {
     "stevearc/conform.nvim",

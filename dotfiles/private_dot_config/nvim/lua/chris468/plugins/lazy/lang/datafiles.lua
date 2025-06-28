@@ -1,10 +1,12 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     dependencies = { "b0o/schemastore.nvim", version = false },
     opts = function(_, opts)
       opts = opts or {}
-      opts["json-lsp"] = {
+      opts.lsps = opts.lsps or {}
+      local lsps = opts.lsps
+      lsps["json-lsp"] = {
         lspconfig = {
           settings = {
             json = {
@@ -17,9 +19,9 @@ return {
       }
 
       -- toml
-      opts.taplo = {}
+      lsps.taplo = {}
 
-      opts["yaml-language-server"] = {
+      lsps["yaml-language-server"] = {
         lspconfig = {
           settings = {
             yaml = {

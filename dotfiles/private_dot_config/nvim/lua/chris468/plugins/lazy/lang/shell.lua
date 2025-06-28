@@ -1,15 +1,17 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      ["bash-language-server"] = {
-        lspconfig = {
-          filetypes = { "bash", "sh", "zsh" },
+      lsps = {
+        ["bash-language-server"] = {
+          lspconfig = {
+            filetypes = { "bash", "sh", "zsh" },
+          },
         },
-      },
-      nushell = {
-        enable = vim.fn.executable("nu") == 1,
-        package = false,
+        nushell = {
+          enable = vim.fn.executable("nu") == 1,
+          package = false,
+        },
       },
     },
   },

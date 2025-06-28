@@ -14,11 +14,13 @@ local terraform_validate = {
 
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      ["terraform-ls"] = {
-        lspconfig = {
-          filetypes = { "tf", "terraform", "terraform-vars" },
+      lsps = {
+        ["terraform-ls"] = {
+          lspconfig = {
+            filetypes = { "tf", "terraform", "terraform-vars" },
+          },
         },
       },
     },
