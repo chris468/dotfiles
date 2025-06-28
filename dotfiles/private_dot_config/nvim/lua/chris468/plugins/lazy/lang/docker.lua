@@ -6,14 +6,9 @@ return {
         ["dockerfile-language-server"] = {},
         ["docker-compose-language-service"] = {},
       },
-    },
-  },
-  {
-    "nvim-lint",
-    opts = {
-      linters_by_ft = {
+      linters = {
         docker = {
-          dockerfile = { "hadolint" },
+          hadolint = { filetypes = { "dockerfile" } },
         },
       },
     },
