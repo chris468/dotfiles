@@ -1,9 +1,9 @@
 return {
   { "mfussenegger/nvim-ansible", ft = {} },
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      ["ansible-language-server"] = {},
+      lsps = { ["ansible-language-server"] = {} },
     },
   },
 }

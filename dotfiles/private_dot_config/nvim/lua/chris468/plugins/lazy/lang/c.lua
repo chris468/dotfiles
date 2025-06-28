@@ -1,8 +1,8 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      clangd = {},
+      lsps = { clangd = {} },
     },
   },
 }

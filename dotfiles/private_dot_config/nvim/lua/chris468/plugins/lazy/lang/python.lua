@@ -7,10 +7,12 @@ local script_path = vim.fn.stdpath("config") .. "/scripts/find-venvs.sh"
 
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      pyright = {},
-      ruff = {},
+      lsps = {
+        pyright = {},
+        ruff = {},
+      },
     },
   },
   {
