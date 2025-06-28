@@ -12,6 +12,11 @@ return {
           php_cs_fixer = { filetypes = { "php" }, package = "php-cs-fixer" },
         },
       },
+      linters = {
+        web = {
+          phpcs = { filetypes = { "php" } },
+        },
+      },
     },
   },
   {
@@ -64,15 +69,5 @@ return {
 
       return opts
     end,
-  },
-  {
-    "nvim-lint",
-    opts = {
-      linters_by_ft = {
-        web = {
-          php = { "phpcs" },
-        },
-      },
-    },
   },
 }

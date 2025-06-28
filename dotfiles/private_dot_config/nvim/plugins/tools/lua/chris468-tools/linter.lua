@@ -5,6 +5,8 @@ local installer = require("chris468-tools.installer")
 ---@class chris468.tools.Linter : chris468.tools.Tool
 ---@field protected super chris468.tools.Tool
 ---@field new fun(self: chris468.tools.Linter, name: string, opts?: chris468.tools.Tool.Options) : chris468.tools.Linter
+---@field by_ft { [string]: chris468.tools.Linter[] }
+---@field names_by_ft { [string]: string[] }
 Linter = Tool:extend() --[[ @as chris468.tools.Linter ]]
 Linter.type = "linter"
 function Linter:new(name, opts)
@@ -37,10 +39,9 @@ local function register_lint(linters_by_ft)
 end
 
 function Linter.setup(opts)
-  local tools_by_ft, names_by_ft = installer.map_tools_by_ft(opts.linters, Linter, opts.disabled_filetypes)
-  require("lint").linters_by_ft = names_by_ft
-  register_lint(tools_by_ft)
-  installer.install_on_filetype(tools_by_ft, vim.api.nvim_create_augroup("chris468-tools.formatter", { clear = true }))
+  Linter.by_ft, Linter.names_by_ft = installer.map_tools_by_filetype(opts, Linter, opts.disabled_filetypes)
+  register_lint(Linter.by_ft)
+  installer.install_on_filetype(Linter.by_ft, vim.api.nvim_create_augroup("chris468-tools.formatter", { clear = true }))
 end
 
 return Linter

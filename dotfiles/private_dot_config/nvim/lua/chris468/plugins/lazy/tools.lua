@@ -82,17 +82,16 @@ return {
   },
   {
     "mfussenegger/nvim-lint",
+    dependencies = { "mason.nvim", "chris468-tools" },
     config = function(_, opts)
-      require("chris468.plugins.config.tools").linter_config(opts)
+      require("lint").linters_by_ft = opts.linters_by_ft
     end,
-    dependencies = { "mason.nvim" },
     lazy = false,
-    opts = {
-      -- linters_by_ft is custom - a map of key to map of filetype to plugins.
-      -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type {string: chris468.config.FormattersByFileType}
-      linters_by_ft = {},
-    },
+    opts = function(_, opts)
+      opts = opts or {}
+      opts.linters_by_ft = require("chris468-tools").linter.names_by_ft
+      return opts
+    end,
     version = false,
   },
   {
