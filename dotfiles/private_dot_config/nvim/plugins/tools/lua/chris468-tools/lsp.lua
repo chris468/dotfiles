@@ -101,13 +101,13 @@ local function register_dynamic_capability_handlers()
   end
 end
 
---- @param opts chris468.config.LspConfig
+---@param opts table<string, chris468.tools.Lsp.Options>
 function Lsp.setup(opts)
   local group = vim.api.nvim_create_augroup("chris468-tools.lsp", { clear = true })
   register_lsp_attach(group)
   register_dynamic_capability_handlers()
-  local tools = installer.map_tools_by_filetype(opts, Lsp, opts.disabled_filetypes)(opts, group)
-  installer.install_on_filetype(tools.tools_by_ft, group)
+  local tools = installer.map_tools_by_filetype({ lsps = opts }, Lsp, opts.disabled_filetypes)
+  installer.install_on_filetype(tools, group)
 end
 
 return Lsp
