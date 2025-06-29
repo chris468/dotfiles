@@ -70,6 +70,29 @@ local function install_tools(tools)
   end
 end
 
+---@param filetype string
+---@param tools_by_ft { [string]: chris468.tools.Tool[] }
+---@param handled_filetypes { [string]: boolean }
+local function install_tools_for_filetype(filetype, tools_by_ft, handled_filetypes)
+  if handled_filetypes[filetype] or not tools_by_ft[filetype] then
+    return
+  end
+  handled_filetypes[filetype] = true
+
+  install_tools(tools_by_ft[filetype])
+end
+
+---@param tools_by_ft { [string]: chris468.tools.Tool[] }
+---@param handled_filetypes { [string]: boolean }
+local function install_tools_for_existing_buffers(tools_by_ft, handled_filetypes)
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].buftype ~= "nofile" then
+      local filetype = vim.bo[bufnr].filetype
+      install_tools_for_filetype(filetype, tools_by_ft, handled_filetypes)
+    end
+  end
+end
+
 ---@param tools_by_ft { [string]: chris468.tools.Tool[] }
 ---@param augroup integer
 function M.install_on_filetype(tools_by_ft, augroup)
@@ -79,14 +102,11 @@ function M.install_on_filetype(tools_by_ft, augroup)
     group = augroup,
     callback = function(arg)
       local filetype = arg.match
-      if handled_filetypes[filetype] or not tools_by_ft[filetype] then
-        return
-      end
-      handled_filetypes[filetype] = true
-
-      install_tools(tools_by_ft[filetype])
+      install_tools_for_filetype(filetype, tools_by_ft, handled_filetypes)
     end,
   })
+
+  install_tools_for_existing_buffers(tools_by_ft, handled_filetypes)
 end
 
 return M
