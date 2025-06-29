@@ -5,11 +5,11 @@ local installer = require("chris468-tools.installer")
 ---@class chris468.tools.Lsp.Options
 ---@field enabled? boolean
 ---@field public package? boolean
----@field lspconfig? vim.lsp.Config
+---@field lspconfig? vim.lsp.Config|fun(): vim.lsp.Config
 
 ---@class chris468.tools.Lsp : chris468.tools.Tool
 ---@field protected super chris468.tools.Tool
----@field lspconfig vim.lsp.Config
+---@field lspconfig fun(self: chris468.tools.Lsp): vim.lsp.Config
 ---@field new fun(self: chris468.tools.Lsp, name: string, opts?: chris468.tools.Lsp.Options, ...: table) : chris468.tools.Lsp
 Lsp = Tool:extend() --[[ @as chris468.tools.Lsp ]]
 Lsp.type = "LSP"
@@ -18,7 +18,7 @@ function Lsp:new(name, opts)
   return self:_new(name, {
     enabled = opts.enabled,
     package = opts.package,
-  }, { lspconfig = opts.lspconfig or {} }) --[[ @as chris468.tools.Lsp ]]
+  }, { _lspconfig = opts.lspconfig or {} }) --[[ @as chris468.tools.Lsp ]]
 end
 
 function Lsp:name()
@@ -30,7 +30,7 @@ function Lsp:name()
 end
 
 function Lsp:_tool_filetypes()
-  return (self.lspconfig or {}).filetypes or (vim.lsp.config[self:name()] or {}).filetypes
+  return (self:lspconfig() or {}).filetypes or (vim.lsp.config[self:name()] or {}).filetypes
 end
 
 ---@param config? vim.lsp.Config
@@ -45,7 +45,7 @@ local function merge_completion_capabilities(config)
 end
 
 function Lsp:before_install()
-  vim.lsp.config(self:name(), merge_completion_capabilities(self.lspconfig))
+  vim.lsp.config(self:name(), merge_completion_capabilities(self:lspconfig()))
   vim.lsp.enable(self:name())
 end
 
@@ -55,6 +55,14 @@ end
 
 function Lsp:on_install_failed(_)
   vim.lsp.disable(self:name())
+end
+
+function Lsp:lspconfig()
+  if type(self._lspconfig) == "function" then
+    self._lspconfig = self._lspconfig()
+  end
+
+  return self._lspconfig
 end
 
 ---@param bufnr integer
