@@ -262,7 +262,7 @@ describe("installer", function()
         wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_installed).called(1)
-        assert.spy(on_installed).called_with(tool, bufnr)
+        assert.spy(on_installed).called_with(tool)
       end)
 
       it("should not call failed callback", function()
@@ -286,7 +286,7 @@ describe("installer", function()
         wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_install_failed).called(1)
-        assert.spy(on_install_failed).called_with(tool, bufnr)
+        assert.spy(on_install_failed).called_with(tool)
       end)
 
       it("should not call success callback", function()
@@ -339,7 +339,7 @@ describe("installer", function()
         vim.bo[bufnr].filetype = "ft"
 
         assert.spy(on_installed).called(1)
-        assert.spy(on_installed).called_with(tool, bufnr)
+        assert.spy(on_installed).called_with(tool)
       end)
     end)
 

@@ -24,8 +24,8 @@ local Object = require("plenary").class
 ---@field protected _tool_filetypes fun(self: chris468.tools.Tool) : string[]|nil
 ---@field public package fun(self: chris468.tools.Tool) : Package|false
 ---@field display_name fun(self: chris468.tools.Tool) : string
----@field on_installed fun(self:chris468.tools.Tool, bufnr: integer)
----@field on_install_failed fun(self:chris468.tools.Tool, bufnr: integer)
+---@field on_installed fun(self:chris468.tools.Tool)
+---@field on_install_failed fun(self:chris468.tools.Tool)
 ---@field before_install fun(self:chris468.tools.Tool)
 Tool = Object:extend() --[[ @as chris468.tools.Tool]]
 Tool.type = "tool"
@@ -93,9 +93,9 @@ function Tool:package()
   return self._package
 end
 
-function Tool:on_installed(_) end
+function Tool:on_installed() end
 
-function Tool:on_install_failed(_) end
+function Tool:on_install_failed() end
 
 function Tool:before_install() end
 
