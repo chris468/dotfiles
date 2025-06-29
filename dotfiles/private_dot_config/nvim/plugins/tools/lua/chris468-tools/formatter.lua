@@ -1,5 +1,4 @@
 local Tool = require("chris468-tools.tool")
-local util = require("chris468-tools._util")
 local installer = require("chris468-tools.installer")
 
 ---@class chris468.tools.Formatter : chris468.tools.Tool
@@ -14,10 +13,6 @@ Formatter.names_by_ft = {}
 function Formatter:new(name, opts)
   opts = opts or {}
   return self:_new(name, opts) --[[ @as chris468.tools.Formatter ]]
-end
-
-function Formatter:on_installed(bufnr)
-  util.raise_filetype(bufnr)
 end
 
 ---@param opts { [string]: chris468.tools.Tool.Options }

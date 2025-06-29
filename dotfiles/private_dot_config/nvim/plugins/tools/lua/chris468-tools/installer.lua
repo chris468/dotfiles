@@ -39,8 +39,7 @@ end
 ---@module "mason-core.package"
 
 ---@param tool chris468.tools.Tool The tool to install.
----@param bufnr integer buffer that triggered the install
-local function install_tool(tool, bufnr)
+local function install_tool(tool)
   tool:before_install()
 
   local package = tool:package()
@@ -50,24 +49,23 @@ local function install_tool(tool, bufnr)
     package
       :once("install:success", function()
         notify(string.format("Successfully installed %s.", display))
-        tool:on_installed(bufnr)
+        tool:on_installed()
       end)
       :once("install:failed", function()
         notify(string.format("Error installing %s.", display), vim.log.levels.WARN)
-        tool:on_install_failed(bufnr)
+        tool:on_install_failed()
       end)
     package:install()
   else
-    tool:on_installed(bufnr)
+    tool:on_installed()
   end
 end
 
 ---@param tools chris468.tools.Tool[]
----@param bufnr integer buffer that triggered the install
-local function install_tools(tools, bufnr)
+local function install_tools(tools)
   for _, tool in ipairs(tools) do
     if tool.enabled then
-      install_tool(tool, bufnr)
+      install_tool(tool)
     end
   end
 end
@@ -86,7 +84,7 @@ function M.install_on_filetype(tools_by_ft, augroup)
       end
       handled_filetypes[filetype] = true
 
-      install_tools(tools_by_ft[filetype], arg.buf)
+      install_tools(tools_by_ft[filetype])
     end,
   })
 end

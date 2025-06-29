@@ -1,5 +1,4 @@
 local Tool = require("chris468-tools.tool")
-local util = require("chris468-tools._util")
 local installer = require("chris468-tools.installer")
 
 ---@class chris468.tools.Linter : chris468.tools.Tool

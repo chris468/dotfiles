@@ -49,13 +49,12 @@ function Lsp:before_install()
   vim.lsp.enable(self:name())
 end
 
-function Lsp:on_installed(bufnr)
+function Lsp:on_installed()
   vim.schedule_wrap(vim.lsp.enable)(self:name())
 end
 
-function Lsp:on_install_failed(_)
-  -- vim.lsp.disable(self:name())
-  vim.cmd("LspStop " .. self:name())
+function Lsp:on_install_failed()
+  vim.schedule_wrap(vim.lsp.enable)(self:name(), false)
 end
 
 function Lsp:lspconfig()
