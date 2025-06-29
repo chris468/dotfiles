@@ -111,6 +111,7 @@ end
 
 ---@param opts table<string, chris468.tools.Lsp.Options>
 function Lsp.setup(opts)
+  local _ = require("lspconfig")
   local group = vim.api.nvim_create_augroup("chris468-tools.lsp", { clear = true })
   register_lsp_attach(group)
   register_dynamic_capability_handlers()
