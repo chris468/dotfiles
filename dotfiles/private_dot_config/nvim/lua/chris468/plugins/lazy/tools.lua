@@ -35,7 +35,7 @@ return {
   },
   {
     "chris468-tools",
-    event = { "BufNew", "BufReadPre" },
+    event = "FileType",
     dependencies = { "mason.nvim", "nvim-lspconfig" },
     dir = vim.fn.stdpath("config") .. "/plugins/tools",
     opts = {},
@@ -45,7 +45,7 @@ return {
     dependencies = {
       { "blink.cmp", optional = true },
     },
-    event = { "BufNew", "BufReadPre" },
+    event = "FileType",
     keys = {
       { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
     },
@@ -53,7 +53,7 @@ return {
   {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim", "chris468-tools" },
-    event = { "BufNew", "BufReadPre" },
+    event = "FileType",
     keys = {
       {
         "<leader>cf",
