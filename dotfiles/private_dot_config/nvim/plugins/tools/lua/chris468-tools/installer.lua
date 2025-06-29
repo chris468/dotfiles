@@ -14,11 +14,8 @@ end
 ---@return { [string]: TTool[] } tools_by_ft, { [string] : string[] } names_by_ft
 function M.map_tools_by_filetype(opts, Tool, disabled_filetypes)
   disabled_filetypes = util.make_set(disabled_filetypes or {})
-  local function empty()
-    return {}
-  end
-  local tools_by_ft = vim.defaulttable(empty)
-  local names_by_ft = vim.defaulttable(empty)
+  local tools_by_ft = {}
+  local names_by_ft = {}
 
   for name, config in pairs(opts) do
     ---@diagnostic disable-next-line: undefined-field
@@ -26,7 +23,10 @@ function M.map_tools_by_filetype(opts, Tool, disabled_filetypes)
     if tool.enabled then
       for _, ft in ipairs(tool:filetypes()) do
         if not disabled_filetypes[ft] then
+          tools_by_ft[ft] = tools_by_ft[ft] or {}
           table.insert(tools_by_ft[ft], tool)
+
+          names_by_ft[ft] = names_by_ft[ft] or {}
           table.insert(names_by_ft[ft], tool:name())
         end
       end
