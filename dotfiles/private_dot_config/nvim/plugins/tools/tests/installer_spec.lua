@@ -185,7 +185,7 @@ describe("installer", function()
 
   describe("installer", function()
     local snapshot
-    local bufnr
+    local bufnr, bufnr2
     local augroup
 
     local tool
@@ -193,6 +193,7 @@ describe("installer", function()
     before_each(function()
       snapshot = assert.snapshot()
       bufnr = vim.api.nvim_create_buf(true, false)
+      bufnr2 = vim.api.nvim_create_buf(true, false)
       augroup = vim.api.nvim_create_augroup("chris468-tools-test", { clear = true })
       tool = tools.tool1
 
@@ -204,6 +205,8 @@ describe("installer", function()
       augroup = vim.api.nvim_create_augroup("chris468-tools-test", { clear = true })
       vim.api.nvim_buf_delete(bufnr, { force = true })
       bufnr = nil
+      vim.api.nvim_buf_delete(bufnr2, { force = true })
+      bufnr2 = nil
       require("mason-core.terminator").terminate(10)
 
       snapshot:revert()
@@ -282,7 +285,6 @@ describe("installer", function()
         local on_install_failed = spy.on(tool, "on_install_failed")
 
         installer.install_on_filetype({ ft = { tool } }, augroup)
-        vim.bo[bufnr].filetype = "ft"
         wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_install_failed).called(1)
@@ -297,10 +299,16 @@ describe("installer", function()
         local on_installed = spy.on(tool, "on_installed")
 
         installer.install_on_filetype({ ft = { tool } }, augroup)
-        vim.bo[bufnr].filetype = "ft"
         wait_for_install("ft", bufnr, "tool1")
 
         assert.spy(on_installed).called(0)
+      end)
+
+      it("should install for pre-existing buffers", function()
+        vim.bo[bufnr2].filetype = "ft2"
+
+        installer.install_on_filetype({ ft = { tool }, ft2 = { tools.tool2 } }, augroup)
+        wait_for_install("ft", bufnr, "tool1", "tool2")
       end)
     end)
 
