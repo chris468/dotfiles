@@ -1,3 +1,4 @@
+local spy = require("luassert.spy")
 local registry = require("tests.utils.lua_registry")
 local Lsp = require("chris468-tools.lsp")
 
@@ -41,15 +42,35 @@ describe("Lsp", function()
 
   describe("lspconfig", function()
     local lsp_config = { filetypes = { "ft1", "ft2" } }
+    local lsp_config_fn = function()
+      return lsp_config
+    end
 
     it("should return lspconfig", function()
       local t = Lsp:new("test tool", { lspconfig = lsp_config })
-      assert.are.equal(lsp_config, t.lspconfig)
+      assert.are.equal(lsp_config, t:lspconfig())
     end)
 
     it("should return empty when unset", function()
       local t = Lsp:new("test tool", {})
-      assert.are.same({}, t.lspconfig)
+      assert.are.same({}, t:lspconfig())
+    end)
+
+    it("should call lspconfig when it is a function", function()
+      local t = Lsp:new("test tool", { lspconfig = lsp_config_fn })
+      assert.are.same(lsp_config, t:lspconfig())
+    end)
+
+    it("should call lspconfig exactly once when it is a function", function()
+      local lspconfig_spy = spy.new(lsp_config_fn)
+      local fn = function(...)
+        return lspconfig_spy(...)
+      end
+      local t = Lsp:new("test tool", { lspconfig = fn })
+
+      assert.are_same(lsp_config, t:lspconfig())
+      assert.are_same(lsp_config, t:lspconfig())
+      assert.spy(lspconfig_spy).was.called(1, t)
     end)
   end)
 end)
