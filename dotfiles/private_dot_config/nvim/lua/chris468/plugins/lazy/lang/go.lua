@@ -4,10 +4,8 @@ return {
     opts = {
       lsps = { gopls = {} },
       formatters = {
-        go = {
-          goimports = { filetypes = { "go" } },
-          gofumpt = { filetypes = { "go" } },
-        },
+        goimports = { filetypes = { "go" } },
+        gofumpt = { filetypes = { "go" } },
       },
     },
   },

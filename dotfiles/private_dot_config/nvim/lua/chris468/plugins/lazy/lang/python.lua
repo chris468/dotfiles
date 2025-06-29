@@ -14,9 +14,7 @@ return {
         ruff = {},
       },
       formatters = {
-        python = {
-          black = { filetypes = { "python" } },
-        },
+        black = { filetypes = { "python" } },
       },
     },
   },

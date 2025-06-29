@@ -14,9 +14,7 @@ return {
         },
       },
       formatters = {
-        shell = {
-          shfmt = { filetypes = { "bash", "sh", "zsh" } },
-        },
+        shfmt = { filetypes = { "bash", "sh", "zsh" } },
       },
     },
   },

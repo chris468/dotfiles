@@ -20,7 +20,7 @@ function Formatter:on_installed(bufnr)
   util.raise_filetype(bufnr)
 end
 
----@param opts { [string]: { [string]: chris468.tools.Tool.Options } }
+---@param opts { [string]: chris468.tools.Tool.Options }
 function Formatter.setup(opts)
   Formatter.by_ft, Formatter.names_by_ft = installer.map_tools_by_filetype(opts, Formatter, opts.disabled_filetype)
   installer.install_on_filetype(

@@ -7,9 +7,7 @@ return {
         ["docker-compose-language-service"] = {},
       },
       linters = {
-        docker = {
-          hadolint = { filetypes = { "dockerfile" } },
-        },
+        hadolint = { filetypes = { "dockerfile" } },
       },
     },
   },

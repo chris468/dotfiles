@@ -17,6 +17,7 @@ end
 return {
   {
     "chris468-tools",
+    opts_extend = { "formatters.prettier.filetypes" },
     opts = {
       lsps = {
         ["angular-language-server"] = {},
@@ -45,15 +46,11 @@ return {
         },
       },
       formatters = {
-        web = {
-          prettier = { filetypes = { "htmlangular" } },
-          php_cs_fixer = { filetypes = { "php" }, package = "php-cs-fixer" },
-        },
+        prettier = { filetypes = { "htmlangular" } },
+        php_cs_fixer = { filetypes = { "php" }, package = "php-cs-fixer" },
       },
       linters = {
-        web = {
-          phpcs = { filetypes = { "php" } },
-        },
+        phpcs = { filetypes = { "php" } },
       },
     },
   },

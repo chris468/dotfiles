@@ -72,14 +72,11 @@ local function create_tools(config)
     return {}
   end)
 
-  for group, ts in pairs(config) do
-    tools[group] = {}
-    for name, opts in pairs(ts) do
-      local t = TestTool:new(name, opts)
-      tools[group][name] = t
-      for _, ft in ipairs(t:filetypes()) do
-        table.insert(tools_by_ft[ft], t)
-      end
+  for name, opts in pairs(config) do
+    local t = TestTool:new(name, opts)
+    tools[name] = t
+    for _, ft in ipairs(t:filetypes()) do
+      table.insert(tools_by_ft[ft], t)
     end
   end
   return tools, setmetatable(tools_by_ft, by_ft_mt)
@@ -92,18 +89,14 @@ describe("installer", function()
 
   before_each(function()
     config = {
-      group1 = {
-        tool1 = {
-          filetypes = { "ft1", "ft2" },
-        },
-        tool2 = {
-          filetypes = { "ft2", "ft3" },
-        },
+      tool1 = {
+        filetypes = { "ft1", "ft2" },
       },
-      group2 = {
-        tool3 = {
-          filetypes = { "ft1", "ft3", "ft4" },
-        },
+      tool2 = {
+        filetypes = { "ft2", "ft3" },
+      },
+      tool3 = {
+        filetypes = { "ft1", "ft3", "ft4" },
       },
     }
 
@@ -120,8 +113,8 @@ describe("installer", function()
 
     it("excludes tools for disabled filetypes", function()
       local expected = setmetatable({
-        ft1 = { tools.group1.tool1, tools.group2.tool3 },
-        ft4 = { tools.group2.tool3 },
+        ft1 = { tools.tool1, tools.tool3 },
+        ft4 = { tools.tool3 },
       }, by_ft_mt)
 
       local actual, _ = installer.map_tools_by_filetype(config, TestTool, { "ft2", "ft3" })
@@ -133,10 +126,10 @@ describe("installer", function()
     it("returns map of filetype to names", function()
       local mt = by_ft_mt
       local expected = setmetatable({
-        ft1 = { tools.group1.tool1:name(), tools.group2.tool3:name() },
-        ft2 = { tools.group1.tool1:name(), tools.group1.tool2:name() },
-        ft3 = { tools.group1.tool2:name(), tools.group2.tool3:name() },
-        ft4 = { tools.group2.tool3:name() },
+        ft1 = { tools.tool1:name(), tools.tool3:name() },
+        ft2 = { tools.tool1:name(), tools.tool2:name() },
+        ft3 = { tools.tool2:name(), tools.tool3:name() },
+        ft4 = { tools.tool3:name() },
       }, mt)
 
       local _, actual = installer.map_tools_by_filetype(config, TestTool)
@@ -147,8 +140,8 @@ describe("installer", function()
 
     it("excludes names of tools for disabled filetypes", function()
       local expected = setmetatable({
-        ft1 = { tools.group1.tool1:name(), tools.group2.tool3:name() },
-        ft4 = { tools.group2.tool3:name() },
+        ft1 = { tools.tool1:name(), tools.tool3:name() },
+        ft4 = { tools.tool3:name() },
       }, by_ft_mt)
 
       local _, actual = installer.map_tools_by_filetype(config, TestTool, { "ft2", "ft3" })
@@ -159,15 +152,15 @@ describe("installer", function()
 
     describe("disabled", function()
       before_each(function()
-        config.group1.tool2.enabled = false
-        config.group2.tool3.enabled = false
+        config.tool2.enabled = false
+        config.tool3.enabled = false
         tools, tools_by_ft = create_tools(config)
       end)
 
       it("omits tools", function()
         local expected = setmetatable({
-          ft1 = { tools.group1.tool1 },
-          ft2 = { tools.group1.tool1 },
+          ft1 = { tools.tool1 },
+          ft2 = { tools.tool1 },
         }, by_ft_mt)
 
         local actual, _ = installer.map_tools_by_filetype(config, TestTool)
@@ -178,8 +171,8 @@ describe("installer", function()
 
       it("omits tool names", function()
         local expected = setmetatable({
-          ft1 = { tools.group1.tool1:name() },
-          ft2 = { tools.group1.tool1:name() },
+          ft1 = { tools.tool1:name() },
+          ft2 = { tools.tool1:name() },
         }, by_ft_mt)
 
         local _, actual = installer.map_tools_by_filetype(config, TestTool)
@@ -201,7 +194,7 @@ describe("installer", function()
       snapshot = assert.snapshot()
       bufnr = vim.api.nvim_create_buf(true, false)
       augroup = vim.api.nvim_create_augroup("chris468-tools-test", { clear = true })
-      tool = tools.group1.tool1
+      tool = tools.tool1
 
       local InstallLocation = require("mason-core.installer.InstallLocation")
       stub(InstallLocation, "global", InstallLocation:new(vim.fn.tempname()))
