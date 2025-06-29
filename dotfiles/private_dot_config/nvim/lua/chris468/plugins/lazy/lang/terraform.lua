@@ -12,21 +12,17 @@ return {
         },
       },
       formatters = {
-        terraform = {
-          terraform_fmt = {
-            filetypes = { "terraform", "terraform-vars", "tf" },
-            package = false,
-            enabled = have_terraform,
-          },
+        terraform_fmt = {
+          filetypes = { "terraform", "terraform-vars", "tf" },
+          package = false,
+          enabled = have_terraform,
         },
       },
       linters = {
-        terraform = {
-          terraform_validate = {
-            filetypes = { "terraform", "tf" },
-            package = false,
-            enabled = have_terraform,
-          },
+        terraform_validate = {
+          filetypes = { "terraform", "tf" },
+          package = false,
+          enabled = have_terraform,
         },
       },
     },

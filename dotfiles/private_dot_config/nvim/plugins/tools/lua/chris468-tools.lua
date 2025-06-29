@@ -2,8 +2,8 @@ local mt = {}
 
 ---@class chris468.tools.Options
 ---@field lsps? { [string]: chris468.tools.Lsp.Options }
----@field formatters? { [string]: { [string]: chris468.tools.Tool.Options } }
----@field linters? { [string]: { [string]: chris468.tools.Tool.Options } }
+---@field formatters? { [string]: chris468.tools.Tool.Options }
+---@field linters? { [string]: chris468.tools.Tool.Options }
 
 ---@class chris468.tools
 ---@field formatter chris468.tools.Formatter

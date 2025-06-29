@@ -1,17 +1,14 @@
 return {
   {
     "chris468-tools",
+    opts_extend = { "formatters.prettier.filetypes" },
     opts = {
       lsps = { marksman = {} },
       formatters = {
-        markdown = {
-          prettier = { filetypes = { "markdown", "markdown.mdx" } },
-        },
+        prettier = { filetypes = { "markdown", "markdown.mdx" } },
       },
       linters = {
-        markdown = {
-          ["markdownlint-cli2"] = { filetypes = { "markdown", "markdown.mdx" } },
-        },
+        ["markdownlint-cli2"] = { filetypes = { "markdown", "markdown.mdx" } },
       },
     },
   },

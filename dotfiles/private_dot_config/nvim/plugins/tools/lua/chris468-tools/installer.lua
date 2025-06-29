@@ -8,7 +8,7 @@ end
 
 ---@generic TConfig
 ---@generic TTool : chris468.tools.Tool
----@param opts  { [string]: { [string]: TConfig } }
+---@param opts  { [string]: TConfig }
 ---@param Tool TTool
 ---@param disabled_filetypes string[]
 ---@return { [string]: TTool[] } tools_by_ft, { [string] : string[] } names_by_ft
@@ -20,16 +20,14 @@ function M.map_tools_by_filetype(opts, Tool, disabled_filetypes)
   local tools_by_ft = vim.defaulttable(empty)
   local names_by_ft = vim.defaulttable(empty)
 
-  for _, configs in pairs(opts) do
-    for name, config in pairs(configs) do
-      ---@diagnostic disable-next-line: undefined-field
-      local tool = Tool:new(name, config)
-      if tool.enabled then
-        for _, ft in ipairs(tool:filetypes()) do
-          if not disabled_filetypes[ft] then
-            table.insert(tools_by_ft[ft], tool)
-            table.insert(names_by_ft[ft], tool:name())
-          end
+  for name, config in pairs(opts) do
+    ---@diagnostic disable-next-line: undefined-field
+    local tool = Tool:new(name, config)
+    if tool.enabled then
+      for _, ft in ipairs(tool:filetypes()) do
+        if not disabled_filetypes[ft] then
+          table.insert(tools_by_ft[ft], tool)
+          table.insert(names_by_ft[ft], tool:name())
         end
       end
     end

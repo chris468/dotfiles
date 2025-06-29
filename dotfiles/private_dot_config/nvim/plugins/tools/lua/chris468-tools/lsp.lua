@@ -115,7 +115,7 @@ function Lsp.setup(opts)
   local group = vim.api.nvim_create_augroup("chris468-tools.lsp", { clear = true })
   register_lsp_attach(group)
   register_dynamic_capability_handlers()
-  local tools = installer.map_tools_by_filetype({ lsps = opts }, Lsp, opts.disabled_filetypes)
+  local tools = installer.map_tools_by_filetype(opts, Lsp, opts.disabled_filetypes)
   installer.install_on_filetype(tools, group)
 end
 
