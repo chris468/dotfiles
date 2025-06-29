@@ -35,25 +35,25 @@ return {
   },
   {
     "chris468-tools",
-    dependencies = { "mason.nvim" },
+    event = { "BufNew", "BufReadPre" },
+    dependencies = { "mason.nvim", "nvim-lspconfig" },
     dir = vim.fn.stdpath("config") .. "/plugins/tools",
     opts = {},
   },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      "chris468-tools",
       { "blink.cmp", optional = true },
     },
-    lazy = false,
+    event = { "BufNew", "BufReadPre" },
     keys = {
       { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
     },
   },
   {
     "stevearc/conform.nvim",
-    dependencies = { "mason.nvim" },
-    lazy = false,
+    dependencies = { "mason.nvim", "chris468-tools" },
+    event = { "BufNew", "BufReadPre" },
     keys = {
       {
         "<leader>cf",
@@ -86,7 +86,7 @@ return {
     config = function(_, opts)
       require("lint").linters_by_ft = opts.linters_by_ft
     end,
-    lazy = false,
+    event = { "BufNew", "BufReadPre" },
     opts = function(_, opts)
       opts = opts or {}
       opts.linters_by_ft = require("chris468-tools").linter.names_by_ft
