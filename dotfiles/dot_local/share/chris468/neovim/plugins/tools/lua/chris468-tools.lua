@@ -4,6 +4,7 @@ local mt = {}
 ---@field lsps? { [string]: chris468.tools.Lsp.Options }
 ---@field formatters? { [string]: chris468.tools.Tool.Options }
 ---@field linters? { [string]: chris468.tools.Tool.Options }
+---@field daps? { [string]: chris468.tools.Tool.Options }
 ---@field disable_filetypes? string[]
 
 ---@class chris468.tools
@@ -42,6 +43,10 @@ function M.setup(opts)
 
   if opts.linters then
     M.linter.setup(opts.linters, disable_filetypes)
+  end
+
+  if opts.daps then
+    M.dap.setup(opts.daps, disable_filetypes)
   end
 end
 
