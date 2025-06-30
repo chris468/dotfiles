@@ -1,3 +1,4 @@
+local getenv = require("os").getenv
 local cmd = require("chris468.util.keymap").cmd
 
 ---@class chris468.config.LspServer
@@ -37,7 +38,7 @@ return {
     "chris468-tools",
     event = "FileType",
     dependencies = { "mason.nvim", "nvim-lspconfig" },
-    dir = vim.fn.stdpath("config") .. "/plugins/tools",
+    dir = (getenv("XDG_DATA_HOME") or vim.expand("~/.local/share")) .. "/chris468/neovim/plugins/tools",
     opts = {},
   },
   {
