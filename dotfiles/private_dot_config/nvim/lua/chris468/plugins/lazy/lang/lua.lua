@@ -23,7 +23,7 @@ return {
           },
         },
       },
-      lua = {
+      formatters = {
         stylua = { filetypes = { "lua" } },
       },
     },
