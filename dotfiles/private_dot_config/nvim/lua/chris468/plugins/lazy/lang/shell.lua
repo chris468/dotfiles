@@ -16,6 +16,9 @@ return {
       formatters = {
         shfmt = { filetypes = { "bash", "sh", "zsh" } },
       },
+      daps = {
+        bash_debug_adapter = {},
+      },
     },
   },
 }
