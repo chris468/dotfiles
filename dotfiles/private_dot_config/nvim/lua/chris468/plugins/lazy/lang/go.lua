@@ -7,6 +7,9 @@ return {
         goimports = { filetypes = { "go" } },
         gofumpt = { filetypes = { "go" } },
       },
+      daps = {
+        delve = {},
+      },
     },
   },
 }

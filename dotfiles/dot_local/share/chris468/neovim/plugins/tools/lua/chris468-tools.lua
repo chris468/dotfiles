@@ -4,6 +4,8 @@ local mt = {}
 ---@field lsps? { [string]: chris468.tools.Lsp.Options }
 ---@field formatters? { [string]: chris468.tools.Tool.Options }
 ---@field linters? { [string]: chris468.tools.Tool.Options }
+---@field daps? { [string]: chris468.tools.Tool.Options }
+---@field disable_filetypes? string[]
 
 ---@class chris468.tools
 ---@field formatter chris468.tools.Formatter
@@ -16,19 +18,35 @@ function mt.__index(tbl, key)
   return tbl[key]
 end
 
+---@param l? any[]
+---@return table<any, true>
+local function to_set(l)
+  return vim.iter(l or {})
+      :fold({}, function(result, i)
+        result[i] = true
+        return result
+      end)
+end
+
 function M.setup(opts)
   opts = opts or {}
 
+  local disable_filetypes = to_set(opts.disable_filetypes)
+
   if opts.lsps then
-    M.lsp.setup(opts.lsps)
+    M.lsp.setup(opts.lsps, disable_filetypes)
   end
 
   if opts.formatters then
-    M.formatter.setup(opts.formatters)
+    M.formatter.setup(opts.formatters, disable_filetypes)
   end
 
   if opts.linters then
-    M.linter.setup(opts.linters)
+    M.linter.setup(opts.linters, disable_filetypes)
+  end
+
+  if opts.daps then
+    M.dap.setup(opts.daps, disable_filetypes)
   end
 end
 

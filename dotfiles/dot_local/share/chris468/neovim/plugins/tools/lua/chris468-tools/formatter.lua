@@ -16,8 +16,9 @@ function Formatter:new(name, opts)
 end
 
 ---@param opts { [string]: chris468.tools.Tool.Options }
-function Formatter.setup(opts)
-  Formatter.by_ft, Formatter.names_by_ft = installer.map_tools_by_filetype(opts, Formatter, opts.disabled_filetype)
+---@param disable_filetypes { [string]: true }
+function Formatter.setup(opts, disable_filetypes)
+  Formatter.by_ft, Formatter.names_by_ft = installer.map_tools_by_filetype(opts, Formatter, disable_filetypes)
   installer.install_on_filetype(
     Formatter.by_ft,
     vim.api.nvim_create_augroup("chris468-tools.formatter", { clear = true })

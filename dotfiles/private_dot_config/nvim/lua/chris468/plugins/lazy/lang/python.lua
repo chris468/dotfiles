@@ -16,6 +16,9 @@ return {
       formatters = {
         black = { filetypes = { "python" } },
       },
+      daps = {
+        debugpy = {},
+      },
     },
   },
   {

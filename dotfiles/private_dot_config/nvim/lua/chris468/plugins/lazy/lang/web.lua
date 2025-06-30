@@ -52,6 +52,11 @@ return {
       linters = {
         phpcs = { filetypes = { "php" } },
       },
+      daps = {
+        ["js-debug-adapter"] = {},
+        ["chrome-debug-adapter"] = {},
+        ["php-debug-adapter"] = {},
+      },
     },
   },
 }

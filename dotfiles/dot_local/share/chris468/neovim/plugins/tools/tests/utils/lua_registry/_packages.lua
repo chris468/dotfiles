@@ -16,6 +16,9 @@ local M = {
       name = "lsp_with_name",
       tool_name = "lsp_name",
     },
+    dap = {
+      name = "dap_pkg"
+    }
   },
 }
 

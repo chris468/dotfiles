@@ -38,8 +38,9 @@ local function register_lint(linters_by_ft)
 end
 
 ---@param opts { [string]: chris468.tools.Tool.Options }
-function Linter.setup(opts)
-  Linter.by_ft, Linter.names_by_ft = installer.map_tools_by_filetype(opts, Linter, opts.disabled_filetypes)
+---@param disable_filetypes { [string]: true }
+function Linter.setup(opts, disable_filetypes)
+  Linter.by_ft, Linter.names_by_ft = installer.map_tools_by_filetype(opts, Linter, disable_filetypes)
   register_lint(Linter.by_ft)
   installer.install_on_filetype(Linter.by_ft, vim.api.nvim_create_augroup("chris468-tools.linter", { clear = true }))
 end
