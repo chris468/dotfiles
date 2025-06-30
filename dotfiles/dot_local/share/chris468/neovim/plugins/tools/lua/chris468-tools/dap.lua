@@ -15,7 +15,7 @@ end
 
 function Dap:name()
   if not self._tool_name then
-    local package_to_nvim_dap = require("mason-nvim-dap.sources").package_to_nvim_dap
+    local package_to_nvim_dap = require("mason-nvim-dap.mappings.source").package_to_nvim_dap
     self._tool_name = package_to_nvim_dap[self._package_name]
   end
 
@@ -23,7 +23,7 @@ function Dap:name()
 end
 
 function Dap:_tool_filetypes()
-  local dap_filetypes = require("mason-nvim-dap.filetypes")
+  local dap_filetypes = require("mason-nvim-dap.mappings.filetypes")
   return dap_filetypes[self:name()]
 end
 

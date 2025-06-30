@@ -19,12 +19,12 @@ describe("Dap", function()
   })
 
   before_each(function()
-    package.loaded["mason-nvim-dap.sources"] = {
+    package.loaded["mason-nvim-dap.mappings.source"] = {
       package_to_nvim_dap = {
         [expected.package_name] = expected.dap_name
       }
     }
-    package.loaded["mason-nvim-dap.filetypes"] = {
+    package.loaded["mason-nvim-dap.mappings.filetypes"] = {
       [expected.dap_name] = expected.filetypes
     }
   end)
