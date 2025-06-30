@@ -1,35 +1,30 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      ["lua-language-server"] = {
-        lspconfig = {
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = "Replace",
-              },
-              hint = {
-                enable = true,
-                setType = false,
-                paramType = true,
-                paramName = "Disable",
-                semicolon = "Disable",
-                arrayIndex = "Disable",
+      lsps = {
+        ["lua-language-server"] = {
+          lspconfig = {
+            settings = {
+              Lua = {
+                completion = {
+                  callSnippet = "Replace",
+                },
+                hint = {
+                  enable = true,
+                  setType = false,
+                  paramType = true,
+                  paramName = "Disable",
+                  semicolon = "Disable",
+                  arrayIndex = "Disable",
+                },
               },
             },
           },
         },
       },
-    },
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        lua = {
-          lua = { "stylua" },
-        },
+      lua = {
+        stylua = { filetypes = { "lua" } },
       },
     },
   },

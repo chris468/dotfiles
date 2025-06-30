@@ -1,17 +1,11 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      gopls = {},
-    },
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        go = {
-          go = { "goimports", "gofumpt" },
-        },
+      lsps = { gopls = {} },
+      formatters = {
+        goimports = { filetypes = { "go" } },
+        gofumpt = { filetypes = { "go" } },
       },
     },
   },

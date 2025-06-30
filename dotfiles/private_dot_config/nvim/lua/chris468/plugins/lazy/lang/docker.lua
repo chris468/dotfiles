@@ -1,18 +1,13 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     opts = {
-      ["dockerfile-language-server"] = {},
-      ["docker-compose-language-service"] = {},
-    },
-  },
-  {
-    "nvim-lint",
-    opts = {
-      linters_by_ft = {
-        docker = {
-          dockerfile = { "hadolint" },
-        },
+      lsps = {
+        ["dockerfile-language-server"] = {},
+        ["docker-compose-language-service"] = {},
+      },
+      linters = {
+        hadolint = { filetypes = { "dockerfile" } },
       },
     },
   },

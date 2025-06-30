@@ -1,3 +1,4 @@
+local getenv = require("os").getenv
 local cmd = require("chris468.util.keymap").cmd
 
 ---@class chris468.config.LspServer
@@ -34,26 +35,26 @@ return {
     },
   },
   {
-    "neovim/nvim-lspconfig",
-    config = function(_, opts)
-      require("chris468.plugins.config.tools").lspconfig(opts)
-    end,
-    dependencies = { "blink.cmp", optional = true },
-    lazy = false,
-    keys = {
-      { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
-    },
-    -- This is custom config (nvim-lspconfig is just data and has no setup)
-    ---@type chris468.config.LspConfig
+    "chris468-tools",
+    event = "FileType",
+    dependencies = { "mason.nvim", "nvim-lspconfig" },
+    dir = (getenv("XDG_DATA_HOME") or vim.expand("~/.local/share")) .. "/chris468/neovim/plugins/tools",
     opts = {},
   },
   {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      { "blink.cmp", optional = true },
+    },
+    event = "FileType",
+    keys = {
+      { "<leader>cL", cmd("LspInfo"), desc = "LSP info" },
+    },
+  },
+  {
     "stevearc/conform.nvim",
-    dependencies = { "mason.nvim" },
-    config = function(_, opts)
-      require("chris468.plugins.config.tools").formatter_config(opts)
-    end,
-    lazy = false,
+    dependencies = { "mason.nvim", "chris468-tools" },
+    event = "FileType",
     keys = {
       {
         "<leader>cf",
@@ -64,36 +65,34 @@ return {
       },
       { "<leader>cF", cmd("ConformInfo"), desc = "Formatter info" },
     },
-    opts = {
-      default_format_opts = {
-        lsp_format = "fallback",
-      },
-      -- formatters_by_ft is custom - a map of key to map of filetype to plugins.
-      -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type {string: chris468.config.FormattersByFileType}
-      formatters_by_ft = {},
-      format_on_save = function(bufnr)
-        if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
-          return
-        end
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts or {}, {
+        default_format_opts = {
+          lsp_format = "fallback",
+        },
+        formatters_by_ft = require("chris468-tools").formatter.names_by_ft,
+        format_on_save = function(bufnr)
+          if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
+            return
+          end
 
-        return { timeout_ms = 500 }
-      end,
-    },
+          return { timeout_ms = 500 }
+        end,
+      })
+    end,
   },
   {
     "mfussenegger/nvim-lint",
+    dependencies = { "mason.nvim", "chris468-tools" },
     config = function(_, opts)
-      require("chris468.plugins.config.tools").linter_config(opts)
+      require("lint").linters_by_ft = opts.linters_by_ft
     end,
-    dependencies = { "mason.nvim" },
-    lazy = false,
-    opts = {
-      -- linters_by_ft is custom - a map of key to map of filetype to plugins.
-      -- Outer map is to avoid conflicts, inner maps will be merged.
-      ---@type {string: chris468.config.FormattersByFileType}
-      linters_by_ft = {},
-    },
+    event = { "BufNew", "BufReadPre" },
+    opts = function(_, opts)
+      opts = opts or {}
+      opts.linters_by_ft = require("chris468-tools").linter.names_by_ft
+      return opts
+    end,
     version = false,
   },
   {

@@ -1,61 +1,56 @@
+local function get_angular_plugin_path()
+  local mason_path = require("mason-core.installer.InstallLocation").global():get_dir()
+  local plugin_path =
+    string.format("%s/packages/angular-language-server/node_modules/@angular/language-server", mason_path)
+  return {
+    name = "@angular/language-server",
+    location = plugin_path,
+  }
+end
+
+local function except(e, t)
+  return vim.tbl_filter(function(v)
+    return v ~= e
+  end, t)
+end
+
 return {
   {
-    "nvim-lspconfig",
-    opts = function(_, opts)
-      opts = opts or {}
-      opts["angular-language-server"] = {}
-      opts.phpactor = {}
-
-      local tailwindcss_lsp_filetypes = vim.tbl_get(vim.lsp.config, "tailwindcss", "filetypes")
-      opts["tailwindcss-language-server"] = {
-        lspconfig = {
-          filetypes = tailwindcss_lsp_filetypes and vim.tbl_filter(function(ft)
-            return ft ~= "markdown"
-          end, tailwindcss_lsp_filetypes) or nil,
-        },
-      }
-
-      local mason_path = require("mason-core.installer.InstallLocation").global():get_dir()
-      local angular_plugin = {
-        name = "@angular/language-server",
-        location = string.format(
-          "%s/packages/angular-language-server/node_modules/@angular/language-server",
-          mason_path
-        ),
-      }
-      opts.vtsls = {
-        lspconfig = {
-          settings = {
-            vstls = {
-              tsserver = {
-                globalPlugins = { angular_plugin },
-              },
-            },
-          },
-        },
-      }
-
-      return opts
-    end,
-  },
-  {
-    "conform.nvim",
+    "chris468-tools",
+    opts_extend = { "formatters.prettier.filetypes" },
     opts = {
-      formatters_by_ft = {
-        web = {
-          htmlangular = { "prettier" },
-          php = { { "php_cs_fixer", package = "php-cs-fixer" } },
+      lsps = {
+        ["angular-language-server"] = {},
+        phpactor = {},
+        ["tailwindcss-language-server"] = {
+          lspconfig = function()
+            local original_filetypes = vim.tbl_get(vim.lsp.config, "tailwindcss", "filetypes" or {}) or {}
+            local result = {
+              filetypes = except("markdown", original_filetypes),
+            }
+            return result
+          end,
+        },
+        vtsls = {
+          lspconfig = function()
+            return {
+              settings = {
+                vstls = {
+                  tsserver = {
+                    globalPlugins = get_angular_plugin_path(),
+                  },
+                },
+              },
+            }
+          end,
         },
       },
-    },
-  },
-  {
-    "nvim-lint",
-    opts = {
-      linters_by_ft = {
-        web = {
-          php = { "phpcs" },
-        },
+      formatters = {
+        prettier = { filetypes = { "htmlangular" } },
+        php_cs_fixer = { filetypes = { "php" }, package = "php-cs-fixer" },
+      },
+      linters = {
+        phpcs = { filetypes = { "php" } },
       },
     },
   },

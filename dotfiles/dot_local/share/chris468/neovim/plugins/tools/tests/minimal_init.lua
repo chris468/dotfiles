@@ -1,0 +1,8 @@
+local tmp_cache = vim.fn.tempname()
+vim.fn.mkdir(tmp_cache, "p")
+vim.fn.setenv("XDG_CACHE_HOME", tmp_cache)
+vim.opt.runtimepath:prepend(("%s/lazy/mason.nvim"):format(vim.fn.stdpath("data")))
+vim.opt.runtimepath:prepend(".")
+vim.cmd.runtime("plugin/plenary.vim")
+vim.cmd.nnoremap([[,,x :luafile %<CR>]])
+require("tests.utils.lua_registry").setup()

@@ -1,10 +1,12 @@
 return {
   { "towolf/vim-helm", ft = "helm" },
   {
-    "nvim-lspconfig",
+    "chris468-tools",
     dependencies = { "b0o/schemastore.nvim", version = false },
     opts = {
-      ["helm-ls"] = {},
+      lsps = {
+        ["helm-ls"] = {},
+      },
     },
   },
 }

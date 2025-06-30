@@ -1,29 +1,14 @@
 return {
   {
-    "nvim-lspconfig",
+    "chris468-tools",
+    opts_extend = { "formatters.prettier.filetypes" },
     opts = {
-      marksman = {},
-    },
-  },
-  {
-    "conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        markdown = {
-          markdown = { "prettier" },
-          ["markdown.mdx"] = { "prettier" },
-        },
+      lsps = { marksman = {} },
+      formatters = {
+        prettier = { filetypes = { "markdown", "markdown.mdx" } },
       },
-    },
-  },
-  {
-    "nvim-lint",
-    opts = {
-      linters_by_ft = {
-        markdown = {
-          markdown = { "markdownlint-cli2" },
-          ["markdown.mdx"] = { "markdownlint-cli2" },
-        },
+      linters = {
+        ["markdownlint-cli2"] = { filetypes = { "markdown", "markdown.mdx" } },
       },
     },
   },
