@@ -28,8 +28,9 @@ function Dap:_tool_filetypes()
 end
 
 ---@param opts { [string]: chris468.tools.Tool.Options }
-function Dap.setup(opts)
-  Dap.by_ft, _ = installer.map_tools_by_filetype(opts, Dap, opts.disabled_filetype)
+---@param disable_filetypes { [string]: true }
+function Dap.setup(opts, disable_filetypes)
+  Dap.by_ft, _ = installer.map_tools_by_filetype(opts, Dap, disable_filetypes)
   installer.install_on_filetype(
     Dap.by_ft,
     vim.api.nvim_create_augroup("chris468-tools.dap", { clear = true })

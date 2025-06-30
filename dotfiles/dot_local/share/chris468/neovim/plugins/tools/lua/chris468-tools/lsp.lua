@@ -69,9 +69,9 @@ end
 ---@param client vim.lsp.Client
 local function configure_inlay_hints(bufnr, client)
   if
-    vim.api.nvim_buf_is_valid(bufnr)
-    and vim.bo[bufnr].buftype == ""
-    and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr)
+      vim.api.nvim_buf_is_valid(bufnr)
+      and vim.bo[bufnr].buftype == ""
+      and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr)
   then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
@@ -110,12 +110,13 @@ local function register_dynamic_capability_handlers()
 end
 
 ---@param opts table<string, chris468.tools.Lsp.Options>
-function Lsp.setup(opts)
+---@param disable_filetypes { [string]: true }
+function Lsp.setup(opts, disable_filetypes)
   local _ = require("lspconfig")
   local group = vim.api.nvim_create_augroup("chris468-tools.lsp", { clear = true })
   register_lsp_attach(group)
   register_dynamic_capability_handlers()
-  local tools = installer.map_tools_by_filetype(opts, Lsp, opts.disabled_filetypes)
+  local tools = installer.map_tools_by_filetype(opts, Lsp, disable_filetypes)
   installer.install_on_filetype(tools, group)
 end
 

@@ -39,7 +39,9 @@ return {
     event = "FileType",
     dependencies = { "mason.nvim", "nvim-lspconfig" },
     dir = (getenv("XDG_DATA_HOME") or vim.expand("~/.local/share")) .. "/chris468/neovim/plugins/tools",
-    opts = {},
+    opts = {
+      disabled_filetypes = Chris468.disabled_filetypes,
+    },
   },
   {
     "neovim/nvim-lspconfig",

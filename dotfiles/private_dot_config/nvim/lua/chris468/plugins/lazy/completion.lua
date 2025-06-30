@@ -60,7 +60,7 @@ return {
         },
       },
       enabled = function()
-        return not vim.list_contains(Chris468.disable_filetypes, vim.bo.filetype)
+        return not vim.list_contains(Chris468.disabled_filetypes, vim.bo.filetype)
       end,
       fuzzy = { implementation = "prefer_rust" },
       keymap = { preset = "super-tab" },
