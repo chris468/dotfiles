@@ -24,7 +24,7 @@ end
 
 function Dap:_tool_filetypes()
   local dap_filetypes = require("mason-nvim-dap.filetypes")
-  return dap_filetypes(self:name())
+  return dap_filetypes[self:name()]
 end
 
 ---@param opts { [string]: chris468.tools.Tool.Options }
@@ -35,3 +35,5 @@ function Dap.setup(opts)
     vim.api.nvim_create_augroup("chris468-tools.dap", { clear = true })
   )
 end
+
+return Dap
