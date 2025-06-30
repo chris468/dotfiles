@@ -26,6 +26,9 @@ return {
       formatters = {
         stylua = { filetypes = { "lua" } },
       },
+      daps = {
+        ["local-lua-debugger-vscode"] = { filetypes = { "lua" } },
+      },
     },
   },
   {
