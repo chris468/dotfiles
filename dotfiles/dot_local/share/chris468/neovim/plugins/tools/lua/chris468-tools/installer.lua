@@ -20,15 +20,13 @@ function M.map_tools_by_filetype(opts, Tool, disabled_filetypes)
 	for name, config in pairs(opts) do
 		---@diagnostic disable-next-line: undefined-field
 		local tool = Tool:new(name, config)
-		if tool:enabled() then
-			for _, ft in ipairs(tool:filetypes()) do
-				if not disabled_filetypes[ft] then
-					tools_by_ft[ft] = tools_by_ft[ft] or {}
-					table.insert(tools_by_ft[ft], tool)
+		for _, ft in ipairs(tool:filetypes()) do
+			if not disabled_filetypes[ft] then
+				tools_by_ft[ft] = tools_by_ft[ft] or {}
+				table.insert(tools_by_ft[ft], tool)
 
-					names_by_ft[ft] = names_by_ft[ft] or {}
-					table.insert(names_by_ft[ft], tool:name())
-				end
+				names_by_ft[ft] = names_by_ft[ft] or {}
+				table.insert(names_by_ft[ft], tool:name())
 			end
 		end
 	end
@@ -40,11 +38,18 @@ end
 
 ---@param tool chris468.tools.Tool The tool to install.
 local function install_tool(tool)
+	local display = tool:display_name()
+	local enabled, reason = tool:enabled()
+	if not enabled then
+		if reason then
+			notify(string.format("Not installing %s: %s", display, reason))
+		end
+	end
+
 	tool:before_install()
 
 	local package = tool:package()
 	if package and not package:is_installed() then
-		local display = tool:display_name()
 		notify(string.format("Installing %s...", display))
 		package
 			:once("install:success", function()
@@ -64,9 +69,7 @@ end
 ---@param tools chris468.tools.Tool[]
 local function install_tools(tools)
 	for _, tool in ipairs(tools) do
-		if tool:enabled() then
-			install_tool(tool)
-		end
+		install_tool(tool)
 	end
 end
 
