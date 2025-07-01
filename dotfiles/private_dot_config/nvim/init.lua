@@ -1,6 +1,16 @@
 require("chris468.config.options")
 require("chris468.util.lazy").install()
 
+local minimum_version = "0.11.2"
+
+if vim.fn.has("nvim-" .. minimum_version) ~= 1 then
+  vim.notify(
+    string.format("Version %s is required, current version is %s", minimum_version, vim.version()),
+    vim.log.levels.ERROR
+  )
+  return
+end
+
 vim.filetype.add(Chris468.filetypes or {})
 
 vim.api.nvim_create_autocmd("FileType", {
