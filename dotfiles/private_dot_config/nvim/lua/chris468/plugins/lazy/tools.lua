@@ -221,7 +221,6 @@ return {
       "nvim-neotest/nvim-nio",
       "plenary.nvim",
       "nvim-treesitter",
-      "nvim-neotest/neotest-plenary",
     },
     keys = {
       {
@@ -267,12 +266,6 @@ return {
         desc = "Run all",
       },
     },
-    opts = function(_, opts)
-      return vim.tbl_deep_extend("force", opts, {
-        adapters = {
-          require("neotest-plenary"),
-        },
-      })
-    end,
+    opts = {},
   },
 }
