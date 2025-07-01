@@ -17,7 +17,9 @@ local Object = require("plenary").class
 ---@field protected super Object
 ---@field protected _abstract fun(self: chris468.tools.Tool, method: string)
 ---@field extend fun(self: chris468.tools.Tool) : chris468.tools.Tool
----@field enabled? boolean
+---@field _enabled? boolean|fun(self: chris468.tools.Tool): boolean enabled, string? reason
+---@field _reason? string
+---@field enabled fun(self: chris468.tools.Tool): boolean enabled, string? reason
 ---@field new fun(name: string, opts?: chris468.tools.Tool.Options, ...: table) : chris468.tools.Tool
 ---@field protected _new fun(self: chris468.tools.Tool, name: string, opts?: chris468.tools.Tool.Options, ...: table) : chris468.tools.Tool
 ---@field filetypes fun(self: chris468.tools.Tool) : string[]
@@ -31,66 +33,76 @@ Tool = Object:extend() --[[ @as chris468.tools.Tool]]
 Tool.type = "tool"
 
 function Tool:__tostring()
-  return self.type
+	return self.type
 end
 
 ---@param method string
 function Tool:_abstract(method)
-  error(("call to abstract method %s.%s"):format(self.type, method))
+	error(("call to abstract method %s.%s"):format(self.type, method))
 end
 
 function Tool:new(_, _)
-  ---@diagnostic disable-next-line: missing-return
-  self:_abstract("new")
+	---@diagnostic disable-next-line: missing-return
+	self:_abstract("new")
 end
 
 function Tool:_new(name, opts, ...)
-  local o = {
-    _package_name = name,
-    _package = opts.package ~= false,
-    enabled = opts.enabled ~= false,
-    _filetypes = opts.filetypes,
-    _tool_name = opts.tool_name,
-  }
-  if select("#", ...) > 0 then
-    o = vim.tbl_extend("error", o, ...)
-  end
-  return setmetatable(o, self)
+	local o = {
+		_package_name = name,
+		_package = opts.package ~= false,
+		_enabled = opts.enabled,
+		_filetypes = opts.filetypes,
+		_tool_name = opts.tool_name,
+	}
+	if select("#", ...) > 0 then
+		o = vim.tbl_extend("error", o, ...)
+	end
+	return setmetatable(o, self)
 end
 
 function Tool:filetypes()
-  if not self._filetypes then
-    self._filetypes = self:_tool_filetypes() or {}
-  end
+	if not self._filetypes then
+		self._filetypes = self:_tool_filetypes() or {}
+	end
 
-  return self._filetypes
+	return self._filetypes
 end
 
 function Tool:_tool_filetypes() end
 
 function Tool:name()
-  return self._tool_name or self._package_name
+	return self._tool_name or self._package_name
+end
+
+function Tool:enabled()
+	if self._enabled == nil then
+		self._enabled = true
+	elseif type(self._enabled) == "function" then
+		self._enabled, self._reason = self._enabled(self)
+	end
+
+	return self._enabled, self._reason
 end
 
 function Tool:display_name()
-  self._display_name = self._display_name
-    or string.format(
-      "%s %s%s",
-      self.type,
-      self._package_name,
-      self._package_name == self:name() and "" or (" (%s)"):format(self:name())
-    )
+	self._display_name = self._display_name
+		or string.format(
+			"%s %s%s",
+			self.type,
+			self._package_name,
+			self._package_name == self:name() and "" or (" (%s)"):format(self:name())
+		)
 
-  return self._display_name
+	return self._display_name
 end
 
 function Tool:package()
-  if self._package == true then
-    local registry = require("mason-registry")
-    local ok, p = pcall(registry.get_package, self._package_name)
-    self._package = ok and p or false
-  end
-  return self._package
+	if self._package == true then
+		local registry = require("mason-registry")
+		local ok, p = pcall(registry.get_package, self._package_name)
+		self._package = ok and p or false
+	end
+	return self._package
 end
 
 function Tool:on_installed() end
