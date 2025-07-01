@@ -78,7 +78,7 @@ function Tool:enabled()
 	if self._enabled == nil then
 		self._enabled = true
 	elseif type(self._enabled) == "function" then
-		self._enabled, self.reason = self._enabled(self)
+		self._enabled, self._reason = self._enabled(self)
 	end
 
 	return self._enabled, self._reason

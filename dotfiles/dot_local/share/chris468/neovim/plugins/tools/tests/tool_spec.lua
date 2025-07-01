@@ -39,6 +39,30 @@ describe("tool", function()
 			local t = TestTool:new(package_name, { enabled = false })
 			assert.are.equal(false, t:enabled())
 		end)
+		it("should be enabled when enabled returns true", function()
+			local t = TestTool:new(package_name, {
+				enabled = function()
+					return true
+				end,
+			})
+			assert.are.equal(true, t:enabled())
+		end)
+		it("should be enabled when enabled returns false", function()
+			local t = TestTool:new(package_name, {
+				enabled = function()
+					return false
+				end,
+			})
+			assert.are.equal(true, t:enabled())
+		end)
+		it("should return reason", function()
+			local t = TestTool:new(package_name, {
+				enabled = function()
+					return false, "reason"
+				end,
+			})
+			assert.are.same({ false, "reason" }, { t:enabled() })
+		end)
 	end)
 
 	describe("package", function()

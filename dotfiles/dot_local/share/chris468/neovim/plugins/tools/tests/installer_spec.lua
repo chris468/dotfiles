@@ -66,31 +66,31 @@ function TestTool:__eq(other)
 	return self:name() == other:name()
 end
 
-local function create_tools(config)
-	local tools = {}
-	local tools_by_ft = {}
-
-	local names_by_ft = {}
-
-	for name, opts in pairs(config) do
-		local t = TestTool:new(name, opts)
-		tools[name] = t
-		for _, ft in ipairs(t:filetypes()) do
-			tools_by_ft[ft] = tools_by_ft[ft] or {}
-			table.insert(tools_by_ft[ft], t)
-
-			names_by_ft[ft] = names_by_ft[ft] or {}
-			table.insert(names_by_ft[ft], name)
-		end
-	end
-	return tools, setmetatable(tools_by_ft, by_ft_mt), setmetatable(names_by_ft, by_ft_mt)
-end
+local function create_tools(config) end
 
 describe("installer", function()
 	local config
 	local tools
 	local tools_by_ft
 	local names_by_ft
+
+	local function set_tools()
+		tools = {}
+		tools_by_ft = setmetatable({}, by_ft_mt)
+		names_by_ft = setmetatable({}, by_ft_mt)
+
+		for name, opts in pairs(config) do
+			local t = TestTool:new(name, opts)
+			tools[name] = t
+			for _, ft in ipairs(t:filetypes()) do
+				tools_by_ft[ft] = tools_by_ft[ft] or {}
+				table.insert(tools_by_ft[ft], t)
+
+				names_by_ft[ft] = names_by_ft[ft] or {}
+				table.insert(names_by_ft[ft], name)
+			end
+		end
+	end
 
 	before_each(function()
 		config = {
@@ -105,7 +105,7 @@ describe("installer", function()
 			},
 		}
 
-		tools, tools_by_ft, names_by_ft = create_tools(config)
+		set_tools()
 	end)
 
 	describe("map_tools_by_filetype", function()
@@ -151,7 +151,7 @@ describe("installer", function()
 			before_each(function()
 				config.tool2.enabled = false
 				config.tool3.enabled = false
-				tools, tools_by_ft, names_by_ft = create_tools(config)
+				set_tools()
 			end)
 
 			it("includes tools", function()
@@ -297,6 +297,50 @@ describe("installer", function()
 				installer.install_on_filetype({ ft = { tool }, ft2 = { tools.tool2 } }, augroup)
 				wait_for_install("ft", bufnr, "tool1", "tool2")
 			end)
+
+			it("should not install disabled tool", function()
+				config.tool1.enabled = false
+				set_tools()
+				local install = spy.on(require("tests.utils.lua_registry.tool1").source, "install")
+
+				installer.install_on_filetype({ ft = { tools.tool1, tools.tool2 } }, augroup)
+				wait_for_install("ft", bufnr, "tool2")
+
+				assert_utils.wait_for(function()
+					assert.spy(install).called(0)
+				end, { success = true })
+			end)
+
+			it("should notify if reason", function()
+				config.tool1.enabled = function()
+					return false, "reason"
+				end
+				set_tools()
+				local notify = spy.on(vim, "notify")
+
+				installer.install_on_filetype({ ft = { tools.tool1 } }, augroup)
+				vim.bo[bufnr].filetype = "ft"
+
+				assert_utils.wait_for(function()
+					assert.spy(notify).called(1)
+					assert.spy(notify).called_with("Not installing test tool1: reason")
+				end)
+			end)
+
+			it("should not notify if no reason", function()
+				config.tool1.enabled = function()
+					return false
+				end
+				set_tools()
+				local notify = spy.on(vim, "notify")
+
+				installer.install_on_filetype({ ft = { tools.tool1 } }, augroup)
+				vim.bo[bufnr].filetype = "ft"
+
+				assert_utils.wait_for(function()
+					assert.spy(notify).called(0)
+				end, { success = true })
+			end)
 		end)
 
 		describe("already installed", function()
@@ -305,9 +349,7 @@ describe("installer", function()
 			end)
 
 			it("should not install package", function()
-				local tool1_spec = require("tests.utils.lua_registry.tool1")
-				local install = spy.new()
-				stub(tool1_spec.source, "install", install)
+				local install = spy.on(require("tests.utils.lua_registry.tool1").source, "install")
 
 				installer.install_on_filetype({ ft = { tool } }, augroup)
 				vim.bo[bufnr].filetype = "ft"

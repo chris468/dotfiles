@@ -44,6 +44,8 @@ local function install_tool(tool)
 		if reason then
 			notify(string.format("Not installing %s: %s", display, reason))
 		end
+
+		return
 	end
 
 	tool:before_install()
