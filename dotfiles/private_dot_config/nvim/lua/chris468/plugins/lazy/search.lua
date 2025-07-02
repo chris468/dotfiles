@@ -45,6 +45,19 @@ return {
         config = configure_select(),
       },
     },
+    init = function()
+      vim.api.nvim_create_autocmd("QuitPre", {
+        group = vim.api.nvim_create_augroup("chris468.telesecope.avoidsave", { clear = true }),
+        callback = function(args)
+          local buf = args.buf
+          if vim.api.nvim_buf_is_valid(buf) then
+            if vim.bo[buf].filetype == "TelescopePrompt" then
+              vim.bo[buf].modified = false
+            end
+          end
+        end,
+      })
+    end,
     keys = function()
       local keys = {
         { "<leader>/", require("chris468.plugins.config.search.rg"), desc = "Live grep" },
