@@ -183,7 +183,7 @@ return {
   },
   {
     "akinsho/bufferline.nvim",
-    dependencies = { "mini.icons" },
+    dependencies = { "mini.icons", "snacks.nvim" },
     event = "VeryLazy",
     keys = {
       { "[b", cmd("BufferLineCyclePrev"), desc = "Previous buffer" },

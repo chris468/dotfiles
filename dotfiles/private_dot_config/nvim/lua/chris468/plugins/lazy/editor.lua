@@ -55,4 +55,10 @@ return {
     opts = {},
     lazy = false,
   },
+  {
+    "folke/snacks.nvim",
+    opts = {
+      indent = {},
+    },
+  },
 }
