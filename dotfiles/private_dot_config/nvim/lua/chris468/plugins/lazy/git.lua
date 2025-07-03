@@ -81,13 +81,11 @@ return {
     keys = {
       { "<leader>gB", cmd("Gitsigns blame"), desc = "Blame buffer" },
       { "<leader>gS", cmd("Gitsigns stage_buffer"), desc = "Stage buffer" },
-      { "<leader>gU", cmd("Gitsigns unstage_buffer"), desc = "Untage buffer" },
       { "<leader>gb", cmd("Gitsigns blame_line"), desc = "Blame line" },
       { "<leader>gp", cmd("Gitsigns preview_hunk_inline"), desc = "Preview hunk" },
       { "<leader>gR", cmd("Gitsigns reset_hunk"), desc = "Reset hunk" },
       { "<leader>g<C-R>", cmd("Gitsigns reset_buffer"), desc = "Reset buffer" },
       { "<leader>gs", cmd("Gitsigns stage_hunk"), desc = "Stage hunk" },
-      { "<leader>gu", cmd("Gitsigns unstage_hunk"), desc = "Untage hunk" },
       { "[g", cmd("Gitsigns prev_hunk"), desc = "Previous git hunk" },
       { "]g", cmd("Gitsigns next_hunk"), desc = "Next git hunk" },
     },
