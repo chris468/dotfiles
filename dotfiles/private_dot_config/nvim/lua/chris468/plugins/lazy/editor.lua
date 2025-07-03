@@ -68,8 +68,20 @@ return {
   },
   {
     "folke/snacks.nvim",
+    event = "BufWinEnter",
     opts = {
-      indent = {},
+      indent = {
+        animate = {
+          enabled = false,
+        },
+        indent = {
+          char = "┊",
+        },
+        scope = {
+          char = "┊",
+          hl = "@keyword",
+        },
+      },
     },
   },
   {
