@@ -1,5 +1,3 @@
-local cmd = require("chris468.util.keymap").cmd
-
 return {
   {
     "echasnovski/mini.surround",
