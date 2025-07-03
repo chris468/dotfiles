@@ -56,6 +56,17 @@ return {
     lazy = false,
   },
   {
+    "catgoose/nvim-colorizer.lua",
+    event = { "BufWinEnter", "FileType", "ColorScheme" },
+    opts = {
+      user_default_options = {
+        mode = "virtualtext",
+        virtualtext_inline = true,
+        names = false,
+      },
+    },
+  },
+  {
     "folke/snacks.nvim",
     opts = {
       indent = {},
