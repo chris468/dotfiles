@@ -1,5 +1,3 @@
-local cmd = require("chris468.util.keymap").cmd
-
 return {
   {
     "echasnovski/mini.surround",
@@ -54,5 +52,82 @@ return {
     },
     opts = {},
     lazy = false,
+  },
+  {
+    "catgoose/nvim-colorizer.lua",
+    event = { "BufWinEnter", "FileType", "ColorScheme" },
+    opts = {
+      user_default_options = {
+        mode = "virtualtext",
+        virtualtext_inline = true,
+        names = false,
+      },
+    },
+  },
+  {
+    "folke/snacks.nvim",
+    event = "BufWinEnter",
+    opts = {
+      indent = {
+        animate = {
+          enabled = false,
+        },
+        indent = {
+          char = "┊",
+        },
+        scope = {
+          char = "┊",
+          hl = "@keyword",
+        },
+      },
+    },
+  },
+  {
+    "luukvbaal/statuscol.nvim",
+    event = "BufWinEnter",
+    opts = function(_, opts)
+      local builtin = require("statuscol.builtin")
+      return vim.tbl_deep_extend("keep", opts or {}, {
+        segments = {
+          { text = { builtin.foldfunc } },
+          {
+            sign = {
+              name = { ".*" },
+              text = { ".*" },
+              colwidth = 1,
+            },
+          },
+          { text = { builtin.lnumfunc } },
+          {
+            sign = {
+              namespace = { "gitsigns" },
+              colwidth = 1,
+            },
+          },
+        },
+      })
+    end,
+  },
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async" },
+    event = "BufWinEnter",
+    keys = {
+      {
+        "zR",
+        function()
+          require("ufo").openAllFolds()
+        end,
+        desc = "Open all folds",
+      },
+      {
+        "zM",
+        function()
+          require("ufo").closeAllFolds()
+        end,
+        desc = "Close all folds",
+      },
+    },
+    opts = {},
   },
 }

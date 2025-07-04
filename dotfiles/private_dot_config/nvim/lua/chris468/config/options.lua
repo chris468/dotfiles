@@ -19,6 +19,9 @@ vim.opt.sidescrolloff = 8
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.fillchars:append({
+  foldopen = "",
+  foldclose = "",
+  foldsep = " ",
   horiz = "─",
   horizdown = "┬",
   horizup = "┴",
@@ -64,6 +67,12 @@ if vim.fn.has("win32") == 1 then
     vim.opt.shellxquote = ""
   end
 end
+
+-- folds
+vim.opt.foldcolumn = "1"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {

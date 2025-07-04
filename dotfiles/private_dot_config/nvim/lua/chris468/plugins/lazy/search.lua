@@ -78,7 +78,7 @@ return {
           desc = "Unicode symbols",
           mode = "i",
         },
-        { "<leader>uC", cmd("Telescope colorschemes"), desc = "Change color scheme" },
+        { "<leader>uC", cmd("Telescope colorscheme enable_preview=true"), desc = "Change color scheme" },
       }
 
       if have_zoxide then
