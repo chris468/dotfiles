@@ -17,6 +17,10 @@ local function get_windows_for_buffer(bufnr)
 end
 
 local function on_textchanged(bufnr)
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return
+  end
+
   local lines = vim.api.nvim_buf_line_count(bufnr)
   local winids = get_windows_for_buffer(bufnr)
   for _, winid in ipairs(winids) do
