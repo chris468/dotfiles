@@ -1,0 +1,58 @@
+chezmoi:modify-template 
+{{- $settings := dict 
+  "startup" true
+  "is_elevated" true
+  "run_elevated" true
+  "is_admin" true
+  "theme" "system"
+  "system_theme" "dark"
+  "action_name" ""
+  "enabled" (dict 
+    "AdvancedPaste" true
+    "AlwaysOnTop" true
+    "Awake" false
+    "CmdNotFound" false
+    "CmdPal" false
+    "ColorPicker" true
+    "CropAndLock" false
+    "EnvironmentVariables" false
+    "FancyZones" true
+    "File Explorer" true
+    "File Locksmith" true
+    "FindMyMouse" true
+    "Hosts" true
+    "Image Resizer" false
+    "Keyboard Manager" false
+    "Measure Tool" false
+    "MouseHighlighter" true
+    "MouseJump" false
+    "MousePointerCrosshairs" false
+    "MouseWithoutBorders" false
+    "NewPlus" false
+    "Peek" false
+    "PowerRename" false
+    "PowerToys Run" false
+    "QuickAccent" false
+    "RegistryPreview" false
+    "Shortcut Guide" true
+    "TextExtractor" false
+    "Workspaces" true
+    "ZoomIt" false
+  ) 
+  "download_updates_automatically" true
+  "enable_experimentation" true 
+}} 
+{{- $current := default "{}" .chezmoi.stdin | fromJson }}
+{{- $updated := merge (dict) $settings $current }}
+{{- range default (dict) (get $current "enabled") | keys }}
+{{-   if not (get $settings.enabled .)}}
+{{-     $updated = set $updated . false }}
+{{-   end }}
+{{- end }}
+{{- if deepEqual $current $updated }}
+{{-   .chezmoi.stdin }}
+{{- else }}
+{{-   $updated | toJson }}
+{{- end }}
+
+{{- /* vim: set ft=none: */ -}} 
