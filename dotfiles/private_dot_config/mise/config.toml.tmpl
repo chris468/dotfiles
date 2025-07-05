@@ -1,21 +1,22 @@
 [tools]
-azure-kubelogin = "latest"
-neovim = "latest"
-k9s = "latest"
-github-cli = "latest"
-helm = "latest"
-lazygit = "latest"
-terraform = "1.5.7"
 awscli = "latest"
-step = "latest"
-eksctl = "latest"
-terragrunt = "latest"
-kubectl = "latest"
-lazydocker = "latest"
-python = "latest"
 {{- if "windows" | ne .chezmoi.os }}
 azure-cli = "latest"
 {{- end }}
+azure-kubelogin = "latest"
+eksctl = "latest"
+github-cli = "latest"
+go = "latest"
+helm = "latest"
+k9s = "latest"
+kubectl = "latest"
+lazydocker = "latest"
+lazygit = "latest"
+neovim = "latest"
+python = "latest"
+step = "latest"
+terraform = "1.5.7"
+terragrunt = "latest"
 
 [settings]
 
