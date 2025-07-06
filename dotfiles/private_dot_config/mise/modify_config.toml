@@ -1,0 +1,35 @@
+chezmoi:modify-template
+{{/*
+[tools]
+awscli = "latest"
+{{- if "windows" | ne .chezmoi.os }}
+azure-cli = "latest"
+{{- end }}
+azure-kubelogin = "latest"
+eksctl = "latest"
+github-cli = "latest"
+go = "latest"
+helm = "latest"
+k9s = "latest"
+kubectl = "latest"
+lazydocker = "latest"
+lazygit = "latest"
+neovim = "latest"
+python = "latest"
+step = "latest"
+terraform = "1.5.7"
+terragrunt = "latest"
+*/}}
+{{-
+ $settings := dict
+   "settings" (dict "disable_backends" (list "pipx"))
+}}
+{{- $current := default "" .chezmoi.stdin | fromToml }}
+{{- $updated := merge (dict) $settings $current }}
+{{- if deepEqual $current $updated }}
+{{-   .chezmoi.stdin }}
+{{- else }}
+{{-   $updated | toToml }}
+{{- end -}}
+
+{{/* vim: set ft=none: */ -}} 
