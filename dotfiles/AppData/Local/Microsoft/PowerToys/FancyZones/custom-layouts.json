@@ -2,7 +2,7 @@
   "custom-layouts": [
     {
       "uuid": "{B7EACF9C-5E65-40EA-A33F-7EAFFE2A0649}",
-      "name": "My Priority (Bottom)",
+      "name": "Bottom/Right Priority",
       "type": "grid",
       "info": {
         "rows": 2,
@@ -32,7 +32,7 @@
     },
     {
       "uuid": "{D5747BE1-23BA-4DE3-A379-6A9218CD5A9F}",
-      "name": "My Priority (Top/Right)",
+      "name": "Top/Right Priority",
       "type": "grid",
       "info": {
         "rows": 2,
@@ -62,7 +62,7 @@
     },
     {
       "uuid": "{A018427F-950C-48BC-99B7-69C46FCD65CE}",
-      "name": "My Priority (Bottom/Right)",
+      "name": "Top/Left Priority",
       "type": "grid",
       "info": {
         "rows": 2,
@@ -70,6 +70,36 @@
         "rows-percentage": [
           7118,
           2882
+        ],
+        "columns-percentage": [
+          5535,
+          4465
+        ],
+        "cell-child-map": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "show-spacing": true,
+        "spacing": 4,
+        "sensitivity-radius": 20
+      }
+    },
+    {
+      "uuid": "{89CA7585-2981-43DD-9C1B-30DF5523534C}",
+      "name": "Bottom/Left Priority",
+      "type": "grid",
+      "info": {
+        "rows": 2,
+        "columns": 2,
+        "rows-percentage": [
+          2875,
+          7125
         ],
         "columns-percentage": [
           5535,
