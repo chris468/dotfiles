@@ -21,6 +21,23 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_autocmd("User", {
+  group = vim.api.nvim_create_augroup("chris468.lazy.check", {}),
+  pattern = "LazyCheck*",
+  callback = function(arg)
+    local message = ({
+      LazyCheckPre = "󰒲 Checking for updates...",
+      LazyCheck = "󰒲 Finished checking for updates.",
+    })[arg.match]
+
+    if message then
+      vim.notify(message)
+    else
+      vim.notify("Unexpected match: " .. arg.match, vim.log.levels.ERROR)
+    end
+  end,
+})
+
 require("lazy").setup({
   spec = {
     { import = "chris468.plugins.lazy" },
@@ -32,6 +49,7 @@ require("lazy").setup({
   install = { colorscheme = { Chris468.options.theme, "tokyonight", "habamax" } },
   checker = {
     enabled = true,
+    frequency = 4 * 60 * 60,
     notify = false,
   },
   performance = {
