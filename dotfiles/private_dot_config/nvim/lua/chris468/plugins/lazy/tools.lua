@@ -19,6 +19,7 @@ local cmd = require("chris468.util.keymap").cmd
 return {
   {
     "mason-org/mason.nvim",
+    build = ":MasonUpdate",
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
     keys = {
       { "<leader>ci", cmd("checkhealth vim.lsp conform"), desc = "LSP/Formatter info" },
