@@ -17,6 +17,18 @@ local function remove_border(original, direction)
   end, original(direction))
 end
 
+local function filetype_highlight(ft)
+  local _, hl = require("mini.icons").get("filetype", ft)
+  return hl
+end
+
+local function wrap(fn, ...)
+  local arg = { ... }
+  return function()
+    return fn(unpack(arg))
+  end
+end
+
 return {
   {
     "echasnovski/mini.icons",
@@ -33,6 +45,8 @@ return {
     event = "VeryLazy",
     opts = {
       extensions = {
+        "lazy",
+        "mason",
         {
           filetypes = { "toggleterm" },
           sections = {
@@ -85,7 +99,18 @@ return {
         lualine_a = { { "mode", fmt = config.format.mode } },
         lualine_b = { "filename", "branch", "diff", "diagnostics" },
         lualine_c = {},
-        lualine_x = {},
+        lualine_x = {
+          {
+            config.mason.status,
+            -- cond = config.mason.cond,
+            -- color = config.mason.color,
+          },
+          {
+            require("lazy.status").updates,
+            cond = require("lazy.status").has_updates,
+            color = wrap(filetype_highlight, "lazy"),
+          },
+        },
         lualine_y = {
           { "lsp_status", icon = Chris468.ui.icons.lsp_status },
           { "filetype", colored = true },

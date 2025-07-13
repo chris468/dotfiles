@@ -69,4 +69,9 @@ require("lazy").setup({
   rocks = {
     enabled = false,
   },
+  ui = {
+    icons = {
+      plugin = "󰒲",
+    },
+  },
 })
