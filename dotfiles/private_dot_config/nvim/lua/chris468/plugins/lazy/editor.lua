@@ -130,4 +130,9 @@ return {
     },
     opts = {},
   },
+  {
+    "MisanthropicBit/decipher.nvim",
+    keys = require("chris468.plugins.config.decipher").mappings(),
+    opts = {},
+  },
 }

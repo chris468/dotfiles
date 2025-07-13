@@ -138,6 +138,7 @@ for _, spec in ipairs(remove_mappings) do
 end
 
 whichkey.add(mappings)
+whichkey.add(require("chris468.plugins.config.decipher").whichkey_specs())
 
 snacks.toggle.diagnostics({ name = "diagnostics" }):map("<leader>c<C-D>")
 
