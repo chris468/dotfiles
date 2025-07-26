@@ -27,8 +27,15 @@ local function get_highlight(kind)
 end
 
 return {
+  { "rafamadriz/friendly-snippets" },
   {
     "saghen/blink.cmp",
+    dependencies = {
+      {
+        "friendly-snippets",
+        version = "*",
+      },
+    },
     event = { "CmdLineEnter", "InsertEnter" },
     opts = {
       completion = {
