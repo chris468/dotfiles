@@ -76,10 +76,10 @@ return {
       },
       sources = {
         default = {
-          "buffer",
           "lsp",
-          "path",
           "snippets",
+          "path",
+          "buffer",
         },
         providers = {
           cmdline = {
@@ -105,6 +105,9 @@ return {
     main = "codeium",
     opts = {
       enable_cmp_source = false,
+      virtual_text = {
+        enabled = Chris468.ai.virtual_text,
+      },
     },
     specs = {
       "blink.cmp",
@@ -114,6 +117,7 @@ return {
           default = { "codeium" },
           providers = {
             codeium = {
+              enabled = not Chris468.ai.virtual_text,
               name = "Codeium",
               module = "codeium.blink",
               async = true,
@@ -130,7 +134,13 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     opts = {
-      suggestion = { enabled = false },
+      suggestion = {
+        enabled = Chris468.ai.virtual_text,
+        auto_trigger = true,
+        keymap = {
+          accept = "<tab>",
+        },
+      },
       panel = { enabled = false },
     },
     specs = {
@@ -148,6 +158,7 @@ return {
             default = { "copilot" },
             providers = {
               copilot = {
+                enabled = not Chris468.ai.virtual_text,
                 async = true,
                 module = "blink-cmp-copilot",
                 name = "Copilot",
