@@ -188,4 +188,47 @@ return {
     },
     opts = {},
   },
+  {
+    "azorng/goose.nvim",
+    cond = Chris468.ai.agent == "goose" and vim.fn.executable("goose") == 1,
+    cmd = {
+      "Goose",
+      "GooseOpenInput",
+      "GooseOpenInputNewSession",
+      "GooseOpenOutput",
+      "GooseToggleFocus",
+      "GooseClose",
+      "GooseToggleFullScreen",
+      "GooseSelectSession",
+      "GooseConfigureProvider",
+      "GooseDiff",
+      "GooseDiffNext",
+      "GooseDiffPrev",
+      "GooseDiffClose",
+      "GooseRevertAll",
+      "GooseRun",
+      "GooseRunNewSession",
+      "GooseStop",
+    },
+    dependencies = {
+      "plenary.nvim",
+    },
+    opts = {
+      preferred_picker = "telescope",
+      default_global_keymaps = false,
+      providers = {
+        ollama = {
+          "qwen2.5:3b",
+          "qwen2.5-coder",
+          "qwen2.5-coder:7b-instruct-q4_K_S",
+        },
+        openai = {
+          "gpt-4o",
+        },
+        ["gemini-cli"] = {
+          "gemini-2.5-pro",
+        },
+      },
+    },
+  },
 }
