@@ -35,7 +35,7 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
-if Chris468.ai.virtual_text then
+if Chris468.ai.completion.virtual_text then
   vim.api.nvim_create_autocmd("User", {
     pattern = { "BlinkCmpMenuOpen", "BlinkCmpMenuClose" },
     group = vim.api.nvim_create_augroup("chris468.blink", {}),
