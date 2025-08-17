@@ -92,7 +92,8 @@ local chris468 = {
     },
     ---@type { agent: chris468.ai.Agent, provider?: string, model?: string, endpoint?: string, mcp: boolean }
     agent = {
-      agent = "none",
+      agent = "codecompanion",
+      provider = chezmoi.work and "copilot" or "gemini",
       mcp = true,
     },
   },

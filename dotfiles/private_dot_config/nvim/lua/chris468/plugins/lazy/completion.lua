@@ -237,11 +237,17 @@ return {
     "yetone/avante.nvim",
     build = vim.fn.has("win32") ~= 0 and "powershell -File Build.ps1 -BuildFromSource false" or "make",
     cond = Chris468.ai.agent.agent == "avante",
+    dependencies = {
+      "mcphub.nvim",
+    },
     event = "VeryLazy",
     ---@module 'avante'
     ---@class avante.Config
     opts = function(_, opts)
       opts = vim.tbl_deep_extend("force", opts or {}, {
+        custom_tools = function()
+          return Chris468.ai.agent.mcp and { require("mcphub.extensions.avante").mcp_tool() } or {}
+        end,
         provider = Chris468.ai.agent.provider or Chris468.ai.completion.provider,
         providers = {
           ollama = {
@@ -252,12 +258,16 @@ return {
             __inherited_from = "openai",
             endpoint = "http://localhost:8080/v1",
             api_key_name = "",
-            context_window = 4000,
-            extra_request_body = {
-              max_completion_tokens = 4000,
-            },
+            -- context_window = 4000,
+            -- extra_request_body = {
+            --   max_completion_tokens = 4000,
+            -- },
           },
         },
+        system_prompt = function()
+          local hub = Chris468.ai.agent.mcp and require("mcphub").get_hub_instance()
+          return hub and hub:get_active_servers_prompt() or ""
+        end,
       })
 
       if opts.provider then
@@ -317,13 +327,13 @@ return {
       },
       strategies = {
         chat = {
-          adapter = "lmstudio",
+          adapter = Chris468.ai.agent.provider or Chris468.ai.completion.provider,
         },
         inline = {
-          adapter = "lmstudio",
+          adapter = Chris468.ai.agent.provider or Chris468.ai.completion.provider,
         },
         cmd = {
-          adapter = "lmstudio",
+          adapter = Chris468.ai.agent.provider or Chris468.ai.completion.provider,
         },
       },
       extensions = {
