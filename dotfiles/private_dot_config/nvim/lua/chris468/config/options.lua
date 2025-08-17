@@ -90,9 +90,10 @@ local chris468 = {
       provider = chezmoi.work and "copilot" or "codeium",
       virtual_text = true,
     },
-    ---@type { agent: chris468.ai.Agent, provider?: string, model?: string, endpoint?: string }
+    ---@type { agent: chris468.ai.Agent, provider?: string, model?: string, endpoint?: string, mcp: boolean }
     agent = {
       agent = "none",
+      mcp = true,
     },
   },
   options = {
