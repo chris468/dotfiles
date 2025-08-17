@@ -79,6 +79,7 @@ vim.opt.foldenable = true
 ---| "goose"
 ---| "avante"
 ---| "codecompanion"
+---| "copilot"
 
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {

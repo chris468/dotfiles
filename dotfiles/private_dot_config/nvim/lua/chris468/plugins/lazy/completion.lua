@@ -186,8 +186,8 @@ return {
       "CopilotChatLoad",
       "CopilotChatPrompts",
       "CopilotChatModels",
-      "CopilotChatAgents",
     },
+    dependencies = { "mcphub.nvim", optional = true },
     opts = {},
   },
   {
@@ -238,7 +238,7 @@ return {
     build = vim.fn.has("win32") ~= 0 and "powershell -File Build.ps1 -BuildFromSource false" or "make",
     cond = Chris468.ai.agent.agent == "avante",
     dependencies = {
-      "mcphub.nvim",
+      { "mcphub.nvim", optional = true },
     },
     event = "VeryLazy",
     ---@module 'avante'
@@ -284,13 +284,18 @@ return {
   },
   {
     "ravitemer/mcphub.nvim",
-    build = "bundled_build.lua", -- Bundles `mcp-hub` binary along with the neovim plugin
+    build = "bundled_build.lua",
     cond = Chris468.ai.agent.mcp and Chris468.ai.completion.provider ~= "none",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
     opts = {
-      use_bundled_binary = true, -- Use local `mcp-hub` binary
+      use_bundled_binary = true,
+      extensions = {
+        copilot_chat = {
+          enabled = Chris468.ai.agent.provider == "copilot",
+        },
+      },
     },
   },
   {
@@ -298,7 +303,7 @@ return {
     dependencies = {
       "plenary.nvim",
       "nvim-treesitter",
-      "mcphub.nvim",
+      { "mcphub.nvim", optional = true },
     },
     cond = Chris468.ai.agent.agent == "codecompanion",
     opts = {
