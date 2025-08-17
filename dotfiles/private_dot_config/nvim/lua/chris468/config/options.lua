@@ -74,6 +74,12 @@ vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 
+---@alias chris468.ai.Agent
+---| "none"
+---| "goose"
+---| "avante"
+---| "codecompanion"
+
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   ---@type string[] disable tooling on these filetypes
@@ -84,7 +90,7 @@ local chris468 = {
       provider = chezmoi.work and "copilot" or "codeium",
       virtual_text = true,
     },
-    ---@type { agent: "none"|"goose"|"avante", provider?: string, model?: string, endpoint?: string }
+    ---@type { agent: chris468.ai.Agent, provider?: string, model?: string, endpoint?: string }
     agent = {
       agent = "none",
     },

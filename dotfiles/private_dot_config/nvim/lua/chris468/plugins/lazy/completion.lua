@@ -272,4 +272,75 @@ return {
       return opts
     end,
   },
+  {
+    "olimorris/codecompanion.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      {
+        "ravitemer/mcphub.nvim",
+        build = "bundled_build.lua", -- Bundles `mcp-hub` binary along with the neovim plugin
+        dependencies = {
+          "nvim-lua/plenary.nvim",
+        },
+        opts = {
+          use_bundled_binary = true, -- Use local `mcp-hub` binary
+        },
+      },
+    },
+    cond = Chris468.ai.agent.agent == "codecompanion",
+    opts = {
+      adapters = {
+        lmstudio = function()
+          local openai = require("codecompanion.adapters.openai")
+          local lmstudio = require("codecompanion.adapters").extend("openai_compatible", {
+            env = {
+              url = "http://rosewill.home.arpa:1234",
+              chat_endpoint = "/v1/chat/completions",
+              models_endpoint = "/v1/models",
+            },
+            name = "lmstudio",
+            roles = {
+              llm = "assistant",
+              user = "user",
+              tool = "tool",
+            },
+          })
+          lmstudio.schema = vim.tbl_extend("keep", lmstudio.schema or {}, openai.schema)
+          return lmstudio
+        end,
+      },
+      opts = {
+        log_level = "DEBUG",
+      },
+      strategies = {
+        chat = {
+          adapter = "lmstudio",
+        },
+        inline = {
+          adapter = "lmstudio",
+        },
+        cmd = {
+          adapter = "lmstudio",
+        },
+      },
+      extensions = {
+        mcphub = {
+          callback = "mcphub.extensions.codecompanion",
+          opts = {
+            -- MCP Tools
+            make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
+            show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
+            add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
+            show_result_in_chat = true, -- Show tool results directly in chat buffer
+            format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
+            -- MCP Resources
+            make_vars = true, -- Convert MCP resources to #variables for prompts
+            -- MCP Prompts
+            make_slash_commands = true, -- Add MCP prompts as /slash commands
+          },
+        },
+      },
+    },
+  },
 }
