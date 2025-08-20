@@ -2,6 +2,26 @@ local snacks = require("snacks")
 local whichkey = require("which-key")
 local util_lua = require("chris468.util.lua")
 local cmd = require("chris468.util.keymap").cmd
+local util_terminal = require("chris468.util.terminal")
+
+---@param source_path? string Source path to apply, or nil to apply all
+---@return string
+local function chezmoi_apply_command(source_path)
+  local command = "chezmoi apply --no-tty --color=false"
+  if source_path then
+    command = string.format('%s "$(chezmoi target-path "%s")"', command, source_path)
+  end
+  return command
+end
+
+local function notify_if_modified_buffers()
+  local buffers = vim.api.nvim_list_bufs()
+  for _, buffer in ipairs(buffers) do
+    if vim.bo[buffer].modified then
+      vim.notify("Unsaved files will not be applied", vim.log.levels.WARN)
+    end
+  end
+end
 
 local function wrap(fn, ...)
   local arg = { ... }
@@ -43,6 +63,64 @@ local mappings = {
   },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
   { "<leader>f", group = "Files" },
+  { "<leader>fc", group = "Chezmoi" },
+  {
+    "<leader>fca",
+    function()
+      notify_if_modified_buffers()
+      util_terminal.background_command(chezmoi_apply_command(), "Chezmoi apply")
+    end,
+    desc = "Apply",
+  },
+  {
+    "<leader>fcf",
+    function()
+      local buf_name = vim.api.nvim_buf_get_name(0)
+      if not buf_name or buf_name == "" then
+        vim.notify("Can't chezmoi apply file never saved", vim.log.levels.ERROR)
+        return
+      end
+
+      -- warn if the file was modified
+      if vim.bo.modified then
+        vim.notify("File has not been saved", vim.log.levels.WARN)
+      end
+
+      local path = vim.fn.fnamemodify(buf_name, ":p")
+      local filename = vim.fn.fnamemodify(buf_name, ":t")
+      util_terminal.background_command(chezmoi_apply_command(path), "Chezmoi apply " .. filename)
+    end,
+    desc = "Apply current source file",
+  },
+  {
+    "<leader>fcd",
+    function()
+      notify_if_modified_buffers()
+      local path = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
+      local display_name = #path > 30 and path:sub(-30) or path
+      util_terminal.background_command(chezmoi_apply_command(path), "Chezmoi apply " .. display_name)
+    end,
+    desc = "Apply current source dir",
+  },
+  {
+    "<leader>fcu",
+    function()
+      notify_if_modified_buffers()
+      util_terminal.background_command("chezmoi update --no-tty --color=false", "Chezmoi update")
+    end,
+    desc = "Update",
+  },
+  {
+    "<leader>fcU",
+    function()
+      notify_if_modified_buffers()
+      util_terminal.background_command(
+        "chezmoi update --no-tty --color=false --init --apply",
+        "Chezmoi update and apply"
+      )
+    end,
+    desc = "Update and apply",
+  },
   { "<leader>g", group = "Git" },
   { "<leader>l", group = "Lua", icon = "󰢱" },
   { "<leader>lx", util_lua.run_selection, desc = "Run selected", mode = { "n", "x" } },
