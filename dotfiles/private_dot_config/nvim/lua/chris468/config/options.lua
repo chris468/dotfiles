@@ -84,7 +84,7 @@ vim.opt.foldenable = true
 local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   ---@type string[] disable tooling on these filetypes
-  disabled_filetypes = { "lazy", "lazy_backdrop", "mason", "oil" },
+  disabled_filetypes = { "lazy", "lazy_backdrop", "mason", "oil", "TelescopePrompt" },
   ai = {
     ---@type { provider: "codeium"|"copilot", virtual_text: boolean }
     completion = {

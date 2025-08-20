@@ -109,6 +109,11 @@ return {
       enable_cmp_source = false,
       virtual_text = {
         enabled = Chris468.ai.completion.virtual_text,
+        default_filetype_enabled = true,
+        filetypes = vim.iter(Chris468.disabled_filetypes):fold({}, function(result, ft)
+          result[ft] = false
+          return result
+        end),
       },
     },
     specs = {
@@ -136,6 +141,10 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     opts = {
+      filetypes = vim.iter(Chris468.disabled_filetypes):fold({}, function(result, ft)
+        result[ft] = false
+        return result
+      end),
       suggestion = {
         enabled = Chris468.ai.completion.virtual_text,
         auto_trigger = true,
