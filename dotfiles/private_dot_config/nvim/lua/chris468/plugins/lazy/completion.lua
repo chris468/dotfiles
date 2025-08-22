@@ -30,6 +30,7 @@ end
 
 return {
   { "rafamadriz/friendly-snippets" },
+  { "saghen/blink.compat", opts = {} },
   {
     "saghen/blink.cmp",
     dependencies = {
@@ -248,6 +249,41 @@ return {
     cond = Chris468.ai.agent.agent == "avante",
     dependencies = {
       { "mcphub.nvim", optional = true },
+      { "blink.compat" },
+      {
+        "blink.cmp",
+        opts = {
+          sources = {
+            default = { "avante_commands", "avante_mentions", "avante_shortcuts", "avante_files" },
+            providers = {
+              avante_commands = {
+                name = "avante_commands",
+                module = "blink.compat.source",
+                score_offset = 90,
+                opts = {},
+              },
+              avante_files = {
+                name = "avante_files",
+                module = "blink.compat.source",
+                score_offset = 100,
+                opts = {},
+              },
+              avante_mentions = {
+                name = "avante_mentions",
+                module = "blink.compat.source",
+                score_offset = 1000,
+                opts = {},
+              },
+              avante_shortcuts = {
+                name = "avante_shortcuts",
+                module = "blink.compat.source",
+                score_offset = 1000,
+                opts = {},
+              },
+            },
+          },
+        },
+      },
     },
     event = "VeryLazy",
     ---@module 'avante'
