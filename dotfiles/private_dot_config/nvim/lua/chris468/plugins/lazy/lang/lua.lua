@@ -135,7 +135,6 @@ return {
   {
     "jbyuki/one-small-step-for-vimkind",
     config = function()
-      vim.notify("osv")
       if require("chris468.util.lazy").has_plugin("nvim-dap") then
         local dap = require("dap")
         dap.configurations.lua = {
