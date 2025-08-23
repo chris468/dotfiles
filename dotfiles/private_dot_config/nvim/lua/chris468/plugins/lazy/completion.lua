@@ -284,6 +284,13 @@ return {
           },
         },
       },
+      {
+        "render-markdown.nvim",
+        optional = true,
+        opts = {
+          file_types = { "Avante" },
+        },
+      },
     },
     event = "VeryLazy",
     ---@module 'avante'
@@ -349,8 +356,35 @@ return {
       "plenary.nvim",
       "nvim-treesitter",
       { "mcphub.nvim", optional = true },
+      {
+        "render-markdown.nvim",
+        optional = true,
+        opts = {
+          file_types = { "codecompanion" },
+        },
+      },
     },
     cond = Chris468.ai.agent.agent == "codecompanion",
+    cmd = {
+      "CodeCompanion",
+      "CodeCompanionChat",
+      "CodeCompanionCmd",
+      "CodeCompanionActions",
+    },
+    keys = {
+      { "<leader>aa", "<cmd>CodeCompanionActions<cr>", desc = "Code companion action", mode = { "n", "v" } },
+      { "<leader>ac", "<cmd>CodeCompanionChat<cr>", desc = "Code companion chat", mode = { "n", "v" } },
+      {
+        "<leader>ai",
+        function()
+          local prompt = vim.fn.input("Prompt: ")
+          vim.cmd.CodeCompanion(prompt)
+        end,
+        desc = "Code companion inline",
+        mode = { "n", "v" },
+      },
+      { "<leader>at", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Toggle code companion chat", mode = { "n", "v" } },
+    },
     opts = {
       adapters = {
         lmstudio = function()
@@ -371,9 +405,6 @@ return {
           lmstudio.schema = vim.tbl_extend("keep", lmstudio.schema or {}, openai.schema)
           return lmstudio
         end,
-      },
-      opts = {
-        log_level = "DEBUG",
       },
       strategies = {
         chat = {

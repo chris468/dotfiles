@@ -46,6 +46,7 @@ end
 local mappings = {
   { "<Esc>", cmd("nohlsearch"), desc = "Clear search hilight" },
   { "<leader>L", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
+  { "<leader>a", group = "AI" },
   { "<leader>b", group = "Buffers" },
   { "<leader>bb", cmd("e #"), desc = "Switch to previous" },
   { "<leader>bd", snacks.bufdelete.delete, desc = "Delete buffer" },
