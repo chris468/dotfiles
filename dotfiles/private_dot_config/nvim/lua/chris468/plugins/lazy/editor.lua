@@ -135,4 +135,30 @@ return {
     keys = require("chris468.plugins.config.decipher").mappings(),
     opts = {},
   },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = {
+      "nvim-treesitter",
+      "mini.icons",
+    }, -- if you use standalone mini plugins
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    ft = { "markdown" },
+    keys = {
+      { "<leader>um", "<cmd>RenderMarkdown buf_toggle<cr>", desc = "Toggle markdown preview" },
+    },
+    opts_extend = { "file_types" },
+    opts = {
+      completions = {
+        lsp = { enabled = true },
+      },
+      code = {
+        sign = false,
+        language = true,
+      },
+      file_types = {
+        "markdown",
+      },
+    },
+  },
 }
