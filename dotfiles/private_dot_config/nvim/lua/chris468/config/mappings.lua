@@ -255,6 +255,9 @@ snacks.toggle
   })
   :map("<leader>c<C-F>")
 
+snacks.toggle.option("wrap", { name = "wrap" }):map("<leader>uw")
+snacks.toggle.zoom():map("<leader>uz").opts.name = "zoom"
+
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("chris468.mappings.lsp", {}),
   callback = function(args)
