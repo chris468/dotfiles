@@ -50,7 +50,7 @@ return {
         {
           filetypes = { "toggleterm" },
           sections = {
-            lualine_a = { { "mode", fmt = config.format.mode } },
+            lualine_a = { "chris468.mode" },
             lualine_b = {
               function()
                 local t = require("toggleterm.terminal")
@@ -96,7 +96,7 @@ return {
         lualine_z = {},
       },
       sections = {
-        lualine_a = { { "mode", fmt = config.format.mode } },
+        lualine_a = { "chris468.mode" },
         lualine_b = { "filename", "branch", "diff", "diagnostics" },
         lualine_c = {},
         lualine_x = {
