@@ -8,11 +8,6 @@ local M = {
   },
 }
 
-function M.format.filetype(filetype)
-  local icon, hl = require("mini.icons").get("filetype", filetype)
-  return "%#" .. hl .. "#" .. icon
-end
-
 function M.format.encoding(encoding)
   return encoding ~= "utf-8" and encoding or ""
 end
