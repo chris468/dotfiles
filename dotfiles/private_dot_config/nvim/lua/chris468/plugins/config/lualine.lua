@@ -1,5 +1,4 @@
 local M = {
-  format = {},
   mason = {
     ---@type "NONE"|"PENDING"|"READY"
     state = "NONE",
@@ -7,10 +6,6 @@ local M = {
     outdated = 0,
   },
 }
-
-function M.format.encoding(encoding)
-  return encoding ~= "utf-8" and encoding or ""
-end
 
 local function count_outdated_mason_packages()
   local registry = require("mason-registry")

@@ -116,7 +116,7 @@ return {
           { "lsp_status", icon = Chris468.ui.icons.lsp_status },
           { "filetype", colored = true },
           "fileformat",
-          { "encoding", fmt = config.format.encoding },
+          "chris468.encoding",
         },
         lualine_z = { "progress", "location" },
       },
