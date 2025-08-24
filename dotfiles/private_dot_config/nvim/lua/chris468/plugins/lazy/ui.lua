@@ -1,5 +1,4 @@
 local cmd = require("chris468.util.keymap").cmd
-local config = require("chris468.plugins.config.lualine")
 
 local function remove_border(original, direction)
   if type(original) == "string" then
@@ -47,45 +46,8 @@ return {
       extensions = {
         "lazy",
         "mason",
-        {
-          filetypes = { "toggleterm" },
-          sections = {
-            lualine_a = { { "mode", fmt = config.format.mode } },
-            lualine_b = {
-              function()
-                local t = require("toggleterm.terminal")
-                local terminal = t.get(vim.b.toggle_number)
-
-                if not terminal then
-                  return "Terminal"
-                end
-
-                return " " .. terminal.display_name or ("Terminal #" .. vim.b.toggle_number)
-              end,
-            },
-          },
-        },
-        {
-          filetypes = { "TelescopePrompt" },
-          sections = {
-            lualine_a = {
-              function()
-                local state = require("telescope.actions.state")
-                local buf = vim.api.nvim_get_current_buf()
-                local picker = state.get_current_picker(buf)
-                local name = vim.trim(picker.prompt_prefix or "")
-                name = name .. (#name and " " or "") .. (picker.prompt_title or " ")
-
-                return name
-              end,
-            },
-            lualine_b = {
-              function()
-                return string.format(" %s", vim.fn.fnamemodify(vim.fn.getcwd(), ":p:~"))
-              end,
-            },
-          },
-        },
+        "chris468.toggleterm",
+        "chris468.telescope",
       },
       inactive_sections = {
         lualine_a = {},
@@ -96,16 +58,12 @@ return {
         lualine_z = {},
       },
       sections = {
-        lualine_a = { { "mode", fmt = config.format.mode } },
+        lualine_a = { "chris468.mode" },
         lualine_b = { "filename", "branch", "diff", "diagnostics" },
         lualine_c = {},
         lualine_x = {
           { "chris468.codecompanion", icon = Chris468.ui.icons.codecompanion },
-          {
-            config.mason.status,
-            -- cond = config.mason.cond,
-            -- color = config.mason.color,
-          },
+          "chris468.mason",
           {
             require("lazy.status").updates,
             cond = require("lazy.status").has_updates,
@@ -116,7 +74,7 @@ return {
           { "lsp_status", icon = Chris468.ui.icons.lsp_status },
           { "filetype", colored = true },
           "fileformat",
-          { "encoding", fmt = config.format.encoding },
+          "chris468.encoding",
         },
         lualine_z = { "progress", "location" },
       },
