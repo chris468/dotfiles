@@ -100,6 +100,7 @@ return {
         lualine_b = { "filename", "branch", "diff", "diagnostics" },
         lualine_c = {},
         lualine_x = {
+          { "chris468.codecompanion", icon = Chris468.ui.icons.codecompanion },
           {
             config.mason.status,
             -- cond = config.mason.cond,

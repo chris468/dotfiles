@@ -135,6 +135,7 @@ local chris468 = {
       lsp_status = "",
       windsurf = "",
       copilot = "",
+      codecompanion = "",
     },
   },
 }
