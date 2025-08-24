@@ -1,5 +1,4 @@
 local cmd = require("chris468.util.keymap").cmd
-local config = require("chris468.plugins.config.lualine")
 
 local function remove_border(original, direction)
   if type(original) == "string" then
@@ -101,11 +100,7 @@ return {
         lualine_c = {},
         lualine_x = {
           { "chris468.codecompanion", icon = Chris468.ui.icons.codecompanion },
-          {
-            config.mason.status,
-            -- cond = config.mason.cond,
-            -- color = config.mason.color,
-          },
+          "chris468.mason",
           {
             require("lazy.status").updates,
             cond = require("lazy.status").has_updates,
