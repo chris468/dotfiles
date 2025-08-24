@@ -46,45 +46,8 @@ return {
       extensions = {
         "lazy",
         "mason",
-        {
-          filetypes = { "toggleterm" },
-          sections = {
-            lualine_a = { "chris468.mode" },
-            lualine_b = {
-              function()
-                local t = require("toggleterm.terminal")
-                local terminal = t.get(vim.b.toggle_number)
-
-                if not terminal then
-                  return "Terminal"
-                end
-
-                return " " .. terminal.display_name or ("Terminal #" .. vim.b.toggle_number)
-              end,
-            },
-          },
-        },
-        {
-          filetypes = { "TelescopePrompt" },
-          sections = {
-            lualine_a = {
-              function()
-                local state = require("telescope.actions.state")
-                local buf = vim.api.nvim_get_current_buf()
-                local picker = state.get_current_picker(buf)
-                local name = vim.trim(picker.prompt_prefix or "")
-                name = name .. (#name and " " or "") .. (picker.prompt_title or " ")
-
-                return name
-              end,
-            },
-            lualine_b = {
-              function()
-                return string.format(" %s", vim.fn.fnamemodify(vim.fn.getcwd(), ":p:~"))
-              end,
-            },
-          },
-        },
+        "chris468.toggleterm",
+        "chris468.telescope",
       },
       inactive_sections = {
         lualine_a = {},

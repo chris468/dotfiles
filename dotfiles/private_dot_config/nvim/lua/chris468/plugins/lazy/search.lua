@@ -94,6 +94,7 @@ return {
           prompt_position = "top",
           mirror = true,
         },
+        layout_strategy = "vertical",
         mappings = {
           i = {
             ["<C-d>"] = "results_scrolling_down",
@@ -113,7 +114,7 @@ return {
             ["<M-k>"] = "nop",
           },
         },
-        layout_strategy = "vertical",
+        prompt_prefix = " ",
         sorting_strategy = "ascending",
       },
       extensions = {
