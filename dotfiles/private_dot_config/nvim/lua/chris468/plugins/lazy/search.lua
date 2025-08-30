@@ -64,7 +64,14 @@ return {
         { "<leader><leader>", require("chris468.plugins.config.search.fd"), desc = "Files" },
         { "<leader>fb", cmd("Telescope buffers"), desc = "Buffers" },
         { "<leader>fg", cmd("Telescope git_status"), desc = "Git changes" },
-        { "<leader>fr", cmd("Telescope oldfiles"), desc = "Recent files" },
+        { "<leader>fr", require("chris468.plugins.config.search.oldfiles"), desc = "Recent files (cwd)" },
+        {
+          "<leader>fR",
+          function()
+            require("chris468.plugins.config.search.oldfiles")({ cwd_only = false })
+          end,
+          desc = "Recent files",
+        },
         { "<leader>r", cmd("Telescope resume"), desc = "Resume last search" },
         { "<leader>sh", cmd("Telescope help_tags"), desc = "Help" },
         { "<leader>sl", cmd("Telescope lazy"), desc = "Lazy" },
