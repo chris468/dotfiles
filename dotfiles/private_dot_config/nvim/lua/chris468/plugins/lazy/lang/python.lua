@@ -23,7 +23,6 @@ return {
   },
   {
     "linux-cultist/venv-selector.nvim",
-    branch = "regexp",
     enabled = true,
     ft = filetypes,
     keys = {
