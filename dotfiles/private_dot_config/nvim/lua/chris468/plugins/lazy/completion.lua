@@ -390,24 +390,26 @@ return {
     },
     opts = {
       adapters = {
-        lmstudio = function()
-          local openai = require("codecompanion.adapters.openai")
-          local lmstudio = require("codecompanion.adapters").extend("openai_compatible", {
-            env = {
-              url = "http://rosewill.home.arpa:1234",
-              chat_endpoint = "/v1/chat/completions",
-              models_endpoint = "/v1/models",
-            },
-            name = "lmstudio",
-            roles = {
-              llm = "assistant",
-              user = "user",
-              tool = "tool",
-            },
-          })
-          lmstudio.schema = vim.tbl_extend("keep", lmstudio.schema or {}, openai.schema)
-          return lmstudio
-        end,
+        http = {
+          lmstudio = function()
+            local openai = require("codecompanion.adapters.openai")
+            local lmstudio = require("codecompanion.adapters").extend("openai_compatible", {
+              env = {
+                url = "http://rosewill.home.arpa:1234",
+                chat_endpoint = "/v1/chat/completions",
+                models_endpoint = "/v1/models",
+              },
+              name = "lmstudio",
+              roles = {
+                llm = "assistant",
+                user = "user",
+                tool = "tool",
+              },
+            })
+            lmstudio.schema = vim.tbl_extend("keep", lmstudio.schema or {}, openai.schema)
+            return lmstudio
+          end,
+        },
       },
       strategies = {
         chat = {
