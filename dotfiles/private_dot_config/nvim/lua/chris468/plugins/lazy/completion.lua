@@ -115,6 +115,9 @@ return {
           result[ft] = false
           return result
         end),
+        key_bindings = {
+          clear = "<C-e>",
+        },
       },
     },
     specs = {
