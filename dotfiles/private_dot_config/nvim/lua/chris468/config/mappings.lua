@@ -133,8 +133,8 @@ local mappings = {
   { "<leader><Tab>c", cmd("tabclose"), desc = "Close" },
   { "[<Tab>", cmd("tabprevious"), desc = "Previous tab" },
   { "]<Tab>", cmd("tabnext"), desc = "Next tab" },
-  { "j", "gj", hidden = true },
-  { "k", "gk", hidden = true },
+  { "j", "v:count == 0 ? 'gj' : 'j'", hidden = true, expr = true },
+  { "k", "v:count == 0 ? 'gk' : 'k'", hidden = true, expr = true },
 }
 
 -- lhs: string|{lhs: string, mode?: string|string[] }
@@ -267,6 +267,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.keymap.set(mapping.mode or "n", mapping[1], mapping[2], {
         buffer = bufnr,
         desc = mapping.desc,
+        expr = mapping.expr,
       })
     end
   end,
