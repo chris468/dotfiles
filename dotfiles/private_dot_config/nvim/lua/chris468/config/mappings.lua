@@ -248,7 +248,10 @@ snacks.toggle
     id = "format",
     name = "format on save",
     get = function()
-      return vim.b.format_on_save ~= false
+      if vim.b.format_on_save == nil then
+        vim.b.format_on_save = Chris468.format_on_save_default[vim.bo.filetype] ~= false
+      end
+      return vim.b.format_on_save
     end,
     set = function(state)
       vim.b.format_on_save = state

@@ -26,7 +26,7 @@ return {
           settings = {
             yaml = {
               format = {
-                enable = false,
+                enable = true,
               },
             },
           },

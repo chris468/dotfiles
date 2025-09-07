@@ -85,6 +85,9 @@ local chezmoi = require("chris468.config.chezmoi")
 local chris468 = {
   ---@type string[] disable tooling on these filetypes
   disabled_filetypes = { "lazy", "lazy_backdrop", "mason", "oil", "TelescopePrompt" },
+  format_on_save_default = {
+    yaml = false,
+  },
   ai = {
     ---@type { provider: "codeium"|"copilot", virtual_text: boolean }
     completion = {
