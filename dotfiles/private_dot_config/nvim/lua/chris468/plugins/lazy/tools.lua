@@ -75,6 +75,9 @@ return {
         },
         formatters_by_ft = require("chris468-tools").formatter.names_by_ft,
         format_on_save = function(bufnr)
+          if vim.b[bufnr].format_on_save == nil then
+            vim.b[bufnr].format_on_save = Chris468.format_on_save_default[vim.bo[bufnr].filetype] ~= false
+          end
           if vim.g.format_on_save == false or vim.b[bufnr].format_on_save == false then
             return
           end
