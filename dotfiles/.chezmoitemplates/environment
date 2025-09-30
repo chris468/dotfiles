@@ -21,9 +21,6 @@
 - name: LOCAL_INSTALL_DIR
   path: true
   value: {{ includeTemplate "path" (dict "path" "localInstall" "chezmoi" .chezmoi) }}
-- name: POSH_THEME
-  path: true
-  value: {{ $config.poshTheme | isAbs | ternary $config.poshTheme ($config.poshTheme | joinPath .chezmoi.homeDir) }}
 - name: XDG_DATA_HOME
   path: true
   persist: true

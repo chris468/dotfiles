@@ -69,7 +69,7 @@ def --env configure_zoxide [] {
 
 def generate-oh-my-posh-config [] {
     if (which oh-my-posh | is-not-empty) {
-        oh-my-posh init nu --print | save --force ~/.config/nushell/scripts/_lib/.oh-my-posh.nu
+        oh-my-posh init nu --config ~/.config/oh-my-posh/chris468.omp.yaml --print | save --force ~/.config/nushell/scripts/_lib/.oh-my-posh.nu
     }
 }
 
