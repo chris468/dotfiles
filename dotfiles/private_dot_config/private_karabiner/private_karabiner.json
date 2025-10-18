@@ -98,6 +98,50 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": ";/option",
+                        "enabled": false,
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "semicolon" },
+                                "to": [
+                                    {
+                                        "key_code": "left_option",
+                                        "repeat": true
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "semicolon",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "a/option",
+                        "enabled": false,
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "a" },
+                                "to": [
+                                    {
+                                        "key_code": "left_option",
+                                        "repeat": true
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "a",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Left command to Esc / Command",
                         "manipulators": [
                             {
