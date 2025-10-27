@@ -33,6 +33,7 @@ return {
   },
   {
     "stevearc/oil.nvim",
+    cond = Chris468.ui.explorer.plugin == "oil",
     dependencies = { "mini.icons" },
     keys = {
       {
@@ -52,6 +53,26 @@ return {
     },
     opts = {},
     lazy = false,
+  },
+  {
+    "echasnovski/mini.files",
+    cond = Chris468.ui.explorer.plugin == "mini.files",
+    dependencies = { "mini.icons" },
+    keys = {
+      {
+        "<leader>e",
+        function()
+          require("mini.files").open()
+        end,
+        desc = "Explore",
+      },
+    },
+    opts = {
+      mappings = {
+        close = "<Esc>",
+        go_in_plus = "<Enter>",
+      },
+    },
   },
   {
     "catgoose/nvim-colorizer.lua",

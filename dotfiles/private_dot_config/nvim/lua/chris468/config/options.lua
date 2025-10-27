@@ -140,6 +140,10 @@ local chris468 = {
       copilot = "",
       codecompanion = "",
     },
+    explorer = {
+      ---@type "oil"|"mini.files"
+      plugin = "mini.files",
+    },
   },
 }
 local has_overrides, overrides = pcall(require, "chris468.config.local")
