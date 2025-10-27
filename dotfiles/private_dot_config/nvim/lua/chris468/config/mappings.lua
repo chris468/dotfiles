@@ -288,6 +288,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = {
     "TelescopePrompt",
     "help",
+    "minifiles",
     "oil",
     "neotest-summary",
     "neotest-output-panel",
