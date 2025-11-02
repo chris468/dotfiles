@@ -1,3 +1,10 @@
+---@param show_hidden boolean
+local function mini_files_filter(show_hidden)
+  return function(fs_entry)
+    return show_hidden or not vim.startswith(fs_entry.name, ".")
+  end
+end
+
 return {
   {
     "echasnovski/mini.surround",
@@ -73,11 +80,31 @@ return {
         end,
         desc = "Explore buffer directory",
       },
+      {
+        "g.",
+        function()
+          vim.g.chris468_mini_files_show_hidden = not vim.g.chris468_mini_files_show_hidden
+          MiniFiles.refresh({ content = { filter = mini_files_filter(vim.g.chris468_mini_files_show_hidden) } })
+        end,
+        desc = "Toggle hidden files",
+        ft = "minifiles",
+      },
     },
+    lazy = false,
     opts = {
+      content = {
+        filter = mini_files_filter(vim.g.chris468_mini_files_show_hidden or false),
+      },
+      options = {
+        use_as_default_explorer = true,
+      },
       mappings = {
         close = "<Esc>",
+        go_in = "",
         go_in_plus = "<Enter>",
+        go_out = "-",
+        go_out_plus = "<BS>",
+        reset = "g<C-R>",
       },
     },
   },
