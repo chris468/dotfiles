@@ -64,6 +64,19 @@ local function update_keymaps(buf)
   end
 end
 
+local mini_files_split = function(direction)
+  return function()
+    local cur_target = MiniFiles.get_explorer_state().target_window
+    local new_target = vim.api.nvim_win_call(cur_target, function()
+      vim.cmd(direction .. " split")
+      return vim.api.nvim_get_current_win()
+    end)
+
+    MiniFiles.set_target_window(new_target)
+    MiniFiles.go_in({ close_on_file = true })
+  end
+end
+
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("chris468_mini_files_toggle_navigation", { clear = true }),
   callback = function(args)
@@ -162,6 +175,24 @@ return {
           update_keymaps()
         end,
         desc = "Toggle arrow navigation",
+        ft = "minifiles",
+      },
+      {
+        "<C-X>",
+        mini_files_split("horizontal"),
+        desc = "Open in horizontal split",
+        ft = "minifiles",
+      },
+      {
+        "<C-V>",
+        mini_files_split("vertical"),
+        desc = "Open in vertical split",
+        ft = "minifiles",
+      },
+      {
+        "<C-T>",
+        mini_files_split("tab"),
+        desc = "Open in new tab",
         ft = "minifiles",
       },
     },
