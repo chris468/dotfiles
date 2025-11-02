@@ -66,6 +66,11 @@ end
 
 local mini_files_split = function(direction)
   return function()
+    local fs_entry = MiniFiles.get_fs_entry() or {}
+    if fs_entry.fs_type ~= "file" then
+      return
+    end
+
     local cur_target = MiniFiles.get_explorer_state().target_window
     local new_target = vim.api.nvim_win_call(cur_target, function()
       vim.cmd(direction .. " split")
