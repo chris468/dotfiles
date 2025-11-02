@@ -129,9 +129,6 @@ return {
         go_out_plus = "<BS>",
         reset = "g<C-R>",
       },
-      windows = {
-        preview = true,
-      },
     },
   },
   {
