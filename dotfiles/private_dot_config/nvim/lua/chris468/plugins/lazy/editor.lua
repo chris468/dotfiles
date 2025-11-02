@@ -14,7 +14,7 @@ local function update_keymaps(buf)
   print("updating for " .. vim.inspect(buf) .. " " .. vim.api.nvim_buf_get_name(buf))
   local arrow_navigation = vim.g.chris468_mini_files_arrow_navigation or false
   local b = vim.b[buf]
-  if (b.chris468_mini_files_arrow_navigation or false) == arrow_navigation then
+  if b.chris468_mini_files_arrow_navigation == arrow_navigation then
     print("bailing " .. vim.inspect({
       buffer_setting = (b.chris468_mini_files_arrow_navigation == nil and "nil")
         or b.chris468_mini_files_arrow_navigation,
