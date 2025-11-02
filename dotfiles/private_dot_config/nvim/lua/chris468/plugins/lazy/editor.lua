@@ -133,7 +133,14 @@ return {
         desc = "Explore buffer directory",
       },
     },
-    opts = {},
+    opts = {
+      keymaps = {
+        ["<C-s>"] = false,
+        ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+        ["<C-h>"] = false,
+        ["<C-x>"] = { "actions.select", opts = { horizontal = true } },
+      },
+    },
     lazy = false,
   },
   {
