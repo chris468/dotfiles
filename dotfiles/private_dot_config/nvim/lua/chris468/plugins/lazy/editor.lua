@@ -175,6 +175,10 @@ return {
       },
       mappings = {
         close = "<Esc>",
+        go_in = "<C-Space>",
+        go_in_plus = "<Enter>",
+        go_out = "-",
+        go_out_plus = "<BS>",
         reset = "g<C-R>",
       },
     },
