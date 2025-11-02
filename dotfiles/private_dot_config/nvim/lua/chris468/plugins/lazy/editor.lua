@@ -5,6 +5,72 @@ local function mini_files_filter(show_hidden)
   end
 end
 
+local function update_keymaps(buf)
+  buf = buf or 0
+  if vim.bo[buf].filetype ~= "minifiles" then
+    return
+  end
+
+  print("updating for " .. vim.inspect(buf) .. " " .. vim.api.nvim_buf_get_name(buf))
+  local arrow_navigation = vim.g.chris468_mini_files_arrow_navigation or false
+  local b = vim.b[buf]
+  if (b.chris468_mini_files_arrow_navigation or false) == arrow_navigation then
+    print("bailing " .. vim.inspect({
+      buffer_setting = (b.chris468_mini_files_arrow_navigation == nil and "nil")
+        or b.chris468_mini_files_arrow_navigation,
+      global_setting = (vim.g.chris468_mini_files_arrow_navigation == nil and "nil")
+        or vim.g.chris468_mini_files_arrow_navigation,
+    }))
+
+    return
+  end
+
+  local mini_files_action = {
+    right = MiniFiles.go_in,
+    shift_right = function()
+      MiniFiles.go_in({ close_on_file = true })
+    end,
+    left = MiniFiles.go_out,
+    shift_left = function()
+      for _ = 1, vim.v.count1 do
+        MiniFiles.go_out()
+      end
+      MiniFiles.trim_right()
+    end,
+  }
+
+  local mini_files_navigation = {
+    [false] = {
+      ["h"] = mini_files_action.left,
+      ["H"] = mini_files_action.shift_left,
+      ["l"] = mini_files_action.right,
+      ["L"] = mini_files_action.shift_right,
+    },
+    [true] = {
+      ["<Left>"] = mini_files_action.left,
+      ["<S-Left>"] = mini_files_action.shift_left,
+      ["<Right>"] = mini_files_action.right,
+      ["<S-Right>"] = mini_files_action.shift_right,
+    },
+  }
+
+  print("setting to " .. vim.inspect(arrow_navigation))
+  b.chris468_mini_files_arrow_navigation = arrow_navigation
+  for key, action in pairs(mini_files_navigation[arrow_navigation]) do
+    vim.keymap.set("n", key, action, { buffer = buf })
+  end
+  for key, _ in pairs(mini_files_navigation[not arrow_navigation]) do
+    vim.keymap.set("n", key, key, { buffer = buf, remap = false })
+  end
+end
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("chris468_mini_files_toggle_navigation", { clear = true }),
+  callback = function(args)
+    update_keymaps(args.buf)
+  end,
+})
+
 return {
   {
     "echasnovski/mini.surround",
@@ -89,6 +155,15 @@ return {
         desc = "Toggle hidden files",
         ft = "minifiles",
       },
+      {
+        "g<C-N>",
+        function()
+          vim.g.chris468_mini_files_arrow_navigation = not vim.g.chris468_mini_files_arrow_navigation
+          update_keymaps()
+        end,
+        desc = "Toggle arrow navigation",
+        ft = "minifiles",
+      },
     },
     lazy = false,
     opts = {
@@ -100,10 +175,6 @@ return {
       },
       mappings = {
         close = "<Esc>",
-        go_in = "",
-        go_in_plus = "<Enter>",
-        go_out = "-",
-        go_out_plus = "<BS>",
         reset = "g<C-R>",
       },
     },
