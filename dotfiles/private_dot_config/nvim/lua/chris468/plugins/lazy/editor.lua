@@ -1,3 +1,5 @@
+local mf = require("chris468.plugins.config.minifiles")
+
 return {
   {
     "echasnovski/mini.surround",
@@ -51,7 +53,14 @@ return {
         desc = "Explore buffer directory",
       },
     },
-    opts = {},
+    opts = {
+      keymaps = {
+        ["<C-s>"] = false,
+        ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+        ["<C-h>"] = false,
+        ["<C-x>"] = { "actions.select", opts = { horizontal = true } },
+      },
+    },
     lazy = false,
   },
   {
@@ -73,11 +82,52 @@ return {
         end,
         desc = "Explore buffer directory",
       },
+      {
+        "g.",
+        mf.toggle_show_hidden,
+        desc = "Toggle hidden files",
+        ft = "minifiles",
+      },
+      {
+        "g<C-N>",
+        mf.toggle_arrow_navigation,
+        desc = "Toggle arrow navigation",
+        ft = "minifiles",
+      },
+      {
+        "<C-X>",
+        mf.mini_files_split("horizontal"),
+        desc = "Open in horizontal split",
+        ft = "minifiles",
+      },
+      {
+        "<C-V>",
+        mf.mini_files_split("vertical"),
+        desc = "Open in vertical split",
+        ft = "minifiles",
+      },
+      {
+        "<C-T>",
+        mf.mini_files_split("tab"),
+        desc = "Open in new tab",
+        ft = "minifiles",
+      },
     },
+    lazy = false,
     opts = {
+      content = {
+        filter = mf.mini_files_filter(),
+      },
+      options = {
+        use_as_default_explorer = true,
+      },
       mappings = {
         close = "<Esc>",
+        go_in = "<C-Space>",
         go_in_plus = "<Enter>",
+        go_out = "-",
+        go_out_plus = "<BS>",
+        reset = "g<C-R>",
       },
     },
   },

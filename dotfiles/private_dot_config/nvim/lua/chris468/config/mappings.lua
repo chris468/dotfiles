@@ -295,3 +295,11 @@ vim.api.nvim_create_autocmd("FileType", {
     "qf",
   },
 })
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("chris468.mappings.minifiles", { clear = true }),
+  callback = function(args)
+    local mf = require("chris468.plugins.config.minifiles")
+    mf.update_keymaps(args.buf)
+  end,
+})
