@@ -26,10 +26,10 @@ local function update_keymaps(buf)
   end
 
   local mini_files_action = {
-    right = MiniFiles.go_in,
-    shift_right = function()
+    right = function()
       MiniFiles.go_in({ close_on_file = true })
     end,
+    shift_right = MiniFiles.go_in,
     left = MiniFiles.go_out,
     shift_left = function()
       for _ = 1, vim.v.count1 do
