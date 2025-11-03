@@ -46,7 +46,7 @@ return {
         },
       },
       formatters = {
-        prettier = { filetypes = { "htmlangular" } },
+        prettier = { filetypes = { "htmlangular", "typescript" } },
         php_cs_fixer = { filetypes = { "php" }, package = "php-cs-fixer" },
       },
       linters = {
