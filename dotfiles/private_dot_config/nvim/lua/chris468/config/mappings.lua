@@ -2,7 +2,7 @@ local snacks = require("snacks")
 local whichkey = require("which-key")
 local util_lua = require("chris468.util.lua")
 local cmd = require("chris468.util.keymap").cmd
-local util_terminal = require("chris468.util.terminal")
+local util_terminal = require("chris468.util._terminal")
 
 ---@param source_path? string Source path to apply, or nil to apply all
 ---@return string
