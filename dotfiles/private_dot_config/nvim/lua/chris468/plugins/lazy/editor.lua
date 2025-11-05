@@ -95,6 +95,18 @@ return {
         ft = "minifiles",
       },
       {
+        "gt",
+        mf.open_terminal(),
+        desc = "Open terminal for current directory",
+        ft = "minifiles",
+      },
+      {
+        "gT",
+        mf.open_terminal({ selected = true }),
+        desc = "Open terminal for selected directory",
+        ft = "minifiles",
+      },
+      {
         "<C-X>",
         mf.mini_files_split("horizontal"),
         desc = "Open in horizontal split",

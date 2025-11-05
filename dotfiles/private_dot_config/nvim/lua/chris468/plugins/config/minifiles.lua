@@ -90,4 +90,20 @@ function M.toggle_show_hidden()
   MiniFiles.refresh({ content = { filter = M.mini_files_filter() } })
 end
 
+---@param opts? { selected: boolean }
+function M.open_terminal(opts)
+  opts = vim.tbl_extend("keep", opts or {}, { selected = false })
+  return function()
+    if vim.bo.filetype ~= "minifiles" then
+      return
+    end
+    local fs_entry = MiniFiles.get_fs_entry() or {}
+    local selected = opts.selected and fs_entry.fs_type == "directory"
+    local dir = selected and fs_entry.path or vim.api.nvim_buf_get_name(0)
+
+    local tt = require("toggleterm.terminal")
+    tt.get_or_create_term(nil, dir, "horizontal", dir):open(nil, "horizontal")
+  end
+end
+
 return M
