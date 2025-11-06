@@ -6,18 +6,15 @@ local Object = require("plenary").class
 ---@field name? string
 
 ---@class chris468.util.Terminal.Mapping : vim.keymap.set.Opts
+---@field [1] string lhs
+---@field [2] string|fun() rhs
 ---@field mode? string|string[]
----@field lhs string
----@field rhs string|fun()
 
 ---@class chris468.util.Terminal
----@field toggle fun(opts: chris468.util.Terminal.Opts): chris468.util.Terminal
----@field toggle_mappings fun(bufnr?: integer)
----@field protected _abstract fun(method: string)
----@field mappings chris468.util.Terminal.Mapping[]
+---@field extend fun(): chris468.util.Terminal
+local Terminal = Object:extend()
 
-local Terminal = Object:extend() --@as chris468.util.Terminal
-
+---@type chris468.util.Terminal.Mapping[]
 Terminal.mappings = {
   { "<C-H>", cmd("TmuxNavigateLeft"), desc = "Navigate left", mode = "t" },
   { "<C-J>", cmd("TmuxNavigateDown"), desc = "Navigate down", mode = "t" },
@@ -61,10 +58,12 @@ function Terminal.toggle_mappings()
   end
 end
 
-function Terminal.toggle(_)
+---@param opts? chris468.util.Terminal.Opts
+function Terminal.toggle(opts) ---@diagnostic disable-line: unused-local
   Terminal._abstract("toggle")
 end
 
+---@protected
 function Terminal._abstract(method)
   error("Method " .. method .. " is abstract")
 end
