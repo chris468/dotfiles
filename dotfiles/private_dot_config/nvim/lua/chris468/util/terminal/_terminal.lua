@@ -22,6 +22,31 @@ Terminal.mappings = {
   { "<C-L>", cmd("TmuxNavigateRight"), desc = "Navigate right", mode = "t" },
 }
 
+---@private
+---@type { [integer]: chris468.util.Terminal }
+Terminal._by_bufnr = {}
+
+---@param opts? table
+---@return chris468.util.Terminal
+function Terminal:new(opts)
+  local t = self:_new(opts)
+  Terminal._by_bufnr[t:bufnr()] = t
+  return t
+end
+
+---@param opts? table
+---@return chris468.util.Terminal
+function Terminal:_new(opts) ---@diagnostic disable-line: unused-local
+  ---@diagnostic disable-next-line: missing-return
+  Terminal._abstract("_new")
+end
+
+---@return integer
+function Terminal:bufnr()
+  ---@diagnostic disable-next-line: missing-return
+  Terminal._abstract("bufnr")
+end
+
 function Terminal.enable_mappings(bufnr)
   vim.b[bufnr].chris468_terminal_mappings = true
   for _, mapping in ipairs(Terminal.mappings) do
