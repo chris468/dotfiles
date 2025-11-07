@@ -2,10 +2,6 @@ local function toggle_terminal()
   require("chris468.util.terminal").toggle({ count = vim.v.count1 })
 end
 
-local function toggle_mappings()
-  require("chris468.util.terminal").toggle_mappings()
-end
-
 return {
   {
     "akinsho/toggleterm.nvim",
@@ -27,7 +23,6 @@ return {
     keys = {
       { "<C-/>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
       { "<C-_>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
-      { [[<C-\><C-\>]], toggle_mappings, desc = "Toggle mappings", mode = "t" },
       {
         [[<C-\><C-R>]],
         function()

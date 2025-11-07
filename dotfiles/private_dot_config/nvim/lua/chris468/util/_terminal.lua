@@ -16,6 +16,10 @@ local function should_show_stdout(str)
   return str ~= ""
 end
 
+local function toggle_mappings()
+  require("chris468.util.terminal").toggle_mappings()
+end
+
 function callbacks.create(term)
   vim.keymap.set("n", "q", function()
     term:close()
@@ -26,6 +30,8 @@ function callbacks.create(term)
   vim.keymap.set({ "n", "t" }, "<C-/>", function()
     term:close()
   end, { buffer = term.bufnr, nowait = true })
+  -- FIXME: this method is just for background, need to register elsewhere for toggled terms
+  vim.keymap.set("t", [[<C-\><C-\>]], toggle_mappings, { buffer = term.bufnr, desc = "Toggle mappings" })
 end
 
 function callbacks.on_stdout(term, _, data)
