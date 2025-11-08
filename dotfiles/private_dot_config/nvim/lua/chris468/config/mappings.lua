@@ -43,6 +43,14 @@ local function trouble_open_or_replace(mode, opts)
   trouble.first(vim.tbl_extend("force", { mode = mode, refresh = true }, opts or {}))
 end
 
+local function toggle_terminal()
+  Terminal:toggle({ vim.v.count1, ("Terminal %s"):format(vim.v.count1) })
+end
+
+local function toggle_terminal_mappings()
+  Terminal:toggle_navigation_mappings()
+end
+
 local mappings = {
   { "<Esc>", cmd("nohlsearch"), desc = "Clear search hilight" },
   { "<leader>L", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
@@ -132,6 +140,20 @@ local mappings = {
   { "]<Tab>", cmd("tabnext"), desc = "Next tab" },
   { "j", "v:count == 0 ? 'gj' : 'j'", hidden = true, expr = true },
   { "k", "v:count == 0 ? 'gk' : 'k'", hidden = true, expr = true },
+  { "<C-/>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
+  { "<C-_>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
+  { [[<C-\><C-\>]], toggle_terminal_mappings, desc = "Toggle navigation mappings", mode = "t" },
+  {
+    [[<C-\><C-R>]],
+    function()
+      return [[<C-\><C-N>"]]
+        .. vim.fn.nr2char(vim.fn.getchar() --[[@as integer ]])
+        .. "pi"
+    end,
+    desc = "Registers",
+    expr = true,
+    mode = "t",
+  },
 }
 
 -- lhs: string|{lhs: string, mode?: string|string[] }
