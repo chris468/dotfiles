@@ -2,7 +2,8 @@ local lazy_require = require("lazy-require").require_on_index
 local toggleterm = lazy_require("toggleterm")
 
 ---@class chris468.util.Terminal.ToggleTerminal : chris468.util.Terminal
-local ToggleTerminal = require("chris468.util.terminal._terminal"):extend()
+
+local ToggleTerminal = require("chris468.util.terminal._terminal"):extend() --[[ @as chris468.util.Terminal.ToggleTerminal ]]
 
 function ToggleTerminal:toggle(opts)
   toggleterm.toggle(opts.count, nil, nil, nil, opts.name or ("Terminal %s"):format(opts.count))

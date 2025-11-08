@@ -2,14 +2,21 @@ local command = require("chris468.util.keymap").cmd
 local Object = require("plenary").class
 
 ---@class chris468.util.Terminal
+---@field setup fun()
+---@field toggle fun(self: chris468.util.Terminal, opts: chris468.util.Terminal.ToggleOpts)
+---@field background_command fun(self: chris468.util.Terminal, cmd: string, opts?: chris468.util.Terminal.BackgroundOpts)
+---@field toggle_navigation_mappings fun(self: chris468.util.Terminal)
 ---@field extend fun(self: chris468.util.Terminal): chris468.util.Terminal
+---@field protected _abstract fun(method: string)
+---@field protected _background_config table
+---@field private _enable_navigation_mappings fun(bufnr: integer)
+---@field private _disable_navigation_mappings fun(bufnr: integer)
 local Terminal = Object:extend()
 
 ---@class chris468.util.Terminal.ToggleOpts
 ---@field count number
 ---@field name? string
 
----@param opts chris468.util.Terminal.ToggleOpts
 function Terminal:toggle(opts) ---@diagnostic disable-line: unused-local
   Terminal._abstract("toggle")
 end
@@ -17,13 +24,10 @@ end
 ---@class chris468.util.Terminal.BackgroundOpts
 ---@field display_name? string
 
---- @param cmd string
---- @param opts? chris468.util.Terminal.BackgroundOpts
 function Terminal:background_command(cmd, opts) ---@diagnostic disable-line: unused-local
   Terminal._abstract("background_command")
 end
 
----@protected
 function Terminal._abstract(method)
   error("abstract method: " .. method)
 end
@@ -36,8 +40,6 @@ Terminal._navigation_mappings = {
   { "<C-L>", command("TmuxNavigateRight"), desc = "Navigate right", mode = "t" },
 }
 
----@private
----@param bufnr integer
 function Terminal._enable_navigation_mappings(bufnr)
   vim.b[bufnr].chris468_terminal_navigation_mappings = true
   for _, mapping in ipairs(Terminal._navigation_mappings) do
@@ -48,8 +50,6 @@ function Terminal._enable_navigation_mappings(bufnr)
   end
 end
 
----@private
----@param bufnr integer
 function Terminal._disable_navigation_mappings(bufnr)
   vim.b[bufnr].chris468_terminal_navigation_mappings = false
   for _, mapping in ipairs(Terminal._navigation_mappings) do
@@ -141,7 +141,6 @@ local function on_exit(term, _, exit_code)
   end
 end
 
----@protected
 Terminal._background_config = {
   on_create = on_create,
   on_stdout = on_stdout,
