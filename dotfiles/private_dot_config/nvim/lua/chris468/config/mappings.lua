@@ -77,7 +77,7 @@ local mappings = {
     "<leader>fca",
     function()
       notify_if_modified_buffers()
-      Terminal:background_command(chezmoi_apply_command(), "Chezmoi apply")
+      Terminal:background_command(chezmoi_apply_command(), { display_name = "Chezmoi apply" })
     end,
     desc = "Apply",
   },
@@ -97,7 +97,7 @@ local mappings = {
 
       local path = vim.fn.fnamemodify(buf_name, ":p")
       local filename = vim.fn.fnamemodify(buf_name, ":t")
-      Terminal:background_command(chezmoi_apply_command(path), "Chezmoi apply " .. filename)
+      Terminal:background_command(chezmoi_apply_command(path), { display_name = "Chezmoi apply " .. filename })
     end,
     desc = "Apply current source file",
   },
@@ -107,7 +107,7 @@ local mappings = {
       notify_if_modified_buffers()
       local path = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
       local display_name = #path > 30 and path:sub(-30) or path
-      Terminal:background_command(chezmoi_apply_command(path), "Chezmoi apply " .. display_name)
+      Terminal:background_command(chezmoi_apply_command(path), { display_name = "Chezmoi apply " .. display_name })
     end,
     desc = "Apply current source dir",
   },
@@ -115,7 +115,7 @@ local mappings = {
     "<leader>fcu",
     function()
       notify_if_modified_buffers()
-      Terminal:background_command("chezmoi update --no-tty --color=false", "Chezmoi update")
+      Terminal:background_command("chezmoi update --no-tty --color=false", { display_name = "Chezmoi update" })
     end,
     desc = "Update",
   },
@@ -123,7 +123,10 @@ local mappings = {
     "<leader>fcU",
     function()
       notify_if_modified_buffers()
-      Terminal:background_command("chezmoi update --no-tty --color=false --init --apply", "Chezmoi update and apply")
+      Terminal:background_command(
+        "chezmoi update --no-tty --color=false --init --apply",
+        { display_name = "Chezmoi update and apply" }
+      )
     end,
     desc = "Update and apply",
   },
