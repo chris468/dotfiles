@@ -1,5 +1,4 @@
 local add_neotest_adapters = require("chris468/plugins/config/neotest").add_neotest_adapters
-
 return {
   {
     "chris468-tools",
@@ -82,9 +81,9 @@ return {
     dependencies = { "snacks.nvim" },
     keys = {
       {
-        "<leader>ll",
+        "<leader>lL",
         function()
-          require("chris468.plugins.config.lang.luapad").toggle()
+          require("chris468.plugins.config.lang.luapad").toggle("luapad")
         end,
         desc = "Luapad",
       },
@@ -94,6 +93,23 @@ return {
       eval_on_move = false,
     },
     version = false,
+  },
+  {
+    "ii14/neorepl.nvim",
+    cmd = { "Repl" },
+    config = function(_, opts)
+      require("neorepl").config(opts)
+    end,
+    keys = {
+      {
+        "<leader>ll",
+        function()
+          require("chris468.plugins.config.lang.luapad").toggle("neorepl")
+        end,
+        desc = "Lua REPL",
+      },
+    },
+    opts = {},
   },
   {
     "snacks.nvim",
@@ -114,19 +130,6 @@ return {
             number = true,
             relativenumber = true,
             cursorline = true,
-          },
-          keys = {
-            ["<leader><c-l>"] = "close",
-            ["<c-/>"] = {
-              "<c-/>",
-              "close",
-              mode = { "n", "i" },
-            },
-            ["<c-_>"] = {
-              "<c-_>",
-              "close",
-              mode = { "n", "i" },
-            },
           },
         },
       },

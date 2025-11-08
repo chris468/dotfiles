@@ -46,22 +46,43 @@ local function attach_luapad(buf)
   })
 end
 
----@type table<integer, snacks.win>
+---@alias chris468.luapad_type "luapad"|"neorepl"
+
+---@type { [chris468.luapad_type]: snacks.win|nil }
 local pads = {}
 
-local function new()
+local new = {}
+
+function new.luapad()
   ensure_project()
-  local luapad_path = project_root / "Luapad" .. (vim.v.count1 > 1 and " " .. vim.v.count1 or "")
-  local win = Snacks.win({ style = "Luapad", file = luapad_path })
+  local luapad_path = project_root / "Luapad"
+  local win = Snacks.win({ style = "Luapad", file = luapad_path.filename })
   attach_luapad(win.buf)
   return win
 end
 
-function M.toggle()
-  if pads[vim.v.count1] and pads[vim.v.count1]:buf_valid() then
-    pads[vim.v.count1]:toggle()
+function new.neorepl()
+  local win = Snacks.win({ position = "right", enter = true })
+  require("neorepl").new({
+    on_init = function(bufnr)
+      print("init")
+      local bo = vim.bo[bufnr]
+      bo.swapfile = false
+      bo.bufhidden = "hide"
+      bo.buftype = "nofile"
+      bo.buflisted = false
+      bo.modifiable = true
+    end,
+  })
+  return win
+end
+
+---@param type chris468.luapad_type
+function M.toggle(type)
+  if pads[type] and pads[type]:win_valid() then
+    pads[type]:toggle()
   else
-    pads[vim.v.count1] = new()
+    pads[type] = new[type]()
   end
 end
 
