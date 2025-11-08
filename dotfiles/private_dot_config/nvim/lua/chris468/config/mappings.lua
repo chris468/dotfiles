@@ -2,7 +2,7 @@ local snacks = require("snacks")
 local whichkey = require("which-key")
 local util_lua = require("chris468.util.lua")
 local cmd = require("chris468.util.keymap").cmd
-local util_terminal = require("chris468.util.terminal")
+local Terminal = require("chris468.util.terminal")
 
 ---@param source_path? string Source path to apply, or nil to apply all
 ---@return string
@@ -43,6 +43,14 @@ local function trouble_open_or_replace(mode, opts)
   trouble.first(vim.tbl_extend("force", { mode = mode, refresh = true }, opts or {}))
 end
 
+local function toggle_terminal()
+  Terminal:toggle({ vim.v.count1, ("Terminal %s"):format(vim.v.count1) })
+end
+
+local function toggle_terminal_mappings()
+  Terminal:toggle_navigation_mappings()
+end
+
 local mappings = {
   { "<Esc>", cmd("nohlsearch"), desc = "Clear search hilight" },
   { "<leader>L", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
@@ -69,7 +77,7 @@ local mappings = {
     "<leader>fca",
     function()
       notify_if_modified_buffers()
-      util_terminal.background_command(chezmoi_apply_command(), "Chezmoi apply")
+      Terminal:background_command(chezmoi_apply_command(), { display_name = "Chezmoi apply" })
     end,
     desc = "Apply",
   },
@@ -89,7 +97,7 @@ local mappings = {
 
       local path = vim.fn.fnamemodify(buf_name, ":p")
       local filename = vim.fn.fnamemodify(buf_name, ":t")
-      util_terminal.background_command(chezmoi_apply_command(path), "Chezmoi apply " .. filename)
+      Terminal:background_command(chezmoi_apply_command(path), { display_name = "Chezmoi apply " .. filename })
     end,
     desc = "Apply current source file",
   },
@@ -99,7 +107,7 @@ local mappings = {
       notify_if_modified_buffers()
       local path = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
       local display_name = #path > 30 and path:sub(-30) or path
-      util_terminal.background_command(chezmoi_apply_command(path), "Chezmoi apply " .. display_name)
+      Terminal:background_command(chezmoi_apply_command(path), { display_name = "Chezmoi apply " .. display_name })
     end,
     desc = "Apply current source dir",
   },
@@ -107,7 +115,7 @@ local mappings = {
     "<leader>fcu",
     function()
       notify_if_modified_buffers()
-      util_terminal.background_command("chezmoi update --no-tty --color=false", "Chezmoi update")
+      Terminal:background_command("chezmoi update --no-tty --color=false", { display_name = "Chezmoi update" })
     end,
     desc = "Update",
   },
@@ -115,9 +123,9 @@ local mappings = {
     "<leader>fcU",
     function()
       notify_if_modified_buffers()
-      util_terminal.background_command(
+      Terminal:background_command(
         "chezmoi update --no-tty --color=false --init --apply",
-        "Chezmoi update and apply"
+        { display_name = "Chezmoi update and apply" }
       )
     end,
     desc = "Update and apply",
@@ -135,6 +143,20 @@ local mappings = {
   { "]<Tab>", cmd("tabnext"), desc = "Next tab" },
   { "j", "v:count == 0 ? 'gj' : 'j'", hidden = true, expr = true },
   { "k", "v:count == 0 ? 'gk' : 'k'", hidden = true, expr = true },
+  { "<C-/>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
+  { "<C-_>", toggle_terminal, desc = "Toggle term", mode = { "n", "i", "t" } },
+  { [[<C-\><C-\>]], toggle_terminal_mappings, desc = "Toggle navigation mappings", mode = "t" },
+  {
+    [[<C-\><C-R>]],
+    function()
+      return [[<C-\><C-N>"]]
+        .. vim.fn.nr2char(vim.fn.getchar() --[[@as integer ]])
+        .. "pi"
+    end,
+    desc = "Registers",
+    expr = true,
+    mode = "t",
+  },
 }
 
 -- lhs: string|{lhs: string, mode?: string|string[] }

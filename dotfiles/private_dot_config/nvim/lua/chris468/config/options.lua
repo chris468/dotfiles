@@ -145,6 +145,10 @@ local chris468 = {
       plugin = "mini.files",
     },
   },
+  terminal = {
+    ---@type "toggleterm"
+    plugin = "toggleterm",
+  },
 }
 local has_overrides, overrides = pcall(require, "chris468.config.local")
 
