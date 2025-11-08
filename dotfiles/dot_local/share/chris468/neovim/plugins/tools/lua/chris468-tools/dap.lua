@@ -6,7 +6,7 @@ local installer = require("chris468-tools.installer")
 ---@field new fun(self: chris468.tools.Dap, name: string, opts?: chris468.tools.Tool.Options) : chris468.tools.Dap
 ---@field by_ft { [string]: chris468.tools.Dap[] }
 ---@field names_by_ft { [string]: string[] }
-Dap = Tool:extend() --[[ @as chris468.tools.Dap ]]
+local Dap = Tool:extend() --[[ @as chris468.tools.Dap ]]
 Dap.type = "DAP"
 function Dap:new(name, opts)
   opts = opts or {}
@@ -31,10 +31,7 @@ end
 ---@param disable_filetypes { [string]: true }
 function Dap.setup(opts, disable_filetypes)
   Dap.by_ft, _ = installer.map_tools_by_filetype(opts, Dap, disable_filetypes)
-  installer.install_on_filetype(
-    Dap.by_ft,
-    vim.api.nvim_create_augroup("chris468-tools.dap", { clear = true })
-  )
+  installer.install_on_filetype(Dap.by_ft, vim.api.nvim_create_augroup("chris468-tools.dap", { clear = true }))
 end
 
 return Dap
