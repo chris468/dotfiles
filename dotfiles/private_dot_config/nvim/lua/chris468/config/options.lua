@@ -117,10 +117,6 @@ local chris468 = {
       "yaml.ansible",
     },
   },
-  terminal = {
-    ---@type "toggleterm"
-    plugin = "toggleterm",
-  },
   ui = {
     icons = {
       error = "󰅚",
