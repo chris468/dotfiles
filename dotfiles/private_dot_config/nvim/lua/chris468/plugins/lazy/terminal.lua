@@ -33,7 +33,7 @@ end
 
 local function toggle_mappings()
   local bufnr = vim.api.nvim_get_current_buf()
-  if vim.bo[bufnr].filetype ~= "toggleterm" then
+  if vim.bo[bufnr].buftype ~= "terminal" then
     return
   end
 
