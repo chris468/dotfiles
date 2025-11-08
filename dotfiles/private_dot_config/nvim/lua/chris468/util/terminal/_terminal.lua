@@ -10,4 +10,15 @@ function Terminal:toggle(opts) ---@diagnostic disable-line: unused-local
   Terminal._abstract("toggle")
 end
 
+--- @param cmd string
+--- @param display_name? string
+function Terminal:background_command(cmd, display_name) ---@diagnostic disable-line: unused-local
+  Terminal._abstract("background_command")
+end
+
+---@protected
+function Terminal._abstract(method)
+  error("abstract method: " .. method)
+end
+
 return Terminal

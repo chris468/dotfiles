@@ -1,7 +1,7 @@
 local cmd = require("chris468.util.keymap").cmd
 
 local function toggle_terminal()
-  require("chris468.util.terminal"):toggle(vim.v.count1, ("Terminal %s"):format(vim.v.count1))
+  require("chris468.util.terminal"):toggle({ vim.v.count1, ("Terminal %s"):format(vim.v.count1) })
 end
 
 local term_mappings = {
