@@ -84,22 +84,53 @@ new["lua-console"] = function()
   return win
 end
 
+---@param fn fun():any
+local function save_restore_cursor_selection(fn)
+  local buffer = vim.api.nvim_get_current_buf()
+  local win = vim.api.nvim_get_current_win()
+
+  local marks = { "<", ">" }
+  local saved = {}
+  saved.marks = vim.tbl_map(function(v)
+    return { v, vim.api.nvim_buf_get_mark(buffer, v) }
+  end, marks)
+  saved.cursor = vim.api.nvim_win_get_cursor(win)
+
+  local ok, ret = pcall(fn)
+
+  vim.api.nvim_win_set_cursor(win, saved.cursor)
+  for _, mark in ipairs(saved.marks) do
+    vim.api.nvim_buf_set_mark(buffer, mark[1], mark[2][1], mark[2][2], {})
+  end
+
+  if not ok then
+    error(ret)
+  end
+
+  return ret
+end
+
 function new.snack()
   local luapad_path = project_root / "lua-console"
-  local win = Snacks.win({
+  return Snacks.win({
     style = "Luapad",
     file = luapad_path.filename,
     keys = {
+      ---@diagnostic disable-next-line: assign-type-mismatch
       ["<localleader><localleader>"] = { Snacks.debug.run, mode = { "n", "v" }, desc = "Run" },
-      -- ["<localleader><CR>"] = {
-      --   function()
-      --     TODO: set selection to current line
-      --     Snacks.debug.run()
-      --     TODO: restore selection
-      --   end,
-      --   mode = "n",
-      --   desc = "Run current line",
-      -- },
+      ["<localleader><CR>"] = {
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        function()
+          save_restore_cursor_selection(function()
+            vim.api.nvim_buf_call(0, function()
+              vim.cmd([[normal! V]])
+              Snacks.debug.run()
+            end)
+          end)
+        end,
+        mode = "n",
+        desc = "Run current line",
+      },
       -- TODO: mapping to dump to buffer
       --[[
 
