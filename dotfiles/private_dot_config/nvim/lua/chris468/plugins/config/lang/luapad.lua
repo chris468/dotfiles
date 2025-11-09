@@ -46,7 +46,7 @@ local function attach_luapad(buf)
   })
 end
 
----@alias chris468.luapad_type "luapad"|"neorepl"|"lua-console"
+---@alias chris468.luapad_type "luapad"|"neorepl"|"lua-console"|"snack"
 
 ---@type { [chris468.luapad_type]: snacks.win|nil }
 local pads = {}
@@ -82,6 +82,54 @@ new["lua-console"] = function()
   local win = Snacks.win({ style = "Luapad", file = luapad_path.filename })
   require("lua-console.utils").attach_toggle(win.buf)
   return win
+end
+
+function new.snack()
+  local luapad_path = project_root / "lua-console"
+  local win = Snacks.win({
+    style = "Luapad",
+    file = luapad_path.filename,
+    keys = {
+      ["<localleader><localleader>"] = { Snacks.debug.run, mode = { "n", "v" }, desc = "Run" },
+      -- ["<localleader><CR>"] = {
+      --   function()
+      --     TODO: set selection to current line
+      --     Snacks.debug.run()
+      --     TODO: restore selection
+      --   end,
+      --   mode = "n",
+      --   desc = "Run current line",
+      -- },
+      -- TODO: mapping to dump to buffer
+      --[[
+
+      { 0, 13, 8, 0 }
+      { 0, 13, 8, 0 }
+      { "s" }
+      s
+      167
+      {}
+
+      local marks = vim.api.nvim_buf_get_extmarks(3, 167, 0, -1, {details=true})
+
+      for _, mark in ipairs(marks) do
+        print(mark[4].virt_lines)
+      end
+
+
+      for _, mark in ipairs(marks) do
+        for _, line in ipairs(mark[4].virt_lines) do
+          for _, section in ipairs(line) do
+            if section[2] == "SnacksDebugPrint" then
+              print(section[1])
+            end
+          end
+        end
+      end
+
+      --]]
+    },
+  })
 end
 
 ---@param type chris468.luapad_type

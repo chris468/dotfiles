@@ -157,6 +157,13 @@ local mappings = {
     expr = true,
     mode = "t",
   },
+  {
+    "<leader>ll",
+    function()
+      require("chris468.plugins.config.lang.luapad").toggle("snack")
+    end,
+    desc = "repl",
+  },
 }
 
 -- lhs: string|{lhs: string, mode?: string|string[] }

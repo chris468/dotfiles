@@ -111,32 +111,32 @@ return {
   --   },
   --   opts = {},
   -- },
-  {
-    "yarospace/lua-console.nvim",
-    lazy = true,
-    keys = {
-      {
-        "<leader>ll",
-        function()
-          require("chris468.plugins.config.lang.luapad").toggle("lua-console")
-        end,
-        desc = "Lua-console",
-      },
-    },
-    opts = {
-      buffer = {
-        clear_before_eval = true,
-        load_on_start = false,
-      },
-      mappings = {
-        attach = false,
-        eval_buffer = "<leader><CR>",
-        messages = false,
-        resize_up = false,
-        resize_down = false,
-      },
-    },
-  },
+  -- {
+  --   "yarospace/lua-console.nvim",
+  --   lazy = true,
+  --   keys = {
+  --     {
+  --       "<leader>ll",
+  --       function()
+  --         require("chris468.plugins.config.lang.luapad").toggle("lua-console")
+  --       end,
+  --       desc = "Lua-console",
+  --     },
+  --   },
+  --   opts = {
+  --     buffer = {
+  --       clear_before_eval = true,
+  --       load_on_start = false,
+  --     },
+  --     mappings = {
+  --       attach = false,
+  --       eval_buffer = "<leader><CR>",
+  --       messages = false,
+  --       resize_up = false,
+  --       resize_down = false,
+  --     },
+  --   },
+  -- },
   {
     "snacks.nvim",
     opts = {
