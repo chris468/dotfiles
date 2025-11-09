@@ -64,6 +64,44 @@ function new.luapad()
 end
 
 function new.snack()
+  ---@return string[]
+  local function extract_output()
+    local ns = vim.api.nvim_create_namespace("snacks_debug")
+    local marks = vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, { details = true })
+    local lines = {}
+    for _, mark in ipairs(marks) do
+      for _, line in ipairs(mark[4].virt_lines) do
+        for _, section in ipairs(line) do
+          if section[2] == "SnacksDebugPrint" then
+            table.insert(lines, section[1])
+          end
+        end
+      end
+    end
+
+    return lines
+  end
+
+  ---@param lines string[]
+  local function create_buffer(lines)
+    vim.cmd([[ sp | enew ]])
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    vim.bo.swapfile = false
+    vim.bo.filetype = "text"
+    vim.bo.bufhidden = "delete"
+    vim.bo.buftype = "nofile"
+    vim.bo.buflisted = false
+    vim.bo.modifiable = true
+    vim.wo.number = true
+    vim.wo.relativenumber = true
+    vim.wo.cursorline = true
+    vim.keymap.set("n", "q", cmd("quit"), {
+      buffer = true,
+      desc = "Close",
+      nowait = true,
+    })
+  end
+
   local luapad_path = project_root / "lua-console"
   return Snacks.win({
     style = "Luapad",
@@ -87,39 +125,12 @@ function new.snack()
       ["<localleader>c"] = {
         ---@diagnostic disable-next-line: assign-type-mismatch
         function()
-          local ns = vim.api.nvim_create_namespace("snacks_debug")
-          local marks = vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, { details = true })
-          local lines = {}
-          for _, mark in ipairs(marks) do
-            for _, line in ipairs(mark[4].virt_lines) do
-              for _, section in ipairs(line) do
-                if section[2] == "SnacksDebugPrint" then
-                  table.insert(lines, section[1])
-                end
-              end
-            end
-          end
+          local lines = extract_output()
           if #lines == 0 then
             vim.notify("No output")
             return
           end
-
-          vim.cmd([[ sp | enew ]])
-          vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
-          vim.bo.swapfile = false
-          vim.bo.filetype = "text"
-          vim.bo.bufhidden = "delete"
-          vim.bo.buftype = "nofile"
-          vim.bo.buflisted = false
-          vim.bo.modifiable = true
-          vim.wo.number = true
-          vim.wo.relativenumber = true
-          vim.wo.cursorline = true
-          vim.keymap.set("n", "q", cmd("quit"), {
-            buffer = true,
-            desc = "Close",
-            nowait = true,
-          })
+          create_buffer(lines)
         end,
         mode = "n",
         desc = "Open output in buffer",
