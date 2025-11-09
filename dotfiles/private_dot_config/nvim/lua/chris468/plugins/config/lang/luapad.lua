@@ -1,5 +1,6 @@
 local Path = require("plenary.path")
 local cmd = require("chris468.util.keymap").cmd
+local save_restore_cursor_selection = require("chris468.util").save_restore_cursor_selection
 
 local M = {}
 
@@ -60,32 +61,6 @@ function new.luapad()
   local win = Snacks.win({ style = "Luapad", file = luapad_path.filename })
   attach_luapad(win.buf)
   return win
-end
-
----@param fn fun():any
-local function save_restore_cursor_selection(fn)
-  local buffer = vim.api.nvim_get_current_buf()
-  local win = vim.api.nvim_get_current_win()
-
-  local marks = { "<", ">" }
-  local saved = {}
-  saved.marks = vim.tbl_map(function(v)
-    return { v, vim.api.nvim_buf_get_mark(buffer, v) }
-  end, marks)
-  saved.cursor = vim.api.nvim_win_get_cursor(win)
-
-  local ok, ret = pcall(fn)
-
-  vim.api.nvim_win_set_cursor(win, saved.cursor)
-  for _, mark in ipairs(saved.marks) do
-    vim.api.nvim_buf_set_mark(buffer, mark[1], mark[2][1], mark[2][2], {})
-  end
-
-  if not ok then
-    error(ret)
-  end
-
-  return ret
 end
 
 function new.snack()
