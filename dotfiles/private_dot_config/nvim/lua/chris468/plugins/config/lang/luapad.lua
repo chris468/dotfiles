@@ -1,3 +1,5 @@
+---@module 'snacks'
+
 local Path = require("plenary.path")
 local cmd = require("chris468.util.keymap").cmd
 local save_restore_cursor_selection = require("chris468.util").save_restore_cursor_selection
