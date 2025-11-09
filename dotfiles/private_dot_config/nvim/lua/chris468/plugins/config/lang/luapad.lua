@@ -46,7 +46,7 @@ local function attach_luapad(buf)
   })
 end
 
----@alias chris468.luapad_type "luapad"|"neorepl"
+---@alias chris468.luapad_type "luapad"|"neorepl"|"lua-console"
 
 ---@type { [chris468.luapad_type]: snacks.win|nil }
 local pads = {}
@@ -74,6 +74,13 @@ function new.neorepl()
       bo.modifiable = true
     end,
   })
+  return win
+end
+
+new["lua-console"] = function()
+  local luapad_path = project_root / "lua-console"
+  local win = Snacks.win({ style = "Luapad", file = luapad_path.filename })
+  require("lua-console.utils").attach_toggle(win.buf)
   return win
 end
 
