@@ -164,6 +164,11 @@ local mappings = {
     end,
     desc = "repl",
   },
+  {
+    "<leader>ls",
+    require("chris468.plugins.config.lang.luascratch").toggle,
+    desc = "Scratch",
+  },
 }
 
 -- lhs: string|{lhs: string, mode?: string|string[] }
