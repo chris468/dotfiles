@@ -82,9 +82,9 @@ return {
     dependencies = { "snacks.nvim" },
     keys = {
       {
-        "<leader>ll",
+        "<leader>lL",
         function()
-          require("chris468.plugins.config.lang.luapad").toggle()
+          require("chris468.plugins.config.lang.luapad").toggle("luapad")
         end,
         desc = "Luapad",
       },
@@ -114,19 +114,6 @@ return {
             number = true,
             relativenumber = true,
             cursorline = true,
-          },
-          keys = {
-            ["<leader><c-l>"] = "close",
-            ["<c-/>"] = {
-              "<c-/>",
-              "close",
-              mode = { "n", "i" },
-            },
-            ["<c-_>"] = {
-              "<c-_>",
-              "close",
-              mode = { "n", "i" },
-            },
           },
         },
       },
