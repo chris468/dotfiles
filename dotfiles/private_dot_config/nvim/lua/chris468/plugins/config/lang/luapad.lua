@@ -1,4 +1,5 @@
 local Path = require("plenary.path")
+local cmd = require("chris468.util.keymap").cmd
 
 local M = {}
 
@@ -131,34 +132,46 @@ function new.snack()
         mode = "n",
         desc = "Run current line",
       },
-      -- TODO: mapping to dump to buffer
-      --[[
-
-      { 0, 13, 8, 0 }
-      { 0, 13, 8, 0 }
-      { "s" }
-      s
-      167
-      {}
-
-      local marks = vim.api.nvim_buf_get_extmarks(3, 167, 0, -1, {details=true})
-
-      for _, mark in ipairs(marks) do
-        print(mark[4].virt_lines)
-      end
-
-
-      for _, mark in ipairs(marks) do
-        for _, line in ipairs(mark[4].virt_lines) do
-          for _, section in ipairs(line) do
-            if section[2] == "SnacksDebugPrint" then
-              print(section[1])
+      ["<localleader>c"] = {
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        function()
+          local ns = vim.api.nvim_create_namespace("snacks_debug")
+          local marks = vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, { details = true })
+          local lines = {}
+          for _, mark in ipairs(marks) do
+            for _, line in ipairs(mark[4].virt_lines) do
+              for _, section in ipairs(line) do
+                if section[2] == "SnacksDebugPrint" then
+                  table.insert(lines, section[1])
+                end
+              end
             end
           end
-        end
-      end
+          if #lines == 0 then
+            vim.notify("No output")
+            return
+          end
 
-      --]]
+          vim.cmd([[ sp | enew ]])
+          vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+          vim.bo.swapfile = false
+          vim.bo.filetype = "text"
+          vim.bo.bufhidden = "delete"
+          vim.bo.buftype = "nofile"
+          vim.bo.buflisted = false
+          vim.bo.modifiable = true
+          vim.wo.number = true
+          vim.wo.relativenumber = true
+          vim.wo.cursorline = true
+          vim.keymap.set("n", "q", cmd("quit"), {
+            buffer = true,
+            desc = "Close",
+            nowait = true,
+          })
+        end,
+        mode = "n",
+        desc = "Open output in buffer",
+      },
     },
   })
 end
