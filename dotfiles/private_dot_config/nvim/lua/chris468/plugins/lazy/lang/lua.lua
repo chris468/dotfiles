@@ -30,6 +30,24 @@ return {
       },
       daps = {
         ["local-lua-debugger-vscode"] = { filetypes = { "lua" } },
+        ["nlua"] = {
+          package = false,
+          filetypes = { "lua" },
+          adapter = function(callback, config)
+            callback({
+              type = "server",
+              host = config.host or "127.0.0.1",
+              port = config.port or 8086,
+            })
+          end,
+          configurations = {
+            {
+              type = "nlua",
+              request = "attach",
+              name = "Attach to running Neovim instance",
+            },
+          },
+        },
       },
     },
   },
@@ -122,25 +140,6 @@ return {
   },
   {
     "jbyuki/one-small-step-for-vimkind",
-    config = function()
-      if require("chris468.util.lazy").has_plugin("nvim-dap") then
-        local dap = require("dap")
-        dap.configurations.lua = {
-          {
-            type = "nlua",
-            request = "attach",
-            name = "Attach to running Neovim instance",
-          },
-        }
-        dap.adapters.nlua = function(callback, config)
-          callback({
-            type = "server",
-            host = config.host or "127.0.0.1",
-            port = config.port or 8086,
-          })
-        end
-      end
-    end,
     dependencies = { "nvim-dap", optional = true },
     keys = {
       {
@@ -150,7 +149,6 @@ return {
         end,
         desc = "Listen for debugger",
       },
-      "<leader>dr",
     },
     version = false,
   },

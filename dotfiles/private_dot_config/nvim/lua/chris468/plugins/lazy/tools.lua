@@ -38,7 +38,7 @@ return {
   {
     "chris468-tools",
     event = "FileType",
-    dependencies = { "mason.nvim", "nvim-lspconfig" },
+    dependencies = { "mason.nvim", "nvim-lspconfig", "mason-nvim-dap.nvim" },
     dir = (getenv("XDG_DATA_HOME") or vim.expand("~/.local/share")) .. "/chris468/neovim/plugins/tools",
     opts = {
       disabled_filetypes = Chris468.disabled_filetypes,
@@ -251,9 +251,7 @@ return {
       "DapInstall",
       "DapUninstall",
     },
-    opts = {
-      handlers = {},
-    },
+    opts = {},
   },
   {
     "nvim-neotest/neotest",
