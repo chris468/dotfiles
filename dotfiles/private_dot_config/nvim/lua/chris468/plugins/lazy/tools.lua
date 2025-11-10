@@ -251,6 +251,9 @@ return {
       "DapInstall",
       "DapUninstall",
     },
+    opts = {
+      handlers = {},
+    },
   },
   {
     "nvim-neotest/neotest",
