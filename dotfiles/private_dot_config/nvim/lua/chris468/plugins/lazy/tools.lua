@@ -135,6 +135,7 @@ return {
 
         before.attach.dapui_config = dapui.open
         before.launch.dapui_config = dapui.open
+        before.disconnect.dapui_config = dapui.close
         before.event_terminated.dapui_config = dapui.close
         before.event_exited.dapui_config = dapui.close
 
