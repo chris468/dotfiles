@@ -182,6 +182,13 @@ return {
               colwidth = 1,
             },
           },
+          {
+            sign = {
+              name = { "Dap.*" },
+              colwidth = 1,
+              auto = true,
+            },
+          },
         },
       })
     end,

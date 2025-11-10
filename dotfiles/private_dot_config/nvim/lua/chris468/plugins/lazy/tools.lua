@@ -38,7 +38,7 @@ return {
   {
     "chris468-tools",
     event = "FileType",
-    dependencies = { "mason.nvim", "nvim-lspconfig" },
+    dependencies = { "mason.nvim", "nvim-lspconfig", "mason-nvim-dap.nvim" },
     dir = (getenv("XDG_DATA_HOME") or vim.expand("~/.local/share")) .. "/chris468/neovim/plugins/tools",
     opts = {
       disabled_filetypes = Chris468.disabled_filetypes,
@@ -127,6 +127,43 @@ return {
   },
   {
     "mfussenegger/nvim-dap",
+    config = function()
+      local icons = Chris468.ui.icons
+      vim.fn.sign_define({
+        { name = "DapBreakpoint", text = icons.breakpoint, texthl = "Error" },
+        { name = "DapBreakpointCondition", text = icons.breakpoint_condition, texthl = "Error" },
+        { name = "DapBreakpointRejected", text = icons.breakpoint_condition, texthl = "Comment" },
+        { name = "DapLogPoint", text = icons.log_point, texthl = "Error" },
+        { name = "DapStopped", text = icons.stopped, texthl = "Function" },
+      })
+    end,
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      config = function(_, opts)
+        local before = require("dap").listeners.before
+        local dapui = require("dapui")
+
+        before.attach.dapui_config = dapui.open
+        before.launch.dapui_config = dapui.open
+        before.disconnect.dapui_config = dapui.close
+        before.event_terminated.dapui_config = dapui.close
+        before.event_exited.dapui_config = dapui.close
+
+        require("dapui").setup(opts)
+      end,
+      dependencies = {
+        "nvim-dap",
+        "nvim-nio",
+        {
+          "lazydev.nvim",
+          opts = {
+            library = { "nvim-dap-ui" },
+          },
+        },
+      },
+      opts = {},
+      version = false,
+    },
     keys = {
       {
         "<leader>db",
@@ -209,6 +246,13 @@ return {
         end,
         desc = "Scopes",
       },
+      {
+        "<leader>du",
+        function()
+          require("dapui").toggle()
+        end,
+        desc = "Toggle UI",
+      },
     },
   },
   {
@@ -218,11 +262,12 @@ return {
       "DapInstall",
       "DapUninstall",
     },
+    opts = {},
   },
   {
     "nvim-neotest/neotest",
     dependencies = {
-      "nvim-neotest/nvim-nio",
+      "nvim-nio",
       "plenary.nvim",
       "nvim-treesitter",
     },

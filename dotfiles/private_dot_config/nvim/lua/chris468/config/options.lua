@@ -139,6 +139,11 @@ local chris468 = {
       windsurf = "",
       copilot = "",
       codecompanion = "",
+      breakpoint = "●",
+      breakpoint_condition = "",
+      breakpoint_rejected = "",
+      log_point = "",
+      stopped = "",
     },
     explorer = {
       ---@type "oil"|"mini.files"
