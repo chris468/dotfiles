@@ -48,6 +48,7 @@ return {
     "folke/lazydev.nvim",
     cmd = { "LazyDev" },
     ft = { "lua" },
+    opts_extend = { "library" },
     opts = {
       library = {
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },

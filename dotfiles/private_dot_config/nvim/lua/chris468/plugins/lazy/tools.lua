@@ -127,6 +127,32 @@ return {
   },
   {
     "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      config = function(_, opts)
+        local before = require("dap").listeners.before
+        local dapui = require("dapui")
+
+        before.attach.dapui_config = dapui.open
+        before.launch.dapui_config = dapui.open
+        before.event_terminated.dapui_config = dapui.close
+        before.event_exited.dapui_config = dapui.close
+
+        require("dapui").setup(opts)
+      end,
+      dependencies = {
+        "nvim-dap",
+        "nvim-nio",
+        {
+          "lazydev.nvim",
+          opts = {
+            library = { "nvim-dap-ui" },
+          },
+        },
+      },
+      opts = {},
+      version = false,
+    },
     keys = {
       {
         "<leader>db",
@@ -209,6 +235,13 @@ return {
         end,
         desc = "Scopes",
       },
+      {
+        "<leader>du",
+        function()
+          require("dapui").toggle()
+        end,
+        desc = "Toggle UI",
+      },
     },
   },
   {
@@ -222,7 +255,7 @@ return {
   {
     "nvim-neotest/neotest",
     dependencies = {
-      "nvim-neotest/nvim-nio",
+      "nvim-nio",
       "plenary.nvim",
       "nvim-treesitter",
     },
