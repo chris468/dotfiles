@@ -127,6 +127,16 @@ return {
   },
   {
     "mfussenegger/nvim-dap",
+    config = function()
+      local icons = Chris468.ui.icons
+      vim.fn.sign_define({
+        { name = "DapBreakpoint", text = icons.breakpoint, texthl = "Error" },
+        { name = "DapBreakpointCondition", text = icons.breakpoint_condition, texthl = "Error" },
+        { name = "DapBreakpointRejected", text = icons.breakpoint_condition, texthl = "Comment" },
+        { name = "DapLogPoint", text = icons.log_point, texthl = "Error" },
+        { name = "DapStopped", text = icons.stopped, texthl = "Function" },
+      })
+    end,
     dependencies = {
       "rcarriga/nvim-dap-ui",
       config = function(_, opts)
