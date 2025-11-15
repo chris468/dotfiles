@@ -1,9 +1,21 @@
 ---@module 'snacks'
+local Path = require("plenary.path")
 
 local M = {}
 
 ---@type snacks.layout?
 local luascratch = nil
+
+local project_root = Path:new(vim.fn.stdpath("state")) / "chris468" / "luapad"
+local scratch = project_root / "Luascratch"
+local output = project_root / "output"
+
+local function ensure_project()
+  local stylua = project_root / "stylua.toml"
+  if not stylua:exists() then
+    stylua:touch({ parents = true })
+  end
+end
 
 local function create(opts)
   opts = vim.tbl_deep_extend("error", opts, {
@@ -35,6 +47,7 @@ local function create(opts)
       input = Snacks.win.new({
         show = false,
         enter = false,
+        file = scratch.filename,
         bo = {
           ft = "lua",
           buftype = "nofile",
@@ -44,6 +57,7 @@ local function create(opts)
       output = Snacks.win.new({
         show = false,
         enter = false,
+        file = output.filename,
         bo = {
           ft = "text",
           buftype = "nofile",
@@ -52,18 +66,17 @@ local function create(opts)
       }),
     },
   })
-  vim.print(vim.inspect({ opts = opts }))
   return Snacks.layout.new(opts)
 end
 
 function M.toggle()
   if not luascratch then
+    ensure_project()
     luascratch = create({
       on_close = function()
         luascratch = nil
       end,
     })
-    vim.print(vim.inspect({ luascratch }))
   else
     luascratch:close()
   end
