@@ -6,6 +6,22 @@ local M = {}
 ---@type snacks.layout?
 local luascratch = nil
 
+local actions = {}
+
+function actions.input()
+  if not (luascratch and luascratch:valid()) then
+    return
+  end
+  luascratch.wins.input:focus()
+end
+
+function actions.output()
+  if not (luascratch and luascratch:valid()) then
+    return
+  end
+  luascratch.wins.output:focus()
+end
+
 local project_root = Path:new(vim.fn.stdpath("state")) / "chris468" / "luapad"
 local scratch = project_root / "Luascratch"
 local output = project_root / "output"
@@ -15,6 +31,39 @@ local function ensure_project()
   if not stylua:exists() then
     stylua:touch({ parents = true })
   end
+end
+
+local function prevent_focusing_root(layout)
+  local root = layout.root
+
+  local function is_focused()
+    local current = vim.api.nvim_get_current_win()
+    for _, win in pairs(layout.wins) do
+      if win.win == current then
+        return true
+      end
+    end
+  end
+
+  local left = true
+  local last
+  root:on("WinLeave", function()
+    left = is_focused()
+  end)
+  root:on("WinEnter", function()
+    if is_focused() then
+      last = vim.api.nvim_get_current_win()
+    end
+  end)
+  root:on("WinEnter", function()
+    if left then
+      vim.cmd.wincmd("h")
+    elseif last and vim.api.nvim_win_is_valid(last) then
+      vim.api.nvim_set_current_win(last)
+    else
+      vim.api.nvim_set_current_win(layout.wins.input.win)
+    end
+  end, { buf = true, nested = true })
 end
 
 local function create(opts)
@@ -30,43 +79,56 @@ local function create(opts)
       border = "none",
       box = "vertical",
       {
-        win = "input",
-        height = 0.75,
         border = "top",
+        enter = true,
+        height = 0.75,
         title = "Lua scratch",
         title_pos = "center",
+        win = "input",
       },
       {
-        win = "output",
         border = "top",
         title = "Output",
         title_pos = "center",
+        win = "output",
       },
     },
     wins = {
       input = Snacks.win.new({
-        show = false,
-        enter = false,
-        file = scratch.filename,
+        actions = actions,
         bo = {
           ft = "lua",
           buftype = "nofile",
           buflisted = false,
         },
+        enter = false,
+        file = scratch.filename,
+        keys = {
+          ["<C-J>"] = "output",
+          ["<C-K>"] = "output",
+        },
+        show = false,
       }),
       output = Snacks.win.new({
-        show = false,
-        enter = false,
-        file = output.filename,
+        actions = actions,
         bo = {
           ft = "text",
           buftype = "nofile",
           buflisted = false,
         },
+        enter = false,
+        file = output.filename,
+        keys = {
+          ["<C-J>"] = "input",
+          ["<C-K>"] = "input",
+        },
+        show = false,
       }),
     },
   })
-  return Snacks.layout.new(opts)
+  local layout = Snacks.layout.new(opts)
+  prevent_focusing_root(layout)
+  return layout
 end
 
 function M.toggle()
