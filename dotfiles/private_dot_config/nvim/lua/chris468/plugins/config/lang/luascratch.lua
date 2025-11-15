@@ -10,14 +10,12 @@ local function create(opts)
     -- TODO: iniitally hide, show on first output
     -- hidden = { "output" },
     layout = {
-      -- FIXME: why is it applying a backdrop?
       backdrop = false,
       width = 0.4,
       min_width = 20,
       height = 0,
       position = "right",
-      -- FIXME: why isn't the border showiing up?
-      border = "left",
+      border = "none",
       box = "vertical",
       {
         win = "input",
@@ -34,8 +32,24 @@ local function create(opts)
       },
     },
     wins = {
-      input = Snacks.win.new({}),
-      output = Snacks.win.new({}),
+      input = Snacks.win.new({
+        show = false,
+        enter = false,
+        bo = {
+          ft = "lua",
+          buftype = "nofile",
+          buflisted = false,
+        },
+      }),
+      output = Snacks.win.new({
+        show = false,
+        enter = false,
+        bo = {
+          ft = "text",
+          buftype = "nofile",
+          buflisted = false,
+        },
+      }),
     },
   })
   vim.print(vim.inspect({ opts = opts }))
