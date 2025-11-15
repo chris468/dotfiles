@@ -112,6 +112,7 @@ local function create(opts)
         },
         enter = false,
         file = scratch.filename,
+        on_close = M.toggle,
         keys = {
           ["<C-J>"] = "output",
           ["<C-K>"] = "output",
