@@ -109,6 +109,7 @@ local function create(opts)
           ft = "lua",
           buftype = "nofile",
           buflisted = false,
+          modifiable = true,
         },
         enter = false,
         file = scratch.filename,
