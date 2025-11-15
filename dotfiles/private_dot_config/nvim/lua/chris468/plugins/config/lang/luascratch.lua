@@ -19,7 +19,17 @@ function actions.output()
   if not (luascratch and luascratch:valid()) then
     return
   end
+
+  luascratch:toggle("output", true)
   luascratch.wins.output:focus()
+end
+
+function actions.hide_output()
+  if not (luascratch and luascratch:valid()) then
+    return
+  end
+
+  luascratch:toggle("output", false)
 end
 
 local project_root = Path:new(vim.fn.stdpath("state")) / "chris468" / "luapad"
@@ -68,8 +78,7 @@ end
 
 local function create(opts)
   opts = vim.tbl_deep_extend("error", opts, {
-    -- TODO: iniitally hide, show on first output
-    -- hidden = { "output" },
+    hidden = { "output" },
     layout = {
       backdrop = false,
       width = 0.4,
@@ -121,6 +130,7 @@ local function create(opts)
         keys = {
           ["<C-J>"] = "input",
           ["<C-K>"] = "input",
+          q = "hide_output",
         },
         show = false,
       }),
