@@ -1,21 +1,6 @@
 local getenv = require("os").getenv
 local cmd = require("chris468.util.keymap").cmd
 
----@class chris468.config.LspServer
----@field enabled? boolean Whether to enable the server. Default true
----@field name? string The server config name. Defaults to package name, or lspconfig name from package if available.
----@field public package? boolean Whether there is a mason package. Defaults to true.
----@field lspconfig? vim.lsp.Config The server config. Defaults to empty
-
----@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
-
----@class chris468.config.Formatter
----@field [1] string Formatter name
----@field enabled? boolean Whether to enable the formatter, default true
----@field public package? string Package name, if different than formatter, or false for no package
-
----@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
-
 return {
   {
     "mason-org/mason.nvim",
@@ -229,22 +214,6 @@ return {
           require("dap").repl_toggle()
         end,
         desc = "Toggle REPL",
-      },
-      {
-        "<leader>df",
-        function()
-          local widgets = require("dap.ui.widgets")
-          widgets.float(widgets.frames)
-        end,
-        desc = "Frames",
-      },
-      {
-        "<leader>dS",
-        function()
-          local widgets = require("dap.ui.widgets")
-          widgets.float(widgets.scopes)
-        end,
-        desc = "Scopes",
       },
       {
         "<leader>du",
