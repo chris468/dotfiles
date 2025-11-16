@@ -101,9 +101,9 @@ return {
     dependencies = { "snacks.nvim" },
     keys = {
       {
-        "<leader>lL",
+        "<leader>l<C-L>",
         function()
-          require("chris468.plugins.config.lang.luapad").toggle("luapad")
+          require("chris468.plugins.config.lang.luapad").toggle()
         end,
         desc = "Luapad",
       },
