@@ -13,18 +13,36 @@ local function pos_equal(l, r)
   return true
 end
 
-local function get_selection()
-  local start = vim.fn.getpos(".")
-  local _end = vim.fn.getpos("v")
-  if pos_equal(start, _end) then
-    return vim.api.nvim_get_current_line()
+local function get_selection(win, current_line)
+  if not win or win == 0 then
+    win = vim.api.nvim_get_current_win()
+  end
+  local buf = vim.api.nvim_win_get_buf(win)
+
+  local s, e = 1, -1
+  if current_line then
+    s = vim.api.nvim_win_get_cursor(win)[1]
+    e = s
+  else
+    local mode = vim.fn.mode()
+    if mode == "v" or mode == "V" then
+      vim.api.nvim_buf_call(buf, function()
+        vim.cmd("normal! " .. mode)
+      end)
+      s = vim.api.nvim_buf_get_mark(0, "<")[1]
+      e = vim.api.nvim_buf_get_mark(0, ">")[1]
+    end
   end
 
-  return vim.fn.join(vim.fn.getregion(start, _end), "\n")
+  local lines = vim.api.nvim_buf_get_lines(buf, s - 1, e, false)
+  return table.concat(lines, "\n")
 end
 
-function M.run_selection()
-  local selection = get_selection()
+---@param win? integer
+---@param on_print function(...any)
+---@param current_line? boolean
+function M.run(win, on_print, current_line)
+  local selection = get_selection(win, current_line)
   if not selection then
     return
   end
@@ -34,9 +52,14 @@ function M.run_selection()
     vim.notify("Failed to parse selection: " .. fn, vim.log.levels.ERROR)
     return
   end
+  ---@cast fn function
+
+  local env = { print = on_print }
+  package.seeall(env)
+  setfenv(fn, env)
 
   local result
-  ok, result = pcall(fn --[[ @as function ]])
+  ok, result = pcall(fn)
   if not ok then
     vim.notify("Failed to run selection: " .. result, vim.log.levels.ERROR)
   elseif result then

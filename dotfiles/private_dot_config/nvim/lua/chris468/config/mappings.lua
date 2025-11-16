@@ -132,7 +132,7 @@ local mappings = {
   },
   { "<leader>g", group = "Git" },
   { "<leader>l", group = "Lua", icon = "󰢱" },
-  { "<leader>lx", util_lua.run_selection, desc = "Run selected", mode = { "n", "x" } },
+  { "<leader>lx", util_lua.run, desc = "Run selected", mode = { "n", "x" } },
   { "<leader>s", group = "Search" },
   { "<leader>t", group = "Test" },
   { "<leader>u", group = "UI" },
