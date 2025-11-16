@@ -1,6 +1,32 @@
 local getenv = require("os").getenv
 local cmd = require("chris468.util.keymap").cmd
 
+local require_on_call = require("lazy-require").require_on_exported_call
+local dap_call = require_on_call("dap")
+local dap_widgets_call = require_on_call("dap.ui.widgets")
+local dap_ui_call = require_on_call("dapui")
+
+local dap_key_spec = {
+  { "<leader>db", dap_call.toggle_breakpoint, desc = "Toggle breakpoint" },
+  { "<leader>dh", dap_widgets_call.hover, mode = { "n", "v" }, desc = "Hover" },
+  { "<leader>di", dap_call.step_into, desc = "Step in" },
+  { "<leader>dl", dap_call.run_last, desc = "Run last configuration" },
+  { "<leader>do", dap_call.step_over, desc = "Step over" },
+  { "<leader>dO", dap_call.step_out, desc = "Step out" },
+  { "<leader>dp", dap_widgets_call.preview, mode = { "n", "v" }, desc = "Preview" },
+  { "<leader>dr", dap_call.continue, desc = "Run/Continue" },
+  { "<leader>dR", dap_call.repl_toggle, desc = "Toggle REPL" },
+  { "<leader>du", dap_ui_call.toggle, desc = "Toggle UI" },
+}
+
+local function dap_keys()
+  local keys = {}
+  for _, spec in ipairs(dap_key_spec) do
+    table.insert(keys, spec)
+  end
+  return keys
+end
+
 return {
   {
     "mason-org/mason.nvim",
@@ -149,80 +175,7 @@ return {
       opts = {},
       version = false,
     },
-    keys = {
-      {
-        "<leader>db",
-        function()
-          require("dap").toggle_breakpoint()
-        end,
-        desc = "Toggle breakpoint",
-      },
-      {
-        "<leader>dh",
-        function()
-          require("dap.ui.widgets").hover()
-        end,
-        mode = { "n", "v" },
-        desc = "Hover",
-      },
-      {
-        "<leader>di",
-        function()
-          require("dap").step_into()
-        end,
-        desc = "Step in",
-      },
-      {
-        "<leader>dl",
-        function()
-          require("dap").run_last()
-        end,
-        desc = "Run last configuration",
-      },
-      {
-        "<leader>do",
-        function()
-          require("dap").step_over()
-        end,
-        desc = "Step over",
-      },
-      {
-        "<leader>dO",
-        function()
-          require("dap").step_out()
-        end,
-        desc = "Step out",
-      },
-      {
-        "<leader>dp",
-        function()
-          require("dap.ui.widgets").preview()
-        end,
-        mode = { "n", "v" },
-        desc = "Preview",
-      },
-      {
-        "<leader>dr",
-        function()
-          require("dap").continue()
-        end,
-        desc = "Run/Continue",
-      },
-      {
-        "<leader>dR",
-        function()
-          require("dap").repl_toggle()
-        end,
-        desc = "Toggle REPL",
-      },
-      {
-        "<leader>du",
-        function()
-          require("dapui").toggle()
-        end,
-        desc = "Toggle UI",
-      },
-    },
+    keys = dap_keys(),
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
