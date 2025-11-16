@@ -39,7 +39,7 @@ local function trouble_open_or_replace(mode, opts)
     end
   end
 
-  trouble.first(vim.tbl_extend("force", { mode = mode, refresh = true }, opts or {}))
+  trouble.first(vim.tbl_extend("force", { mode = mode, refresh = true }, opts or {}), {})
 end
 
 local function toggle_terminal()
