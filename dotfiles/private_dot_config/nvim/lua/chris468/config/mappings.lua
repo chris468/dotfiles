@@ -313,6 +313,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
   pattern = {
     "TelescopePrompt",
+    "dap-float",
     "help",
     "minifiles",
     "oil",
