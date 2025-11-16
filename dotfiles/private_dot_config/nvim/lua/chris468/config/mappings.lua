@@ -1,6 +1,5 @@
 local snacks = require("snacks")
 local whichkey = require("which-key")
-local util_lua = require("chris468.util.lua")
 local cmd = require("chris468.util.keymap").cmd
 local Terminal = require("chris468.util.terminal")
 
@@ -40,7 +39,7 @@ local function trouble_open_or_replace(mode, opts)
     end
   end
 
-  trouble.first(vim.tbl_extend("force", { mode = mode, refresh = true }, opts or {}))
+  trouble.first(vim.tbl_extend("force", { mode = mode, refresh = true }, opts or {}), {})
 end
 
 local function toggle_terminal()
@@ -51,6 +50,34 @@ local function toggle_terminal_mappings()
   Terminal:toggle_navigation_mappings()
 end
 
+---@return wk.Spec
+local function fn_mappings()
+  local offsets = {
+    S = 12,
+    C = 24,
+    ["C-S"] = 36,
+  }
+  local mode = { "n", "i", "v" }
+
+  ---@type wk.Spec
+  local m = {}
+
+  for mod, offset in pairs(offsets) do
+    for i = 1, 12 do
+      table.insert(m, {
+        ("<F%d>"):format(i + offset),
+        ("<%s-F%d>"):format(mod, i),
+        hidden = true,
+        mode = mode,
+        remap = true,
+      })
+    end
+  end
+
+  return m
+end
+
+---@type wk.Spec
 local mappings = {
   { "<Esc>", cmd("nohlsearch"), desc = "Clear search hilight" },
   { "<leader>L", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
@@ -171,6 +198,7 @@ local remove_mappings = {
   "grr", -- -> gr find references
 }
 
+---@type wk.Spec
 local lsp_mappings = {
   {
     "<leader>ca",
@@ -214,7 +242,6 @@ local lsp_mappings = {
   },
   {
     "gd",
-    "<cmd>Trouble lsp_definitions first<CR>",
     wrap(trouble_open_or_replace, "lsp_definitions"),
     desc = "Go to definition)",
   },
@@ -243,6 +270,7 @@ for _, spec in ipairs(remove_mappings) do
 end
 
 whichkey.add(mappings)
+whichkey.add(fn_mappings())
 whichkey.add(require("chris468.plugins.config.decipher").whichkey_specs())
 
 snacks.toggle.diagnostics({ name = "diagnostics" }):map("<leader>c<C-D>")
@@ -292,13 +320,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("chris468.mappings.lsp", {}),
   callback = function(args)
     local bufnr = args.buf
-    for _, mapping in ipairs(lsp_mappings) do
-      vim.keymap.set(mapping.mode or "n", mapping[1], mapping[2], {
-        buffer = bufnr,
-        desc = mapping.desc,
-        expr = mapping.expr,
-      })
-    end
+    whichkey.add(vim.tbl_map(function(v)
+      return vim.tbl_extend("keep", { buffer = bufnr }, v)
+    end, lsp_mappings))
   end,
 })
 
@@ -313,6 +337,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
   pattern = {
     "TelescopePrompt",
+    "dap-float",
     "help",
     "minifiles",
     "oil",

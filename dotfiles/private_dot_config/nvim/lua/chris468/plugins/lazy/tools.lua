@@ -1,20 +1,64 @@
 local getenv = require("os").getenv
 local cmd = require("chris468.util.keymap").cmd
 
----@class chris468.config.LspServer
----@field enabled? boolean Whether to enable the server. Default true
----@field name? string The server config name. Defaults to package name, or lspconfig name from package if available.
----@field public package? boolean Whether there is a mason package. Defaults to true.
----@field lspconfig? vim.lsp.Config The server config. Defaults to empty
+local require_on_call = require("lazy-require").require_on_exported_call
+local dap_call = require_on_call("dap")
+local dap_widgets_call = require_on_call("dap.ui.widgets")
+local dap_ui_call = require_on_call("dapui")
 
----@alias chris468.config.LspConfig table<string, chris468.config.LspServer> Map of package name to server config
+local function smart_end_session()
+  local session = dap_call.session()
+  if not (session and session.config) then
+    vim.notify(vim.inspect({ session = vim.inspect(session), config = vim.inspect((session or {}).config) }))
+    return
+  end
 
----@class chris468.config.Formatter
----@field [1] string Formatter name
----@field enabled? boolean Whether to enable the formatter, default true
----@field public package? string Package name, if different than formatter, or false for no package
+  if session.config.request == "attach" then
+    dap_call.disconnect()
+  else
+    dap_call.terminate()
+  end
+end
 
----@alias chris468.config.FormattersByFileType { string: (string|chris468.config.Formatter)[] }}
+local dap_key_spec = {
+  [{ "<leader>db", "<F9>" }] = { dap_call.toggle_breakpoint, desc = "Toggle breakpoint" },
+  ["<leader>dh"] = { dap_widgets_call.hover, mode = { "n", "v" }, desc = "Hover" },
+  [{ "<leader>di", "<F11>" }] = { dap_call.step_into, desc = "Step in" },
+  ["<leader>dl"] = { dap_call.run_last, desc = "Run last configuration" },
+  [{ "<leader>do", "<F10>" }] = { dap_call.step_over, desc = "Step over" },
+  [{ "<leader>dO", "<S-F11>" }] = { dap_call.step_out, desc = "Step out" },
+  ["<leader>dp"] = { dap_widgets_call.preview, mode = { "n", "v" }, desc = "Preview" },
+  [{ "<leader>dr", "<F5>" }] = { dap_call.continue, desc = "Run/Continue" },
+  ["<leader>dR"] = { dap_call.repl_toggle, desc = "Toggle REPL" },
+  ["<leader>du"] = { dap_ui_call.toggle, desc = "Toggle UI" },
+  [{ "<leader>dx", "<S-F5>" }] = { smart_end_session, desc = "End session" },
+  ["<leader>d<C-T>"] = { dap_call.terminate, desc = "Terminate" },
+  ["<leader>d<C-D>"] = { dap_call.disconnect, desc = "Disconnect" },
+}
+
+local function dap_keys()
+  local specs = {}
+  for keys, spec in pairs(dap_key_spec) do
+    keys = type(keys) == "string" and { keys } or keys
+    ---@cast keys string[]
+    for _, key in ipairs(keys) do
+      table.insert(
+        specs,
+        vim.iter(spec):fold({}, function(t, k, v)
+          if k == 1 then
+            t[1] = key
+            t[2] = v
+          else
+            t[k] = v
+          end
+          return t
+        end)
+      )
+    end
+  end
+
+  return specs
+end
 
 return {
   {
@@ -164,96 +208,7 @@ return {
       opts = {},
       version = false,
     },
-    keys = {
-      {
-        "<leader>db",
-        function()
-          require("dap").toggle_breakpoint()
-        end,
-        desc = "Toggle breakpoint",
-      },
-      {
-        "<leader>dh",
-        function()
-          require("dap.ui.widgets").hover()
-        end,
-        mode = { "n", "v" },
-        desc = "Hover",
-      },
-      {
-        "<leader>di",
-        function()
-          require("dap").step_into()
-        end,
-        desc = "Step in",
-      },
-      {
-        "<leader>dl",
-        function()
-          require("dap").run_last()
-        end,
-        desc = "Run last configuration",
-      },
-      {
-        "<leader>do",
-        function()
-          require("dap").step_over()
-        end,
-        desc = "Step over",
-      },
-      {
-        "<leader>dO",
-        function()
-          require("dap").step_out()
-        end,
-        desc = "Step out",
-      },
-      {
-        "<leader>dp",
-        function()
-          require("dap.ui.widgets").preview()
-        end,
-        mode = { "n", "v" },
-        desc = "Preview",
-      },
-      {
-        "<leader>dr",
-        function()
-          require("dap").continue()
-        end,
-        desc = "Run/Continue",
-      },
-      {
-        "<leader>dR",
-        function()
-          require("dap").repl_toggle()
-        end,
-        desc = "Toggle REPL",
-      },
-      {
-        "<leader>df",
-        function()
-          local widgets = require("dap.ui.widgets")
-          widgets.float(widgets.frames)
-        end,
-        desc = "Frames",
-      },
-      {
-        "<leader>dS",
-        function()
-          local widgets = require("dap.ui.widgets")
-          widgets.float(widgets.scopes)
-        end,
-        desc = "Scopes",
-      },
-      {
-        "<leader>du",
-        function()
-          require("dapui").toggle()
-        end,
-        desc = "Toggle UI",
-      },
-    },
+    keys = dap_keys(),
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
