@@ -6,25 +6,58 @@ local dap_call = require_on_call("dap")
 local dap_widgets_call = require_on_call("dap.ui.widgets")
 local dap_ui_call = require_on_call("dapui")
 
+local function smart_end_session()
+  local session = dap_call.session()
+  if not (session and session.config) then
+    vim.notify(vim.inspect({ session = vim.inspect(session), config = vim.inspect((session or {}).config) }))
+    return
+  end
+
+  if session.config.request == "attach" then
+    dap_call.disconnect()
+  else
+    dap_call.terminate()
+  end
+end
+
 local dap_key_spec = {
-  { "<leader>db", dap_call.toggle_breakpoint, desc = "Toggle breakpoint" },
-  { "<leader>dh", dap_widgets_call.hover, mode = { "n", "v" }, desc = "Hover" },
-  { "<leader>di", dap_call.step_into, desc = "Step in" },
-  { "<leader>dl", dap_call.run_last, desc = "Run last configuration" },
-  { "<leader>do", dap_call.step_over, desc = "Step over" },
-  { "<leader>dO", dap_call.step_out, desc = "Step out" },
-  { "<leader>dp", dap_widgets_call.preview, mode = { "n", "v" }, desc = "Preview" },
-  { "<leader>dr", dap_call.continue, desc = "Run/Continue" },
-  { "<leader>dR", dap_call.repl_toggle, desc = "Toggle REPL" },
-  { "<leader>du", dap_ui_call.toggle, desc = "Toggle UI" },
+  [{ "<leader>db", "<F9>" }] = { dap_call.toggle_breakpoint, desc = "Toggle breakpoint" },
+  ["<leader>dh"] = { dap_widgets_call.hover, mode = { "n", "v" }, desc = "Hover" },
+  [{ "<leader>di", "<F11>" }] = { dap_call.step_into, desc = "Step in" },
+  ["<leader>dl"] = { dap_call.run_last, desc = "Run last configuration" },
+  [{ "<leader>do", "<F10>" }] = { dap_call.step_over, desc = "Step over" },
+  [{ "<leader>dO", "<S-F11>" }] = { dap_call.step_out, desc = "Step out" },
+  ["<leader>dp"] = { dap_widgets_call.preview, mode = { "n", "v" }, desc = "Preview" },
+  [{ "<leader>dr", "<F5>" }] = { dap_call.continue, desc = "Run/Continue" },
+  ["<leader>dR"] = { dap_call.repl_toggle, desc = "Toggle REPL" },
+  ["<leader>du"] = { dap_ui_call.toggle, desc = "Toggle UI" },
+  [{ "<leader>dx", "<S-F5>" }] = { smart_end_session, desc = "End session" },
+  ["<leader>d<C-T>"] = { dap_call.terminate, desc = "Terminate" },
+  ["<leader>d<C-D>"] = { dap_call.disconnect, desc = "Disconnect" },
 }
 
 local function dap_keys()
-  local keys = {}
-  for _, spec in ipairs(dap_key_spec) do
-    table.insert(keys, spec)
+  local specs = {}
+  for keys, spec in pairs(dap_key_spec) do
+    keys = type(keys) == "string" and { keys } or keys
+    ---@cast keys string[]
+    for _, key in ipairs(keys) do
+      table.insert(
+        specs,
+        vim.iter(spec):fold({}, function(t, k, v)
+          if k == 1 then
+            t[1] = key
+            t[2] = v
+          else
+            t[k] = v
+          end
+          return t
+        end)
+      )
+    end
   end
-  return keys
+
+  return specs
 end
 
 return {
