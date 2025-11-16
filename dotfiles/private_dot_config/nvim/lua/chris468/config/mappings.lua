@@ -132,7 +132,6 @@ local mappings = {
   },
   { "<leader>g", group = "Git" },
   { "<leader>l", group = "Lua", icon = "󰢱" },
-  { "<leader>lx", util_lua.run, desc = "Run selected", mode = { "n", "x" } },
   { "<leader>s", group = "Search" },
   { "<leader>t", group = "Test" },
   { "<leader>u", group = "UI" },
@@ -159,13 +158,6 @@ local mappings = {
   },
   {
     "<leader>ll",
-    function()
-      require("chris468.plugins.config.lang.luapad").toggle("snack")
-    end,
-    desc = "repl",
-  },
-  {
-    "<leader>ls",
     require("chris468.plugins.config.lang.luascratch").toggle,
     desc = "Scratch",
   },
