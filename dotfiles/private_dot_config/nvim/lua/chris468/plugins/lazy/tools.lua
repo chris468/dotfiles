@@ -183,6 +183,7 @@ return {
     end,
     dependencies = {
       "rcarriga/nvim-dap-ui",
+      cond = false,
       config = function(_, opts)
         local before = require("dap").listeners.before
         local dapui = require("dapui")
@@ -209,6 +210,25 @@ return {
       version = false,
     },
     keys = dap_keys(),
+    version = false,
+  },
+  {
+    "igorlfs/nvim-dap-view",
+    cmd = {
+      "DapViewOpen",
+      "DapViewToggle",
+    },
+    dependencies = { "nvim-dap" },
+    ---@module 'dap-view'
+    ---@type dapview.Config
+    opts = {
+      windows = {
+        terminal = {
+          start_hidden = true,
+        },
+      },
+      auto_toggle = true,
+    },
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
