@@ -2,15 +2,13 @@ if LazyVim.pick.picker.name ~= "telescope" then
   return {}
 end
 
-local override_keys = require("util.lazy").override_keys
-
 ---@type LazyPluginSpec[]
 return {
   {
     "telescope.nvim",
-    keys = override_keys({
-      ["<leader>sl"] = "<leader>sL",
-    }),
+    keys = {
+      { "<leader>sL", "<cmd>Telescope loclist<cr>", desc = "Location List" },
+    },
   },
   {
     "tsakirist/telescope-lazy.nvim",
