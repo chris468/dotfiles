@@ -1,17 +1,9 @@
-local M = {}
-
-local function pos_equal(l, r)
-  if #l ~= #r then
-    return false
-  end
-  for i, _ in ipairs(l) do
-    if l[i] ~= r[i] then
-      return false
-    end
-  end
-
-  return true
-end
+---@overload fun(win: integer?, on_print: fun(...: any), current_line: boolean?)
+local M = setmetatable({}, {
+  __call = function(m, ...)
+    return m.run(...)
+  end,
+})
 
 local function get_selection(win, current_line)
   if not win or win == 0 then
@@ -39,7 +31,7 @@ local function get_selection(win, current_line)
 end
 
 ---@param win? integer
----@param on_print function(...any)
+---@param on_print fun(...: any)
 ---@param current_line? boolean
 function M.run(win, on_print, current_line)
   local selection = get_selection(win, current_line)
