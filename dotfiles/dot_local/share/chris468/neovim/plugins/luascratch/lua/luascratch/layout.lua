@@ -96,7 +96,9 @@ function M:_create()
         },
         enter = false,
         file = scratch.filename,
-        on_close = M.toggle,
+        on_close = function()
+          M:toggle()
+        end,
         keys = config.opts.mappings.input,
         show = false,
       }),
