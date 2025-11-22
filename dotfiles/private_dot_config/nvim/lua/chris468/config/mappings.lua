@@ -183,11 +183,6 @@ local mappings = {
     expr = true,
     mode = "t",
   },
-  {
-    "<leader>ll",
-    require("chris468.plugins.config.lang.luascratch").toggle,
-    desc = "Scratch",
-  },
 }
 
 -- lhs: string|{lhs: string, mode?: string|string[] }
