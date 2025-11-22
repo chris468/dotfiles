@@ -6,9 +6,15 @@ end
 return {
   {
     "telescope.nvim",
-    keys = {
-      { "<leader>sL", "<cmd>Telescope loclist<cr>", desc = "Location List" },
-    },
+    keys = function(_, keys)
+      vim.tbl_filter(function(v)
+        return v[1] ~= "<leader>sl"
+      end, keys)
+
+      table.insert(keys, { "<leader>sL", "<cmd>Telescope loclist<cr>", desc = "Location List" })
+
+      return keys
+    end,
   },
   {
     "tsakirist/telescope-lazy.nvim",
