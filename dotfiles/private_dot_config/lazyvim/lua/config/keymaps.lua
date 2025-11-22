@@ -5,6 +5,9 @@ vim.keymap.del({ "n", "i", "v" }, "<A-k>")
 -- I never increment on purpose
 vim.keymap.set("n", "<C-a>", "<nop>")
 
+-- Default keymaps I don't, remapm or use for something else
+vim.keymap.del("n", "<leader>l") -- Lazy
+
 vim.keymap.set("n", "<leader>za", function()
   require("util.chezmoi").apply("all")
 end, { desc = "Apply" })
@@ -37,5 +40,6 @@ LazyVim.on_load("which-key.nvim", function()
   require("which-key").add({
     { "<leader>z", group = "Chezmoi" },
     { "<leader>p", group = "Packages" },
+    { "<leader>l", group = "Lua" },
   })
 end)
