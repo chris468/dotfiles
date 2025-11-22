@@ -1,8 +1,7 @@
 ---@module 'snacks'
 
 local Path = require("plenary.path")
-
-local actions = require("luascratch.actions")
+local config = require("luascratch.config")
 
 --- @class chris468.luascratch.layout
 local M = {
@@ -57,6 +56,7 @@ end
 
 ---@private
 function M:_create()
+  local actions = require("luascratch.actions")
   self._layout = Snacks.layout.new({
     hidden = { "output" },
     layout = {
@@ -97,13 +97,7 @@ function M:_create()
         enter = false,
         file = scratch.filename,
         on_close = M.toggle,
-        keys = {
-          ["<C-J>"] = "output",
-          ["<C-K>"] = "output",
-          ["<localleader><localleader>"] = { "run", mode = { "n", "v" } },
-          ["<localleader><cr>"] = "run_current_line",
-          ["<localleader>c"] = { "clear_output", mode = { "n", "v" } },
-        },
+        keys = config.opts.mappings.input,
         show = false,
       }),
       output = Snacks.win.new({
@@ -116,14 +110,7 @@ function M:_create()
         },
         enter = false,
         file = output.filename,
-        keys = {
-          ["<C-J>"] = "input",
-          ["<C-K>"] = "input",
-          ["<localleader><localleader>"] = { "run", mode = { "n", "v" } },
-          ["<localleader><cr>"] = "run_current_line",
-          ["<localleader>c"] = { "clear_output", mode = { "n", "v" } },
-          q = "hide_output",
-        },
+        keys = config.opts.mappings.output,
         show = false,
       }),
     },
