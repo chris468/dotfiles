@@ -25,9 +25,17 @@ vim.keymap.set("n", "<leader>zU", function()
   require("util.chezmoi").update(true)
 end, { desc = "Update and apply" })
 
+vim.keymap.set("n", "<leader>pl", "<cmd>Lazy<CR>", { desc = "Lazy" })
+vim.keymap.set("n", "<leader>pL", function()
+  LazyVim.news.changelog()
+end, { desc = "LazyVim changelog" })
+vim.keymap.set("n", "<leader>px", "<cmd>LazyExtras<CR>", { desc = "LazyVim extras" })
+vim.keymap.set("n", "<leader>pm", "<cmd>Mason<CR>", { desc = "Mason" })
+
 ---@module 'lazyvim'
 LazyVim.on_load("which-key.nvim", function()
   require("which-key").add({
     { "<leader>z", group = "Chezmoi" },
+    { "<leader>p", group = "Packages" },
   })
 end)
