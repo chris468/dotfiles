@@ -67,7 +67,7 @@ return {
     cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUninstallAll", "MasonUpdate" },
     keys = {
       { "<leader>ci", cmd("checkhealth vim.lsp conform"), desc = "LSP/Formatter info" },
-      { "<leader>M", cmd("Mason"), desc = "Mason" },
+      { "<leader>pm", cmd("Mason"), desc = "Mason" },
     },
     opts = {
       ui = {

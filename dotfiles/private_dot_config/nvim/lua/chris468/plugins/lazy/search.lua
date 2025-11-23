@@ -72,7 +72,7 @@ return {
           end,
           desc = "Recent files",
         },
-        { "<leader>r", cmd("Telescope resume"), desc = "Resume last search" },
+        { "<leader>sR", cmd("Telescope resume"), desc = "Resume last search" },
         { "<leader>sh", cmd("Telescope help_tags"), desc = "Help" },
         { "<leader>sl", cmd("Telescope lazy"), desc = "Lazy" },
         { "<leader>sH", cmd("Telescope highlights"), desc = "Highlights" },

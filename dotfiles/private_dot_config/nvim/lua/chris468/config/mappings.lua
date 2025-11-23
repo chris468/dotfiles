@@ -80,7 +80,7 @@ end
 ---@type wk.Spec
 local mappings = {
   { "<Esc>", cmd("nohlsearch"), desc = "Clear search hilight" },
-  { "<leader>L", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
+  { "<leader>pl", cmd("Lazy"), desc = "Lazy", icon = "󰒲" },
   { "<leader>a", group = "AI" },
   { "<leader>b", group = "Buffers" },
   { "<leader>bb", cmd("e #"), desc = "Switch to previous" },
@@ -99,9 +99,9 @@ local mappings = {
   },
   { "<leader>cl", vim.diagnostic.open_float, desc = "Line diagnostic" },
   { "<leader>f", group = "Files" },
-  { "<leader>fc", group = "Chezmoi" },
+  { "<leader>z", group = "Chezmoi" },
   {
-    "<leader>fca",
+    "<leader>za",
     function()
       notify_if_modified_buffers()
       Terminal:background_command(chezmoi_apply_command(), { display_name = "Chezmoi apply" })
@@ -109,7 +109,7 @@ local mappings = {
     desc = "Apply",
   },
   {
-    "<leader>fcf",
+    "<leader>zf",
     function()
       local buf_name = vim.api.nvim_buf_get_name(0)
       if not buf_name or buf_name == "" then
@@ -129,7 +129,7 @@ local mappings = {
     desc = "Apply current source file",
   },
   {
-    "<leader>fcd",
+    "<leader>zd",
     function()
       notify_if_modified_buffers()
       local path = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
@@ -139,7 +139,7 @@ local mappings = {
     desc = "Apply current source dir",
   },
   {
-    "<leader>fcu",
+    "<leader>zu",
     function()
       notify_if_modified_buffers()
       Terminal:background_command("chezmoi update --no-tty --color=false", { display_name = "Chezmoi update" })
@@ -147,7 +147,7 @@ local mappings = {
     desc = "Update",
   },
   {
-    "<leader>fcU",
+    "<leader>zU",
     function()
       notify_if_modified_buffers()
       Terminal:background_command(
@@ -159,12 +159,14 @@ local mappings = {
   },
   { "<leader>g", group = "Git" },
   { "<leader>l", group = "Lua", icon = "󰢱" },
+  { "<leader>z", group = "Chezmoi" },
+  { "<leader>p", group = "Packages" },
   { "<leader>s", group = "Search" },
   { "<leader>t", group = "Test" },
   { "<leader>u", group = "UI" },
   { "<leader><Tab>", group = "Tab" },
-  { "<leader><Tab>n", cmd("tabnew"), desc = "New" },
-  { "<leader><Tab>c", cmd("tabclose"), desc = "Close" },
+  { "<leader><Tab><Tab>", cmd("tabnew"), desc = "New" },
+  { "<leader><Tab>d", cmd("tabclose"), desc = "Close" },
   { "[<Tab>", cmd("tabprevious"), desc = "Previous tab" },
   { "]<Tab>", cmd("tabnext"), desc = "Next tab" },
   { "j", "v:count == 0 ? 'gj' : 'j'", hidden = true, expr = true },
@@ -209,7 +211,7 @@ local lsp_mappings = {
     desc = "Incoming calls",
   },
   {
-    "<leader>cn",
+    "<leader>cr",
     function()
       vim.lsp.buf.rename()
     end,
