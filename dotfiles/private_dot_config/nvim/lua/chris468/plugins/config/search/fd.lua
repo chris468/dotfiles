@@ -6,7 +6,7 @@ local function attach_mappings(opts)
   return function(_, map)
     map(
       { "i", "n" },
-      "<C-E>i",
+      "<C-\\>i",
       search.change_opts(fd, function()
         opts.search_ignored_files = not opts.search_ignored_files
         return opts
@@ -15,7 +15,7 @@ local function attach_mappings(opts)
 
     map(
       { "i", "n" },
-      "<C-E>h",
+      "<C-\\>h",
       search.change_opts(fd, function()
         opts.search_hidden_files = not opts.search_hidden_files
         return opts

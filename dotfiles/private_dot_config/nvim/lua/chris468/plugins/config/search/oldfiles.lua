@@ -9,7 +9,7 @@ local function oldfiles(opts)
     return function(_, map)
       map(
         { "i", "n" },
-        "<C-E>c",
+        "<C-\\>c",
         search.change_opts(oldfiles, function()
           opts.cwd_only = not opts.cwd_only
           return opts
