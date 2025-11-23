@@ -46,6 +46,11 @@ do -- telescope
   vim.keymap.set("n", "<leader>sl", "<cmd>Telescope lazy<CR>", { desc = "Lazy" })
 end
 
+do -- tabs
+  vim.keymap.set("n", "[<Tab>", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+  vim.keymap.set("n", "]<Tab>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+end
+
 -- group names / icons
 ---@module 'lazyvim'
 LazyVim.on_load("which-key.nvim", function()
