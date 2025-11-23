@@ -40,6 +40,12 @@ do -- package management
   vim.keymap.set("n", "<leader>pm", "<cmd>Mason<CR>", { desc = "Mason" })
 end
 
+do -- telescope
+  -- <leader>sl is the default for loclist, but I want it for lazy
+  vim.keymap.set("n", "<leader>sL", "<cmd>Telescope loclist<cr>", { desc = "Location List" })
+  vim.keymap.set("n", "<leader>sl", "<cmd>Telescope lazy<CR>", { desc = "Lazy" })
+end
+
 -- group names / icons
 ---@module 'lazyvim'
 LazyVim.on_load("which-key.nvim", function()
