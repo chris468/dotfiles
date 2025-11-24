@@ -40,12 +40,6 @@ do -- package management
   vim.keymap.set("n", "<leader>pm", "<cmd>Mason<CR>", { desc = "Mason" })
 end
 
-do -- telescope
-  -- <leader>sl is the default for loclist, but I want it for lazy
-  vim.keymap.set("n", "<leader>sL", "<cmd>Telescope loclist<cr>", { desc = "Location List" })
-  vim.keymap.set("n", "<leader>sl", "<cmd>Telescope lazy<CR>", { desc = "Lazy" })
-end
-
 do -- tabs
   vim.keymap.set("n", "[<Tab>", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
   vim.keymap.set("n", "]<Tab>", "<cmd>tabnext<cr>", { desc = "Next Tab" })

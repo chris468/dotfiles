@@ -83,6 +83,10 @@ return {
       require("telescope").setup(opts)
       capture_builtin_opts()
     end,
+    keys = {
+      { "<leader>sL", "<cmd>Telescope loclist<cr>", desc = "Location List" },
+      { "<leader>sl", "<cmd>Telescope lazy<CR>", desc = "Lazy" },
+    },
     opts = {
       defaults = {
         dynamic_preview_title = true,
