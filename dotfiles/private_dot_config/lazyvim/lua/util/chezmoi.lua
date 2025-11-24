@@ -3,7 +3,7 @@ local M = {}
 ---@param source_path? string Source path to apply, or nil to apply all
 ---@return string
 local function chezmoi_apply_command(source_path)
-  local command = "chezmoi apply --no-tty --color=false"
+  local command = "apply --no-tty --color=false"
   if source_path then
     command = string.format('%s "$(chezmoi target-path "%s")"', command, source_path)
   end
@@ -17,6 +17,17 @@ local function notify_if_modified_buffers()
       vim.notify("Unsaved files will not be applied", vim.log.levels.WARN)
     end
   end
+end
+
+local function chezmoi(command, display)
+  Snacks.terminal("chezmoi " .. command, {
+    win = {
+      title = display,
+      border = "rounded",
+      height = 0.3,
+      row = -0.4,
+    },
+  })
 end
 
 ---@param what "all"|"current_file"|"current_dir"
@@ -38,25 +49,22 @@ function M.apply(what)
     display_name = vim.fn.fnamemodify(buf_name, ":t")
   elseif what == "current_dir" then
     path = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
-    display_name = #path > 30 and path:sub(-30) or path
+    display_name = #path > 30 and "…" .. path:sub(-30) or path
     notify_if_modified_buffers()
   else
     notify_if_modified_buffers()
   end
 
-  ---@module 'snacks'
-  Snacks.terminal(
-    chezmoi_apply_command(path),
-    { win = { title = ("Chezmoi apply%s%s"):format(display_name and " " or "", display_name or "") } }
-  )
+  local title = ("Chezmoi apply%s%s"):format(display_name and " " or "", display_name or "")
+  chezmoi(chezmoi_apply_command(path), title)
 end
 
 ---@param apply? boolean
 function M.update(apply)
-  local command = "chezmoi update --no-tty --color=false" .. (apply and " --init --apply" or "")
+  local command = "update --no-tty --color=false" .. (apply and " --init --apply" or "")
   local title = "Chezmoi update" .. (apply and " and apply" or "")
   print(command)
-  Snacks.terminal(command, { win = { title = { title } } })
+  chezmoi(command, title)
 end
 
 return M
