@@ -18,6 +18,8 @@ require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- explictly imported extras
+    { import = "plugins.extras" },
     -- import/override with your plugins
     { import = "plugins" },
   },
