@@ -29,7 +29,7 @@ local function write_data(data)
   end
   if f then
     ---@diagnostic disable-next-line: cast-local-type
-    _, err = vim.uv.fs_write(f, vim.json.encode(data))
+    _, err = vim.uv.fs_write(f, vim.json.encode({ version = 2, icons = data }))
     vim.uv.fs_close(f)
   end
 
@@ -52,7 +52,7 @@ local function download_unicode_data()
       local n = name:lower():gsub(" ", "-")
       items[#items + 1] = {
         name = n,
-        char = utf8.char(codepoint),
+        icon = utf8.char(codepoint),
         code = string.format("%x", codepoint),
       }
     end
@@ -75,11 +75,11 @@ local function download_unicode_data()
     on_error = function(result)
       schedule_notify("Downloading unicode data failed: " .. result.message, vim.log.levels.ERROR)
     end,
-    callback = function(response)
-      if response.exit == 0 then
-        write_data(items)
-      end
-    end,
+    -- callback = function(response)
+    --   if response.exit == 0 then
+    --     write_data(items)
+    --   end
+    -- end,
   })
   download_unicode:start()
   download_unicode:wait(30000, 10, true)
@@ -117,8 +117,8 @@ local function download_unicode_data()
     if name ~= "METADATA" then
       items[#items + 1] = {
         name = name,
-        char = data.char,
-        code = data.char,
+        icon = data.char,
+        code = data.code,
       }
     end
   end
@@ -149,7 +149,7 @@ local function load_data()
   if data then
     local ok, items = pcall(vim.fn.json_decode, data)
     if ok then
-      return items
+      return items.version == 2 and items.icons or nil
     else
       err = "invalid json: " .. items
     end

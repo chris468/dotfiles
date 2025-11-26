@@ -10,7 +10,7 @@ local function gen_from_item()
 
   local make_display = function(entry)
     return displayer({
-      entry.value.char,
+      entry.value.icon,
       entry.value.code,
       entry.value.name,
     })
@@ -19,7 +19,7 @@ local function gen_from_item()
   return function(item)
     return {
       value = item,
-      ordinal = item.char .. item.code .. item.name,
+      ordinal = item.icon .. item.code .. item.name,
       display = make_display,
     }
   end
