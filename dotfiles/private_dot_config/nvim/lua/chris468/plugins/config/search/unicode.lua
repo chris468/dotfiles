@@ -10,7 +10,7 @@ local function gen_from_item()
 
   local make_display = function(entry)
     return displayer({
-      entry.value.char,
+      entry.value.icon,
       entry.value.code,
       entry.value.name,
     })
@@ -19,16 +19,27 @@ local function gen_from_item()
   return function(item)
     return {
       value = item,
-      ordinal = item.char .. item.code .. item.name,
+      ordinal = item.icon .. (item.code or "-") .. item.name,
       display = make_display,
     }
   end
 end
 
 local function create_finder()
+  local make_entry = gen_from_item()
+  local data = require("chris468-utils.unicode").data()
+  local results = {}
+  for _, inner in ipairs(data) do
+    for _, item in ipairs(inner) do
+      table.insert(results, make_entry(item))
+    end
+  end
+
   return require("telescope.finders").new_table({
-    results = require("chris468.util.unicode").data(),
-    entry_maker = gen_from_item(),
+    results = results,
+    entry_maker = function(v)
+      return v
+    end,
   })
 end
 
