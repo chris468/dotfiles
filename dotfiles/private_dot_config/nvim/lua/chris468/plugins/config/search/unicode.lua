@@ -27,7 +27,7 @@ end
 
 local function create_finder()
   return require("telescope.finders").new_table({
-    results = require("chris468.util.unicode").data(),
+    results = require("chris468-utils.unicode").data(),
     entry_maker = gen_from_item(),
   })
 end

@@ -1,11 +1,5 @@
 local M = {}
 
-function M.schedule_notify(message, level, opts)
-  vim.schedule(function()
-    vim.notify(message, level, opts)
-  end)
-end
-
 function M.insert_at_cursor(text)
   local col = vim.api.nvim_win_get_cursor(0)[2]
   local line = vim.api.nvim_get_current_line()
