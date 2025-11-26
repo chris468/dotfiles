@@ -1,15 +1,21 @@
 local curl = require("plenary.curl")
-local path = require("plenary.path")
+local Path = require("plenary.path")
 local utf8 = require("utf8")
 
 local strutil = require("chris468-utils.string")
 
-local datadir = path:new(vim.fn.stdpath("cache"), "chris468")
-local datafile = path:new(datadir, "unicode.json")
+---@alias chris468.utils.unicode.Kind "unicode"|"nerdfonts"
+---@alias chris468.utils.unicode.Item { icon: string, name: string, category?: string, code?: string }
+---@alias chris468.utils.unicode.AddCallback fun(item: chris468.utils.unicode.Item[])
+---@alias chris468.utils.unicode.StreamCallback fun(line: string, add: chris468.utils.unicode.AddCallback)
+---@alias chris468.utils.unicode.CompleteCallback fun(body: string, add: chris468.utils.unicode.AddCallback, done: fun(success: boolean))
+---t
+---@alias chris468.utils.unicode.Status { success?: boolean, items?: chris468.utils.unicode.Item[] }
 
 local M = {}
 
-local cached = nil
+---@type { [chris468.utils.unicode.Kind]: chris468.utils.unicode.Item[]? }
+local cached = {}
 
 local function schedule_notify(message, level, opts)
   vim.schedule(function()
@@ -19,116 +25,187 @@ end
 
 local notify = vim.notify
 
-local function write_data(data)
-  local ok, err = pcall(path.mkdir, datadir, { parents = true })
+---@param name string
+---@return table
+local function datafile(name)
+  local datadir = Path:new(vim.fn.stdpath("cache"), "chris468")
+  return Path:new(datadir, name .. ".json")
+end
+
+---@param name string
+---@items chris468.utils.unicode.Item[]
+---@return boolean
+local function write_data(name, items)
+  local path = datafile(name)
+  local ok, err = pcall(Path.mkdir, path:parent(), { parents = true })
 
   local f
   if ok then
     ---@diagnostic disable-next-line: cast-local-type
-    f, err = vim.uv.fs_open(datafile.filename, "w", tonumber("644", 8))
+    f, err = vim.uv.fs_open(path.filename, "w", tonumber("644", 8))
   end
   if f then
     ---@diagnostic disable-next-line: cast-local-type
-    _, err = vim.uv.fs_write(f, vim.json.encode({ version = 2, icons = data }))
+    _, err = vim.uv.fs_write(f, vim.json.encode({ version = 2, icons = items }))
     vim.uv.fs_close(f)
   end
 
   if err then
-    notify("Failed to write unicode data: " .. err, vim.log.levels.WARN)
+    notify(("Failed to write %s: %s"):format(name, err), vim.log.levels.WARN)
+    return false
   end
+
+  return true
 end
 
-local function download_unicode_data()
-  ---@param s string
-  ---@return integer codepoint, string[] names, string category
-  local function parse(s)
-    local sp = strutil.split(s, ";")
-    return tonumber(sp[1], 16), { sp[2], sp[11] ~= "" and sp[11] or nil }, sp[3]
+---@param name string
+---@param url string
+---@param opts {
+---  stream?: chris468.utils.unicode.StreamCallback,
+---  complete?: chris468.utils.unicode.CompleteCallback,
+---}
+---@return chris468.utils.unicode.Status
+local function download(name, url, opts)
+  if not (opts and (opts.stream or opts.complete)) then
+    error("either stream or callback is required")
+    return { success = false }
   end
-
+  ---
+  ---@type chris468.utils.unicode.Item[]
   local items = {}
-  local function append_items(codepoint, names)
-    for _, name in ipairs(names) do
-      local n = name:lower():gsub(" ", "-")
-      items[#items + 1] = {
-        name = n,
-        icon = utf8.char(codepoint),
-        code = string.format("%x", codepoint),
-      }
-    end
+
+  ---@param item chris468.utils.unicode.Item[]
+  local function add(item)
+    vim.list_extend(items, item)
   end
 
-  local unicode_info_url = "https://unicode.org/Public/UNIDATA/UnicodeData.txt"
-  local nerdfont_info_url = "https://github.com/ryanoasis/nerd-fonts/raw/refs/heads/master/glyphnames.json"
-  local include_unicode_categories = { "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po", "Sm", "Sc", "Sk", "So" }
-  notify("Downloading unicode data")
-  local download_unicode = curl.get(unicode_info_url, {
+  ---@type chris468.utils.unicode.Status
+  local status = {
+    success = nil,
+    items = nil,
+  }
+
+  local curl_opts = {
     timeout = 30000,
-    stream = function(_, chunk)
-      if chunk then
-        local codepoint, names, category = parse(chunk)
-        if codepoint > 0x7F and vim.list_contains(include_unicode_categories, category) then
-          append_items(codepoint, names)
+    raw = "--fail",
+    callback = function(response)
+      if response.exit ~= 0 then
+        return
+      end
+
+      local function done(success)
+        if success and write_data(name, items) then
+          status.success, status.items = true, items
+          schedule_notify("Finished downloading " .. name)
+        else
+          status.success = false
         end
       end
-    end,
-    on_error = function(result)
-      schedule_notify("Downloading unicode data failed: " .. result.message, vim.log.levels.ERROR)
-    end,
-    -- callback = function(response)
-    --   if response.exit == 0 then
-    --     write_data(items)
-    --   end
-    -- end,
-  })
-  download_unicode:start()
-  download_unicode:wait(30000, 10, true)
-  if download_unicode.code ~= 0 then
-    return
-  end
-  notify("Finished downloading unicode data", vim.log.levels.INFO)
 
-  notify("Downloading nerdfont data")
-  local nerdfont_json
-  local download_nerdfont = curl.get(nerdfont_info_url, {
-    callback = function(result)
-      if result.exit == 0 then
-        nerdfont_json = result.body
+      if opts.complete then
+        opts.complete(response.body, add, done)
+      else
+        done(true)
       end
     end,
     on_error = function(result)
-      schedule_notify("Downloading nerdfont data failed: " .. result.message, vim.log.levels.ERROR)
+      schedule_notify(("Downloading %s failed: %s"):format(name, result.message), vim.log.levels.ERROR)
+      status.success = false
     end,
-  })
-  download_nerdfont:start()
-  download_nerdfont:wait(30000, 10, true)
-  if download_nerdfont.code ~= 0 then
-    return
-  end
+  }
 
-  local ok, nerdfont_items = pcall(vim.fn.json_decode, nerdfont_json)
-  if not ok then
-    notify("Parsing nerdfont json failed: " .. nerdfont_items, vim.log.levels.ERROR)
-    return
-  end
-  notify("Finished downloading nerdfont data")
-
-  for name, data in pairs(nerdfont_items) do
-    if name ~= "METADATA" then
-      items[#items + 1] = {
-        name = name,
-        icon = data.char,
-        code = data.code,
-      }
+  if opts.stream then
+    curl_opts.stream = function(err, line)
+      if err or not line then
+        return
+      end
+      opts.stream(line, add)
     end
   end
-  write_data(items)
 
-  return items
+  notify("Downloading " .. name)
+  curl.get(url, curl_opts)
+  return status
 end
 
-local function load_data()
-  local f, err, err_name = vim.uv.fs_open(datafile.filename, "r", tonumber("644", 8))
+---@return chris468.utils.unicode.Status
+local function download_nerdfonts()
+  local nerdfont_info_url = "https://github.com/ryanoasis/nerd-fonts/raw/refs/heads/master/glyphnames.json"
+  return download("nerdfonts", nerdfont_info_url, {
+    complete = function(body, add, done)
+      vim.schedule(function()
+        local ok, nerdfont_json = pcall(vim.fn.json_decode, body)
+        if not ok then
+          notify("Parsing nerdfont json failed: " .. nerdfont_json, vim.log.levels.ERROR)
+          done(false)
+        end
+
+        for name, data in pairs(nerdfont_json) do
+          if name ~= "METADATA" then
+            add({
+              {
+                name = name,
+                icon = data.char,
+                code = data.code,
+              },
+            })
+          end
+        end
+
+        done(true)
+      end)
+    end,
+  })
+end
+
+---@return chris468.utils.unicode.Status
+local function download_unicode()
+  local unicode_info_url = "https://unicode.org/Public/UNIDATA/UnicodeData.txt"
+  local unicode_categories = {
+    Pc = "Connector Punctuation",
+    Pd = "Dash Punctuation",
+    Ps = "Open Punctuation",
+    Pe = "Close Punctuation",
+    Pi = "Initial Punctuation",
+    Pf = "Final Punctuation",
+    Po = "Other Punctuation",
+    Sm = "Math Symbol",
+    Sc = "Currency Symbol",
+    Sk = "Modifier Symbol",
+    So = "Other Symbol",
+  }
+  ---
+  ---@param s string
+  ---@return number, string, chris468.utils.unicode.Item[]
+  local function parse(s)
+    local sp = strutil.split(s, ";")
+    local codepoint, names, category = tonumber(sp[1], 16), { sp[2], sp[11] ~= "" and sp[11] or nil }, sp[3]
+    local result = {}
+    for _, name in ipairs(names) do
+      table.insert(result, {
+        name = name:lower():gsub(" ", "-"),
+        icon = utf8.char(codepoint),
+        code = codepoint,
+        category = unicode_categories[category],
+      })
+    end
+    return codepoint, category, result
+  end
+
+  return download("unicode", unicode_info_url, {
+    stream = function(chunk, add)
+      local codepoint, category, items = parse(chunk)
+      if codepoint > 0x7F and unicode_categories[category] then
+        add(items)
+      end
+    end,
+  })
+end
+
+---@param name chris468.utils.unicode.Kind
+---@return chris468.utils.unicode.Item[]?
+local function load_data(name)
+  local f, err, err_name = vim.uv.fs_open(datafile(name).filename, "r", tonumber("644", 8))
   if err_name == "ENOENT" then
     return
   end
@@ -158,22 +235,53 @@ local function load_data()
   notify("Error loading: " .. err, vim.log.levls.ERROR)
 end
 
-local function load_or_generate_unicode_data()
-  ---@diagnostic disable-next-line undefined-field
-  local items = load_data()
-  if items then
-    return items
-  end
+---@type { [chris468.utils.unicode.Kind]: fun(): chris468.utils.unicode.Status }
+local download_map = {
+  nerdfonts = download_nerdfonts,
+  unicode = download_unicode,
+}
 
-  ---@diagnostic disable-next-line undefined-field
-  return download_unicode_data()
+---@param kind chris468.utils.unicode.Kind
+---@return chris468.utils.unicode.Status
+local function cached_load(kind)
+  local items = cached[kind] or load_data(kind)
+  return items and { success = true, items = items } or download_map[kind]()
 end
 
-function M.data()
-  if not cached then
-    cached = load_or_generate_unicode_data()
+---@param ... chris468.utils.unicode.Kind
+---@return (chris468.utils.unicode.Item[])?
+function M.data(...)
+  local kinds = { ... }
+  kinds = (not kinds or #kinds == 0) and { "nerdfonts", "unicode" } or kinds
+  local results = vim
+    .iter(kinds)
+    :map(function(kind)
+      return cached_load(kind)
+    end)
+    :totable()
+
+  local function ready()
+    return vim.iter(results):all(function(result)
+      return result.success ~= nil
+    end)
   end
-  return cached
+
+  if not ready() then
+    vim.wait(35000, function()
+      vim.cmd.redraw()
+      return ready()
+    end)
+  end
+
+  return vim
+    .iter(results)
+    :filter(function(result)
+      return result.success
+    end)
+    :map(function(result)
+      return result.items or {}
+    end)
+    :totable()
 end
 
 return M
