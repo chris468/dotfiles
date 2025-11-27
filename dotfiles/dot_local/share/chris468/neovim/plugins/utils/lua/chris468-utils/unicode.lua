@@ -46,7 +46,7 @@ local function write_data(name, items)
   end
   if f then
     ---@diagnostic disable-next-line: cast-local-type
-    _, err = vim.uv.fs_write(f, vim.json.encode({ version = 2, icons = items }))
+    _, err = vim.uv.fs_write(f, vim.json.encode(items))
     vim.uv.fs_close(f)
   end
 
@@ -226,10 +226,10 @@ local function load_data(name)
   if data then
     local ok, items = pcall(vim.fn.json_decode, data)
     if ok then
-      return items.version == 2 and items.icons or nil
-    else
-      err = "invalid json: " .. items
+      return items
     end
+
+    err = "invalid json: " .. items
   end
 
   notify("Error loading: " .. err, vim.log.levls.ERROR)
@@ -282,6 +282,27 @@ function M.data(...)
       return result.items or {}
     end)
     :totable()
+end
+
+---@param kind chris468.utils.unicode.Kind
+---@param force? boolean
+---@return string? filename
+function M.download(kind, force)
+  local file = datafile(kind)
+  if not file:exists() or force ~= nil then
+    local status = download_map[kind]()
+    if status.success == nil then
+      vim.wait(35000, function()
+        vim.cmd.redraw()
+        return status.success ~= nil
+      end)
+    end
+    if not status.success then
+      return nil
+    end
+  end
+
+  return file.filename
 end
 
 return M

@@ -1,3 +1,5 @@
+local getenv = require("os").getenv
+
 if LazyVim.pick.picker.name ~= "snacks" then
   return {}
 end
@@ -156,9 +158,33 @@ local function update_picker_title(picker)
 end
 
 return {
-  { "uga-rosa/utf8.nvim" },
+  { "uga-rosa/utf8.nvim", lazy = true },
+  {
+    "chris468-utils",
+    dependencies = {
+      "plenary.nvim",
+      "utf8.nvim",
+    },
+    dir = (getenv("XDG_DATA_HOME") or vim.expand("~/.local/share")) .. "/chris468/neovim/plugins/utils",
+    lazy = true,
+  },
   {
     "snacks.nvim",
+    dependencies = { "chris468-utils" },
+    keys = {
+      {
+        "<leader>si",
+        function()
+          local opts = {}
+          local filename = require("chris468-utils.unicode").download("unicode")
+          if filename then
+            opts.custom_sources = { unicode = filename }
+          end
+          Snacks.picker.icons(opts)
+        end,
+        desc = "Icons",
+      },
+    },
     ---@module 'snacks'
     ---@type snacks.Config
     opts = {
