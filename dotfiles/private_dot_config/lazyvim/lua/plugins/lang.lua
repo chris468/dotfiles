@@ -33,4 +33,20 @@ return {
       return opts
     end,
   },
+  {
+    "noice.nvim",
+    opts = function(_, opts)
+      opts.routes = vim.list_extend(opts.routes or {}, {
+        {
+          filter = {
+            cond = function(m)
+              return m.opts.chris468_lang ~= nil
+            end,
+          },
+          view = "mini",
+        },
+      })
+      return opts
+    end,
+  },
 }

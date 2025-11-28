@@ -11,39 +11,43 @@ local function get_package(name)
   return ok and package or nil
 end
 
-local function spinner()
-  return require("noice.util.spinners").spin()
-end
-
----@type { [string]: { description: string, status: "installing"|"failed"|"success" } }
+---@type { [string]: {id: string, description: string, status: "installing"|"failed"|"success" }}
 local installing = {}
 
-local function monitor(id)
+local formats = {
+  installing = {
+    { "{spinner}", hl_group = "NoiceLspProgressSpinner" },
+    " ",
+    "Installing {data.chris468_lang.description}...",
+  },
+  success = {
+    { "", hl_group = "DiagnosticInfo" },
+    " ",
+    "Installed {data.chris468_lang.description}.",
+  },
+  failed = {
+    { "✕", hl_group = "DiagnosticError" },
+    " ",
+    "Failed to install {data.chris468_lang.description}.",
+  },
+}
+
+local function monitor(message)
   vim.defer_fn(function()
-    local state = installing[id]
-    if not state then
-      return
+    local status = message.opts.chris468_lang.status
+    local format = formats[status]
+    if format then
+      local Manager = require("noice.message.manager")
+      local Format = require("noice.text.format")
+      Manager.add(Format.format(message, format))
     end
 
-    local msg, level
-    if state.status == "installing" then
-      msg = ("%s Installing %s..."):format(spinner(), state.description)
-    elseif state.status == "success" then
-      msg = (" Installed %s"):format(state.description)
-    elseif state.status == "failed" then
-      level = vim.log.levels.ERROR
-      msg = ("✕ Failed to install %s"):format(state.description)
+    if status == "installing" then
+      monitor(message)
     else
-      installing[id] = nil
-      return
-    end
-
-    vim.notify(msg, level, {
-      id = id,
-    })
-
-    if state.status == "installing" then
-      monitor(id)
+      local Router = require("noice.message.router")
+      Router.update()
+      installing[message.opts.chris468_lang.id] = nil
     end
   end, 80)
 end
@@ -58,12 +62,14 @@ local function start(pkg, filetype, annotation)
   end
 
   local description = ("%s%s for %s"):format(pkg.name, annotation and (" (" .. annotation .. ")") or "", filetype)
+  local message = require("noice.message")("msg_show", "echo")
   installing[id] = {
+    id = id,
     description = description,
     status = "installing",
   }
-
-  monitor(id)
+  message.opts.chris468_lang = installing[id]
+  monitor(message)
 end
 
 ---@param pkg Package
