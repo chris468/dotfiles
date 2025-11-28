@@ -8,20 +8,20 @@ end
 ---@alias chris468.picker.Status "root"|"cwd"|"same"|"global"
 
 ---@param picker snacks.Picker
----return (chris468.picker.Capabilities, string root, string cwd)|(false, nil, nil)
+---@return (chris468.picker.Capabilities, string root, string cwd)|(false, nil, nil)
 local function get_capabilities(picker)
   ---@type snacks.picker.Config|snacks.picker.grep.Config
   local opts = picker.opts or {}
   local result = {}
 
-  result.global = opts.finder == "recent_files"
+  result.global = opts.source == "recent"
   result.cwd = not opts.buffers
     and vim.tbl_contains({
       "explorer",
       "files",
       "grep",
-      "recent_files",
-    }, opts.finder)
+      "recent",
+    }, opts.source)
   result.root = result.cwd
 
   if vim.tbl_contains(result, true) then
@@ -157,6 +157,58 @@ local function update_picker_title(picker)
   set_picker_title(picker, state)
 end
 
+---@type snacks.picker.Config
+local plugin_source = {
+  formatters = { file = { filename_first = true } },
+  layout = { preset = "vertical", hidden = { "preview" } },
+  icons = { files = { enabled = false } },
+  preview = "file",
+  source = "plugins",
+  title = "Lazy plugins",
+  confirm = { "picker_files" },
+  win = {
+    input = {
+      keys = {
+        ["<C-G>"] = { "picker_grep", mode = { "n", "i" } },
+      },
+    },
+    list = {
+      keys = {
+        ["<C-G>"] = "picker_grep",
+      },
+    },
+  },
+}
+
+function plugin_source.finder()
+  require("lazy.view.colors").setup()
+  return vim.tbl_map(function(p)
+    return {
+      text = p.name,
+      file = p.dir,
+      loaded = p._.loaded ~= nil,
+      is_local = p._.is_local ~= nil,
+    }
+  end, require("lazy").plugins())
+end
+
+function plugin_source.format(item, picker)
+  local icons = require("lazy.core.config").options.ui.icons
+  ---@type snacks.picker.Highlight[]
+  local ret = {
+    { item.loaded and icons.loaded or icons.not_loaded, item.is_local and "LazyLocal" or "LazySpecial" },
+    { " " },
+  }
+
+  vim.list_extend(ret, Snacks.picker.format.file(item, picker))
+
+  return ret
+end
+
+LazyVim.on_load("snacks.nvim", function()
+  Snacks.picker.sources.plugin = plugin_source
+end)
+
 return {
   { "uga-rosa/utf8.nvim", lazy = true },
   {
@@ -183,6 +235,20 @@ return {
           Snacks.picker.icons(opts)
         end,
         desc = "Icons",
+      },
+      {
+        "<leader>sp",
+        function()
+          Snacks.picker.plugin()
+        end,
+        desc = "Lazy plugins",
+      },
+      {
+        "<leader>sP",
+        function()
+          Snacks.picker.lazy()
+        end,
+        desc = "Lazy plugin specs",
       },
     },
     ---@module 'snacks'
