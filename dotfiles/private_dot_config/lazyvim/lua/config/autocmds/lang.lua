@@ -11,6 +11,80 @@ local function get_package(name)
   return ok and package or nil
 end
 
+local progress = {
+  count = 0,
+  total = 0,
+  ---@type string[]
+  _messages = {},
+  error = false,
+  ---@type table|boolean
+  timer = false,
+}
+
+local function spinner()
+  return require("noice.util.spinners").spin()
+end
+
+function progress.installing(display_name)
+  if progress.count == progress.total then
+    progress.count, progress.total = 0, 1
+  else
+    progress.total = progress.total + 1
+  end
+  progress.message(("  Installing %s"):format(display_name))
+end
+
+function progress.success(display_name)
+  progress.count = progress.count + 1
+  progress.message((" Installed %s"):format(display_name))
+end
+
+function progress.failed(display_name)
+  progress.count = progress.count + 1
+  progress.message(("✗ Failed to install %s"):format(display_name), true)
+end
+
+---@param status string
+---@param error? boolean
+function progress.message(status, error)
+  table.insert(progress._messages, status)
+  progress.error = progress.error or error or false
+
+  local function last_messages(n)
+    return table.concat(vim.tbl_values({ unpack(progress._messages, #progress._messages - (n - 1)) }), "\n")
+  end
+
+  local function notify(done)
+    local title = done and (progress.error and "Language support installation failed" or "Language support installed")
+      or ("Installing language support... (%d/%d)"):format(progress.count, progress.total)
+    local icon = done and (progress.error and "✗" or "✓") or spinner()
+    vim.schedule_wrap(vim.notify)(
+      last_messages(5),
+      progress.error and vim.log.levels.ERROR or vim.log.levels.INFO,
+      { title = title, icon = icon, id = "chris468.lang", history = false }
+    )
+  end
+
+  local function show()
+    progress.timer = vim.defer_fn(function()
+      if progress.total == 0 then
+        return
+      end
+      if progress.count == progress.total then
+        notify(true)
+        progress.count, progress.total, progress.timer, progress._messages = 0, 0, false, {}
+      else
+        notify(false)
+        progress.timer = show()
+      end
+    end, 80)
+  end
+
+  if not progress.timer then
+    show()
+  end
+end
+
 ---@param pkg? Package
 ---@param annotation? string|boolean
 local function install_package(pkg, annotation)
@@ -22,13 +96,13 @@ local function install_package(pkg, annotation)
 
   pkg
     :once("install:handle", function()
-      vim.schedule_wrap(vim.notify)(("Installing %s"):format(display_name))
+      progress.installing(display_name)
     end)
     :once("install:success", function()
-      vim.schedule_wrap(vim.notify)(("Installed %s"):format(display_name))
+      progress.success(display_name)
     end)
     :once("install:failure", function()
-      vim.schedule_wrap(vim.notify)(("Failed to install %s"):format(display_name), vim.log.levels.ERROR)
+      progress.failed(display_name)
     end) --[[ @as Package ]]
     :install()
 end
