@@ -11,98 +11,95 @@ local function get_package(name)
   return ok and package or nil
 end
 
-local progress = {
-  count = 0,
-  total = 0,
-  ---@type string[]
-  _messages = {},
-  error = false,
-  ---@type table|boolean
-  timer = false,
-}
-
 local function spinner()
   return require("noice.util.spinners").spin()
 end
 
-function progress.installing(display_name)
-  if progress.count == progress.total then
-    progress.count, progress.total = 0, 1
-  else
-    progress.total = progress.total + 1
-  end
-  progress.message(("  Installing %s"):format(display_name))
+---@type { [string]: { description: string, status: "installing"|"failed"|"success" } }
+local installing = {}
+
+local function monitor(id)
+  vim.defer_fn(function()
+    local state = installing[id]
+    if not state then
+      return
+    end
+
+    local msg, level
+    if state.status == "installing" then
+      msg = ("%s Installing %s..."):format(spinner(), state.description)
+    elseif state.status == "success" then
+      msg = (" Installed %s"):format(state.description)
+    elseif state.status == "failed" then
+      level = vim.log.levels.ERROR
+      msg = ("✕ Failed to install %s"):format(state.description)
+    else
+      installing[id] = nil
+      return
+    end
+
+    vim.notify(msg, level, {
+      id = id,
+    })
+
+    if state.status == "installing" then
+      monitor(id)
+    end
+  end, 80)
 end
 
-function progress.success(display_name)
-  progress.count = progress.count + 1
-  progress.message((" Installed %s"):format(display_name))
+---@param pkg Package
+---@param filetype string
+---@param annotation? string|boolean
+local function start(pkg, filetype, annotation)
+  local id = pkg.spec.source.id
+  if installing[id] then
+    return
+  end
+
+  local description = ("%s%s for %s"):format(pkg.name, annotation and (" (" .. annotation .. ")") or "", filetype)
+  installing[id] = {
+    description = description,
+    status = "installing",
+  }
+
+  monitor(id)
 end
 
-function progress.failed(display_name)
-  progress.count = progress.count + 1
-  progress.message(("✗ Failed to install %s"):format(display_name), true)
+---@param pkg Package
+local function success(pkg)
+  local id = pkg.spec.source.id
+  if not installing[id] then
+    return
+  end
+  installing[id].status = "success"
 end
 
----@param status string
----@param error? boolean
-function progress.message(status, error)
-  table.insert(progress._messages, status)
-  progress.error = progress.error or error or false
-
-  local function last_messages(n)
-    return table.concat(vim.tbl_values({ unpack(progress._messages, #progress._messages - (n - 1)) }), "\n")
+local function failure(pkg)
+  local id = pkg.spec.source.id
+  if not installing[id] then
+    return
   end
-
-  local function notify(done)
-    local title = done and (progress.error and "Language support installation failed" or "Language support installed")
-      or ("Installing language support... (%d/%d)"):format(progress.count, progress.total)
-    local icon = done and (progress.error and "✗" or "✓") or spinner()
-    vim.schedule_wrap(vim.notify)(
-      last_messages(5),
-      progress.error and vim.log.levels.ERROR or vim.log.levels.INFO,
-      { title = title, icon = icon, id = "chris468.lang", history = false }
-    )
-  end
-
-  local function show()
-    progress.timer = vim.defer_fn(function()
-      if progress.total == 0 then
-        return
-      end
-      if progress.count == progress.total then
-        notify(true)
-        progress.count, progress.total, progress.timer, progress._messages = 0, 0, false, {}
-      else
-        notify(false)
-        progress.timer = show()
-      end
-    end, 80)
-  end
-
-  if not progress.timer then
-    show()
-  end
+  installing[id].status = "failed"
 end
 
 ---@param pkg? Package
+---@param filetype string
 ---@param annotation? string|boolean
-local function install_package(pkg, annotation)
+local function install_package(pkg, filetype, annotation)
   if not pkg or pkg:is_installed() or pkg:is_installing() then
     return
   end
 
-  local display_name = annotation and (("%s (%s)"):format(pkg.name, annotation)) or pkg.name
-
   pkg
     :once("install:handle", function()
-      progress.installing(display_name)
+      start(pkg, filetype, annotation)
     end)
     :once("install:success", function()
-      progress.success(display_name)
+      success(pkg)
     end)
     :once("install:failure", function()
-      progress.failed(display_name)
+      failure(pkg)
     end) --[[ @as Package ]]
     :install()
 end
@@ -121,7 +118,7 @@ local function install_lsps(filetype)
       return
     end
 
-    install_package(pkg, server ~= pkg.name and ("%s lsp"):format(server))
+    install_package(pkg, filetype, server ~= pkg.name and ("%s lsp"):format(server))
   end
 
   local servers = vim.tbl_keys(LazyVim.opts("nvim-lspconfig").servers)
@@ -134,9 +131,10 @@ local function install_lsps(filetype)
 end
 
 ---@param names string[]
-local function install_packages(names)
+---@param filetype string
+local function install_packages(names, filetype)
   for _, name in ipairs(names) do
-    install_package(get_package(name))
+    install_package(get_package(name), filetype)
   end
 end
 
@@ -144,14 +142,14 @@ end
 local function install_formatters(filetype)
   local formatters_by_ft = LazyVim.opts("conform.nvim").formatters_by_ft or {}
   local formatters = formatters_by_ft[filetype] or {}
-  install_packages(formatters)
+  install_packages(formatters, filetype)
 end
 
 ---@param filetype string
 local function install_linters(filetype)
   local linters_by_ft = LazyVim.opts("formatters").linters_by_ft or {}
   local linters = linters_by_ft[filetype] or {}
-  install_packages(linters)
+  install_packages(linters, filetype)
 end
 
 ---@param filetype string
@@ -168,7 +166,7 @@ local function install_daps(filetype)
       return
     end
 
-    install_package(pkg, dap ~= pkg.name and ("%s dap"):format(dap))
+    install_package(pkg, filetype, dap ~= pkg.name and ("%s dap"):format(dap))
   end
 
   local auto_install = LazyVim.opts("mason.nvim").chris468_auto_install
