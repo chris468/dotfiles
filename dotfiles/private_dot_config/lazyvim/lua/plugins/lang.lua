@@ -45,6 +45,30 @@ return {
           },
           view = "mini",
         },
+        {
+          --- LazyVim angular lsp configuration uses a helper that asserts that a mason package path is present
+          --- Squash that error if that package installed is not. The message can still be seen in the history.
+          filter = {
+            -- Cond is called even if event/kind/find don't match, so check
+            -- everything in cond in order to avoid unnecessary expensive checks.
+            ---@param m NoiceMessage
+            cond = function(m)
+              if
+                m.event ~= "notify"
+                or m.kind ~= "warn"
+                or not m:content():find("^Mason package path not found for %*%*angular%-language%-server%*%*")
+              then
+                return false
+              end
+
+              local registry = require("mason-registry")
+              local ok, pkg = pcall(registry.get_package, "angular-language-server")
+              local installed = ok and pkg:is_installed()
+              return not installed
+            end,
+          },
+          opts = { skip = true },
+        },
       })
       return opts
     end,
