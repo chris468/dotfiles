@@ -29,13 +29,20 @@ return {
     opts = {
       callbacks = {
         ["dev.azure.com"] = function(url_data)
+          local file = url_data.file
+          local rev = url_data.rev
+          local lstart = url_data.lstart
+          local lend = url_data.lend
+          if not lend or lend == lstart then
+            lend = lstart + 1
+          end
           return string.format(
             "%s?path=/%s&version=GC%s&line=%d&lineEnd=%d&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents",
             require("gitlinker.hosts").get_base_https_url(url_data),
-            url_data.file,
-            url_data.rev,
-            url_data.lstart,
-            url_data.lend or url_data.lstart + 1
+            file,
+            rev,
+            lstart,
+            lend
           )
         end,
       },
