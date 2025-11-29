@@ -153,7 +153,7 @@ end
 
 ---@param filetype string
 local function install_linters(filetype)
-  local linters_by_ft = LazyVim.opts("formatters").linters_by_ft or {}
+  local linters_by_ft = LazyVim.opts("nvim-lint").linters_by_ft or {}
   local linters = linters_by_ft[filetype] or {}
   install_packages(linters, filetype)
 end
