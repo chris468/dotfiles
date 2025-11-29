@@ -1,8 +1,11 @@
+local function refresh_lualine()
+  require("lualine").refresh()
+end
 local function codeium_status_components()
   local vt = require("lazy-require").require_on_index("codeium.virtual_text")
 
   LazyVim.on_load("codeium.nvim", function()
-    return vt.set_statusbar_refresh(require("lualine").refresh)
+    return vt.set_statusbar_refresh(refresh_lualine)
   end)
 
   local icon_component = LazyVim.lualine.status(LazyVim.config.icons.kinds.Codeium, function()
@@ -31,6 +34,36 @@ local function codeium_status_components()
   return { icon_component, completions_component }
 end
 
+local function lsp_status_components()
+  local ignore_clients = { "copilot" }
+  local function current_buffer_has_clients()
+    local clients = vim.tbl_filter(function(client)
+      return not vim.list_contains(ignore_clients, client.name)
+    end, vim.lsp.get_clients({ buf = vim.api.nvim_get_current_buf() }))
+    return #clients > 0
+  end
+
+  vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
+    group = vim.api.nvim_create_augroup("chris468.lsp_status", { clear = true }),
+    callback = refresh_lualine,
+  })
+
+  return {
+    {
+      function()
+        return current_buffer_has_clients() and "" or ""
+      end,
+      color = function()
+        ---@module "mini.icons"
+        local _, hl = MiniIcons.get("file", vim.api.nvim_buf_get_name(0))
+        return hl
+      end,
+      padding = { left = 1, right = 0 },
+      separator = "",
+    },
+  }
+end
+
 local function insert_components(section, components, pos)
   if type(components) == "table" then
     local iter = vim.iter(components)
@@ -43,18 +76,27 @@ local function insert_components(section, components, pos)
   end
 end
 
+local function insert_components_before(section, components, component_name)
+  for pos, c in ipairs(section) do
+    if c[1] == component_name then
+      insert_components(section, components, pos)
+      return
+    end
+  end
+
+  insert_components(section, components, 1)
+end
+
 return {
   {
     "lualine.nvim",
     dependencies = {
       { "tjdevries/lazy-require.nvim", lazy = true, version = false },
+      { "mini.icons" },
     },
     optional = true,
     opts = function(_, opts)
-      LazyVim.on_load("codeium.nvm", function()
-        require("codeium.virtual_text")
-      end)
-
+      insert_components_before(opts.sections.lualine_c, lsp_status_components(), "filetype")
       insert_components(opts.sections.lualine_x, codeium_status_components(), 2)
       return opts
     end,
