@@ -53,12 +53,56 @@ do -- tabs
   vim.keymap.set("n", "]<Tab>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 end
 
+do -- git
+  -- overriding many LazyVim maps so they have to appear here instead of in the lazy spec
+  vim.keymap.set("n", "<leader>gc", "<cmd>Neogit commit<cr>", { desc = "Commit" })
+  vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen -- %<cr>", { desc = "Diff current buffer" })
+  vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
+  vim.keymap.set("n", "<leader>gG", "<cmd>DiffviewOpen<cr>", { desc = "Git (diffview)" })
+  vim.keymap.set("n", "<leader>gl", "<cmd>DiffviewFileHistory %<cr>", { desc = "Log (current file)" })
+  vim.keymap.set("n", "<leader>gL", "<cmd>DiffviewFileHistory<cr>", { desc = "Log" })
+  vim.keymap.set("n", "<leader>gp", "<cmd>Neogit pull<cr>", { desc = "Pull" })
+  vim.keymap.set("n", "<leader>gP", "<cmd>Neogit push<cr>", { desc = "Push" })
+
+  -- Move snacks git mappings that I might find useful
+  vim.keymap.set("n", "<leader>gsd", function()
+    Snacks.picker.git_diff()
+  end, { desc = "Git Diff (hunks)" })
+  vim.keymap.set("n", "<leader>gsD", function()
+    Snacks.picker.git_diff({ base = "origin", group = true })
+  end, { desc = "Git Diff (origin)" })
+  vim.keymap.set("n", "<leader>gss", function()
+    Snacks.picker.git_status()
+  end, { desc = "Git Status" })
+  vim.keymap.set("n", "<leader>gsS", function()
+    Snacks.picker.git_stash()
+  end, { desc = "Git Stash" })
+
+  if vim.fn.executable("lazygit") == 1 then
+    vim.keymap.set("n", "<leader>gsg", function()
+      Snacks.lazygit({ cwd = LazyVim.root.git() })
+    end, { desc = "Lazygit (Root Dir)" })
+    vim.keymap.set("n", "<leader>gsG", function()
+      Snacks.lazygit()
+    end, { desc = "Lazygit (cwd)" })
+  end
+
+  -- Delete snacks git mappings I moved or don't want but didn't reuse
+  vim.keymap.del({ "n", "x" }, "<leader>gB") -- browse/open
+  vim.keymap.del("n", "<leader>gD") -- diff origin
+  vim.keymap.del("n", "<leader>gi") -- github issues/open
+  vim.keymap.del("n", "<leader>gI") -- github issues/all
+  vim.keymap.del("n", "<leader>gS") -- stash
+  vim.keymap.del({ "n", "x" }, "<leader>gY") -- browse/yank
+end
+
 -- group names / icons
 ---@module 'lazyvim'
 LazyVim.on_load("which-key.nvim", function()
   require("which-key").add({
-    { "<leader>z", group = "Chezmoi" },
-    { "<leader>p", group = "Packages" },
+    { "<leader>gs", group = "Snacks" },
     { "<leader>l", group = "Lua" },
+    { "<leader>p", group = "Packages" },
+    { "<leader>z", group = "Chezmoi" },
   })
 end)
