@@ -1,3 +1,7 @@
+-- lsp is only registered for the terraform and terraform-vars filetypes,
+-- but *.tf files are detected as tf.
+vim.filetype.add({ extension = { tf = "terraform" } })
+
 return {
   {
     "mason.nvim",
