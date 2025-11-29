@@ -10,13 +10,21 @@ local function chezmoi_apply_command(source_path)
   return command
 end
 
-local function notify_if_modified_buffers()
-  local buffers = vim.api.nvim_list_bufs()
+---@param force? boolean
+---@param buf? number
+local function notify_if_modified_buffers(force, buf)
+  local buffers = buf and { buf } or vim.api.nvim_list_bufs()
   for _, buffer in ipairs(buffers) do
     if vim.bo[buffer].modified then
-      vim.notify("Unsaved files will not be applied", vim.log.levels.WARN)
+      vim.notify(
+        force and "Unsaved files will not be applied" or "Save files before applying",
+        force and vim.log.levels.WARN or vim.log.levels.ERROR
+      )
+      return force
     end
   end
+
+  return true
 end
 
 local function chezmoi(command, display)
@@ -31,8 +39,9 @@ local function chezmoi(command, display)
 end
 
 ---@param what "all"|"current_file"|"current_dir"
-function M.apply(what)
-  local path, display_name
+---@param force? boolean
+function M.apply(what, force)
+  local path, display_name, buf
   if what == "current_file" then
     local buf_name = vim.api.nvim_buf_get_name(0)
     if not buf_name or buf_name == "" then
@@ -40,21 +49,17 @@ function M.apply(what)
       return
     end
 
-    -- warn if the file was modified
-    if vim.bo.modified then
-      vim.notify("File has not been saved", vim.log.levels.WARN)
-    end
-
     path = vim.fn.fnamemodify(buf_name, ":p")
     display_name = vim.fn.fnamemodify(buf_name, ":t")
+    buf = vim.api.nvim_get_current_buf()
   elseif what == "current_dir" then
     path = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
     display_name = #path > 30 and "…" .. path:sub(-30) or path
-    notify_if_modified_buffers()
-  else
-    notify_if_modified_buffers()
   end
 
+  if not notify_if_modified_buffers(force, buf) then
+    return
+  end
   local title = ("Chezmoi apply%s%s"):format(display_name and " " or "", display_name or "")
   chezmoi(chezmoi_apply_command(path), title)
 end

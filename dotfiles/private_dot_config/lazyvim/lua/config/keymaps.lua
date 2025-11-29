@@ -14,9 +14,17 @@ do -- chezmoi
     require("util.chezmoi").apply("all")
   end, { desc = "Apply" })
 
+  vim.keymap.set("n", "<leader>zA", function()
+    require("util.chezmoi").apply("all", true)
+  end, { desc = "Apply (ignore unsaved)" })
+
   vim.keymap.set("n", "<leader>zd", function()
     require("util.chezmoi").apply("current_dir")
   end, { desc = "Apply current source dir" })
+
+  vim.keymap.set("n", "<leader>zD", function()
+    require("util.chezmoi").apply("current_dir", true)
+  end, { desc = "Apply current source dir (ignore unsaved)" })
 
   vim.keymap.set("n", "<leader>zf", function()
     require("util.chezmoi").apply("current_file")
