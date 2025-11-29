@@ -59,4 +59,12 @@ return {
       return opts
     end,
   },
+  {
+    "noice.nvim",
+    opts = {
+      status = {
+        command = { has = false },
+      },
+    },
+  },
 }
