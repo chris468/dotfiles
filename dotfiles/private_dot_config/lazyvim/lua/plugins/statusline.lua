@@ -1,6 +1,7 @@
 local function refresh_lualine()
   require("lualine").refresh()
 end
+
 local function codeium_status_components()
   local vt = require("lazy-require").require_on_index("codeium.virtual_text")
 
@@ -76,15 +77,13 @@ local function insert_components(section, components, pos)
   end
 end
 
-local function insert_components_before(section, components, component_name)
+local function find_component(section, name)
   for pos, c in ipairs(section) do
-    if c[1] == component_name then
-      insert_components(section, components, pos)
-      return
+    if c[1] == name then
+      return pos
     end
   end
-
-  insert_components(section, components, 1)
+  return false
 end
 
 return {
@@ -96,7 +95,20 @@ return {
     },
     optional = true,
     opts = function(_, opts)
-      insert_components_before(opts.sections.lualine_c, lsp_status_components(), "filetype")
+      local filetype_pos = find_component(opts.sections.lualine_c, "filetype")
+      local path_pos = filetype_pos + 1
+      local root_path_pos = 1
+
+      -- fix some spacing
+      opts.sections.lualine_c[path_pos].padding = { left = 0, right = 1 }
+      local original_root_path = opts.sections.lualine_c[root_path_pos][1]
+      opts.sections.lualine_c[root_path_pos][1] = function()
+        local spaces_removed, _ = original_root_path():gsub("(.)(%s)(.*)", "%1%3")
+        return spaces_removed
+      end
+
+      -- insert components last to avoid having existing ones move around
+      insert_components(opts.sections.lualine_c, lsp_status_components(), filetype_pos)
       insert_components(opts.sections.lualine_x, codeium_status_components(), 2)
       return opts
     end,
