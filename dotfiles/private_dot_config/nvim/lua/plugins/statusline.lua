@@ -35,36 +35,6 @@ local function codeium_status_components()
   return { icon_component, completions_component }
 end
 
-local function lsp_status_components()
-  local ignore_clients = { "copilot" }
-  local function current_buffer_has_clients()
-    local clients = vim.tbl_filter(function(client)
-      return not vim.list_contains(ignore_clients, client.name)
-    end, vim.lsp.get_clients({ buf = vim.api.nvim_get_current_buf() }))
-    return #clients > 0
-  end
-
-  vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
-    group = vim.api.nvim_create_augroup("chris468.lsp_status", { clear = true }),
-    callback = refresh_lualine,
-  })
-
-  return {
-    {
-      function()
-        return current_buffer_has_clients() and "" or ""
-      end,
-      color = function()
-        ---@module "mini.icons"
-        local _, hl = MiniIcons.get("file", vim.api.nvim_buf_get_name(0))
-        return hl
-      end,
-      padding = { left = 1, right = 0 },
-      separator = "",
-    },
-  }
-end
-
 local function insert_components(section, components, pos)
   if type(components) == "table" then
     local iter = vim.iter(components)
@@ -77,13 +47,16 @@ local function insert_components(section, components, pos)
   end
 end
 
-local function find_component(section, name)
+---@param section {[string]: table}
+---@param text string|fun()
+---@return number|false, table?
+local function find_component(section, text)
   for pos, c in ipairs(section) do
-    if c[1] == name then
-      return pos
+    if c[1] == text then
+      return pos, c
     end
   end
-  return false
+  return false, nil
 end
 
 return {
@@ -95,21 +68,40 @@ return {
     },
     optional = true,
     opts = function(_, opts)
-      local filetype_pos = find_component(opts.sections.lualine_c, "filetype")
-      local path_pos = filetype_pos + 1
-      local root_path_pos = 1
-
-      -- fix some spacing
-      opts.sections.lualine_c[path_pos].padding = { left = 0, right = 1 }
-      local original_root_path = opts.sections.lualine_c[root_path_pos][1]
-      opts.sections.lualine_c[root_path_pos][1] = function()
-        local spaces_removed, _ = original_root_path():gsub("(.)(%s)(.*)", "%1%3")
-        return spaces_removed
+      do -- codeium status that works with virtual_text
+        local ai_status_pos = 2 -- same as in codeium extension
+        insert_components(opts.sections.lualine_x, codeium_status_components(), ai_status_pos)
       end
 
-      -- insert components last to avoid having existing ones move around
-      insert_components(opts.sections.lualine_c, lsp_status_components(), filetype_pos)
-      insert_components(opts.sections.lualine_x, codeium_status_components(), 2)
+      do -- reoove extra space from root path
+        local root_path_pos = 1
+        local root_path_component = opts.sections.lualine_c[root_path_pos]
+        local original_root_path = root_path_component[1]
+        root_path_component[1] = function()
+          local spaces_removed, _ = original_root_path():gsub("(.)(%s)(.*)", "%1%3")
+          return spaces_removed
+        end
+      end
+
+      do -- reoove extra space from file path
+        local path_pos = find_component(opts.sections.lualine_c, "filetype") + 1
+        opts.sections.lualine_c[path_pos].padding = { left = 0, right = 1 }
+      end
+
+      do -- add icon indicating lsp presence next to diagnostics
+        local _, diagnostics = find_component(opts.sections.lualine_c, "diagnostics")
+        diagnostics[1] = "chris468.diagnostics_with_lsp"
+      end
+
+      do -- replace lazy updates w/ a component that includes both lazy and mason
+        local updates_pos = find_component(opts.sections.lualine_x, require("lazy.status").updates)
+        if updates_pos then
+          opts.sections.lualine_x[updates_pos] = "chris468.updates"
+        else
+          print("didn't find updates")
+        end
+      end
+
       return opts
     end,
   },
