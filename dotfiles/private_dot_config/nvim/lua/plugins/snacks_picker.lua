@@ -209,6 +209,53 @@ LazyVim.on_load("snacks.nvim", function()
   Snacks.picker.sources.plugin = plugin_source
 end)
 
+---@param ...table<string|string[], false|string[]>
+local function mappings(...)
+  local common_mappings = {
+    [{ "<C-/>", "<C-_>" }] = { "toggle_help_input", mode = { "i", "n" } },
+    ["<C-\\>c"] = {
+      "toggle_cwd",
+      mode = { "n", "i" },
+    },
+    ["<C-\\>d"] = { "inspect", mode = { "n", "i" } },
+    ["<C-\\>f"] = { "toggle_follow", mode = { "i", "n" } },
+    ["<C-\\>h"] = { "toggle_hidden", mode = { "i", "n" } },
+    ["<C-\\>i"] = { "toggle_ignored", mode = { "i", "n" } },
+    ["<C-\\>m"] = { "toggle_maximize", mode = { "i", "n" } },
+    ["<C-\\>p"] = { "toggle_preview", mode = { "i", "n" } },
+    ["<C-\\>r"] = { "toggle_regex", mode = { "i", "n" } },
+    ["<C-\\>w"] = { "cycle_win", mode = { "i", "n" } },
+  }
+  local disabled_mappings = {
+    [{
+      "<C-j>",
+      "<C-k>",
+      "<a-c>",
+      "<a-d>",
+      "<a-f>",
+      "<a-h>",
+      "<a-i>",
+      "<a-m>",
+      "<a-p>",
+      "<a-r>",
+      "<a-w>",
+    }] = false,
+  }
+
+  local function flatten(...)
+    return vim.iter({ ... }):fold({}, function(result, ms)
+      for ks, v in pairs(ms) do
+        for _, k in ipairs(type(ks) == "string" and { ks } or ks) do
+          result[k] = v
+        end
+      end
+      return result
+    end)
+  end
+
+  return flatten(common_mappings, disabled_mappings, ...)
+end
+
 return {
   { "uga-rosa/utf8.nvim", lazy = true },
   {
@@ -261,60 +308,10 @@ return {
         on_show = update_picker_title,
         win = {
           input = {
-            keys = {
-              ["<C-/>"] = { "toggle_help_input", mode = "i" },
-              ["<C-_>"] = { "toggle_help_input", mode = "i" },
-              ["<C-\\>c"] = {
-                "toggle_cwd",
-                mode = { "n", "i" },
-              },
-              ["<C-\\>d"] = { "inspect", mode = { "n", "i" } },
-              ["<C-\\>f"] = { "toggle_follow", mode = { "i", "n" } },
-              ["<C-\\>h"] = { "toggle_hidden", mode = { "i", "n" } },
-              ["<C-\\>i"] = { "toggle_ignored", mode = { "i", "n" } },
-              ["<C-\\>r"] = { "toggle_regex", mode = { "i", "n" } },
-              ["<C-\\>m"] = { "toggle_maximize", mode = { "i", "n" } },
-              ["<C-\\>p"] = { "toggle_preview", mode = { "i", "n" } },
-              ["<C-\\>w"] = { "cycle_win", mode = { "i", "n" } },
-              ["<C-j>"] = false,
-              ["<C-k>"] = false,
-              ["<a-c>"] = false,
-              ["<a-d>"] = false,
-              ["<a-f>"] = false,
-              ["<a-h>"] = false,
-              ["<a-i>"] = false,
-              ["<a-r>"] = false,
-              ["<a-m>"] = false,
-              ["<a-p>"] = false,
-              ["<a-w>"] = false,
-            },
+            keys = mappings(),
           },
           list = {
-            keys = {
-              ["<C-/>"] = { "toggle_help_input" },
-              ["<C-_>"] = { "toggle_help_input" },
-              ["<C-\\>c"] = {
-                "toggle_cwd",
-                mode = { "n", "i" },
-              },
-              ["<C-\\>d"] = "inspect",
-              ["<C-\\>f"] = "toggle_follow",
-              ["<C-\\>h"] = "toggle_hidden",
-              ["<C-\\>i"] = "toggle_ignored",
-              ["<C-\\>m"] = "toggle_maximize",
-              ["<C-\\>p"] = "toggle_preview",
-              ["<C-\\>w"] = "cycle_win",
-              ["<C-j>"] = false,
-              ["<C-k>"] = false,
-              ["<a-c>"] = false,
-              ["<a-d>"] = false,
-              ["<a-f>"] = false,
-              ["<a-h>"] = false,
-              ["<a-i>"] = false,
-              ["<a-m>"] = false,
-              ["<a-p>"] = false,
-              ["<a-w>"] = false,
-            },
+            keys = mappings(),
           },
         },
       },
