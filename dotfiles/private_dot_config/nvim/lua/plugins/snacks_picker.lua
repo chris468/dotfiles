@@ -225,11 +225,15 @@ local function mappings(...)
     ["<C-\\>p"] = { "toggle_preview", mode = { "i", "n" } },
     ["<C-\\>r"] = { "toggle_regex", mode = { "i", "n" } },
     ["<C-\\>w"] = { "cycle_win", mode = { "i", "n" } },
+    ["<C-\\>["] = { "history_back", mode = { "i", "n" } },
+    ["<C-\\>]"] = { "history_forward", mode = { "i", "n" } },
   }
   local disabled_mappings = {
     [{
       "<C-j>",
       "<C-k>",
+      "<C-Down>",
+      "<C-Up>",
       "<a-c>",
       "<a-d>",
       "<a-f>",
