@@ -48,11 +48,11 @@ local function insert_components(section, components, pos)
 end
 
 ---@param section {[string]: table}
----@param name string
+---@param text string|fun()
 ---@return number|false, table?
-local function find_component(section, name)
+local function find_component(section, text)
   for pos, c in ipairs(section) do
-    if c[1] == name then
+    if c[1] == text then
       return pos, c
     end
   end
@@ -91,6 +91,15 @@ return {
       do -- add icon indicating lsp presence next to diagnostics
         local _, diagnostics = find_component(opts.sections.lualine_c, "diagnostics")
         diagnostics[1] = "chris468.diagnostics_with_lsp"
+      end
+
+      do -- replace lazy updates w/ a component that includes both lazy and mason
+        local updates_pos = find_component(opts.sections.lualine_x, require("lazy.status").updates)
+        if updates_pos then
+          opts.sections.lualine_x[updates_pos] = "chris468.updates"
+        else
+          print("didn't find updates")
+        end
       end
 
       return opts
