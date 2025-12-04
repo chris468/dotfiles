@@ -10,6 +10,9 @@ if vim.o.shell:find("cmd%.exe$") then
   LazyVim.terminal.setup("pwsh")
 end
 
+vim.g.root_spec =
+  { "lsp", { ".git", "lua", "package.json", "*.sln", "mix.exs", "pyproject.toml", "requirements.txt" }, "cwd" }
+
 require("config.filetypes")
 
 require("config.chezmoi")
