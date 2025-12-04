@@ -1,10 +1,12 @@
 local ai_extras = {}
 
-local providers = vim.g.chris468_ai_providers
-providers = type(providers) == "table" and providers or { providers }
-for _, provider in ipairs(providers) do
+local ai_extras = vim.tbl_map(function(provider)
+  return { import = "lazyvim.plugins.extras.ai." .. provider }
+end, type(vim.g.chris468_ai_providers) == "table" and vim.g.chris468_ai_providers or { vim.g.chris468_ai_providers })
+
+if #ai_extras > 0 then
   table.insert(ai_extras, {
-    { import = "lazyvim.plugins.extras.ai." .. provider },
+    { import = "lazyvim.plugins.extras.ai.sidekick" },
   })
 end
 
