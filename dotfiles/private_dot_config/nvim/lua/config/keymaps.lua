@@ -96,6 +96,36 @@ do -- git
   vim.keymap.del({ "n", "x" }, "<leader>gY") -- browse/yank
 end
 
+do -- debugging
+  if LazyVim.has("one-small-step-for-vimkind") then
+    Snacks.toggle({
+      name = "Lua debug server",
+      wk_desc = {
+        enabled = "Stop ",
+        disabled = "Start ",
+      },
+      get = function()
+        return require("osv").is_running()
+      end,
+      set = function(start)
+        local osv = require("osv")
+        if start then
+          osv.launch({
+            port = 8086,
+          })
+        else
+          osv.stop()
+        end
+      end,
+      notify = function(started, _)
+        if not started then
+          print("Server stopped.")
+        end
+      end,
+    }):map("<leader>dN")
+  end
+end
+
 -- group names / icons
 ---@module 'lazyvim'
 LazyVim.on_load("which-key.nvim", function()
