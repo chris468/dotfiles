@@ -14,7 +14,6 @@ function M:_current_buffer_has_clients()
 end
 
 function M:init(options)
-  print("init")
   M.super.init(self, options)
   self.options = vim.tbl_deep_extend("keep", self.options or {}, defaults)
 end
