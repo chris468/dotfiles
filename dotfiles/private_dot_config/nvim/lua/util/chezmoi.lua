@@ -68,7 +68,6 @@ end
 function M.update(apply)
   local command = "update --no-tty --color=false" .. (apply and " --init --apply" or "")
   local title = "Chezmoi update" .. (apply and " and apply" or "")
-  print(command)
   chezmoi(command, title)
 end
 
