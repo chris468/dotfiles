@@ -2,7 +2,7 @@ local function refresh_lualine()
   require("lualine").refresh()
 end
 
-local function codeium_status_components()
+local function codeium_status()
   local vt = require("lazy-require").require_on_index("codeium.virtual_text")
 
   LazyVim.on_load("codeium.nvim", function()
@@ -15,36 +15,21 @@ local function codeium_status_components()
     end
     return vt.status().state == "waiting" and "pending" or "ok"
   end)
-  icon_component.separator = ""
-  icon_component.padding = { left = 1, right = 0 }
 
-  local completions_component = {
+  local component = {
     function()
+      local icon = icon_component[1]():gsub(" *$", "")
       if vt.status().state == "completions" then
-        return vt.status_string()
+        return icon .. " " .. vt.status_string()
       else
-        return ""
+        return icon
       end
     end,
     cond = icon_component.cond,
     color = icon_component.color,
-    padding = { left = 0, right = 1 },
-    draw_empty = true,
   }
 
-  return { icon_component, completions_component }
-end
-
-local function insert_components(section, components, pos)
-  if type(components) == "table" then
-    local iter = vim.iter(components)
-    if pos then
-      iter:rev()
-    end
-    iter:each(function(c)
-      table.insert(section, pos, c)
-    end)
-  end
+  return component
 end
 
 ---@param section {[string]: table}
@@ -70,7 +55,7 @@ return {
     opts = function(_, opts)
       do -- codeium status that works with virtual_text
         local ai_status_pos = 2 -- same as in codeium extension
-        insert_components(opts.sections.lualine_x, codeium_status_components(), ai_status_pos)
+        table.insert(opts.sections.lualine_x, ai_status_pos, codeium_status())
       end
 
       do -- reoove extra space from root path
@@ -97,10 +82,10 @@ return {
         local updates_pos = find_component(opts.sections.lualine_x, require("lazy.status").updates)
         if updates_pos then
           opts.sections.lualine_x[updates_pos] = "chris468.updates"
-        else
-          print("didn't find updates")
         end
       end
+
+      table.insert(opts.sections.lualine_x, "overseer")
 
       return opts
     end,
@@ -109,6 +94,7 @@ return {
     "noice.nvim",
     opts = {
       status = {
+        -- Remove command section from status line
         command = { has = false },
       },
     },
