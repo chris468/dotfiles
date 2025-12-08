@@ -32,7 +32,29 @@ return {
         ["<C-h>"] = false,
         ["<C-x>"] = { "actions.select", opts = { horizontal = true } },
         q = "actions.close",
-        ["<esc>"] = "actions.close",
+      },
+    },
+  },
+  {
+    "snacks.nvim",
+    opts = {
+      picker = {
+        sources = {
+          explorer = {
+            win = {
+              input = {
+                keys = {
+                  ["<Esc>"] = false,
+                },
+              },
+              list = {
+                keys = {
+                  ["<Esc>"] = false,
+                },
+              },
+            },
+          },
+        },
       },
     },
   },
