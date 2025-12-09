@@ -19,6 +19,13 @@ do
   end
 end
 
+vim.g.chris468_mason = {
+  pin_versions = {
+    -- lua language server 3.16 broke on linux due to newly added dependency on old version of lib
+    ["lua-language-server"] = "3.15.0",
+  },
+}
+
 vim.g.root_spec =
   { "lsp", { ".git", "lua", "package.json", "*.sln", "mix.exs", "pyproject.toml", "requirements.txt" }, "cwd" }
 

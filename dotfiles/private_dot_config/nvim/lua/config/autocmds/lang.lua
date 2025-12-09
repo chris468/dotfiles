@@ -99,15 +99,18 @@ do -- lazily install tools
   end
 
   ---@param pkg Package
+  ---@param version? string
   ---@param filetype string
   ---@param annotation? string|boolean
-  local function start(pkg, filetype, annotation)
+  local function start(pkg, version, filetype, annotation)
     local id = pkg.spec.source.id
     if installing[id] then
       return
     end
 
-    local description = ("%s%s for %s"):format(pkg.name, annotation and (" (" .. annotation .. ")") or "", filetype)
+    annotation = annotation and (" (" .. annotation .. ")") or ""
+    version = version and ("@" .. version) or ""
+    local description = ("%s%s%s for %s"):format(pkg.name, version, annotation, filetype)
     local message = require("noice.message")("msg_show", "echo")
     installing[id] = {
       id = id,
@@ -135,17 +138,31 @@ do -- lazily install tools
     installing[id].status = "failed"
   end
 
+  ---@param pkg Package
+  ---@param version? string
+  local function should_install(pkg, version)
+    return pkg
+      and not pkg:is_installing()
+      and (not pkg:is_installed() or (version and pkg:get_installed_version() ~= version))
+  end
+
   ---@param pkg? Package
   ---@param filetype string
   ---@param annotation? string|boolean
   local function install_package(pkg, filetype, annotation)
-    if not pkg or pkg:is_installed() or pkg:is_installing() then
+    if not pkg then
+      return
+    end
+
+    local version = vim.g.chris468_mason.pin_versions[pkg.name]
+
+    if not should_install(pkg, version) then
       return
     end
 
     pkg
       :once("install:handle", function()
-        start(pkg, filetype, annotation)
+        start(pkg, version, filetype, annotation)
       end)
       :once("install:success", function()
         success(pkg)
@@ -153,7 +170,7 @@ do -- lazily install tools
       :once("install:failure", function()
         failure(pkg)
       end) --[[ @as Package ]]
-      :install()
+      :install({ version = version })
   end
 
   ---@param filetype string
@@ -166,7 +183,7 @@ do -- lazily install tools
     ---@param server string
     local function install_lsp(server)
       local pkg = get_lsp_package(server)
-      if not pkg or pkg:is_installed() or pkg:is_installing() then
+      if not pkg then
         return
       end
 
