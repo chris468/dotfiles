@@ -1,5 +1,17 @@
 ---@module "mason-registry"
 
+do --- disable formatting by default for yaml
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "yaml",
+    group = vim.api.nvim_create_augroup("chris468.lang.yaml", { clear = true }),
+    callback = function(a)
+      if vim.b[a.buf].autoformat == nil then
+        vim.b[a.buf].autoformat = false
+      end
+    end,
+  })
+end
+
 do -- automatically select last venv
   if LazyVim.has("venv-selector.nvim") then
     local function update_venv()
