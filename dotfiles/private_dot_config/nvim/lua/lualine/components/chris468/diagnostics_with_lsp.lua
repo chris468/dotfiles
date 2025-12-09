@@ -3,6 +3,10 @@ local M = require("lualine.components.diagnostics"):extend()
 local defaults = {
   ignore_clients = { "copilot" },
   lsp_icon = " ",
+  auto_format_color = {
+    [true] = "DiagnosticHint",
+    [false] = "Comment",
+  },
 }
 
 ---@private
@@ -16,12 +20,16 @@ end
 function M:init(options)
   M.super.init(self, options)
   self.options = vim.tbl_deep_extend("keep", self.options or {}, defaults)
+  self.options.auto_format_hl = vim.tbl_map(function(v)
+    return self:create_hl(v)
+  end, self.options.auto_format_color)
 end
 
 function M:update_status()
   local result = ""
   if self:_current_buffer_has_clients() then
-    result = self:format_hl(self.highlight_groups.info) .. self.options.lsp_icon
+    local color = self.options.auto_format_hl[LazyVim.format.enabled()]
+    result = self:format_hl(color) .. self.options.lsp_icon
   end
   result = result .. (self.super.update_status(self) or "")
   result = result:gsub("%s*$", "")
