@@ -1,5 +1,7 @@
 local timers = {}
 
+local group = vim.api.nvim_create_augroup("chris468.autocmds.linenumbers", { clear = true })
+
 local function getwidth(current_width, lines)
   local magnitude = math.log(lines) / math.log(10)
 
@@ -43,23 +45,21 @@ local function debounce(timeout, callback, bufnr)
   end)
 end
 
-local group = vim.api.nvim_create_augroup("chris468.linenumbers", { clear = true })
 vim.api.nvim_create_autocmd("BufWinEnter", {
-  group = group,
   callback = function(a)
     on_textchanged(a.buf)
   end,
+  group = group,
 })
 
 vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP", "TextChangedT" }, {
-  group = group,
   callback = function(a)
     debounce(250, on_textchanged, a.buf)
   end,
+  group = group,
 })
 
 vim.api.nvim_create_autocmd("BufDelete", {
-  group = group,
   callback = function(a)
     local timer = timers[a.buf]
     timers[a.buf] = nil
@@ -67,4 +67,5 @@ vim.api.nvim_create_autocmd("BufDelete", {
       timer:close()
     end
   end,
+  group = group,
 })
