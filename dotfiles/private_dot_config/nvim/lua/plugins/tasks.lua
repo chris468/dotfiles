@@ -24,7 +24,7 @@ return {
     optional = true,
     keys = {
       {
-        "<leader>oR",
+        "<leader>oO",
         restart_last,
         desc = "Restart last task",
       },
