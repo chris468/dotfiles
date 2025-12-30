@@ -1,9 +1,0 @@
-.config/.vim/plugin/packer_compiled.lua
-.config/bash/**
-.config/fish/conf.d/install-oh-my-posh.fish
-.local/opt/bin/**
-.local/opt/sbin/**
-.local/bin/update-tools
-.local/bin/update-tools.ps1
-.config/alacritty/dracula.yml
-.config/xfce4/colorschemes/Dracula.theme
