@@ -15,6 +15,7 @@ Host ssh.dev.azure.com
 Host {{ .name }}{{ if ne $hostname .name }} {{ $hostname }}{{ end }}
     Hostname {{ $hostname }}
     ForwardAgent {{ if eq "trusted" ("type" | index .) }}yes{{ else }}no{{ end }}
+    EnableEscapeCommandLine {{ if eq "trusted" ("type" | index .) }}yes{{ else }}no{{ end }}
     User {{ "user" | index . | default $.chezmoi.username }}
 {{    end }}
 {{ end -}}
