@@ -3,6 +3,9 @@ return {
   theme = "{{ $config.theme }}",
   font = {
     family = {{ $config.font.family | quote }},
+    {{- if "fallback" | get $config.font | default false }}
+    fallback = {{ $config.font.fallback | quote }},
+    {{- end }}
     size = {{ $config.font.size }}
   },
   homedir = {{ .chezmoi.homeDir | quote }},

@@ -4,7 +4,7 @@ local settings = require("chris468.settings")
 
 require("chris468.theme." .. settings.theme)(config)
 
-config.font = wezterm.font(settings.font.family)
+config.font = wezterm.font_with_fallback({ settings.font.family, settings.font.fallback })
 config.font_size = settings.font.size
 
 config.enable_tab_bar = true
