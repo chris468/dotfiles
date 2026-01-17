@@ -39,7 +39,6 @@
   persist: true
   value:
     - {{ includeTemplate "path" (dict "path" "localInstallBin" "chezmoi" .chezmoi) }}
-    - {{ includeTemplate "path" (dict "path" "fzfBin" "chezmoi" .chezmoi) }}
 {{- if $config.packageManager.homebrew.enable }}
     - {{ "bin" | joinPath (includeTemplate "path" (dict "path" "homebrew" "chezmoi" .chezmoi)) }}
 {{- end }}

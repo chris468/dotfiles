@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [[ "$(uname -o)" == "Msys" ]] ; then
+  exec pwsh -nologo $HOME/.local/bin/install-essentials.ps1
+fi
+
+echo "not implemented" >&2
+exit 1
