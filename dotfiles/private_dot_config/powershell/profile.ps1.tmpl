@@ -5,6 +5,7 @@ chezmoi:template:missing-key=zero
             "unset" "Remove-Item -ErrorAction Ignore env:{NAME}"
             "set" "$env:{NAME} = \"{VALUE}\""
             "prepend" "if (\"$env:{NAME}\" -NotLike '*{VALUE}*') { $env:{NAME} = \"{VALUE};$env:{NAME}\" }"
+            "append" "if (\"$env:{NAME}\" -NotLike '*{VALUE}*') { $env:{NAME} = \"$env:{NAME};{VALUE}\" }"
         )
     )
 -}}
@@ -20,4 +21,3 @@ foreach ($path in $paths) {
         }
     }
 }
-
