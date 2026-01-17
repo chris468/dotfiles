@@ -3,7 +3,7 @@
 CURRENT=$(realpath --no-symlinks ${1:-$(pwd)})
 STOP=$(dirname $HOME)
 
-if get-command -v poetry >/dev/null 2>&1; then
+if command -v poetry >/dev/null 2>&1; then
   poetry -C "$CURRENT" env list --full-path 2>/dev/null |
     sed -E -e "s/ \(Activated\)//" -e "s|(.+)|\1/bin/python|"
 fi
