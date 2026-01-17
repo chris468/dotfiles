@@ -8,8 +8,6 @@
 {{- $_ipython := joinPath $_configHome "ipython" -}}
 {{- $_zshConfig := joinPath $_configHome "zsh" -}}
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
-{{- $_fzf := joinPath $_localInstall "fzf" -}}
-{{- $_fzfBin := joinPath $_fzf "bin" -}}
 {{- $_tokyonight := joinPath $_localInstall "tokyonight.nvim" -}}
 {{- $paths := dict
       "local" $_local
@@ -19,8 +17,6 @@
       "asdf" ".asdf"
       "dataHome" $_dataHome
       "configHome" $_configHome
-      "fzf" $_fzf
-      "fzfBin" $_fzfBin
       "tokyonight" $_tokyonight
       "homebrew" "/opt/homebrew"
       "cacheHome" $_cacheHome
