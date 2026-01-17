@@ -42,4 +42,11 @@
 {{- if $config.packageManager.homebrew.enable }}
     - {{ "bin" | joinPath (includeTemplate "path" (dict "path" "homebrew" "chezmoi" .chezmoi)) }}
 {{- end }}
-
+{{- if "windows" | eq .chezmoi.os }}
+- name: PATH
+  path: true
+  action: append
+  persist: false
+  value:
+    - {{ joinPath (env "PROGRAMFILES(X86)") "GnuWin32" "bin" }}
+{{- end }}
