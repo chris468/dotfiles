@@ -1,9 +1,0 @@
-{{- $localInstallBin := includeTemplate "path" (dict "path" "localInstallBin" "relative" true "chezmoi" .chezmoi) -}}
-{{- $archive_ext := ("windows" | eq .chezmoi.os) | ternary "zip" "tar.gz" -}}
-{{- $pattern := printf "carapace-bin_*_%s_%s.%s" .chezmoi.os .chezmoi.arch $archive_ext -}}
-{{ joinPath $localInstallBin | quote }}:
-  type: archive
-  url: {{ gitHubLatestReleaseAssetURL "carapace-sh/carapace-bin" $pattern }}
-  include:
-    - carapace*
-  refreshPeriod: "168h"
