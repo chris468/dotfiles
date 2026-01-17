@@ -1,5 +1,5 @@
 if (Get-Command oh-my-posh 2>$null) {
-    oh-my-posh init pwsh --config $HOME\.config\oh-my-posh\chris468.omp.yaml | Invoke-Expression
+    oh-my-posh init pwsh --config $HOME\.config\oh-my-posh\chris468.omp.yaml --eval | Invoke-Expression
 }
 
 function Set-PoshParameters {
