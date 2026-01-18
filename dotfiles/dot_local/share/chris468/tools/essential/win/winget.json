@@ -27,7 +27,6 @@
         { "PackageIdentifier": "Python.Python.3.14" },
         { "PackageIdentifier": "Smallstep.step" },
         { "PackageIdentifier": "ajeetdsouza.zoxide" },
-        { "PackageIdentifier": "jdx.mise" },
         { "PackageIdentifier": "jqlang.jq" },
         { "PackageIdentifier": "junegunn.fzf" },
         { "PackageIdentifier": "rsteube.Carapace" },
