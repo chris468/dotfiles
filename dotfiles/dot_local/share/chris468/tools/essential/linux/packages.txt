@@ -1,0 +1,16 @@
+carapace
+chezmoi
+fd
+fzf
+github-cli
+jq
+lazygit
+neovim
+nodejs-lts
+oh-my-posh
+python
+ripgrep
+step-cli
+wezterm
+yq
+zoxide
