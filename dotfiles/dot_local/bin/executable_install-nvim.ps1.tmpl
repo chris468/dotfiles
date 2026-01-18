@@ -1,4 +1,0 @@
-{{- if eq "windows" .chezmoi.os -}}
-scoop import $env:XDG_CONFIG_HOME/install/windows/nvim.scoop.json 6>$null
-nvim --headless "+Lazy sync" +qa
-{{- end -}}
