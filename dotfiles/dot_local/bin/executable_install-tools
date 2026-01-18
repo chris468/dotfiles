@@ -15,9 +15,25 @@ function install_Darwin() {
   brew install "${packages[@]}"
 }
 
+function install_nerd_font() {
+  local category="$1"
+  local -a fonts_file="$XDG_DATA_HOME/chris468/tools/$category/nerdfonts.txt"
+  [[ -f "$fonts_file" ]] || return
+
+  local -a fonts=($(cat "$fonts_file"))
+  [[ ${#fonts[@]} -gt 0 ]] || return
+
+  echo
+  echo "Installing $category nerd fonts..."
+  for font in "${fonts[@]}"; do
+    oh-my-posh font install "$font"
+  done
+}
+
 declare -ar ORDER=(essential container kubernetes aws azure)
 ALL=
 ANY=
+FONTS=1
 for category in "${ORDER[@]}"; do
   declare "category_$category"
 done
@@ -27,6 +43,11 @@ while [[ $# -gt 0 ]]; do
   --all)
     ALL=1
     break
+    ;;
+
+  --no-fonts)
+    FONTS=
+    shift
     ;;
 
   --*)
@@ -55,4 +76,5 @@ for category in "${ORDER[@]}"; do
   v="category_$category"
   [[ -n "$ALL" ]] || [[ -n "${!v}" ]] || continue
   install_$OS $category
+  [[ -z "$FONTS" ]] || install_nerd_font $category
 done
