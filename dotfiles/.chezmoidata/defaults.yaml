@@ -15,10 +15,7 @@ defaults:
 
   packageManager:
     mise:
-      install: false
       enable: false
-      version: "v2025.4.0"
-      sha512: 85a441e9da0e834e23107a9706f5331c9526c41c90e61d74780d2b8ac5d3004d4b0953772984f5c0553dd9292345e99658be21a49ee34bb846e6951ea61a35d9
     homebrew:
       enable: false
 
@@ -32,9 +29,6 @@ defaults:
     windows:
       font:
         size: 11
-      packageManager:
-        mise:
-          sha512: 8b45f25bcfa6bf18af3160ad0bb00b43bb8a43fc4360615bd4fecebd31e2dba7a3a999a828ee0687bac9c20b1819e35c436540ef57268aa8d2003d6c50c79539
 
     linux:
       gitCredentialManager:
@@ -42,7 +36,6 @@ defaults:
         install: true
       packageManager:
         mise:
-          install: true
           enable: true
 
     darwin:
