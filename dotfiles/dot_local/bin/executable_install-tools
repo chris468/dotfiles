@@ -1,8 +1,58 @@
 #!/usr/bin/env bash
 
-if [[ "$(uname -o)" == "Msys" ]]; then
-  exec pwsh -nologo $HOME/.local/bin/install-tools.ps1 "$@"
-fi
+[[ "$(uname -o)" != "Msys" ]] || exec pwsh -nologo $HOME/.local/bin/install-tools.ps1 "$@"
 
-echo "not implemented" >&2
-exit 1
+function install_Darwin() {
+  local category="$1"
+  local -a packages_file="$XDG_DATA_HOME/chris468/tools/$category/darwin/brew.txt"
+  [[ -f "$packages_file" ]] || return
+
+  local -a packages=($(cat "$packages_file"))
+  [[ ${#packages[@]} -gt 0 ]] || return
+
+  echo
+  echo "Installing $category tool homebrew packages..."
+  brew install "${packages[@]}"
+}
+
+declare -ar ORDER=(essential container kubernetes aws azure)
+ALL=
+ANY=
+for category in "${ORDER[@]}"; do
+  declare "category_$category"
+done
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  --all)
+    ALL=1
+    break
+    ;;
+
+  --*)
+    c="${1#--}"
+    [[ -d "$XDG_DATA_HOME/chris468/tools/$c" ]] || {
+      echo "Unknown option: $1" >&2
+      exit 1
+    }
+
+    declare "category_$c"=1
+    ANY=1
+    shift
+    ;;
+
+  *)
+    echo "Unknown option: $1" >&2
+    exit 1
+    ;;
+  esac
+done
+
+[[ -n "$ANY" ]] || category_essential=1
+
+OS=$(uname -o)
+for category in "${ORDER[@]}"; do
+  v="category_$category"
+  [[ -n "$ALL" ]] || [[ -n "${!v}" ]] || continue
+  install_$OS $category
+done
