@@ -126,6 +126,12 @@ do -- debugging
   end
 end
 
+do -- terminal
+  vim.keymap.set("t", "<C-]>", "<C-\\><C-O>", { desc = "Single normal mode command" })
+  vim.keymap.set("t", '<C-]">', '<C-\\><C-O>"', { desc = "Single normal mode register command" })
+  vim.keymap.set("t", "<C-]><C-]>", "<C-]>", { desc = "Send <C-]>" })
+end
+
 -- group names / icons
 ---@module 'lazyvim'
 LazyVim.on_load("which-key.nvim", function()
