@@ -27,7 +27,7 @@ $categories = @(foreach ($category in $AllCategories) {
 })
 $categories = if ($categories) { $categories } else { @("Essential") }
 
-foreach ($category in $categories) {
+foreach ($category in $categories.ToLower()) {
   $CategoryRoot = "$ToolsRoot/$category"
   $CategoryOSRoot = "$CategoryRoot/win"
 
