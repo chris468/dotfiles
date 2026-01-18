@@ -19,10 +19,11 @@ do
   end
 end
 
+---@class chris468.mason.Config
 vim.g.chris468_mason = {
+  ---@type table<string, string?> Map of mason package name -> pinned version.
   pin_versions = {
-    -- lua language server 3.16 broke on linux due to newly added dependency on old version of lib
-    ["lua-language-server"] = "3.15.0",
+    --["lua-language-server"] = "3.15.0",
   },
 }
 
