@@ -3,8 +3,6 @@ export-env {
     use _config *
 
     $env.config = {
-        color_config: (theme default)
-
         cursor_shape: {
             vi_insert: line
             vi_normal: block
@@ -50,7 +48,12 @@ export-env {
 {{ if $config.packageManager.mise.enable }}
     use _lib/mise.nu
 {{- end }}
-
+{{- $theme := dict
+  "catppuccin-mocha" "catppuccin-mocha.nu"
+  "nord" "nord.nu"
+  "tokyonight-night" "tokyo-night.nu"
+}}
+    use nu-themes/{{ $config.theme | get $theme }}
     hook-fix-env-path
     hook-update-tmux-environment
 

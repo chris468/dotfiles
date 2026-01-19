@@ -1,0 +1,10 @@
+{{- $configHome := includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) -}}
+{{- $nordYaml := joinPath $configHome "alacritty" "themes" "nord.yaml" -}}
+{{- $nord := include $nordYaml | fromYaml -}}
+{{- $colors := "colors" | get $nord | default dict -}}
+{{- $search := "search" | get $colors | default dict -}}
+{{- if "bar" | hasKey $search -}}
+{{-    $colors := set $colors "footer_bar" ("bar" | get $search)  -}}
+{{-    $colors := set $colors "search" (omit $search "bar") -}}
+{{- end }}
+{{ $nord | toToml }}

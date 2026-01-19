@@ -1,4 +1,4 @@
-# from folke/tokyonight.nvim
+# colors values from folke/tokyonight.nvim
 bg: &bg "#1a1b26"
 bg_dark: &bg_dark "#16161e"
 bg_highlight: &bg_highlight "#292e42"

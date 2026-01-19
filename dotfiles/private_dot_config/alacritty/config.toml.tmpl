@@ -1,8 +1,16 @@
 {{- $config := includeTemplate "config" . | fromJson -}}
+{{- $catppuccin := includeTemplate "path" (dict "path" "catppuccin" "chezmoi" .chezmoi) -}}
+{{- $tokyonight := includeTemplate "path" (dict "path" "tokyonight" "chezmoi" .chezmoi) -}}
+{{- $configHome := includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) -}}
+{{- $themes := dict
+  "nord" (joinPath $configHome "alacritty" "themes" "nord.toml")
+  "tokyonight-night" (joinPath $tokyonight "extras" "alacritty" "tokyonight_night.toml")
+  "catppuccin-mocha" (joinPath $catppuccin "alacritty" "catppuccin-mocha.toml")
+-}}
 [general]
 working_directory = "{{ .chezmoi.homeDir }}"
 
-import = [ "~/.config/alacritty/themes/{{ $config.theme }}.toml" ]
+import = [ "{{ $config.theme | get $themes }}" ]
 
 [font]
 size = {{ $config.font.size }}
