@@ -1,3 +1,4 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
 nu_scripts:
   url: "https://github.com/nushell/nu_scripts/archive/main.tar.gz"
   type: archive
@@ -13,9 +14,24 @@ tokyonight.nvim:
   url: {{ (gitHubLatestRelease "folke/tokyonight.nvim").TarballURL }}
   stripComponents: 1
 
-{{- if ne "windows" .chezmoi.os }}
+{{ if ne "windows" .chezmoi.os -}}
 ohmyzsh:
   url: "https://github.com/ohmyzsh/ohmyzsh"
   type: git-repo
   refreshPeriod: "168h"
+{{- end }}
+
+{{- if $config.gitCredentialManager.install }}
+{{ $gcmAssetPattern := printf "gcm-%s-%s-*[0-9].%s" 
+  (.chezmoi.os | get (dict "windows" "win" "darwin" "osx") | default .chezmoi.os)
+  (.chezmoi.arch | get (dict "amd64" "x64") | default .chezmoi.arch)
+  (.chezmoi.os | get (dict "windows" "zip") | default "tar.gz")
+}}
+git-credential-manager:
+  type: archive
+  exact: true
+{{- if eq .chezmoi.os "darwin" }}
+  stripComponents: 2
+{{- end }}
+  url: {{ gitHubLatestReleaseAssetURL "git-ecosystem/git-credential-manager" $gcmAssetPattern }}
 {{- end }}
