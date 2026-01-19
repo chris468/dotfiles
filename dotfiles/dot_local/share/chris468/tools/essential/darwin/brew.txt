@@ -3,6 +3,7 @@ chezmoi
 fd
 fzf
 gh
+git-credential-manager
 jq
 lazygit
 neovim

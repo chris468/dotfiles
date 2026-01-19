@@ -16,7 +16,7 @@
       "configHome" $_configHome
       "dataHome" $_dataHome
       "externals" $_externals
-      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
+      "gitCredentialManager" (joinPath $_externals "git-credential-manager")
       "homebrew" "/opt/homebrew"
       "ipython" $_ipython
       "local" $_local
