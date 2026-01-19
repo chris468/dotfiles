@@ -1,7 +1,0 @@
-{{- $dataHome := includeTemplate "path" (dict "path" "dataHome" "relative" true "chezmoi" .chezmoi) -}}
-{{ joinPath $dataHome "fonts" | quote }}:
-  type: archive
-  url: {{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "Hack.zip" }}
-  exact: true
-  include:
-    - "*Mono*"
