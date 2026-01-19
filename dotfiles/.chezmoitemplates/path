@@ -9,26 +9,22 @@
 {{- $_catppuccin := joinPath $_externals "catppuccin" -}}
 {{- $_ipython := joinPath $_configHome "ipython" -}}
 {{- $_nuscripts_themes := joinPath $_externals "nu_scripts" "themes" -}}
-{{- $_zshConfig := joinPath $_configHome "zsh" -}}
-{{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
 {{- $_tokyonight := joinPath $_externals "tokyonight.nvim" -}}
 {{- $paths := dict
+      "cacheHome" $_cacheHome
+      "catppuccin" $_catppuccin
+      "configHome" $_configHome
+      "dataHome" $_dataHome
+      "externals" $_externals
+      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
+      "homebrew" "/opt/homebrew"
+      "ipython" $_ipython
       "local" $_local
       "localInstall" $_localInstall
       "localInstallBin" $_localInstallBin
       "localInstallSbin" $_localInstallSbin
-      "asdf" ".asdf"
-      "dataHome" $_dataHome
-      "configHome" $_configHome
-      "tokyonight" $_tokyonight
-      "homebrew" "/opt/homebrew"
-      "cacheHome" $_cacheHome
-      "catppuccin" $_catppuccin
-      "ipython" $_ipython
-      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
       "nuscripts_themes" $_nuscripts_themes
-      "zshConfig" $_zshConfig
-      "zshPlugins" $_zshPlugins
+      "tokyonight" $_tokyonight
 -}}
 {{- if eq "windows" .chezmoi.os -}}
 {{-   $paths = set $paths "bash" (joinPath "C:\\" "Program Files" "git" "bin" "bash.exe") -}}
