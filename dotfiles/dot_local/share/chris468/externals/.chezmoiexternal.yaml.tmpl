@@ -1,0 +1,30 @@
+nu_scripts:
+  url: "https://github.com/nushell/nu_scripts/archive/main.tar.gz"
+  type: archive
+  refreshPeriod: "168h"
+  include:
+    - nu_scripts-main/themes/nu-themes/catppuccin-mocha.nu
+    - nu_scripts-main/themes/nu-themes/tokyo-night.nu
+    - nu_scripts-main/themes/nu-themes/nord.nu
+  stripComponents: 1
+
+catppuccin/k9s:
+  url: https://github.com/catppuccin/k9s/archive/main.tar.gz
+  type: archive
+  refreshPeriod: "168h"
+  stripComponents: 2
+  include:
+    - "k9s-main/dist/**"
+
+catppuccin/alacritty:
+  url: https://github.com/catppuccin/alacritty/archive/main.tar.gz
+  type: archive
+  refreshPeriod: "168h"
+  stripComponents: 1
+  include:
+    - "alacritty-main/catppuccin*.toml"
+
+tokyonight.nvim:
+  type: archive
+  url: {{ (gitHubLatestRelease "folke/tokyonight.nvim").TarballURL }}
+  stripComponents: 1

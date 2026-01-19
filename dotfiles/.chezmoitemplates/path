@@ -1,14 +1,17 @@
 {{- $_local := ".local" -}}
+{{- $_externals := joinPath $_local "share" "chris468" "externals" -}}
 {{- $_localInstall := joinPath $_local "opt" -}}
 {{- $_localInstallBin := joinPath $_local "bin" -}}
 {{- $_localInstallSbin := joinPath $_local "sbin" -}}
 {{- $_dataHome := joinPath $_local "share" -}}
 {{- $_configHome := ".config" -}}
 {{- $_cacheHome := ".cache" -}}
+{{- $_catppuccin := joinPath $_externals "catppuccin" -}}
 {{- $_ipython := joinPath $_configHome "ipython" -}}
+{{- $_nuscripts_themes := joinPath $_externals "nu_scripts" "themes" -}}
 {{- $_zshConfig := joinPath $_configHome "zsh" -}}
 {{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
-{{- $_tokyonight := joinPath $_localInstall "tokyonight.nvim" -}}
+{{- $_tokyonight := joinPath $_externals "tokyonight.nvim" -}}
 {{- $paths := dict
       "local" $_local
       "localInstall" $_localInstall
@@ -20,8 +23,10 @@
       "tokyonight" $_tokyonight
       "homebrew" "/opt/homebrew"
       "cacheHome" $_cacheHome
+      "catppuccin" $_catppuccin
       "ipython" $_ipython
       "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
+      "nuscripts_themes" $_nuscripts_themes
       "zshConfig" $_zshConfig
       "zshPlugins" $_zshPlugins
 -}}

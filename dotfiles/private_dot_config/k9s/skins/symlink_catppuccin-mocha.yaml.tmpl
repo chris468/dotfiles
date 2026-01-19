@@ -1,0 +1,2 @@
+{{- $catppuccin := includeTemplate "path" (dict "path" "catppuccin" "chezmoi" .chezmoi) -}}
+{{ joinPath $catppuccin "k9s" "catppuccin-mocha.yaml" }}

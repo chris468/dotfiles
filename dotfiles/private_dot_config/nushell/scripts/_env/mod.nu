@@ -86,4 +86,3 @@ export def --env main [] {
 
     if $nu.os-info.name != "windows" { ssh-agent }
 }
-
