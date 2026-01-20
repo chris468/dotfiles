@@ -1,9 +1,6 @@
-{{- $_local := ".local" -}}
-{{- $_externals := joinPath $_local "share" "chris468" "externals" -}}
-{{- $_localInstall := joinPath $_local "opt" -}}
-{{- $_localInstallBin := joinPath $_local "bin" -}}
-{{- $_localInstallSbin := joinPath $_local "sbin" -}}
-{{- $_dataHome := joinPath $_local "share" -}}
+{{- $_externals := joinPath ".local" "share" "chris468" "externals" -}}
+{{- $_bin := joinPath ".local" "share" "chris468" "bin" -}}
+{{- $_dataHome := joinPath ".local" "share" -}}
 {{- $_configHome := ".config" -}}
 {{- $_cacheHome := ".cache" -}}
 {{- $_catppuccin := joinPath $_externals "catppuccin" -}}
@@ -19,10 +16,7 @@
       "gitCredentialManager" (joinPath $_externals "git-credential-manager")
       "homebrew" "/opt/homebrew"
       "ipython" $_ipython
-      "local" $_local
-      "localInstall" $_localInstall
-      "localInstallBin" $_localInstallBin
-      "localInstallSbin" $_localInstallSbin
+      "bin" $_bin
       "nuscripts_themes" $_nuscripts_themes
       "tokyonight" $_tokyonight
 -}}
