@@ -1,11 +1,16 @@
+bat
+btop
 carapace
 chezmoi
+eza
 fd
 fzf
 gh
+git-delta
 git-credential-manager
 jq
 lazygit
+lsd
 neovim
 node@24
 oh-my-posh

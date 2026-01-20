@@ -1,10 +1,15 @@
+bat
+btop
 carapace
 chezmoi
+eza
 fd
 fzf
 github-cli
+git-delta
 jq
 lazygit
+lsd
 neovim
 nodejs-lts
 oh-my-posh
