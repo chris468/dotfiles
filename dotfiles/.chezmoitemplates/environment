@@ -18,9 +18,6 @@
 - name: IPYTHONDIR
   path: true
   value: {{ includeTemplate "path" (dict "path" "ipython" "chezmoi" .chezmoi) }}
-- name: LOCAL_INSTALL_DIR
-  path: true
-  value: {{ includeTemplate "path" (dict "path" "localInstall" "chezmoi" .chezmoi) }}
 - name: XDG_DATA_HOME
   path: true
   persist: true
@@ -38,10 +35,11 @@
   action: prepend
   persist: true
   value:
-    - {{ includeTemplate "path" (dict "path" "localInstallBin" "chezmoi" .chezmoi) }}
 {{- if $config.packageManager.homebrew.enable }}
     - {{ "bin" | joinPath (includeTemplate "path" (dict "path" "homebrew" "chezmoi" .chezmoi)) }}
 {{- end }}
+    - {{ includeTemplate "path" (dict "path" "bin" "chezmoi" .chezmoi) }}
+    - {{ joinPath .chezmoi.homeDir ".local" "bin" }}
 {{- if "windows" | eq .chezmoi.os }}
 - name: PATH
   path: true
