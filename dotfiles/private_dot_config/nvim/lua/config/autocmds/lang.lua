@@ -130,7 +130,7 @@ do -- lazily install tools
     installing[id].status = "success"
   end
 
-  local function failure(pkg)
+  local function failed(pkg)
     local id = pkg.spec.source.id
     if not installing[id] then
       return
@@ -167,8 +167,8 @@ do -- lazily install tools
       :once("install:success", function()
         success(pkg)
       end)
-      :once("install:failure", function()
-        failure(pkg)
+      :once("install:failed", function()
+        failed(pkg)
       end) --[[ @as Package ]]
       :install({ version = version })
   end
