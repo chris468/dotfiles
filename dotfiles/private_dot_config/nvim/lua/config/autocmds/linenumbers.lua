@@ -1,4 +1,4 @@
-local timers = {}
+local debounce = require("util.debounce")
 
 local group = vim.api.nvim_create_augroup("chris468.autocmds.linenumbers", { clear = true })
 
@@ -36,15 +36,6 @@ local function on_textchanged(bufnr)
   end
 end
 
-local function debounce(timeout, callback, bufnr)
-  timers[bufnr] = timers[bufnr] or vim.uv.new_timer()
-  local timer = timers[bufnr]
-
-  timer:start(timeout, 0, function()
-    vim.schedule_wrap(callback)(bufnr)
-  end)
-end
-
 vim.api.nvim_create_autocmd("BufWinEnter", {
   callback = function(a)
     on_textchanged(a.buf)
@@ -54,18 +45,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP", "TextChangedT" }, {
   callback = function(a)
-    debounce(250, on_textchanged, a.buf)
-  end,
-  group = group,
-})
-
-vim.api.nvim_create_autocmd("BufDelete", {
-  callback = function(a)
-    local timer = timers[a.buf]
-    timers[a.buf] = nil
-    if timer then
-      timer:close()
-    end
+    debounce(250, false, on_textchanged, a.buf)
   end,
   group = group,
 })

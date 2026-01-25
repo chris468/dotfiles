@@ -73,5 +73,17 @@ return {
       return opts
     end,
   },
+  {
+    "nvim-treesitter",
+    opts = function(_, opts)
+      -- don't install any treesitter parsers up front.
+      -- config/autocmds/treesitter.lua will install parsers when needed.
+      opts.ensure_installed = {}
+
+      -- highlights controls whether LazyVim starts the parser.
+      -- disable so I can control it. see config/autocmds/treesitter.lua
+      opts.highlights = { enabled = false }
+    end,
+  },
   { import = "plugins.lang" },
 }
