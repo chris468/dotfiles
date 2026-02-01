@@ -1,3 +1,4 @@
-{{- if .config.swapkeys -}}
+{{- $config := includeTemplate "config" . | fromJson -}}
+{{- if $config.swapkeys -}}
 {{ .chezmoi.homeDir }}/.config/ahk/swapkeys.ahk
 {{- end -}}
