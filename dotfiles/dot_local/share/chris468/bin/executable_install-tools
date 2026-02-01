@@ -78,6 +78,7 @@ function install_linux() {
   _configure_home_manager_tools "${categories[@]}"
   _home_manager=home_manager
   get-command -v $_home_manager >&/dev/null || _home_manager="nix run home-manager/release-25.05 -- "
+  nix flake update --flake "path:$HOME/.config/home-manager/" tools
   $_home_manager switch
 }
 
