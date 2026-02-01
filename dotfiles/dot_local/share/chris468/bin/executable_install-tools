@@ -7,47 +7,44 @@ function _sudo() {
   sudo "$@"
 }
 
+function _read_packages() {
+  local filename="$1"
+  shift
+  local -a categories=("$@")
+  local -a packages=()
+  for category in "${categories[@]}"; do
+    local packages_file="$XDG_DATA_HOME/chris468/tools/$category/$filename"
+    [[ -f "$packages_file" ]] || continue
+    cat "$packages_file"
+  done
+}
+
 function install_darwin() {
-  local category="$1"
-  local -a packages_file="$XDG_DATA_HOME/chris468/tools/$category/darwin/brew.txt"
-  [[ -f "$packages_file" ]] || return
-
-  local -a packages=($(cat "$packages_file"))
-  [[ ${#packages[@]} -gt 0 ]] || return
-
+  local -a categories=("$@")
+  local -a packages=($(_read_packages darwin/brew.txt "${categories[@]}"))
+  [[ -n "${packages[*]}" ]] || return 0
   echo
-  echo "Installing $category tool homebrew packages..."
+  echo "Installing tool homebrew packages for ${categories[*]}..."
   brew install "${packages[@]}"
 }
 
 function install_linux() {
-  local category="$1"
-  local -a packages_file="$XDG_DATA_HOME/chris468/tools/$category/linux/packages.txt"
-  [[ -f "$packages_file" ]] || return
-
-  local -a packages=($(cat "$packages_file"))
-  [[ ${#packages[@]} -gt 0 ]] || return
-
-  command -v pacman >&/dev/null || {
-    echo "only pacman is supported." >&2
-    exit 1
-  }
+  local -a categories=("$@")
+  local -a packages=($(_read_packages linux/packages.txt "${categories[@]}"))
+  [[ -n "${packages[*]}" ]] || return 0
 
   echo
-  echo "Installing $category tool pacman packages..."
-  _sudo pacman -S "${packages[@]}"
+  echo "Installing tool pacman packages for ${categories[*]}..."
+  _sudo pacman -S "${packages[@]}" --needed || true
 }
 
 function install_nerd_font() {
-  local category="$1"
-  local -a fonts_file="$XDG_DATA_HOME/chris468/tools/$category/nerdfonts.txt"
-  [[ -f "$fonts_file" ]] || return
-
-  local -a fonts=($(cat "$fonts_file"))
-  [[ ${#fonts[@]} -gt 0 ]] || return
+  local -a categories=("$@")
+  local -a fonts=($(_read_packages nerdfonts.txt "${categories[@]}"))
+  [[ -n "${fonts[*]}" ]] || return 0
 
   echo
-  echo "Installing $category nerd fonts..."
+  echo "Installing nerd fonts for ${categories[*]}..."
   for font in "${fonts[@]}"; do
     oh-my-posh font install "$font"
   done
@@ -100,9 +97,12 @@ done
 # Remove everything before / to convert GNU/Linux to Linux
 # Convert upper to lower
 OS=$(uname -o | sed -E 's|^.*/||' | tr '[:upper:]' '[:lower:]')
+declare -a INSTALL_CATEGORIES=()
 for category in "${ORDER[@]}"; do
   v="category_$category"
   [[ -n "$ALL" ]] || [[ -n "${!v}" ]] || continue
-  install_$OS $category
-  [[ -z "$FONTS" ]] || install_nerd_font $category
+  INSTALL_CATEGORIES+=("$category")
 done
+
+"install_$OS" "${INSTALL_CATEGORIES[@]}"
+[[ -z "$FONTS" ]] || install_nerd_font "${INSTALL_CATEGORIES[@]}"
