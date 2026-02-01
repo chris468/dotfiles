@@ -1,0 +1,19 @@
+{{- $configHome := includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) -}}
+{{- $nordPath := joinPath $configHome "alacritty" "themes" "nord.yaml" -}}
+{{- if stat $nordPath -}}
+{{- $nordYaml := include $nordPath -}}
+{{- $nord := $nordYaml | fromYaml -}}
+{{- $colors := "colors" | get $nord | default dict -}}
+{{- $search := "search" | get $colors | default dict -}}
+{{- if "bar" | hasKey $search -}}
+{{-    $colors := set $colors "footer_bar" ("bar" | get $search)  -}}
+{{-    $colors := set $colors "search" (omit $search "bar") -}}
+{{- end -}}
+#!/usr/bin/env bash
+
+# signature: {{ $nordYaml | sha256sum }}
+
+echo <<EOF >{{ joinPath $configHome "alacritty" "themes" "nord.toml" }}
+{{ $nord | toToml }}
+EOF
+{{- end -}}
