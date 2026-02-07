@@ -168,7 +168,7 @@
         - os_packages | length > 0
         - not (dry_run | bool)
 
-    - name: Install nix packages (optional)
+    - name: Configure nix packages
       ansible.builtin.copy:
         dest: "{{ hm_tools_file }}"
         content: "{{ hm_tools_content }}"
