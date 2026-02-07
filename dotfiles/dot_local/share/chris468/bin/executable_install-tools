@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-[[ "$(uname -o)" != "Msys" ]] || exec pwsh -nologo $HOME/.local/bin/install-tools.ps1 "$@"
+# Remove everything before / to convert GNU/Linux to Linux
+# Convert upper to lower
+#
+OS=$(uname -o | sed -E 's|^.*/||' | tr '[:upper:]' '[:lower:]')
+[[ "$OS" != "msys" ]] || exec pwsh -nologo $HOME/.local/bin/install-tools.ps1 "$@"
 
 function _sudo() {
   echo sudo "$@"
@@ -33,9 +37,24 @@ function install_os_packages() {
   local -a packages=($(_read_packages packages.txt "${categories[@]}"))
   [[ -n "${packages[*]}" ]] || return 0
 
+  source /etc/os-release
+
+  local install
+  case "${ID_LIKE:-$ID}" in
+  *debian*)
+    install="apt-get install -y"
+    ;;
+
+  *arch*)
+    install="pacman -S --needed"
+    ;;
+  esac
+
+  [[ -n "$install" ]] || (echo "Unknown OS: $ID/$ID_LIKE" >&2 && return 1)
+
   echo
-  echo "Installing tool pacman packages for ${categories[*]}..."
-  _sudo pacman -S "${packages[@]}" --needed || true
+  echo "Installing tool os packages for ${categories[*]}..."
+  _sudo $install "${packages[@]}" || true
 }
 
 function _get_enabled_categories() {
@@ -144,9 +163,6 @@ done
 # Force sudo to prompt for a password
 ! command -v sudo >&/dev/null || sudo -k
 
-# Remove everything before / to convert GNU/Linux to Linux
-# Convert upper to lower
-OS=$(uname -o | sed -E 's|^.*/||' | tr '[:upper:]' '[:lower:]')
 declare -a INSTALL_CATEGORIES=()
 for category in "${ORDER[@]}"; do
   v="category_$category"
