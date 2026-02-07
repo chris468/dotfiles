@@ -61,18 +61,18 @@
           {%-       set preferred_manager = prefer -%}
           {%-     endif -%}
           {%-     if preferred_manager != 'nix' -%}
-          {%-     set os_pkgs = meta.get('packages', {}).get('os', {}) -%}
-          {%-     if os_key == 'windows' -%}
-          {%-       set pkg = os_pkgs.get('windows', '') -%}
-          {%-     elif os_key == 'macos' -%}
-          {%-       set pkg = os_pkgs.get('macos', '') -%}
-          {%-     else -%}
-          {%-       set linux_pkgs = os_pkgs.get('linux', {}) -%}
-          {%-       set pkg = linux_pkgs.get(linux_pkg_key, linux_pkgs.get('default', '')) -%}
-          {%-     endif -%}
-          {%-     if pkg -%}
-          {%-       set _ = pkgs.append(pkg) -%}
-          {%-     endif -%}
+          {%-       set os_pkgs = meta.get('packages', {}).get('os', {}) -%}
+          {%-       if os_key == 'windows' -%}
+          {%-         set pkg = os_pkgs.get('windows', '') -%}
+          {%-       elif os_key == 'macos' -%}
+          {%-         set pkg = os_pkgs.get('macos', '') -%}
+          {%-       else -%}
+          {%-         set linux_pkgs = os_pkgs.get('linux', {}) -%}
+          {%-         set pkg = linux_pkgs.get(linux_pkg_key, linux_pkgs.get('default', '')) -%}
+          {%-       endif -%}
+          {%-       if pkg -%}
+          {%-         set _ = pkgs.append(pkg) -%}
+          {%-       endif -%}
           {%-     endif -%}
           {%-   endfor -%}
           {%- endfor -%}
@@ -82,9 +82,31 @@
           {%- for cat in categories_list -%}
           {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
           {%-   for name, meta in cat_tools.items() -%}
-          {%-     set pkg = meta.get('packages', {}).get('nix', '') -%}
-          {%-     if pkg -%}
-          {%-       set _ = pkgs.append(pkg) -%}
+          {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
+          {%-     set preferred_manager = '' -%}
+          {%-     if os_key == 'linux' and prefer is mapping -%}
+          {%-       if ansible_os_family == 'Debian' -%}
+          {%-         set preferred_manager = prefer.get('debian', '') -%}
+          {%-       elif ansible_distribution in ['Archlinux', 'Arch Linux', 'Manjaro'] -%}
+          {%-         set preferred_manager = prefer.get('arch', '') -%}
+          {%-       else -%}
+          {%-         set preferred_manager = prefer.get('default', '') -%}
+          {%-       endif -%}
+          {%-     elif prefer is string -%}
+          {%-       set preferred_manager = prefer -%}
+          {%-     endif -%}
+          {%-     set os_pkgs = meta.get('packages', {}).get('os', {}) -%}
+          {%-     if os_key == 'windows' -%}
+          {%-       set os_pkg = os_pkgs.get('windows', '') -%}
+          {%-     elif os_key == 'macos' -%}
+          {%-       set os_pkg = os_pkgs.get('macos', '') -%}
+          {%-     else -%}
+          {%-       set linux_pkgs = os_pkgs.get('linux', {}) -%}
+          {%-       set os_pkg = linux_pkgs.get(linux_pkg_key, linux_pkgs.get('default', '')) -%}
+          {%-     endif -%}
+          {%-     set nix_pkg = meta.get('packages', {}).get('nix', '') -%}
+          {%-     if nix_pkg and (preferred_manager == 'nix' or os_pkg == '') -%}
+          {%-       set _ = pkgs.append(nix_pkg) -%}
           {%-     endif -%}
           {%-   endfor -%}
           {%- endfor -%}
