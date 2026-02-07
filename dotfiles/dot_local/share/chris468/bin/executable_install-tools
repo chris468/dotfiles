@@ -58,9 +58,9 @@ function install_with_ansible() {
 
   if [[ "$OS" == "linux" ]]; then
     args+=("-e" "use_nix=true")
-    if [[ -z "$DRY_RUN" ]]; then
-      args+=("--become" "--ask-become-pass")
-    fi
+  fi
+  if [[ -z "$DRY_RUN" ]]; then
+    args+=("--ask-become-pass")
   fi
   [[ -z "$DRY_RUN" ]] || args+=("-e" "dry_run=true")
 
