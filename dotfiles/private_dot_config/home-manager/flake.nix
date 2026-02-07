@@ -6,13 +6,9 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    tools = {
-      url = "path:/home/chris/.local/share/chris468/tools";
-      flake = false;
-    };
   };
 
-  outputs = { nixpkgs, home-manager, tools, ... }:
+  outputs = { nixpkgs, home-manager, ... }:
     let
       # inherit (nixpkgs) lib;
       chezmoiConfig = import ./chezmoi-config.nix;
@@ -28,7 +24,11 @@
 
             # tool profiles
             ./tiers.nix
-            "${tools}/essential/packages.nix"
+            ./tools/essentials.nix
+            ./tools/container.nix
+            ./tools/kubernetes.nix
+            ./tools/aws.nix
+            ./tools/azure.nix
 
             # tool selections. (must be last)
             ./tools.nix

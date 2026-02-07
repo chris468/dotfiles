@@ -21,16 +21,16 @@ function _read_packages() {
 
 function install_darwin() {
   local -a categories=("$@")
-  local -a packages=($(_read_packages darwin/brew.txt "${categories[@]}"))
+  local -a packages=($(_read_packages packages.txt "${categories[@]}"))
   [[ -n "${packages[*]}" ]] || return 0
   echo
   echo "Installing tool homebrew packages for ${categories[*]}..."
   brew install "${packages[@]}"
 }
 
-function _install_linux() {
+function install_os_packages() {
   local -a categories=("$@")
-  local -a packages=($(_read_packages linux/packages.txt "${categories[@]}"))
+  local -a packages=($(_read_packages packages.txt "${categories[@]}"))
   [[ -n "${packages[*]}" ]] || return 0
 
   echo
@@ -72,14 +72,20 @@ function _configure_home_manager_tools() {
 EOF
 }
 
-function install_linux() {
+function install_nix_packages() {
   local -a categories=("$@")
 
   _configure_home_manager_tools "${categories[@]}"
   _home_manager=home_manager
   get-command -v $_home_manager >&/dev/null || _home_manager="nix run home-manager/release-25.05 -- "
-  nix flake update --flake "path:$HOME/.config/home-manager/" tools
   $_home_manager switch
+}
+
+function install_linux() {
+  local -a categories=("$@")
+
+  install_os_packages "${categories[@]}"
+  install_nix_packages "${categories[@]}"
 }
 
 function install_nerd_font() {

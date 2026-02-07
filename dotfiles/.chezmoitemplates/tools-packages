@@ -1,0 +1,30 @@
+{{- $tools := (includeTemplate "tools" . | fromYaml) -}}
+{{- $category := (index . "category") | default "" -}}
+{{- $requestedManager := (index . "manager") | default "os" -}}
+{{- $categoryTools := (index $tools $category) | default dict -}}
+{{- $names := $categoryTools | keys | sortAlpha -}}
+{{- range $names }}
+{{- $name := . -}}
+{{- $meta := (index $categoryTools $name) | default dict -}}
+{{- $managerOverrides := (index $meta "manager") | default dict -}}
+{{- $enabled := false -}}
+{{- if hasKey $managerOverrides $requestedManager -}}
+  {{- $enabled = (index $managerOverrides $requestedManager) -}}
+{{- else if eq $requestedManager "os" -}}
+  {{- if $managerOverrides -}}
+    {{- $enabled = not (has (values $managerOverrides) true) -}}
+  {{- else -}}
+    {{- $enabled = true -}}
+  {{- end -}}
+{{- end -}}
+{{- if $enabled -}}
+  {{- $pkg := $name -}}
+  {{- $packageOverrides := (index $meta "package") | default dict -}}
+  {{- if hasKey $packageOverrides $requestedManager -}}
+    {{- $pkg = (index $packageOverrides $requestedManager) -}}
+  {{- end -}}
+  {{- if $pkg -}}
+{{ $pkg }}
+  {{- end -}}
+{{- end -}}
+{{- end -}}

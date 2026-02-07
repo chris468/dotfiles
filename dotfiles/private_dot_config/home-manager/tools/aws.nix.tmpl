@@ -2,8 +2,7 @@
   config = lib.mkIf config.tiers.aws.enable {
     home.packages = with pkgs; # packages
       [
-        aws-cli-v2
-        eksctl
+{{- includeTemplate "tools-packages" (dict "category" "aws" "manager" "nix" "chezmoi" .chezmoi) | indent 8 }}
       ];
   };
 }

@@ -2,9 +2,7 @@
   config = lib.mkIf config.tiers.kubernetes.enable {
     home.packages = with pkgs; # packages
       [
-        helm
-        k9s
-        kubectl
+{{- includeTemplate "tools-packages" (dict "category" "kubernetes" "manager" "nix" "chezmoi" .chezmoi) | indent 8 }}
       ];
   };
 }
