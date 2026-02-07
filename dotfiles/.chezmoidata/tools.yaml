@@ -1,0 +1,211 @@
+categories:
+  essential:
+    bat:
+      packages:
+        os:
+          linux:
+            apt: bat
+            pacman: bat
+          macos: bat
+          windows: sharkdp.bat
+        nix: bat
+    btop:
+      packages:
+        os:
+          windows: aristocratos.btop4win
+    carapace:
+      packages:
+        os:
+          windows: rsteube.Carapace
+        nix: carapace
+      prefer:
+        linux:
+          debian: nix
+    chezmoi:
+      packages:
+        os:
+          windows: twpayne.chezmoi
+        nix: chezmoi
+      prefer:
+        linux:
+          debian: nix
+    eza:
+      packages:
+        os:
+          windows: eza-community.eza
+    fd:
+      packages:
+        os:
+          linux:
+            apt: fd-find
+            pacman: fd
+            default: fd
+          windows: sharkdp.fd
+    fzf:
+      packages:
+        os:
+          windows: junegunn.fzf
+    github-cli:
+      packages:
+        os:
+          linux:
+            apt: gh
+            pacman: github-cli
+            default: gh
+          macos: gh
+          windows: Github.cli
+    git-delta:
+      packages:
+        os:
+          windows: dandavison.delta
+        nix: delta
+    git-credential-manager:
+      packages:
+        os:
+          macos: git-credential-manager
+        nix: git-credential-manager
+      prefer:
+        linux:
+          default: nix
+    jq:
+      packages:
+        os:
+          windows: jqlang.jq
+    lazygit:
+      packages:
+        os:
+          windows: JesseDuffield.lazygit
+    lsd:
+      packages:
+        os:
+          windows: lsd-rs.lsd
+    neovim:
+      packages:
+        os:
+          windows: Neovim.Neovim
+    nodejs-lts:
+      packages:
+        os:
+          linux:
+            apt: nodejs
+            pacman: nodejs-lts
+            default: nodejs
+          macos: node@24
+          windows: OpenJS.NodeJS.LTS
+        nix: nodejs
+      prefer:
+        linux:
+          debian: nix
+    oh-my-posh:
+      packages:
+        os:
+          windows: JanDeDobbeleer.OhMyPosh
+        nix: oh-my-posh
+      prefer:
+        linux:
+          debian: nix
+    python:
+      packages:
+        os:
+          linux:
+            apt: python3
+            pacman: python
+            default: python3
+          macos: python@3.14
+          windows: Python.Python.3.14
+        nix: python3
+    ripgrep:
+      packages:
+        os:
+          windows: BurntSushi.ripgrep.MSVC
+    step-cli:
+      packages:
+        os:
+          macos: step
+          windows: Smallstep.step
+    wezterm:
+      packages:
+        os:
+          windows: wez.wezterm
+        nix: wezterm
+      prefer:
+        linux:
+          debian: nix
+    yq:
+      packages:
+        os:
+          windows: MikeFarah.yq
+    zoxide:
+      packages:
+        os:
+          windows: ajeetdsouza.zoxide
+    winlibs-posix-ucrt:
+      packages:
+        os:
+          windows: BrechtSanders.WinLibs.POSIX.UCRT
+    vcredist-2015plus:
+      packages:
+        os:
+          windows: Microsoft.VCRedist.2015+.x64
+    gnuwin32-file:
+      packages:
+        os:
+          windows: GnuWin32.File
+    gnuwin32-findutils:
+      packages:
+        os:
+          windows: GnuWin32.FindUtils
+    gnuwin32-grep:
+      packages:
+        os:
+          windows: GnuWin32.Grep
+    gnuwin32-tree:
+      packages:
+        os:
+          windows: GnuWin32.Tree
+    gnuwin32-which:
+      packages:
+        os:
+          windows: GnuWin32.Which
+    psfzf:
+      psmodules:
+        windows:
+          - PSFzf
+  container:
+    lazydocker:
+      packages:
+        os:
+          windows: JesseDuffield.Lazydocker
+  kubernetes:
+    helm:
+      packages:
+        os:
+          windows: Helm.Helm
+    k9s:
+      packages:
+        os:
+          windows: Derailed.k9s
+    kubectl:
+      packages:
+        os:
+          windows: Kubernetes.kubectl
+  aws:
+    aws-cli-v2:
+      packages:
+        os:
+          macos: awscli
+          windows: Amazon.AWSCLI
+    eksctl:
+      packages:
+        os:
+          windows: eksctl.eksctl
+  azure:
+    azure-cli:
+      packages:
+        os:
+          windows: Microsoft.AzureCLI
+    azure-kubelogin:
+      packages:
+        os:
+          macos: Azure/kubelogin/kubelogin
+          windows: Microsoft.Azure.KubeLogin

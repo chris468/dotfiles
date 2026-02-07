@@ -1,0 +1,179 @@
+---
+- name: Install system tools (local)
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    tools_file: >-
+      {{
+        lookup('env', 'XDG_DATA_HOME')
+          | default(ansible_env.HOME + '/.local/share', true)
+      }}/chris468/tools/tools.yaml
+    categories:
+      - essential
+    use_nix: false
+    dry_run: false
+
+  tasks:
+    - name: Load tool definitions
+      ansible.builtin.include_vars:
+        file: "{{ tools_file }}"
+        name: tools_data
+
+    - name: Compute platform keys
+      ansible.builtin.set_fact:
+        os_key: >-
+          {{
+            'windows' if ansible_system == 'Windows'
+            else 'macos' if ansible_system == 'Darwin'
+            else 'linux'
+          }}
+        linux_pkg_key: >-
+          {{
+            'apt' if ansible_os_family == 'Debian'
+            else 'pacman' if ansible_distribution in ['Archlinux', 'Arch Linux', 'Manjaro']
+            else 'default'
+          }}
+
+    - name: Build package lists
+      ansible.builtin.set_fact:
+        os_packages: >-
+          {%- set pkgs = [] -%}
+          {%- for cat in categories -%}
+          {%-   set cat_tools = tools_data.categories.get(cat, {}) -%}
+          {%-   for name, meta in cat_tools.items() -%}
+          {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
+          {%-     set preferred_manager = '' -%}
+          {%-     if os_key == 'linux' and prefer is mapping -%}
+          {%-       if ansible_os_family == 'Debian' -%}
+          {%-         set preferred_manager = prefer.get('debian', '') -%}
+          {%-       elif ansible_distribution in ['Archlinux', 'Arch Linux', 'Manjaro'] -%}
+          {%-         set preferred_manager = prefer.get('arch', '') -%}
+          {%-       else -%}
+          {%-         set preferred_manager = prefer.get('default', '') -%}
+          {%-       endif -%}
+          {%-     elif prefer is string -%}
+          {%-       set preferred_manager = prefer -%}
+          {%-     endif -%}
+          {%-     if preferred_manager == 'nix' -%}
+          {%-       continue -%}
+          {%-     endif -%}
+          {%-     set os_pkgs = meta.get('packages', {}).get('os', {}) -%}
+          {%-     if os_key == 'windows' -%}
+          {%-       set pkg = os_pkgs.get('windows', '') -%}
+          {%-     elif os_key == 'macos' -%}
+          {%-       set pkg = os_pkgs.get('macos', '') -%}
+          {%-     else -%}
+          {%-       set linux_pkgs = os_pkgs.get('linux', {}) -%}
+          {%-       set pkg = linux_pkgs.get(linux_pkg_key, linux_pkgs.get('default', '')) -%}
+          {%-     endif -%}
+          {%-     if pkg -%}
+          {%-       set _ = pkgs.append(pkg) -%}
+          {%-     endif -%}
+          {%-   endfor -%}
+          {%- endfor -%}
+          {{ pkgs | unique | sort }}
+        nix_packages: >-
+          {%- set pkgs = [] -%}
+          {%- for cat in categories -%}
+          {%-   set cat_tools = tools_data.categories.get(cat, {}) -%}
+          {%-   for name, meta in cat_tools.items() -%}
+          {%-     set pkg = meta.get('packages', {}).get('nix', '') -%}
+          {%-     if pkg -%}
+          {%-       set _ = pkgs.append(pkg) -%}
+          {%-     endif -%}
+          {%-   endfor -%}
+          {%- endfor -%}
+          {{ pkgs | unique | sort }}
+
+    - name: Read enabled categories from home-manager tools file
+      ansible.builtin.command: >-
+        nix eval --raw --impure --expr
+        "let lib = import <nixpkgs/lib>;
+         tools = ((import {{ ansible_env.HOME }}/.config/home-manager/tools.nix) {}).tiers or {};
+         in (builtins.concatStringsSep \" \" (builtins.attrNames (lib.filterAttrs(name: value: value.enable) tools)))"
+      register: hm_enabled
+      changed_when: false
+      failed_when: false
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+        - not (dry_run | bool)
+
+    - name: Build home-manager tools file content
+      ansible.builtin.set_fact:
+        hm_tools_file: "{{ ansible_env.HOME }}/.config/home-manager/tools.nix"
+        hm_enabled_categories: "{{ (hm_enabled.stdout | default('')) | trim | split(' ') | select('length') | list }}"
+        hm_all_categories: "{{ (categories + hm_enabled_categories) | unique | sort }}"
+        hm_tools_content: >-
+          { ... }: {
+            tiers = {
+          {%- for cat in hm_all_categories -%}
+              {{ cat }}.enable=true;
+          {%- endfor -%}
+            };
+          }
+
+    - name: Show resolved package lists (dry run)
+      ansible.builtin.debug:
+        msg:
+          os_packages: "{{ os_packages }}"
+          nix_packages: "{{ nix_packages }}"
+          hm_enabled_categories: "{{ hm_enabled_categories | default([]) }}"
+          hm_all_categories: "{{ hm_all_categories | default(categories) }}"
+          hm_tools_content: "{{ hm_tools_content | default('') }}"
+      when: dry_run | bool
+
+    - name: Install OS packages (macOS)
+      ansible.builtin.homebrew:
+        name: "{{ os_packages }}"
+        state: present
+      when:
+        - os_key == 'macos'
+        - os_packages | length > 0
+        - not (dry_run | bool)
+
+    - name: Install OS packages (Linux)
+      ansible.builtin.package:
+        name: "{{ os_packages }}"
+        state: present
+      when:
+        - os_key == 'linux'
+        - os_packages | length > 0
+        - not (dry_run | bool)
+
+    - name: Install nix packages (optional)
+      ansible.builtin.copy:
+        dest: "{{ hm_tools_file }}"
+        content: "{{ hm_tools_content }}"
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+        - not (dry_run | bool)
+
+    - name: Check for home-manager
+      ansible.builtin.command: command -v home-manager
+      register: hm_command
+      changed_when: false
+      failed_when: false
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+        - not (dry_run | bool)
+
+    - name: Run home-manager switch
+      ansible.builtin.command: home-manager switch
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+        - not (dry_run | bool)
+        - hm_command.rc == 0
+
+    - name: Run home-manager via nix
+      ansible.builtin.command: nix run home-manager/release-25.05 -- switch
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+        - not (dry_run | bool)
+        - hm_command.rc != 0

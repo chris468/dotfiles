@@ -1,30 +1,67 @@
 {{- $tools := (includeTemplate "tools" . | fromYaml) -}}
 {{- $category := (index . "category") | default "" -}}
 {{- $requestedManager := (index . "manager") | default "os" -}}
-{{- $categoryTools := (index $tools $category) | default dict -}}
+{{- $categoryTools := (index $tools "categories" $category) | default dict -}}
 {{- $names := $categoryTools | keys | sortAlpha -}}
+{{- $os := .chezmoi.os -}}
+{{- $osRelease := .chezmoi.osRelease | default dict -}}
+{{- $osId := (index $osRelease "id") | default "" -}}
+{{- $osLike := (index $osRelease "id_like") | default "" -}}
 {{- range $names -}}
 {{- $name := . -}}
 {{- $meta := (index $categoryTools $name) | default dict -}}
-{{- $managerOverrides := (index $meta "manager") | default dict -}}
-{{- $enabled := false -}}
-{{- if hasKey $managerOverrides $requestedManager -}}
-  {{- $enabled = (index $managerOverrides $requestedManager) -}}
-{{- else if eq $requestedManager "os" -}}
-  {{- if $managerOverrides -}}
-    {{- $enabled = not (gt (len (compact (values $managerOverrides))) 0) -}}
-  {{- else -}}
-    {{- $enabled = true -}}
+{{- $packages := (index $meta "packages") | default dict -}}
+{{- $prefer := (index $meta "prefer") | default dict -}}
+
+{{- $preferForOs := (index $prefer $os) | default dict -}}
+{{- $preferredManager := "" -}}
+{{- if $preferForOs -}}
+  {{- if and (eq $os "linux") (kindIs "map" $preferForOs) -}}
+    {{- if or (contains "debian" $osId) (contains "debian" $osLike) -}}
+      {{- $preferredManager = (index $preferForOs "debian") | default "" -}}
+    {{- else if or (contains "arch" $osId) (contains "arch" $osLike) -}}
+      {{- $preferredManager = (index $preferForOs "arch") | default "" -}}
+    {{- else -}}
+      {{- $preferredManager = (index $preferForOs "default") | default "" -}}
+    {{- end -}}
+  {{- else if kindIs "string" $preferForOs -}}
+    {{- $preferredManager = $preferForOs -}}
   {{- end -}}
 {{- end -}}
-{{- if $enabled -}}
-  {{- $pkg := $name -}}
-  {{- $packageOverrides := (index $meta "package") | default dict -}}
-  {{- if hasKey $packageOverrides $requestedManager -}}
-    {{- $pkg = (index $packageOverrides $requestedManager) -}}
-  {{- end -}}
-  {{- if $pkg }}
+
+{{- if and (eq $requestedManager "os") (eq $preferredManager "nix") -}}
+  {{- /* skip os package when nix is preferred */ -}}
+{{- else if eq $requestedManager "nix" -}}
+  {{- $pkg := (index $packages "nix") | default "" -}}
+  {{- if $pkg -}}
 {{- $pkg }}
-  {{- end }}
-{{ end -}}
+  {{- end -}}
+{{- else if eq $requestedManager "psmodules" -}}
+  {{- if eq $os "windows" -}}
+    {{- $mods := (index $meta "psmodules" "windows") | default list -}}
+    {{- range $mod := $mods -}}
+{{- $mod }}
+    {{- end -}}
+  {{- end -}}
+{{- else if eq $requestedManager "os" -}}
+  {{- $osPackages := (index $packages "os") | default dict -}}
+  {{- $pkg := "" -}}
+  {{- if eq $os "windows" -}}
+    {{- $pkg = (index $osPackages "windows") | default "" -}}
+  {{- else if eq $os "darwin" -}}
+    {{- $pkg = (index $osPackages "macos") | default "" -}}
+  {{- else if eq $os "linux" -}}
+    {{- $linuxPkgs := (index $osPackages "linux") | default dict -}}
+    {{- if or (contains "debian" $osId) (contains "debian" $osLike) -}}
+      {{- $pkg = (index $linuxPkgs "apt") | default "" -}}
+    {{- else if or (contains "arch" $osId) (contains "arch" $osLike) -}}
+      {{- $pkg = (index $linuxPkgs "pacman") | default "" -}}
+    {{- else -}}
+      {{- $pkg = (index $linuxPkgs "default") | default "" -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $pkg -}}
+{{- $pkg }}
+  {{- end -}}
+{{- end -}}
 {{- end -}}

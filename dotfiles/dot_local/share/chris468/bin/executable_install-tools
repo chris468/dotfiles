@@ -25,86 +25,51 @@ function _read_packages() {
 
 function install_darwin() {
   local -a categories=("$@")
-  local -a packages=($(_read_packages packages.txt "${categories[@]}"))
-  [[ -n "${packages[*]}" ]] || return 0
-  echo
-  echo "Installing tool homebrew packages for ${categories[*]}..."
-  brew install "${packages[@]}"
+  install_with_ansible "${categories[@]}"
 }
 
-function install_os_packages() {
+function install_with_ansible() {
   local -a categories=("$@")
-  local -a packages=($(_read_packages packages.txt "${categories[@]}"))
-  [[ -n "${packages[*]}" ]] || return 0
+  local playbook="$XDG_DATA_HOME/chris468/tools/ansible/site.yml"
+  [[ -f "$playbook" ]] || {
+    echo "Missing ansible playbook: $playbook" >&2
+    return 1
+  }
+  command -v ansible-playbook >/dev/null || {
+    echo "ansible-playbook not found in PATH" >&2
+    return 1
+  }
 
-  source /etc/os-release
-
-  local install
-  case "${ID_LIKE:-$ID}" in
-  *debian*)
-    install="apt-get install -y"
-    ;;
-
-  *arch*)
-    install="pacman -S --needed"
-    ;;
-  esac
-
-  [[ -n "$install" ]] || (echo "Unknown OS: $ID/$ID_LIKE" >&2 && return 1)
-
-  echo
-  echo "Installing tool os packages for ${categories[*]}..."
-  _sudo $install "${packages[@]}" || true
-}
-
-function _get_enabled_categories() {
-  local expr
-  expr=$(
-    cat <<EOF
-let
-  lib = import <nixpkgs/lib>;
-  tools = ((import $HOME/.config/home-manager/tools.nix) {}).tiers or {};
-in
-  (builtins.concatStringsSep " " (builtins.attrNames (lib.filterAttrs(name: value: value.enable) tools)))
-EOF
-  )
-  nix eval --raw --impure --expr "$expr"
-}
-
-function _configure_home_manager_tools() {
-  local -a categories=("$@")
-  categories+=($(_get_enabled_categories))
-
-  local enables=
+  local categories_json="["
+  local first=1
   for category in "${categories[@]}"; do
-    local seen_v=seen_$category
-    [[ -z "${!seen_v}" ]] || continue
-    local seen_$category=1
-    enables="$(printf "%s\n    %s.enable=true;" "$enables" "$category")"
+    if [[ -z "$first" ]]; then
+      categories_json+=","
+    else
+      first=
+    fi
+    categories_json+="\"$category\""
   done
+  categories_json+="]"
 
-  cat <<EOF >$HOME/.config/home-manager/tools.nix
-{ ... }: {
-  tiers = {$enables
-  };
-}
-EOF
-}
+  local -a args=()
+  args+=("$playbook")
+  args+=("-e" "categories=$categories_json")
 
-function install_nix_packages() {
-  local -a categories=("$@")
+  if [[ "$OS" == "linux" ]]; then
+    args+=("-e" "use_nix=true")
+    args+=("--become" "--ask-become-pass")
+  fi
+  [[ -z "$DRY_RUN" ]] || args+=("-e" "dry_run=true")
 
-  _configure_home_manager_tools "${categories[@]}"
-  _home_manager=home_manager
-  get-command -v $_home_manager >&/dev/null || _home_manager="nix run home-manager/release-25.05 -- "
-  $_home_manager switch
+  echo
+  echo "Installing tools via ansible for ${categories[*]}..."
+  ansible-playbook "${args[@]}"
 }
 
 function install_linux() {
   local -a categories=("$@")
-
-  install_os_packages "${categories[@]}"
-  install_nix_packages "${categories[@]}"
+  install_with_ansible "${categories[@]}"
 }
 
 function install_nerd_font() {
@@ -123,6 +88,7 @@ declare -ar ORDER=(essential container kubernetes aws azure)
 ALL=
 ANY=
 FONTS=1
+DRY_RUN=
 for category in "${ORDER[@]}"; do
   declare "category_$category"
 done
@@ -132,6 +98,11 @@ while [[ $# -gt 0 ]]; do
   --all)
     ALL=1
     break
+    ;;
+
+  --dry-run)
+    DRY_RUN=1
+    shift
     ;;
 
   --no-fonts)
