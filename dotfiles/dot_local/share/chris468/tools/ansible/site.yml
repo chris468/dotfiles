@@ -116,8 +116,9 @@
       ansible.builtin.command: >-
         nix eval --raw --impure --expr
         "let lib = import <nixpkgs/lib>;
-         tools = ((import {{ ansible_env.HOME }}/.config/home-manager/tools.nix) {}).tiers or {};
+         tools = ((import {{ ansible_user_dir }}/.config/home-manager/tools.nix) {}).tiers or {};
          in (builtins.concatStringsSep \" \" (builtins.attrNames (lib.filterAttrs(name: value: value.enable) tools)))"
+      become: false
       register: hm_enabled
       changed_when: false
       failed_when: false
@@ -128,7 +129,7 @@
 
     - name: Build home-manager tools file content
       ansible.builtin.set_fact:
-        hm_tools_file: "{{ ansible_env.HOME }}/.config/home-manager/tools.nix"
+        hm_tools_file: "{{ ansible_user_dir }}/.config/home-manager/tools.nix"
         hm_enabled_categories: "{{ (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list) }}"
         hm_all_categories: "{{ (categories_list + (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list)) | unique | sort }}"
         hm_tools_content: >-
@@ -139,6 +140,7 @@
           {%- endfor -%}
             };
           }
+      become: false
 
     - name: Show resolved package lists (dry run)
       ansible.builtin.debug:
@@ -154,6 +156,7 @@
       ansible.builtin.homebrew:
         name: "{{ os_packages }}"
         state: present
+      become: true
       when:
         - os_key == 'macos'
         - os_packages | length > 0
@@ -163,6 +166,7 @@
       ansible.builtin.package:
         name: "{{ os_packages }}"
         state: present
+      become: true
       when:
         - os_key == 'linux'
         - os_packages | length > 0
@@ -172,6 +176,7 @@
       ansible.builtin.copy:
         dest: "{{ hm_tools_file }}"
         content: "{{ hm_tools_content }}"
+      become: false
       when:
         - use_nix | bool
         - nix_packages | length > 0
@@ -179,6 +184,7 @@
 
     - name: Check for home-manager
       ansible.builtin.command: command -v home-manager
+      become: false
       register: hm_command
       changed_when: false
       failed_when: false
@@ -189,6 +195,7 @@
 
     - name: Run home-manager switch
       ansible.builtin.command: home-manager switch
+      become: false
       when:
         - use_nix | bool
         - nix_packages | length > 0
@@ -197,6 +204,7 @@
 
     - name: Run home-manager via nix
       ansible.builtin.command: nix run home-manager/release-25.05 -- switch
+      become: false
       when:
         - use_nix | bool
         - nix_packages | length > 0
