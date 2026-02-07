@@ -44,7 +44,7 @@ $toolsData = Get-Content $toolsYaml -Raw | ConvertFrom-Yaml
 foreach ($category in $categories.ToLower()) {
   $CategoryRoot = "$ToolsRoot/$category"
 
-  $catTools = $toolsData.categories.$category
+  $catTools = $toolsData.tools.$category
   if ($catTools) {
     foreach ($tool in $catTools.PSObject.Properties) {
       $meta = $tool.Value

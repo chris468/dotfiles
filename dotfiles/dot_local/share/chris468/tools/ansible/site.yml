@@ -41,7 +41,7 @@
         os_packages: >-
           {%- set pkgs = [] -%}
           {%- for cat in categories -%}
-          {%-   set cat_tools = tools_data.categories.get(cat, {}) -%}
+          {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
           {%-   for name, meta in cat_tools.items() -%}
           {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
           {%-     set preferred_manager = '' -%}
@@ -77,7 +77,7 @@
         nix_packages: >-
           {%- set pkgs = [] -%}
           {%- for cat in categories -%}
-          {%-   set cat_tools = tools_data.categories.get(cat, {}) -%}
+          {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
           {%-   for name, meta in cat_tools.items() -%}
           {%-     set pkg = meta.get('packages', {}).get('nix', '') -%}
           {%-     if pkg -%}

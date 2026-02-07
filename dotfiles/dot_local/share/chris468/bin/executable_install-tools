@@ -35,8 +35,8 @@ function install_with_ansible() {
     echo "Missing ansible playbook: $playbook" >&2
     return 1
   }
-  command -v ansible-playbook >/dev/null || {
-    echo "ansible-playbook not found in PATH" >&2
+  command -v pipx >/dev/null || {
+    echo "pipx not found in PATH" >&2
     return 1
   }
 
@@ -64,7 +64,7 @@ function install_with_ansible() {
 
   echo
   echo "Installing tools via ansible for ${categories[*]}..."
-  ansible-playbook "${args[@]}"
+  pipx run --spec ansible ansible-playbook "${args[@]}"
 }
 
 function install_linux() {

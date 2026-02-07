@@ -2,7 +2,19 @@
   config = lib.mkIf config.tiers.{{ .category }}.enable {
     home.packages = with pkgs; # packages
       [
-{{- includeTemplate "tools-packages" (dict "category" .category "manager" "nix" "chezmoi" .chezmoi) | trimSuffix "\n" | nindent 8 }}
+{{- $tools := .tools | default dict -}}
+{{- $category := (index . "category") | default "" -}}
+{{- $categoryTools := (index $tools $category) | default dict -}}
+{{- $names := $categoryTools | keys | sortAlpha -}}
+{{- range $names -}}
+{{- $name := . -}}
+{{- $meta := (index $categoryTools $name) | default dict -}}
+{{- $packages := (index $meta "packages") | default dict -}}
+{{- $pkg := (index $packages "nix") | default "" -}}
+{{- if $pkg -}}
+{{- $pkg | nindent 8 }}
+{{- end -}}
+{{- end -}}
       ];
   };
 }
