@@ -3,7 +3,7 @@
 {{- $requestedManager := (index . "manager") | default "os" -}}
 {{- $categoryTools := (index $tools $category) | default dict -}}
 {{- $names := $categoryTools | keys | sortAlpha -}}
-{{- range $names }}
+{{- range $names -}}
 {{- $name := . -}}
 {{- $meta := (index $categoryTools $name) | default dict -}}
 {{- $managerOverrides := (index $meta "manager") | default dict -}}
@@ -12,7 +12,7 @@
   {{- $enabled = (index $managerOverrides $requestedManager) -}}
 {{- else if eq $requestedManager "os" -}}
   {{- if $managerOverrides -}}
-    {{- $enabled = not (has (values $managerOverrides) true) -}}
+    {{- $enabled = not (gt (len (compact (values $managerOverrides))) 0) -}}
   {{- else -}}
     {{- $enabled = true -}}
   {{- end -}}
@@ -23,8 +23,8 @@
   {{- if hasKey $packageOverrides $requestedManager -}}
     {{- $pkg = (index $packageOverrides $requestedManager) -}}
   {{- end -}}
-  {{- if $pkg -}}
-{{ $pkg }}
-  {{- end -}}
-{{- end -}}
+  {{- if $pkg }}
+{{- $pkg }}
+  {{- end }}
+{{ end -}}
 {{- end -}}

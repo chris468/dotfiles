@@ -2,7 +2,7 @@
   config = lib.mkIf config.tiers.essential.enable {
     home.packages = with pkgs; # packages
       [
-{{- includeTemplate "tools-packages" (dict "category" "essential" "manager" "nix" "chezmoi" .chezmoi) | indent 8 }}
+{{- includeTemplate "tools-packages" (dict "category" "essential" "manager" "nix" "chezmoi" .chezmoi) | trimSuffix "\n" | nindent 8 }}
       ];
   };
 }
