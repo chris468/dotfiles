@@ -1,0 +1,8 @@
+{ config, lib, pkgs, ... }: {
+  config = lib.mkIf config.tiers.{{ .category }}.enable {
+    home.packages = with pkgs; # packages
+      [
+{{- includeTemplate "tools-packages" (dict "category" .category "manager" "nix" "chezmoi" .chezmoi) | trimSuffix "\n" | nindent 8 }}
+      ];
+  };
+}

@@ -1,8 +1,1 @@
-{ config, lib, pkgs, ... }: {
-  config = lib.mkIf config.tiers.azure.enable {
-    home.packages = with pkgs; # packages
-      [
-{{- includeTemplate "tools-packages" (dict "category" "azure" "manager" "nix" "chezmoi" .chezmoi) | trimSuffix "\n" | nindent 8 }}
-      ];
-  };
-}
+{{- includeTemplate "tools-nix" (dict "category" "azure" "chezmoi" .chezmoi) -}}

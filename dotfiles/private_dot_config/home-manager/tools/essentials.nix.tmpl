@@ -1,8 +1,1 @@
-{ config, lib, pkgs, ... }: {
-  config = lib.mkIf config.tiers.essential.enable {
-    home.packages = with pkgs; # packages
-      [
-{{- includeTemplate "tools-packages" (dict "category" "essential" "manager" "nix" "chezmoi" .chezmoi) | trimSuffix "\n" | nindent 8 }}
-      ];
-  };
-}
+{{- includeTemplate "tools-nix" (dict "category" "essential" "chezmoi" .chezmoi) -}}
