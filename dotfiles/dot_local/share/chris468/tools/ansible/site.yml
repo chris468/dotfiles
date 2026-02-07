@@ -16,6 +16,10 @@
     dry_run: false
 
   tasks:
+    - name: Normalize categories list
+      ansible.builtin.set_fact:
+        categories_list: "{{ (categories is string) | ternary(categories | from_yaml, categories) }}"
+
     - name: Load tool definitions
       ansible.builtin.include_vars:
         file: "{{ tools_file }}"
@@ -40,7 +44,7 @@
       ansible.builtin.set_fact:
         os_packages: >-
           {%- set pkgs = [] -%}
-          {%- for cat in categories -%}
+          {%- for cat in categories_list -%}
           {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
           {%-   for name, meta in cat_tools.items() -%}
           {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
@@ -56,9 +60,7 @@
           {%-     elif prefer is string -%}
           {%-       set preferred_manager = prefer -%}
           {%-     endif -%}
-          {%-     if preferred_manager == 'nix' -%}
-          {%-       continue -%}
-          {%-     endif -%}
+          {%-     if preferred_manager != 'nix' -%}
           {%-     set os_pkgs = meta.get('packages', {}).get('os', {}) -%}
           {%-     if os_key == 'windows' -%}
           {%-       set pkg = os_pkgs.get('windows', '') -%}
@@ -71,12 +73,13 @@
           {%-     if pkg -%}
           {%-       set _ = pkgs.append(pkg) -%}
           {%-     endif -%}
+          {%-     endif -%}
           {%-   endfor -%}
           {%- endfor -%}
           {{ pkgs | unique | sort }}
         nix_packages: >-
           {%- set pkgs = [] -%}
-          {%- for cat in categories -%}
+          {%- for cat in categories_list -%}
           {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
           {%-   for name, meta in cat_tools.items() -%}
           {%-     set pkg = meta.get('packages', {}).get('nix', '') -%}
@@ -104,12 +107,12 @@
     - name: Build home-manager tools file content
       ansible.builtin.set_fact:
         hm_tools_file: "{{ ansible_env.HOME }}/.config/home-manager/tools.nix"
-        hm_enabled_categories: "{{ (hm_enabled.stdout | default('')) | trim | split(' ') | select('length') | list }}"
-        hm_all_categories: "{{ (categories + hm_enabled_categories) | unique | sort }}"
+        hm_enabled_categories: "{{ (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list) }}"
+        hm_all_categories: "{{ (categories_list + (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list)) | unique | sort }}"
         hm_tools_content: >-
           { ... }: {
             tiers = {
-          {%- for cat in hm_all_categories -%}
+          {%- for cat in (categories_list + (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list)) | unique | sort -%}
               {{ cat }}.enable=true;
           {%- endfor -%}
             };
