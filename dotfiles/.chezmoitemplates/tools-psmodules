@@ -1,0 +1,4 @@
+{{- if eq .chezmoi.os "windows" -}}
+{{- $modules := includeTemplate "tools-packages" (dict "category" (index . "category") "manager" "psmodules" "chezmoi" .chezmoi) | splitList "\n" | compact -}}
+{{- $modules | toJson -}}
+{{- end -}}

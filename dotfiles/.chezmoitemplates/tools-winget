@@ -1,0 +1,27 @@
+{{- if eq .chezmoi.os "windows" -}}
+{{- $packages := includeTemplate "tools-packages" (dict "category" (index . "category") "manager" "os" "chezmoi" .chezmoi) | splitList "\n" -}}
+{
+  "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+
+  "Sources": [
+    {
+      "SourceDetails": {
+        "Argument": "https://cdn.winget.microsoft.com/cache",
+        "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Name": "winget",
+        "Type": "Microsoft.PreIndexed.Package"
+      },
+      "Packages": [
+{{- $first := true -}}
+{{- range $pkg := $packages }}
+{{- if $pkg -}}
+{{- if not $first }},{{ end }}
+        { "PackageIdentifier": "{{ $pkg }}" }
+{{- $first = false -}}
+{{- end -}}
+{{- end }}
+      ]
+    }
+  ]
+}
+{{- end -}}

@@ -29,9 +29,8 @@ $categories = if ($categories) { $categories } else { @("Essential") }
 
 foreach ($category in $categories.ToLower()) {
   $CategoryRoot = "$ToolsRoot/$category"
-  $CategoryOSRoot = "$CategoryRoot/win"
 
-  $WingetPackages = "$CategoryOSRoot/winget.json"
+  $WingetPackages = "$CategoryRoot/winget.json"
   if (Test-Path $WingetPackages) {
     Write-Host "`nInstalling $category tool winget packages..." -ForegroundColor Green
     winget import `
@@ -40,7 +39,7 @@ foreach ($category in $categories.ToLower()) {
       --accept-source-agreements
   }
 
-  $PowerShellModules = "$CategoryOSRoot/ps-modules.json"
+  $PowerShellModules = "$CategoryRoot/psmodules.json"
   if (Test-Path $PowerShellModules) {
     Write-Host "`nInstalling $category tool powershell modules..." -ForegroundColor Green
     Set-PSRepository PSGallery https://www.powershellgallery.com/api/v2 -InstallationPolicy Trusted

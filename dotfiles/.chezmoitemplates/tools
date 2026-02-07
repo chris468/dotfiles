@@ -1,64 +1,140 @@
 azure:
   azure-cli:
-  azure-kubelogin:
-{{ if eq .chezmoi.os "darwin" }}
     package:
+{{ if eq .chezmoi.os "windows" }}
+      os: Microsoft.AzureCLI
+{{ end }}
+  azure-kubelogin:
+    package:
+{{ if eq .chezmoi.os "darwin" }}
       os: Azure/kubelogin/kubelogin
+{{ end }}
+{{ if eq .chezmoi.os "windows" }}
+      os: Microsoft.Azure.KubeLogin
 {{ end }}
 aws:
   aws-cli-v2:
-{{ if eq .chezmoi.os "darwin" }}
     package:
+{{ if eq .chezmoi.os "darwin" }}
       os: awscli
 {{ end }}
+{{ if eq .chezmoi.os "windows" }}
+      os: Amazon.AWSCLI
+{{ end }}
   eksctl:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: eksctl.eksctl
+{{ end }}
 container:
   lazydocker:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: JesseDuffield.Lazydocker
+{{ end }}
 essential:
   bat:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: sharkdp.bat
+{{ end }}
   btop:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: aristocratos.btop4win
+{{ end }}
   carapace:
     manager:
       nix: {{ eq (index .chezmoi.osRelease "id") "debian" }}
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: rsteube.Carapace
+{{ end }}
   chezmoi:
     manager:
       nix: {{ eq (index .chezmoi.osRelease "id") "debian" }}
-  eza:
-  fd:
-{{ if eq (index .chezmoi.osRelease "id") "debian" }}
     package:
+{{ if eq .chezmoi.os "windows" }}
+      os: twpayne.chezmoi
+{{ end }}
+  eza:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: eza-community.eza
+{{ end }}
+  fd:
+    package:
+{{ if eq (index .chezmoi.osRelease "id") "debian" }}
       os: fd-find
+{{ end }}
+{{ if eq .chezmoi.os "windows" }}
+      os: sharkdp.fd
+{{ end }}
+{{ if eq (index .chezmoi.osRelease "id") "debian" }}
     post-install:
       - ln -s /usr/bin/fdfind /usr/local/bin/fd
 {{ end }}
   fzf:
-  github-cli:
-{{ if or (eq (index .chezmoi.osRelease "id") "debian") (eq .chezmoi.os "darwin") }}
     package:
+{{ if eq .chezmoi.os "windows" }}
+      os: junegunn.fzf
+{{ end }}
+  github-cli:
+    package:
+{{ if or (eq (index .chezmoi.osRelease "id") "debian") (eq .chezmoi.os "darwin") }}
       os: gh
+{{ end }}
+{{ if eq .chezmoi.os "windows" }}
+      os: Github.cli
 {{ end }}
   git-delta:
     package:
       nix: delta
+{{ if eq .chezmoi.os "windows" }}
+      os: dandavison.delta
+{{ end }}
   git-credential-manager:
     manager:
       os: {{ or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") }}
       nix: {{ eq .chezmoi.os "linux" }}
   jq:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: jqlang.jq
+{{ end }}
   lazygit:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: JesseDuffield.lazygit
+{{ end }}
   lsd:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: lsd-rs.lsd
+{{ end }}
   neovim:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: Neovim.Neovim
+{{ end }}
   nodejs-lts:
     package:
       nix: nodejs
 {{ if eq .chezmoi.os "darwin" }}
       os: node@24
 {{ end }}
+{{ if eq .chezmoi.os "windows" }}
+      os: OpenJS.NodeJS.LTS
+{{ end }}
     manager:
       nix: {{ eq (index .chezmoi.osRelease "id") "debian" }}
   oh-my-posh:
     manager:
       nix: {{ eq (index .chezmoi.osRelease "id") "debian" }}
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: JanDeDobbeleer.OhMyPosh
+{{ end }}
   python:
     package:
       nix: python3
@@ -68,18 +144,92 @@ essential:
 {{ if eq .chezmoi.os "darwin" }}
       os: python@3.14
 {{ end }}
+{{ if eq .chezmoi.os "windows" }}
+      os: Python.Python.3.14
+{{ end }}
   ripgrep:
-  step-cli:
-{{ if eq .chezmoi.os "darwin" }}
     package:
+{{ if eq .chezmoi.os "windows" }}
+      os: BurntSushi.ripgrep.MSVC
+{{ end }}
+  step-cli:
+    package:
+{{ if eq .chezmoi.os "darwin" }}
       os: step
+{{ end }}
+{{ if eq .chezmoi.os "windows" }}
+      os: Smallstep.step
 {{ end }}
   wezterm:
     manager:
       nix: {{ eq (index .chezmoi.osRelease "id") "debian" }}
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: wez.wezterm
+{{ end }}
   yq:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: MikeFarah.yq
+{{ end }}
   zoxide:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: ajeetdsouza.zoxide
+{{ end }}
+  winlibs-posix-ucrt:
+    manager:
+      os: {{ eq .chezmoi.os "windows" }}
+    package:
+      os: BrechtSanders.WinLibs.POSIX.UCRT
+  vcredist-2015plus:
+    manager:
+      os: {{ eq .chezmoi.os "windows" }}
+    package:
+      os: Microsoft.VCRedist.2015+.x64
+  gnuwin32-file:
+    manager:
+      os: {{ eq .chezmoi.os "windows" }}
+    package:
+      os: GnuWin32.File
+  gnuwin32-findutils:
+    manager:
+      os: {{ eq .chezmoi.os "windows" }}
+    package:
+      os: GnuWin32.FindUtils
+  gnuwin32-grep:
+    manager:
+      os: {{ eq .chezmoi.os "windows" }}
+    package:
+      os: GnuWin32.Grep
+  gnuwin32-tree:
+    manager:
+      os: {{ eq .chezmoi.os "windows" }}
+    package:
+      os: GnuWin32.Tree
+  gnuwin32-which:
+    manager:
+      os: {{ eq .chezmoi.os "windows" }}
+    package:
+      os: GnuWin32.Which
+  psfzf:
+    manager:
+      psmodules: {{ eq .chezmoi.os "windows" }}
+    package:
+      psmodules: PSFzf
 kubernetes:
   helm:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: Helm.Helm
+{{ end }}
   k9s:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: Derailed.k9s
+{{ end }}
   kubectl:
+    package:
+{{ if eq .chezmoi.os "windows" }}
+      os: Kubernetes.kubectl
+{{ end }}
