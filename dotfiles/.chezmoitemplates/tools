@@ -93,10 +93,11 @@ essential:
 {{ if eq .chezmoi.os "windows" }}
       os: dandavison.delta
 {{ end }}
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") }}
   git-credential-manager:
     manager:
-      os: {{ or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") }}
       nix: {{ eq .chezmoi.os "linux" }}
+{{ end }}
   jq:
     package:
 {{ if eq .chezmoi.os "windows" }}
@@ -177,46 +178,34 @@ essential:
 {{ if eq .chezmoi.os "windows" }}
       os: ajeetdsouza.zoxide
 {{ end }}
+{{ if eq .chezmoi.os "windows" }}
   winlibs-posix-ucrt:
-    manager:
-      os: {{ eq .chezmoi.os "windows" }}
     package:
       os: BrechtSanders.WinLibs.POSIX.UCRT
   vcredist-2015plus:
-    manager:
-      os: {{ eq .chezmoi.os "windows" }}
     package:
       os: Microsoft.VCRedist.2015+.x64
   gnuwin32-file:
-    manager:
-      os: {{ eq .chezmoi.os "windows" }}
     package:
       os: GnuWin32.File
   gnuwin32-findutils:
-    manager:
-      os: {{ eq .chezmoi.os "windows" }}
     package:
       os: GnuWin32.FindUtils
   gnuwin32-grep:
-    manager:
-      os: {{ eq .chezmoi.os "windows" }}
     package:
       os: GnuWin32.Grep
   gnuwin32-tree:
-    manager:
-      os: {{ eq .chezmoi.os "windows" }}
     package:
       os: GnuWin32.Tree
   gnuwin32-which:
-    manager:
-      os: {{ eq .chezmoi.os "windows" }}
     package:
       os: GnuWin32.Which
   psfzf:
     manager:
-      psmodules: {{ eq .chezmoi.os "windows" }}
+      psmodules: true
     package:
       psmodules: PSFzf
+{{ end }}
 kubernetes:
   helm:
     package:
