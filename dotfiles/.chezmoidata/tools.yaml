@@ -50,7 +50,9 @@ tools:
         os:
           linux:
             apt: gh
+            dnf: gh
             pacman: github-cli
+            zypper: gh
             default: gh
           macos: gh
           windows: Github.cli
@@ -109,7 +111,9 @@ tools:
         os:
           linux:
             apt: python3
+            dnf: python3
             pacman: python
+            zypper: python3
             default: python3
           macos: python@3.14
           windows: Python.Python.3.14
@@ -118,6 +122,9 @@ tools:
       packages:
         os:
           windows: BurntSushi.ripgrep.MSVC
+          linux:
+            dnf: ripgrep
+            zypper: ripgrep
     step-cli:
       packages:
         os:
@@ -139,6 +146,31 @@ tools:
       packages:
         os:
           windows: ajeetdsouza.zoxide
+    gpg:
+      packages:
+        os:
+          linux:
+            apt: gnupg
+            dnf: gnupg2
+            pacman: gnupg
+            zypper: gpg2
+            default: gnupg
+    xz:
+      packages:
+        os:
+          linux:
+            apt: xz-utils
+            dnf: xz
+            pacman: xz
+            zypper: xz
+            default: xz-utils
+    nix:
+      packages:
+        os:
+          linux:
+            dnf: nix
+            pacman: nix
+            zypper: nix
     winlibs-posix-ucrt:
       packages:
         os:

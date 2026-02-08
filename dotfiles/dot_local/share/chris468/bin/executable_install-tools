@@ -59,10 +59,7 @@ function install_with_ansible() {
   if [[ "$OS" == "linux" ]]; then
     args+=("-e" "use_nix=true")
   fi
-  if [[ -z "$DRY_RUN" ]]; then
-    args+=("--ask-become-pass")
-  fi
-  [[ -z "$DRY_RUN" ]] || args+=("-e" "dry_run=true")
+  args+=("--ask-become-pass")
 
   echo
   echo "Installing tools via ansible for ${categories[*]}..."
@@ -90,7 +87,6 @@ declare -ar ORDER=(essential container kubernetes aws azure)
 ALL=
 ANY=
 FONTS=1
-DRY_RUN=
 for category in "${ORDER[@]}"; do
   declare "category_$category"
 done
@@ -100,11 +96,6 @@ while [[ $# -gt 0 ]]; do
   --all)
     ALL=1
     break
-    ;;
-
-  --dry-run)
-    DRY_RUN=1
-    shift
     ;;
 
   --no-fonts)

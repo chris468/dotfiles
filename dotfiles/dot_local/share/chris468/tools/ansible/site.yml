@@ -3,6 +3,8 @@
   hosts: localhost
   connection: local
   gather_facts: true
+  environment:
+    PATH: "{{ lookup('env','HOME') }}/.nix-profile/bin:/nix/var/nix/profiles/default/bin:{{ ansible_env.PATH }}"
 
   vars:
     tools_file: >-
@@ -13,7 +15,6 @@
     categories:
       - essential
     use_nix: false
-    dry_run: false
 
   tasks:
     - name: Normalize categories list
@@ -24,6 +25,13 @@
       ansible.builtin.include_vars:
         file: "{{ tools_file }}"
         name: tools_data
+
+    - name: Check for nix
+      ansible.builtin.command: command -v nix
+      register: nix_command
+      changed_when: false
+      failed_when: false
+      when: use_nix | bool
 
     - name: Compute platform keys
       ansible.builtin.set_fact:
@@ -36,9 +44,56 @@
         linux_pkg_key: >-
           {{
             'apt' if ansible_os_family == 'Debian'
+            else 'dnf' if ansible_os_family == 'RedHat'
             else 'pacman' if ansible_distribution in ['Archlinux', 'Arch Linux', 'Manjaro']
+            else 'zypper' if ansible_os_family == 'Suse'
             else 'default'
           }}
+
+    - name: Fetch nix tags from GitHub
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/NixOS/nix/tags
+        return_content: true
+      register: nix_github_tags
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_os_family == 'Debian'
+
+    - name: Set nix version from GitHub
+      ansible.builtin.set_fact:
+        nix_version: >-
+          {{
+            (nix_github_tags.json | default([]) | first | default({})).name
+            | default('')
+          }}
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_os_family == 'Debian'
+
+    - name: Fail if nix version could not be determined
+      ansible.builtin.fail:
+        msg: "Failed to determine latest nix version."
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_os_family == 'Debian'
+        - nix_version | length == 0
+
+    - name: Note nix installer URLs
+      ansible.builtin.set_fact:
+        nix_install_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install"
+        nix_install_checksum_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install.sha256"
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_os_family == 'Debian'
+
 
     - name: Build package lists
       ansible.builtin.set_fact:
@@ -112,6 +167,58 @@
           {%- endfor -%}
           {{ pkgs | unique | sort }}
 
+
+    - name: Install OS packages (macOS)
+      ansible.builtin.homebrew:
+        name: "{{ os_packages }}"
+        state: present
+      become: true
+      when:
+        - os_key == 'macos'
+        - os_packages | length > 0
+
+    - name: Install OS packages (Linux)
+      ansible.builtin.package:
+        name: "{{ os_packages }}"
+        state: present
+      become: true
+      when:
+        - os_key == 'linux'
+        - os_packages | length > 0
+
+    - name: Install nix (daemon, verified)
+      block:
+        - name: Create temp dir for nix installer
+          ansible.builtin.tempfile:
+            state: directory
+            suffix: nix-install
+          register: nix_tmp
+
+        - name: Download nix installer
+          ansible.builtin.get_url:
+            url: "{{ nix_install_url }}"
+            dest: "{{ nix_tmp.path }}/install"
+            mode: "0755"
+            checksum: "sha256:{{ nix_install_checksum_url }}"
+
+        - name: Run nix installer (daemon)
+          ansible.builtin.command: "{{ nix_tmp.path }}/install --daemon"
+          environment:
+            PATH: "/usr/sbin:/sbin:{{ ansible_env.PATH }}"
+
+        - name: Enable nix-command and flakes
+          ansible.builtin.copy:
+            dest: /etc/nix/nix.conf
+            content: |
+              experimental-features = nix-command flakes
+            mode: "0644"
+      become: true
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_os_family == 'Debian'
+
     - name: Read enabled categories from home-manager tools file
       ansible.builtin.command: >-
         nix eval --raw --impure --expr
@@ -124,7 +231,6 @@
       when:
         - use_nix | bool
         - nix_packages | length > 0
-        - not (dry_run | bool)
 
     - name: Build home-manager tools file content
       ansible.builtin.set_fact:
@@ -139,34 +245,9 @@
           {%- endfor -%}
             };
           }
-
-    - name: Show resolved package lists (dry run)
-      ansible.builtin.debug:
-        msg:
-          os_packages: "{{ os_packages }}"
-          nix_packages: "{{ nix_packages }}"
-          hm_enabled_categories: "{{ hm_enabled_categories | default([]) }}"
-          hm_all_categories: "{{ hm_all_categories | default(categories) }}"
-          hm_tools_content: "{{ hm_tools_content | default('') }}"
-      when: dry_run | bool
-
-    - name: Install OS packages (macOS)
-      ansible.builtin.homebrew:
-        name: "{{ os_packages }}"
-        state: present
       when:
-        - os_key == 'macos'
-        - os_packages | length > 0
-        - not (dry_run | bool)
-
-    - name: Install OS packages (Linux)
-      ansible.builtin.package:
-        name: "{{ os_packages }}"
-        state: present
-      when:
-        - os_key == 'linux'
-        - os_packages | length > 0
-        - not (dry_run | bool)
+        - use_nix | bool
+        - nix_packages | length > 0
 
     - name: Configure nix packages
       ansible.builtin.copy:
@@ -175,7 +256,6 @@
       when:
         - use_nix | bool
         - nix_packages | length > 0
-        - not (dry_run | bool)
 
     - name: Check for home-manager
       ansible.builtin.command: command -v home-manager
@@ -185,14 +265,12 @@
       when:
         - use_nix | bool
         - nix_packages | length > 0
-        - not (dry_run | bool)
 
     - name: Run home-manager switch
       ansible.builtin.command: home-manager switch
       when:
         - use_nix | bool
         - nix_packages | length > 0
-        - not (dry_run | bool)
         - hm_command.rc == 0
 
     - name: Run home-manager via nix
@@ -200,5 +278,4 @@
       when:
         - use_nix | bool
         - nix_packages | length > 0
-        - not (dry_run | bool)
         - hm_command.rc != 0
