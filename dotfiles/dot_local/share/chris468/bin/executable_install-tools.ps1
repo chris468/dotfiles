@@ -1,7 +1,6 @@
 [CmdletBinding()]
 param(
   [switch]$All,
-  [switch]$DryRun,
 
   # Categories. Each must have a folder in .local/shared/chris468/tools
   [Switch]$Aws,
@@ -10,7 +9,7 @@ param(
   [switch]$Essential,
   [Switch]$Kubernetes
 )
-$AllCategories = @(
+$allCategories = @(
   "Essential",
   "Container",
   "Kubernetes",
@@ -18,9 +17,16 @@ $AllCategories = @(
   "Azure"
 )
 
-$ToolsRoot = "$env:XDG_DATA_HOME/chris468/tools"
+Set-PSRepository PSGallery https://www.powershellgallery.com/api/v2 -InstallationPolicy Trusted
 
-$categories = @(foreach ($category in $AllCategories) {
+$yamlModuleName = "PowerShell-Yaml"
+if (-not (Get-Module -ListAvailable -Name $yamlModuleName)) {
+  Install-Module -Name $yamlModuleName -Scope CurrentUser
+}
+
+$toolsRoot = "$env:XDG_DATA_HOME/chris468/tools"
+
+$categories = @(foreach ($category in $allCategories) {
   if ($All -or (Get-Variable -Scope Script -Name $category).Value.IsPresent) {
     $category.ToLower()
   }
@@ -30,84 +36,75 @@ $categories = if ($categories) { $categories } else { @("Essential") }
 $wingetPackageIds = @()
 $wingetSourceDetails = $null
 $psModules = @()
-$toolsYaml = "$ToolsRoot/tools.yaml"
-if (!(Test-Path $toolsYaml)) {
-  throw "Missing tools definition: $toolsYaml"
+$nerdFonts = @()
+$toolsYamlPath = "$toolsRoot/tools.yaml"
+if (!(Test-Path $toolsYamlPath)) {
+  throw "Missing tools definition: $toolsYamlPath"
 }
-$toolsData = Get-Content $toolsYaml -Raw | ConvertFrom-Yaml
+$tools = Get-Content $toolsYamlPath -Raw | ConvertFrom-Yaml
 
 foreach ($category in $categories.ToLower()) {
-  $CategoryRoot = "$ToolsRoot/$category"
-
-  $catTools = $toolsData.tools.$category.packages
-  if ($catTools) {
-    foreach ($tool in $catTools.PSObject.Properties) {
-      $meta = $tool.Value
-      if ($meta.packages.os.windows) {
-        $wingetPackageIds += $meta.packages.os.windows
+  $categoryTools = $tools.tools.$category.packages
+  if ($categoryTools) {
+    foreach ($tool in $categoryTools.PSObject.Properties.Value) {
+      if ($tool.packages.os.windows) {
+        $wingetPackageIds += $tool.packages.os.windows
       }
-      if ($meta.psmodules.windows) {
-        $psModules += @($meta.psmodules.windows)
+      if ($tool.psmodules.windows) {
+        $psModules += @($tool.psmodules.windows)
       }
     }
   }
 
-  $nerdFonts = $toolsData.tools.$category.nerdfonts
-  if ($nerdFonts) {
-    if ($nerdFonts -is [string]) {
-      $nerdFonts = @($nerdFonts)
+  $categoryNerdFonts = $tools.tools.$category.nerdfonts
+  if ($categoryNerdFonts) {
+    if ($categoryNerdFonts -is [string]) {
+      $categoryNerdFonts = @($categoryNerdFonts)
     }
-    Write-Host "`nInstalling $category nerdfonts..." -ForegroundColor Green
-    foreach ($font in $nerdFonts) {
-      oh-my-posh font install "$font"
-    }
+    $nerdFonts += $categoryNerdFonts
   }
 }
 
 if ($wingetPackageIds.Count -gt 0) {
-  $wingetPackages = $wingetPackageIds | Sort-Object -Unique
+  $wingetPackageIds = $wingetPackageIds | Sort-Object -Unique
   $wingetSourceDetails = $wingetSourceDetails ?? @{
     Argument   = "https://cdn.winget.microsoft.com/cache"
     Identifier = "Microsoft.Winget.Source_8wekyb3d8bbwe"
     Name       = "winget"
     Type       = "Microsoft.PreIndexed.Package"
   }
-  $wingetPayload = [ordered]@{
+  $wingetImportPayload = [ordered]@{
     '$schema' = "https://aka.ms/winget-packages.schema.2.0.json"
     Sources   = @(
       [ordered]@{
         SourceDetails = $wingetSourceDetails
         Packages      = @(
-          foreach ($pkg in $wingetPackages) {
+          foreach ($pkg in $wingetPackageIds) {
             @{ PackageIdentifier = $pkg }
           }
         )
       }
     )
   }
-  $wingetFile = New-TemporaryFile
-  $wingetPayload | ConvertTo-Json -Depth 6 | Set-Content -Path $wingetFile -Encoding utf8
+  $wingetImportFile = New-TemporaryFile
+  $wingetImportPayload | ConvertTo-Json -Depth 6 | Set-Content -Path $wingetImportFile -Encoding utf8
 
-  if ($DryRun) {
-    Write-Host "`nDry run winget packages:" -ForegroundColor Yellow
-    $wingetPackages | ForEach-Object { Write-Host "  $_" }
-  } else {
   Write-Host "`nInstalling tool winget packages..." -ForegroundColor Green
   winget import `
-    --import-file $wingetFile `
+    --import-file $wingetImportFile `
     --accept-package-agreements `
     --accept-source-agreements
-  }
 }
 
 if ($psModules.Count -gt 0) {
   $psModules = $psModules | Sort-Object -Unique
-  if ($DryRun) {
-    Write-Host "`nDry run powershell modules:" -ForegroundColor Yellow
-    $psModules | ForEach-Object { Write-Host "  $_" }
-    return
-  }
   Write-Host "`nInstalling tool powershell modules..." -ForegroundColor Green
-  Set-PSRepository PSGallery https://www.powershellgallery.com/api/v2 -InstallationPolicy Trusted
   Install-Module -Name $psModules
+}
+
+if ($nerdFonts.Count -gt 0) {
+  Write-Host "`nInstalling nerdfonts..." -ForegroundColor Green
+  foreach ($font in $nerdFonts) {
+    oh-my-posh font install "$font"
+  }
 }
