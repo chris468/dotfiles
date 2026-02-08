@@ -2,7 +2,6 @@
 param(
   [switch]$All,
   [switch]$DryRun,
-  [Switch]$NoFonts,
 
   # Categories. Each must have a folder in .local/shared/chris468/tools
   [Switch]$Aws,
@@ -18,10 +17,6 @@ $AllCategories = @(
   "Aws",
   "Azure"
 )
-
-if ($DryRun) {
-  $NoFonts = $true
-}
 
 $ToolsRoot = "$env:XDG_DATA_HOME/chris468/tools"
 
@@ -44,7 +39,7 @@ $toolsData = Get-Content $toolsYaml -Raw | ConvertFrom-Yaml
 foreach ($category in $categories.ToLower()) {
   $CategoryRoot = "$ToolsRoot/$category"
 
-  $catTools = $toolsData.tools.$category
+  $catTools = $toolsData.tools.$category.packages
   if ($catTools) {
     foreach ($tool in $catTools.PSObject.Properties) {
       $meta = $tool.Value
@@ -57,10 +52,13 @@ foreach ($category in $categories.ToLower()) {
     }
   }
 
-  $NerdFonts = "$CategoryRoot/nerdfonts.txt"
-  if (!$NoFonts -and (Test-Path $NerdFonts)) {
+  $nerdFonts = $toolsData.tools.$category.nerdfonts
+  if ($nerdFonts) {
+    if ($nerdFonts -is [string]) {
+      $nerdFonts = @($nerdFonts)
+    }
     Write-Host "`nInstalling $category nerdfonts..." -ForegroundColor Green
-    foreach ($font in (Get-Content $NerdFonts)) {
+    foreach ($font in $nerdFonts) {
       oh-my-posh font install "$font"
     }
   }

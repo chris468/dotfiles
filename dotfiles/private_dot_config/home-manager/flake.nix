@@ -2,19 +2,28 @@
   description = "My Home Manager configuration";
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
       # inherit (nixpkgs) lib;
       chezmoiConfig = import ./chezmoi-config.nix;
       inherit (chezmoiConfig) system;
       inherit (chezmoiConfig) username;
-      pkgs = import nixpkgs { inherit system; };
+      pkgsUnstable = import nixpkgs-unstable { inherit system; };
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [
+          (final: prev: {
+            oh-my-posh = pkgsUnstable.oh-my-posh;
+          })
+        ];
+      };
     in {
       homeConfigurations."${username}" =
         home-manager.lib.homeManagerConfiguration {

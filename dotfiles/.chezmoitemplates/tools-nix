@@ -5,10 +5,11 @@
 {{- $tools := .tools | default dict -}}
 {{- $category := (index . "category") | default "" -}}
 {{- $categoryTools := (index $tools $category) | default dict -}}
-{{- $names := $categoryTools | keys | sortAlpha -}}
+{{- $categoryPackages := (index $categoryTools "packages") | default dict -}}
+{{- $names := $categoryPackages | keys | sortAlpha -}}
 {{- range $names -}}
 {{- $name := . -}}
-{{- $meta := (index $categoryTools $name) | default dict -}}
+{{- $meta := (index $categoryPackages $name) | default dict -}}
 {{- $packages := (index $meta "packages") | default dict -}}
 {{- $pkg := (index $packages "nix") | default "" -}}
 {{- if $pkg -}}

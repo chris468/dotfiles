@@ -71,22 +71,9 @@ function install_linux() {
   install_with_ansible "${categories[@]}"
 }
 
-function install_nerd_font() {
-  local -a categories=("$@")
-  local -a fonts=($(_read_packages nerdfonts.txt "${categories[@]}"))
-  [[ -n "${fonts[*]}" ]] || return 0
-
-  echo
-  echo "Installing nerd fonts for ${categories[*]}..."
-  for font in "${fonts[@]}"; do
-    oh-my-posh font install "$font"
-  done
-}
-
 declare -ar ORDER=(essential container kubernetes aws azure)
 ALL=
 ANY=
-FONTS=1
 for category in "${ORDER[@]}"; do
   declare "category_$category"
 done
@@ -96,11 +83,6 @@ while [[ $# -gt 0 ]]; do
   --all)
     ALL=1
     break
-    ;;
-
-  --no-fonts)
-    FONTS=
-    shift
     ;;
 
   --*)
@@ -135,4 +117,3 @@ for category in "${ORDER[@]}"; do
 done
 
 "install_$OS" "${INSTALL_CATEGORIES[@]}"
-[[ -z "$FONTS" ]] || install_nerd_font "${INSTALL_CATEGORIES[@]}"

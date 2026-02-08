@@ -56,7 +56,7 @@
         os_packages: >-
           {%- set pkgs = [] -%}
           {%- for cat in categories_list -%}
-          {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
+          {%-   set cat_tools = tools_data.tools.get(cat, {}).get('packages', {}) -%}
           {%-   for name, meta in cat_tools.items() -%}
           {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
           {%-     set preferred_manager = '' -%}
@@ -91,7 +91,7 @@
         nix_packages: >-
           {%- set pkgs = [] -%}
           {%- for cat in categories_list -%}
-          {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
+          {%-   set cat_tools = tools_data.tools.get(cat, {}).get('packages', {}) -%}
           {%-   for name, meta in cat_tools.items() -%}
           {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
           {%-     set preferred_manager = '' -%}
@@ -122,6 +122,22 @@
           {%-   endfor -%}
           {%- endfor -%}
           {{ pkgs | unique | sort }}
+        nerdfonts_list: >-
+          {%- set fonts = [] -%}
+          {%- for cat in categories_list -%}
+          {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
+          {%-   set cat_fonts = cat_tools.get('nerdfonts', []) -%}
+          {%-   if cat_fonts -%}
+          {%-     if cat_fonts is string -%}
+          {%-       set _ = fonts.append(cat_fonts) -%}
+          {%-     else -%}
+          {%-       for f in cat_fonts -%}
+          {%-         set _ = fonts.append(f) -%}
+          {%-       endfor -%}
+          {%-     endif -%}
+          {%-   endif -%}
+          {%- endfor -%}
+          {{ fonts | unique | sort }}
 
 
     - name: Install OS packages (macOS)
@@ -296,3 +312,13 @@
         - hm_command.rc != 0
       environment:
         PATH: "{{ nix_path }}"
+
+    - name: Install Nerd Fonts via oh-my-posh
+      block: 
+        - ansible.builtin.command: env
+        - ansible.builtin.command: "oh-my-posh font install --headless {{ item }}"
+          loop: "{{ nerdfonts_list }}"
+      when:
+        - nerdfonts_list | length > 0
+      environment:
+        PATH: "{{ (use_nix | bool) | ternary(nix_path, ansible_facts['env']['PATH']) }}"
