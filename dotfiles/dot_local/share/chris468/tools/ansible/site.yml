@@ -3,8 +3,6 @@
   hosts: localhost
   connection: local
   gather_facts: true
-  environment:
-    PATH: "{{ lookup('env','HOME') }}/.nix-profile/bin:/nix/var/nix/profiles/default/bin:{{ lookup('env','PATH') }}"
 
   vars:
     tools_file: >-
@@ -26,13 +24,6 @@
         file: "{{ tools_file }}"
         name: tools_data
 
-    - name: Check for nix
-      ansible.builtin.command: command -v nix
-      register: nix_command
-      changed_when: false
-      failed_when: false
-      when: use_nix | bool
-
     - name: Compute platform keys
       ansible.builtin.set_fact:
         os_key: >-
@@ -50,49 +41,14 @@
             else 'default'
           }}
 
-    - name: Fetch nix tags from GitHub
-      ansible.builtin.uri:
-        url: https://api.github.com/repos/NixOS/nix/tags
-        return_content: true
-      register: nix_github_tags
-      when:
-        - use_nix | bool
-        - nix_command.rc != 0
-        - os_key == 'linux'
-        - ansible_facts['os_family'] == 'Debian'
-
-    - name: Set nix version from GitHub
+    - name: Set nix PATH
       ansible.builtin.set_fact:
-        nix_version: >-
+        nix_path: >-
           {{
-            (nix_github_tags.json | default([]) | first | default({})).name
-            | default('')
+            ansible_facts['env']['HOME'] + '/.nix-profile/bin' +
+            ':/nix/var/nix/profiles/default/bin:' +
+            ansible_facts['env']['PATH']
           }}
-      when:
-        - use_nix | bool
-        - nix_command.rc != 0
-        - os_key == 'linux'
-        - ansible_facts['os_family'] == 'Debian'
-
-    - name: Fail if nix version could not be determined
-      ansible.builtin.fail:
-        msg: "Failed to determine latest nix version."
-      when:
-        - use_nix | bool
-        - nix_command.rc != 0
-        - os_key == 'linux'
-        - ansible_facts['os_family'] == 'Debian'
-        - nix_version | length == 0
-
-    - name: Note nix installer URLs
-      ansible.builtin.set_fact:
-        nix_install_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install"
-        nix_install_checksum_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install.sha256"
-      when:
-        - use_nix | bool
-        - nix_command.rc != 0
-        - os_key == 'linux'
-        - ansible_facts['os_family'] == 'Debian'
 
 
     - name: Build package lists
@@ -186,6 +142,59 @@
         - os_key == 'linux'
         - os_packages | length > 0
 
+    - name: Check for nix
+      ansible.builtin.shell: command -v nix
+      register: nix_command
+      changed_when: false
+      failed_when: false
+      when: use_nix | bool
+      environment:
+        PATH: "{{ nix_path }}"
+
+    - name: Fetch nix tags from GitHub
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/NixOS/nix/tags
+        return_content: true
+      register: nix_github_tags
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_facts['os_family'] == 'Debian'
+
+    - name: Set nix version from GitHub
+      ansible.builtin.set_fact:
+        nix_version: >-
+          {{
+            (nix_github_tags.json | default([]) | first | default({})).name
+            | default('')
+          }}
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_facts['os_family'] == 'Debian'
+
+    - name: Fail if nix version could not be determined
+      ansible.builtin.fail:
+        msg: "Failed to determine latest nix version."
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_facts['os_family'] == 'Debian'
+        - nix_version | length == 0
+
+    - name: Note nix installer URLs
+      ansible.builtin.set_fact:
+        nix_install_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install"
+        nix_install_checksum_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install.sha256"
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - os_key == 'linux'
+        - ansible_facts['os_family'] == 'Debian'
+
     - name: Install nix (daemon, verified)
       block:
         - name: Create temp dir for nix installer
@@ -225,6 +234,8 @@
         "let lib = import <nixpkgs/lib>;
          tools = ((import {{ ansible_facts['user_dir'] }}/.config/home-manager/tools.nix) {}).tiers or {};
          in (builtins.concatStringsSep \" \" (builtins.attrNames (lib.filterAttrs(name: value: value.enable) tools)))"
+      environment:
+        PATH: "{{ nix_path }}"
       register: hm_enabled
       changed_when: false
       failed_when: false
@@ -258,13 +269,15 @@
         - nix_packages | length > 0
 
     - name: Check for home-manager
-      ansible.builtin.command: command -v home-manager
+      ansible.builtin.shell: command -v home-manager
       register: hm_command
       changed_when: false
       failed_when: false
       when:
         - use_nix | bool
         - nix_packages | length > 0
+      environment:
+        PATH: "{{ nix_path }}"
 
     - name: Run home-manager switch
       ansible.builtin.command: home-manager switch
@@ -272,6 +285,8 @@
         - use_nix | bool
         - nix_packages | length > 0
         - hm_command.rc == 0
+      environment:
+        PATH: "{{ nix_path }}"
 
     - name: Run home-manager via nix
       ansible.builtin.command: nix run home-manager/release-25.05 -- switch
@@ -279,3 +294,5 @@
         - use_nix | bool
         - nix_packages | length > 0
         - hm_command.rc != 0
+      environment:
+        PATH: "{{ nix_path }}"
