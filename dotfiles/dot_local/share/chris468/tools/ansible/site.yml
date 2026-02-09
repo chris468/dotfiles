@@ -55,86 +55,43 @@
       ansible.builtin.set_fact:
         os_packages: >-
           {%- set pkgs = [] -%}
-          {%- for cat in categories_list -%}
-          {%-   set cat_tools = tools_data.tools.get(cat, {}).get('packages', {}) -%}
-          {%-   for name, meta in cat_tools.items() -%}
-          {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
-          {%-     set preferred_manager = '' -%}
-          {%-     if os_key == 'linux' and prefer is mapping -%}
-          {%-       if ansible_facts['os_family'] == 'Debian' -%}
-          {%-         set preferred_manager = prefer.get('debian', '') -%}
-          {%-       elif ansible_facts['distribution'] in ['Archlinux', 'Arch Linux', 'Manjaro'] -%}
-          {%-         set preferred_manager = prefer.get('arch', '') -%}
-          {%-       else -%}
-          {%-         set preferred_manager = prefer.get('default', '') -%}
-          {%-       endif -%}
-          {%-     elif prefer is string -%}
-          {%-       set preferred_manager = prefer -%}
-          {%-     endif -%}
-          {%-     if preferred_manager != 'nix' -%}
-          {%-       set os_pkgs = meta.get('packages', {}).get('os', {}) -%}
-          {%-       if os_key == 'windows' -%}
-          {%-         set pkg = os_pkgs.get('windows', '') -%}
-          {%-       elif os_key == 'macos' -%}
-          {%-         set pkg = os_pkgs.get('macos', '') -%}
-          {%-       else -%}
-          {%-         set linux_pkgs = os_pkgs.get('linux', {}) -%}
-          {%-         set pkg = linux_pkgs.get(linux_pkg_key, linux_pkgs.get('default', '')) -%}
-          {%-       endif -%}
-          {%-       if pkg -%}
-          {%-         set _ = pkgs.append(pkg) -%}
-          {%-       endif -%}
+          {%- for category in categories_list -%}
+          {%-   set category_packages = tools_data.tools.get(category, {}).get('packages', []) -%}
+          {%-   for item in category_packages -%}
+          {%-     set name = item.get('name', '') -%}
+          {%-     set manager = item.get('manager', 'os') -%}
+          {%-     if name and manager == 'os' -%}
+          {%-       set _ = pkgs.append(name) -%}
           {%-     endif -%}
           {%-   endfor -%}
           {%- endfor -%}
           {{ pkgs | unique | sort }}
         nix_packages: >-
           {%- set pkgs = [] -%}
-          {%- for cat in categories_list -%}
-          {%-   set cat_tools = tools_data.tools.get(cat, {}).get('packages', {}) -%}
-          {%-   for name, meta in cat_tools.items() -%}
-          {%-     set prefer = meta.get('prefer', {}).get(os_key, {}) -%}
-          {%-     set preferred_manager = '' -%}
-          {%-     if os_key == 'linux' and prefer is mapping -%}
-          {%-       if ansible_facts['os_family'] == 'Debian' -%}
-          {%-         set preferred_manager = prefer.get('debian', '') -%}
-          {%-       elif ansible_facts['distribution'] in ['Archlinux', 'Arch Linux', 'Manjaro'] -%}
-          {%-         set preferred_manager = prefer.get('arch', '') -%}
-          {%-       else -%}
-          {%-         set preferred_manager = prefer.get('default', '') -%}
-          {%-       endif -%}
-          {%-     elif prefer is string -%}
-          {%-       set preferred_manager = prefer -%}
-          {%-     endif -%}
-          {%-     set os_pkgs = meta.get('packages', {}).get('os', {}) -%}
-          {%-     if os_key == 'windows' -%}
-          {%-       set os_pkg = os_pkgs.get('windows', '') -%}
-          {%-     elif os_key == 'macos' -%}
-          {%-       set os_pkg = os_pkgs.get('macos', '') -%}
-          {%-     else -%}
-          {%-       set linux_pkgs = os_pkgs.get('linux', {}) -%}
-          {%-       set os_pkg = linux_pkgs.get(linux_pkg_key, linux_pkgs.get('default', '')) -%}
-          {%-     endif -%}
-          {%-     set nix_pkg = meta.get('packages', {}).get('nix', '') -%}
-          {%-     if nix_pkg and (preferred_manager == 'nix' or os_pkg == '') -%}
-          {%-       set _ = pkgs.append(nix_pkg) -%}
+          {%- for category in categories_list -%}
+          {%-   set category_packages = tools_data.tools.get(category, {}).get('packages', []) -%}
+          {%-   for item in category_packages -%}
+          {%-     set name = item.get('name', '') -%}
+          {%-     set manager = item.get('manager', 'os') -%}
+          {%-     if name and manager == 'nix' -%}
+          {%-       set _ = pkgs.append(name) -%}
           {%-     endif -%}
           {%-   endfor -%}
           {%- endfor -%}
           {{ pkgs | unique | sort }}
         nerdfonts_list: >-
           {%- set fonts = [] -%}
-          {%- for cat in categories_list -%}
-          {%-   set cat_tools = tools_data.tools.get(cat, {}) -%}
-          {%-   set cat_fonts = cat_tools.get('nerdfonts', []) -%}
-          {%-   if cat_fonts -%}
-          {%-     if cat_fonts is string -%}
-          {%-       set _ = fonts.append(cat_fonts) -%}
-          {%-     else -%}
-          {%-       for f in cat_fonts -%}
-          {%-         set _ = fonts.append(f) -%}
-          {%-       endfor -%}
-          {%-     endif -%}
+          {%- for category in categories_list -%}
+          {%-   set category_tools = tools_data.tools.get(category, {}) -%}
+          {%-   set category_fonts = category_tools.get('nerdfonts', []) -%}
+          {%-   if category_fonts -%}
+          {%-     for font in category_fonts -%}
+          {%-       if font is mapping and font.get('name', '') -%}
+          {%-         set _ = fonts.append(font.get('name')) -%}
+          {%-       elif font is string -%}
+          {%-         set _ = fonts.append(font) -%}
+          {%-       endif -%}
+          {%-     endfor -%}
           {%-   endif -%}
           {%- endfor -%}
           {{ fonts | unique | sort }}
@@ -267,8 +224,8 @@
         hm_tools_content: >-
           { ... }: {
             tiers = {
-          {%- for cat in (categories_list + (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list)) | unique | sort -%}
-              {{ cat }}.enable=true;
+          {%- for category in (categories_list + (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list)) | unique | sort -%}
+              {{ category }}.enable=true;
           {%- endfor -%}
             };
           }

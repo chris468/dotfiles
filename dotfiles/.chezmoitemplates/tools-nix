@@ -2,18 +2,16 @@
   config = lib.mkIf config.tiers.{{ .category }}.enable {
     home.packages = with pkgs; # packages
       [
-{{- $tools := .tools | default dict -}}
 {{- $category := (index . "category") | default "" -}}
+{{- $rendered := includeTemplate "dot_local/share/chris468/tools/tools.yaml.tmpl" . | fromYaml -}}
+{{- $tools := (index $rendered "tools") | default dict -}}
 {{- $categoryTools := (index $tools $category) | default dict -}}
-{{- $categoryPackages := (index $categoryTools "packages") | default dict -}}
-{{- $names := $categoryPackages | keys | sortAlpha -}}
-{{- range $names -}}
-{{- $name := . -}}
-{{- $meta := (index $categoryPackages $name) | default dict -}}
-{{- $packages := (index $meta "packages") | default dict -}}
-{{- $pkg := (index $packages "nix") | default "" -}}
-{{- if $pkg -}}
-{{- $pkg | nindent 8 }}
+{{- $categoryPackages := (index $categoryTools "packages") | default list -}}
+{{- range $categoryPackages -}}
+{{- $name := (index . "name") | default "" -}}
+{{- $manager := (index . "manager") | default "os" -}}
+{{- if and $name (eq $manager "nix") -}}
+{{- $name | nindent 8 }}
 {{- end -}}
 {{- end -}}
       ];

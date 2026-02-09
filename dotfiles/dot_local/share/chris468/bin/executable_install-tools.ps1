@@ -44,24 +44,28 @@ if (!(Test-Path $toolsYamlPath)) {
 $tools = Get-Content $toolsYamlPath -Raw | ConvertFrom-Yaml
 
 foreach ($category in $categories.ToLower()) {
-  $categoryTools = $tools.tools.$category.packages
+  $categoryTools = $tools.tools.$category
   if ($categoryTools) {
-    foreach ($tool in $categoryTools.PSObject.Properties.Value) {
-      if ($tool.packages.os.windows) {
-        $wingetPackageIds += $tool.packages.os.windows
-      }
-      if ($tool.psmodules.windows) {
-        $psModules += @($tool.psmodules.windows)
+    $categoryPackages = $categoryTools.packages
+    if ($categoryPackages) {
+      foreach ($tool in $categoryPackages) {
+        if ($tool.manager -eq "os" -and $tool.name) {
+          $wingetPackageIds += $tool.name
+        } elseif ($tool.manager -eq "psmodule" -and $tool.name) {
+          $psModules += $tool.name
+        }
       }
     }
   }
 
   $categoryNerdFonts = $tools.tools.$category.nerdfonts
   if ($categoryNerdFonts) {
-    if ($categoryNerdFonts -is [string]) {
-      $categoryNerdFonts = @($categoryNerdFonts)
+    foreach ($font in $categoryNerdFonts) {
+      $fontName = if ($font -is [string]) { $font } else { $font.name }
+      if ($fontName) {
+        $nerdFonts += $fontName
+      }
     }
-    $nerdFonts += $categoryNerdFonts
   }
 }
 
