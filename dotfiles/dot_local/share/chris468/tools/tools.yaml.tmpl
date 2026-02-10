@@ -1,8 +1,6 @@
 {{- $tools := .tools | default dict -}}
 {{- $os := .chezmoi.os | default "" -}}
 {{- $family := "" -}}
-{{- $contextManager := "os" -}}
-
 {{- if eq $os "linux" -}}
   {{- $osRelease := .chezmoi.osRelease | default dict -}}
   {{- $idLike := (index $osRelease "ID_LIKE") | default (index $osRelease "ID") | default "" -}}
@@ -45,6 +43,7 @@
   {{- range $packages -}}
     {{- $package := . | default dict -}}
     {{- $include := true -}}
+    {{- $resolvedManager := index $package "manager" | default "os" -}}
     {{- $resolvedSymlinks := index $package "symlinks" | default list -}}
     {{- $platforms := index $package "platforms" | default dict -}}
     {{- if $platforms -}}
@@ -59,6 +58,7 @@
         {{- $matchedManager := index $match "manager" | default "" -}}
         {{- if and $matchedOs (ne $matchedOs $os) -}}{{- $ok = false -}}{{- end -}}
         {{- if and $matchedFamily (ne $matchedFamily $family) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedManager (ne $matchedManager $resolvedManager) -}}{{- $ok = false -}}{{- end -}}
         {{- if $ok -}}{{- $matched = true -}}{{- end -}}
       {{- end -}}
       {{- if $exclude -}}
@@ -70,29 +70,23 @@
 
     {{- if $include -}}
       {{- $resolvedName := index $package "name" | default "" -}}
-      {{- $resolvedManager := index $package "manager" | default "os" -}}
       {{- $overrides := index $package "overrides" | default list -}}
-      {{- $overrideApplied := false -}}
       {{- range $overrides -}}
-        {{- if not $overrideApplied -}}
-          {{- $match := index . "match" | default dict -}}
-          {{- $ok := true -}}
-          {{- $matchedOs := index $match "os" | default "" -}}
-          {{- $matchedFamily := index $match "family" | default "" -}}
-          {{- $matchedManager := index $match "manager" | default "" -}}
-          {{- if and $matchedOs (ne $matchedOs $os) -}}{{- $ok = false -}}{{- end -}}
-          {{- if and $matchedFamily (ne $matchedFamily $family) -}}{{- $ok = false -}}{{- end -}}
-          {{- if and (not $matchedOs) (not $matchedFamily) $matchedManager (ne $matchedManager $contextManager) -}}
-            {{- $ok = false -}}
-          {{- end -}}
-          {{- if $ok -}}
-            {{- $nameOverride := index . "name" | default "" -}}
-            {{- $symlinksOverride := index . "symlinks" -}}
-            {{- if $nameOverride -}}{{- $resolvedName = $nameOverride -}}{{- end -}}
-            {{- if $symlinksOverride -}}{{- $resolvedSymlinks = $symlinksOverride -}}{{- end -}}
-            {{- if $matchedManager -}}{{- $resolvedManager = $matchedManager -}}{{- end -}}
-            {{- $overrideApplied = true -}}
-          {{- end -}}
+        {{- $match := index . "match" | default dict -}}
+        {{- $ok := true -}}
+        {{- $matchedOs := index $match "os" | default "" -}}
+        {{- $matchedFamily := index $match "family" | default "" -}}
+        {{- $matchedManager := index $match "manager" | default "" -}}
+        {{- if and $matchedOs (ne $matchedOs $os) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedFamily (ne $matchedFamily $family) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedManager (ne $matchedManager $resolvedManager) -}}{{- $ok = false -}}{{- end -}}
+        {{- if $ok -}}
+          {{- $nameOverride := index . "name" | default "" -}}
+          {{- $managerOverride := index . "manager" | default "" -}}
+          {{- $symlinksOverride := index . "symlinks" -}}
+          {{- if $nameOverride -}}{{- $resolvedName = $nameOverride -}}{{- end -}}
+          {{- if $managerOverride -}}{{- $resolvedManager = $managerOverride -}}{{- end -}}
+          {{- if $symlinksOverride -}}{{- $resolvedSymlinks = $symlinksOverride -}}{{- end -}}
         {{- end -}}
       {{- end -}}
 

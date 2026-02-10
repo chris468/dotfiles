@@ -49,9 +49,10 @@ foreach ($category in $categories.ToLower()) {
     $categoryPackages = $categoryTools.packages
     if ($categoryPackages) {
       foreach ($tool in $categoryPackages) {
-        if ($tool.manager -eq "os" -and $tool.name) {
+        $manager = if ($tool.manager) { $tool.manager } else { "os" }
+        if ($manager -eq "os" -and $tool.name) {
           $wingetPackageIds += $tool.name
-        } elseif ($tool.manager -eq "psmodule" -and $tool.name) {
+        } elseif ($manager -eq "psmodule" -and $tool.name) {
           $psModules += $tool.name
         }
       }

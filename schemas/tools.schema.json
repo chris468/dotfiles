@@ -4,7 +4,9 @@
   "title": "Chezmoi Tools Schema",
   "type": "object",
   "additionalProperties": false,
-  "required": ["tools"],
+  "required": [
+    "tools"
+  ],
   "properties": {
     "tools": {
       "type": "object",
@@ -17,15 +19,22 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["name"],
+              "required": [
+                "name"
+              ],
               "properties": {
-                "name": {"type": "string", "minLength": 1}
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                }
               }
             }
           },
           "packages": {
             "type": "array",
-            "items": {"$ref": "#/$defs/package"}
+            "items": {
+              "$ref": "#/$defs/package"
+            }
           }
         }
       }
@@ -36,68 +45,145 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "os": {"type": "string", "enum": ["linux", "darwin", "windows"]},
-        "family": {"type": "string", "enum": ["debian", "redhat", "arch", "suse"]},
-        "manager": {"type": "string", "enum": ["os", "nix", "psmodule"]}
+        "os": {
+          "type": "string",
+          "enum": [
+            "linux",
+            "darwin",
+            "windows"
+          ]
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "debian",
+            "redhat",
+            "arch",
+            "suse"
+          ]
+        },
+        "manager": {
+          "type": "string",
+          "enum": [
+            "os",
+            "nix",
+            "psmodule"
+          ]
+        }
       }
     },
     "matchWrapper": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["match"],
+      "required": [
+        "match"
+      ],
       "properties": {
-        "match": {"$ref": "#/$defs/match"}
+        "match": {
+          "$ref": "#/$defs/match"
+        }
       }
     },
     "platforms": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "exclude": {"type": "boolean", "default": false},
+        "exclude": {
+          "type": "boolean",
+          "default": false
+        },
         "matches": {
           "type": "array",
-          "items": {"$ref": "#/$defs/matchWrapper"}
+          "items": {
+            "$ref": "#/$defs/matchWrapper"
+          }
         }
       },
-      "required": ["matches"]
+      "required": [
+        "matches"
+      ]
     },
     "override": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["match"],
+      "required": [
+        "match"
+      ],
       "properties": {
-        "match": {"$ref": "#/$defs/match"},
-        "name": {"type": "string", "minLength": 1},
+        "match": {
+          "$ref": "#/$defs/match"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
         "symlinks": {
           "type": "array",
-          "items": {"$ref": "#/$defs/symlinkEntry"}
+          "items": {
+            "$ref": "#/$defs/symlinkEntry"
+          }
+        },
+        "manager": {
+          "type": "string",
+          "enum": [
+            "os",
+            "nix",
+            "psmodule"
+          ]
         }
       }
     },
     "symlinkEntry": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source", "target"],
+      "required": [
+        "source",
+        "target"
+      ],
       "properties": {
-        "source": {"type": "string", "minLength": 1},
-        "target": {"type": "string", "minLength": 1}
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "package": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
-        "name": {"type": "string", "minLength": 1},
-        "manager": {"type": "string", "enum": ["os", "nix", "psmodule"]},
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manager": {
+          "type": "string",
+          "enum": [
+            "os",
+            "nix",
+            "psmodule"
+          ]
+        },
         "symlinks": {
           "type": "array",
-          "items": {"$ref": "#/$defs/symlinkEntry"}
+          "items": {
+            "$ref": "#/$defs/symlinkEntry"
+          }
         },
-        "platforms": {"$ref": "#/$defs/platforms"},
+        "platforms": {
+          "$ref": "#/$defs/platforms"
+        },
         "overrides": {
           "type": "array",
-          "items": {"$ref": "#/$defs/override"}
+          "items": {
+            "$ref": "#/$defs/override"
+          }
         }
       }
     }

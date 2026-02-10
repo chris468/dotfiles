@@ -21,6 +21,9 @@ tools:
       - match:
           os: windows
         name: rsteube.Carapace
+      - match:
+          os: linux
+        manager: nix
 
     - name: chezmoi
       overrides:
@@ -70,6 +73,10 @@ tools:
           os: windows
         name: dandavison.delta
       - match:
+          os: linux
+          family: debian
+        manager: nix
+      - match:
           manager: nix
         name: delta
 
@@ -107,8 +114,7 @@ tools:
       - match:
           os: linux
           family: debian
-          manager: nix
-        name: neovim
+        manager: nix
 
     - name: nodejs
       overrides:
@@ -116,6 +122,10 @@ tools:
           os: linux
           family: arch
         name: nodejs-lts
+      - match:
+          os: linux
+          family: debian
+        manager: nix
       - match:
           os: darwin
         name: node@24
@@ -128,6 +138,9 @@ tools:
       - match:
           os: windows
         name: JanDeDobbeleer.OhMyPosh
+      - match:
+          os: linux
+        manager: nix
 
     - name: python3
       overrides:
@@ -149,12 +162,6 @@ tools:
         name: BurntSushi.ripgrep.MSVC
 
     - name: step
-      platforms:
-        matches:
-        - match:
-            os: darwin
-        - match:
-            os: windows
       overrides:
       - match:
           os: windows

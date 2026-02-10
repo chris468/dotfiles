@@ -60,6 +60,9 @@
           {%-   for item in category_packages -%}
           {%-     set name = item.get('name', '') -%}
           {%-     set manager = item.get('manager', 'os') -%}
+          {%-     if not manager -%}
+          {%-       set manager = 'os' -%}
+          {%-     endif -%}
           {%-     if name and manager == 'os' -%}
           {%-       set _ = pkgs.append(name) -%}
           {%-     endif -%}
@@ -73,6 +76,9 @@
           {%-   for item in category_packages -%}
           {%-     set name = item.get('name', '') -%}
           {%-     set manager = item.get('manager', 'os') -%}
+          {%-     if not manager -%}
+          {%-       set manager = 'os' -%}
+          {%-     endif -%}
           {%-     if name and manager == 'nix' -%}
           {%-       set _ = pkgs.append(name) -%}
           {%-     endif -%}
