@@ -95,6 +95,22 @@
           {%-   endif -%}
           {%- endfor -%}
           {{ fonts | unique | sort }}
+        symlink_items: >-
+          {%- set links = [] -%}
+          {%- for category in categories_list -%}
+          {%-   set category_packages = tools_data.tools.get(category, {}).get('packages', []) -%}
+          {%-   for item in category_packages -%}
+          {%-     set symlinks = item.get('symlinks', []) -%}
+          {%-     if symlinks -%}
+          {%-       for link in symlinks -%}
+          {%-         if link is mapping and link.get('source', '') and link.get('target', '') -%}
+          {%-           set _ = links.append({'source': link.get('source'), 'target': link.get('target')}) -%}
+          {%-         endif -%}
+          {%-       endfor -%}
+          {%-     endif -%}
+          {%-   endfor -%}
+          {%- endfor -%}
+          {{ links }}
 
 
     - name: Install OS packages (macOS)
@@ -279,3 +295,16 @@
         - nerdfonts_list | length > 0
       environment:
         PATH: "{{ (use_nix | bool) | ternary(nix_path, ansible_facts['env']['PATH']) }}"
+
+    - name: Create symlinks (Linux/macOS)
+      ansible.builtin.file:
+        src: "{{ item.source }}"
+        dest: "{{ item.target }}"
+        state: link
+      loop: "{{ symlink_items }}"
+      loop_control:
+        label: "{{ item.source }} -> {{ item.target }}"
+      become: "{{ (item.target | default('')) is match('^/(usr(/|$)|opt(/|$))') }}"
+      when:
+        - os_key in ['linux', 'macos']
+        - symlink_items | length > 0

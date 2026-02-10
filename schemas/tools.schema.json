@@ -67,7 +67,20 @@
       "required": ["match"],
       "properties": {
         "match": {"$ref": "#/$defs/match"},
-        "name": {"type": "string", "minLength": 1}
+        "name": {"type": "string", "minLength": 1},
+        "symlinks": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/symlinkEntry"}
+        }
+      }
+    },
+    "symlinkEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "target"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "minLength": 1}
       }
     },
     "package": {
@@ -77,6 +90,10 @@
       "properties": {
         "name": {"type": "string", "minLength": 1},
         "manager": {"type": "string", "enum": ["os", "nix", "psmodule"]},
+        "symlinks": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/symlinkEntry"}
+        },
         "platforms": {"$ref": "#/$defs/platforms"},
         "overrides": {
           "type": "array",

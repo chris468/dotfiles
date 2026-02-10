@@ -45,6 +45,7 @@
   {{- range $packages -}}
     {{- $package := . | default dict -}}
     {{- $include := true -}}
+    {{- $resolvedSymlinks := index $package "symlinks" | default list -}}
     {{- $platforms := index $package "platforms" | default dict -}}
     {{- if $platforms -}}
       {{- $exclude := index $platforms "exclude" | default false -}}
@@ -86,7 +87,9 @@
           {{- end -}}
           {{- if $ok -}}
             {{- $nameOverride := index . "name" | default "" -}}
+            {{- $symlinksOverride := index . "symlinks" -}}
             {{- if $nameOverride -}}{{- $resolvedName = $nameOverride -}}{{- end -}}
+            {{- if $symlinksOverride -}}{{- $resolvedSymlinks = $symlinksOverride -}}{{- end -}}
             {{- if $matchedManager -}}{{- $resolvedManager = $matchedManager -}}{{- end -}}
             {{- $overrideApplied = true -}}
           {{- end -}}
@@ -94,7 +97,11 @@
       {{- end -}}
 
       {{- if $resolvedName -}}
-        {{- $packagesOutput = append $packagesOutput (dict "name" $resolvedName "manager" $resolvedManager) -}}
+        {{- if and $resolvedSymlinks (or (eq $os "linux") (eq $os "darwin")) -}}
+          {{- $packagesOutput = append $packagesOutput (dict "name" $resolvedName "manager" $resolvedManager "symlinks" $resolvedSymlinks) -}}
+        {{- else -}}
+          {{- $packagesOutput = append $packagesOutput (dict "name" $resolvedName "manager" $resolvedManager) -}}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}

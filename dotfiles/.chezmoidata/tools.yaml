@@ -41,6 +41,9 @@ tools:
           family: debian
           manager: os
         name: fd-find
+        symlinks:
+          - source: /usr/bin/fdfind
+            target: /usr/local/bin/fd
       - match:
           os: windows
         name: sharkdp.fd
