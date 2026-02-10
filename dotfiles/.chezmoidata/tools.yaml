@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=/home/chris/.local/share/chezmoi/schemas/tools.schema.json
+# yaml-language-server: $schema=../../schemas/tools.schema.json
 tools:
   essential:
     nerdfonts:
