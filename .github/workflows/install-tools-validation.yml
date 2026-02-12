@@ -1,0 +1,49 @@
+name: Install Tools Validation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  linux-incus:
+    name: Linux Incus (${{ matrix.distro }})
+    runs-on: [self-hosted, linux, incus]
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [debian, ubuntu, fedora, arch, tumbleweed]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Task
+        uses: arduino/setup-task@v2
+
+      - name: Run validation
+        run: task test:incus:${{ matrix.distro }}
+
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Task
+        uses: arduino/setup-task@v2
+
+      - name: Run validation
+        run: task test:mac
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Task
+        uses: arduino/setup-task@v2
+
+      - name: Run validation
+        shell: pwsh
+        run: task test:win

@@ -1,0 +1,122 @@
+version: '3'
+
+vars:
+  TEST_ROOT: '{{.TASKFILE_DIR}}'
+  TESTS_DIR: '{{.TASKFILE_DIR}}/tests'
+
+silent: false
+
+tasks:
+  test:incus:debian:
+    desc: Run install-tools test in Debian Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:debian/12/cloud
+          DISTRO: debian
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:incus:ubuntu:
+    desc: Run install-tools test in Ubuntu Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:ubuntu/24.04/cloud
+          DISTRO: ubuntu
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:incus:fedora:
+    desc: Run install-tools test in Fedora Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:fedora/41/cloud
+          DISTRO: fedora
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:incus:arch:
+    desc: Run install-tools test in Arch Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:archlinux/current/cloud
+          DISTRO: arch
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:incus:tumbleweed:
+    desc: Run install-tools test in openSUSE Tumbleweed Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:opensuse/tumbleweed/cloud
+          DISTRO: tumbleweed
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:mac:
+    desc: Run macOS install-tools test
+    cmds:
+      - |
+        set -euo pipefail
+        "{{.TESTS_DIR}}/test-install-tools.sh"
+
+  test:win:
+    desc: Run Windows install-tools test
+    cmds:
+      - pwsh -NoLogo -NoProfile -File "{{.TESTS_DIR}}/test-install-tools.ps1"
+
+  _test:incus:
+    internal: true
+    requires:
+      vars: [IMAGE, DISTRO]
+    cmds:
+      - |
+        set -euo pipefail
+
+        if ! command -v incus >/dev/null 2>&1; then
+          echo "incus is required for Linux VM tests" >&2
+          exit 1
+        fi
+
+        vm_name="dotfiles-test-{{.DISTRO}}-$(date +%s)"
+        cleanup() {
+          incus delete -f "$vm_name" >/dev/null 2>&1 || true
+        }
+        trap cleanup EXIT
+
+        incus launch "{{.IMAGE}}" "$vm_name"
+
+        incus exec "$vm_name" -- bash -lc '
+          set -euo pipefail
+
+          if command -v apt-get >/dev/null 2>&1; then
+            apt-get update
+            DEBIAN_FRONTEND=noninteractive apt-get install -y curl git python3 python3-pip python3-venv pipx sudo ca-certificates
+          elif command -v dnf >/dev/null 2>&1; then
+            dnf -y install curl git python3 python3-pip pipx sudo ca-certificates shadow-utils
+          elif command -v pacman >/dev/null 2>&1; then
+            pacman -Sy --noconfirm curl git python python-pip sudo ca-certificates
+            python -m pip install --break-system-packages pipx
+          elif command -v zypper >/dev/null 2>&1; then
+            zypper --non-interactive install -y curl git python3 python3-pip sudo ca-certificates shadow
+            python3 -m pip install --break-system-packages pipx
+          else
+            echo "Unsupported package manager in VM" >&2
+            exit 1
+          fi
+
+          useradd --create-home --shell /bin/bash ci || true
+          usermod -aG sudo ci || true
+          echo "ci ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/ci
+          chmod 0440 /etc/sudoers.d/ci
+        '
+
+        incus exec "$vm_name" -- mkdir -p /home/ci/workspace
+        tar -C "{{.TEST_ROOT}}" -cf - . | incus exec "$vm_name" -- tar -C /home/ci/workspace -xf -
+        incus exec "$vm_name" -- chown -R ci:ci /home/ci/workspace
+
+        incus exec "$vm_name" -- sudo -u ci bash -lc '
+          set -euo pipefail
+          export GITHUB_WORKSPACE=/home/ci/workspace
+          cd /home/ci/workspace
+          ./tests/test-install-tools.sh {{.INSTALL_TOOLS_ARGS}}
+        '
