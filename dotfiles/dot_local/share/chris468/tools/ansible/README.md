@@ -12,5 +12,6 @@ Example:
 ```
 ansible-playbook site.yml -K -e "categories=['essential','kubernetes']"
 ansible-playbook site.yml -K -e "use_nix=true"
+ansible-playbook site.yml -K -e "use_nix=true nix_install_mode=single"
 ansible-playbook site.yml -K -e "tools_file=/path/to/.chezmoidata/tools.yaml"
 ```

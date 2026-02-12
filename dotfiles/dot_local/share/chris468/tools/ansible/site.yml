@@ -13,6 +13,7 @@
     categories:
       - essential
     use_nix: false
+    nix_install_mode: daemon
 
   tasks:
     - name: Normalize categories list
@@ -49,6 +50,14 @@
             ':/nix/var/nix/profiles/default/bin:' +
             ansible_facts['env']['PATH']
           }}
+        nix_install_mode_normalized: "{{ nix_install_mode | string | lower }}"
+
+    - name: Validate nix install mode
+      ansible.builtin.fail:
+        msg: "nix_install_mode must be either 'daemon' or 'single'."
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized not in ['daemon', 'single']
 
 
     - name: Build package lists
@@ -190,7 +199,7 @@
         - os_key == 'linux'
         - ansible_facts['os_family'] == 'Debian'
 
-    - name: Install nix (daemon, verified)
+    - name: Install nix (verified)
       block:
         - name: Create temp dir for nix installer
           ansible.builtin.tempfile:
@@ -205,18 +214,41 @@
             mode: "0755"
             checksum: "sha256:{{ nix_install_checksum_url }}"
 
-        - name: Run nix installer (daemon)
-          ansible.builtin.command: "{{ nix_tmp.path }}/install --daemon"
-          environment:
-            PATH: "/usr/sbin:/sbin:{{ ansible_facts['env']['PATH'] }}"
+        - name: Ensure user nix config directory exists
+          ansible.builtin.file:
+            path: "{{ ansible_facts['user_dir'] }}/.config/nix"
+            state: directory
+            mode: "0755"
+          when: nix_install_mode_normalized == 'single'
 
-        - name: Enable nix-command and flakes
+        - name: Run nix installer
+          ansible.builtin.command: >-
+            {{ nix_tmp.path }}/install
+            {{ '--no-daemon' if nix_install_mode_normalized == 'single' else '--daemon' }}
+          environment:
+            PATH: >-
+              {{
+                '/usr/sbin:/sbin:' + ansible_facts['env']['PATH']
+                if nix_install_mode_normalized == 'daemon'
+                else ansible_facts['env']['PATH']
+              }}
+
+        - name: Enable nix-command and flakes (daemon)
           ansible.builtin.copy:
             dest: /etc/nix/nix.conf
             content: |
               experimental-features = nix-command flakes
             mode: "0644"
-      become: true
+          when: nix_install_mode_normalized == 'daemon'
+
+        - name: Enable nix-command and flakes (single)
+          ansible.builtin.copy:
+            dest: "{{ ansible_facts['user_dir'] }}/.config/nix/nix.conf"
+            content: |
+              experimental-features = nix-command flakes
+            mode: "0644"
+          when: nix_install_mode_normalized == 'single'
+      become: "{{ nix_install_mode_normalized == 'daemon' }}"
       when:
         - use_nix | bool
         - nix_command.rc != 0

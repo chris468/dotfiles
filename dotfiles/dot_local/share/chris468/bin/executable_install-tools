@@ -58,8 +58,10 @@ function install_with_ansible() {
 
   if [[ "$OS" == "linux" ]]; then
     args+=("-e" "use_nix=true")
+    args+=("-e" "nix_install_mode=$NIX_INSTALL_MODE")
   fi
-  args+=("--ask-become-pass")
+  args+=("-e" "sudo_password_prompt=$([[ -n "$SUDO_PASSWORD_PROMPT" ]] && echo true || echo false)")
+  [[ -n "$SUDO_PASSWORD_PROMPT" ]] && args+=("--ask-become-pass")
 
   echo
   echo "Installing tools via ansible for ${categories[*]}..."
@@ -74,6 +76,8 @@ function install_linux() {
 declare -ar ORDER=(essential container kubernetes aws azure)
 ALL=
 ANY=
+NIX_INSTALL_MODE=daemon
+SUDO_PASSWORD_PROMPT=1
 for category in "${ORDER[@]}"; do
   declare "category_$category"
 done
@@ -82,7 +86,32 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
   --all)
     ALL=1
-    break
+    shift
+    continue
+    ;;
+
+  --nix-daemon)
+    NIX_INSTALL_MODE=daemon
+    shift
+    continue
+    ;;
+
+  --no-nix-daemon)
+    NIX_INSTALL_MODE=single
+    shift
+    continue
+    ;;
+
+  --sudo-password-prompt)
+    SUDO_PASSWORD_PROMPT=1
+    shift
+    continue
+    ;;
+
+  --no-sudo-password-prompt)
+    SUDO_PASSWORD_PROMPT=
+    shift
+    continue
     ;;
 
   --*)
@@ -107,7 +136,7 @@ done
 [[ -n "$ANY" ]] || category_essential=1
 
 # Force sudo to prompt for a password
-! command -v sudo >&/dev/null || sudo -k
+[[ -z "$SUDO_PASSWORD_PROMPT" ]] || ! command -v sudo >&/dev/null || sudo -k
 
 declare -a INSTALL_CATEGORIES=()
 for category in "${ORDER[@]}"; do
