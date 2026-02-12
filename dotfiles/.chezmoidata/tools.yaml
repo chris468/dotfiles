@@ -28,6 +28,11 @@ tools:
     - name: chezmoi
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+        name: fd-find
+      - match:
           os: windows
         name: twpayne.chezmoi
 
@@ -87,6 +92,10 @@ tools:
             os: linux
         - match:
             os: darwin
+      overrides:
+        - match:
+            os: linux
+          manager: nix
 
     - name: jq
       overrides:
@@ -172,6 +181,12 @@ tools:
       - match:
           os: windows
         name: wez.wezterm
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          family: redhat
+        manager: nix
 
     - name: yq
       overrides:
