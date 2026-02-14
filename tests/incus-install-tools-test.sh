@@ -66,6 +66,24 @@ install_prereqs() {
   '
 }
 
+wait_for_cloud_init() {
+  local target_vm="$1"
+  echo "[incus-test] waiting for cloud-init in VM: $target_vm"
+  for _ in $(seq 1 60); do
+    if incus exec "$target_vm" -- bash -lc '
+      set -euo pipefail
+      if command -v cloud-init >/dev/null 2>&1; then
+        cloud-init status --wait
+      fi
+    ' >/dev/null 2>&1; then
+      return
+    fi
+    sleep 2
+  done
+  echo "[incus-test] cloud-init did not complete in time for VM: $target_vm" >&2
+  exit 1
+}
+
 create_cached_vm() {
   for _ in $(seq 1 10); do
     vm_hash="$(tr -dc 'a-f0-9' </dev/urandom | head -c 4 || true)"
@@ -88,6 +106,7 @@ create_cached_vm() {
     -c user.dotfiles.test-suite=install-tools \
     -c user.dotfiles.test-distro="$DISTRO" \
     -c user.dotfiles.test-image="$IMAGE"
+  wait_for_cloud_init "$vm_name"
   echo "[incus-test] installing prerequisite packages"
   install_prereqs "$vm_name"
   echo "[incus-test] creating snapshot: $SNAPSHOT_NAME"
