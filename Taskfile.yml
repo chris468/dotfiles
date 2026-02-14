@@ -14,6 +14,7 @@ tasks:
         vars:
           IMAGE: images:debian/13/cloud
           DISTRO: debian
+          DISTRO_VERSION: "13"
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
   test:incus:ubuntu:
@@ -23,6 +24,7 @@ tasks:
         vars:
           IMAGE: images:ubuntu/24.04/cloud
           DISTRO: ubuntu
+          DISTRO_VERSION: "2404"
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
   test:incus:fedora:
@@ -32,6 +34,7 @@ tasks:
         vars:
           IMAGE: images:fedora/43/cloud
           DISTRO: fedora
+          DISTRO_VERSION: "43"
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
   test:incus:arch:
@@ -41,6 +44,7 @@ tasks:
         vars:
           IMAGE: images:archlinux/current/cloud
           DISTRO: arch
+          DISTRO_VERSION: ""
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
   test:incus:tumbleweed:
@@ -50,6 +54,7 @@ tasks:
         vars:
           IMAGE: images:opensuse/tumbleweed/cloud
           DISTRO: tumbleweed
+          DISTRO_VERSION: ""
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
   test:incus:reset:debian:
@@ -59,6 +64,7 @@ tasks:
         vars:
           IMAGE: images:debian/13/cloud
           DISTRO: debian
+          DISTRO_VERSION: "13"
 
   test:incus:reset:ubuntu:
     desc: Delete cached Ubuntu Incus VM used by install-tools tests
@@ -67,6 +73,7 @@ tasks:
         vars:
           IMAGE: images:ubuntu/24.04/cloud
           DISTRO: ubuntu
+          DISTRO_VERSION: "24_04"
 
   test:incus:reset:fedora:
     desc: Delete cached Fedora Incus VM used by install-tools tests
@@ -75,6 +82,7 @@ tasks:
         vars:
           IMAGE: images:fedora/43/cloud
           DISTRO: fedora
+          DISTRO_VERSION: "43"
 
   test:incus:reset:arch:
     desc: Delete cached Arch Incus VM used by install-tools tests
@@ -83,6 +91,7 @@ tasks:
         vars:
           IMAGE: images:archlinux/current/cloud
           DISTRO: arch
+          DISTRO_VERSION: ""
 
   test:incus:reset:tumbleweed:
     desc: Delete cached openSUSE Tumbleweed Incus VM used by install-tools tests
@@ -91,6 +100,7 @@ tasks:
         vars:
           IMAGE: images:opensuse/tumbleweed/cloud
           DISTRO: tumbleweed
+          DISTRO_VERSION: ""
 
   test:incus:reset:all:
     desc: Delete all cached Incus VMs used by install-tools tests
@@ -116,11 +126,11 @@ tasks:
     requires:
       vars: [IMAGE, DISTRO]
     cmds:
-      - DISTRO="{{.DISTRO}}" IMAGE="{{.IMAGE}}" INSTALL_TOOLS_ARGS="{{.INSTALL_TOOLS_ARGS}}" TEST_ROOT="{{.TEST_ROOT}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
+      - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" INSTALL_TOOLS_ARGS="{{.INSTALL_TOOLS_ARGS}}" TEST_ROOT="{{.TEST_ROOT}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
   _test:incus:reset:
     internal: true
     requires:
       vars: [IMAGE, DISTRO]
     cmds:
-      - DISTRO="{{.DISTRO}}" IMAGE="{{.IMAGE}}" "{{.TESTS_DIR}}/incus-reset-test-vm.sh"
+      - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" "{{.TESTS_DIR}}/incus-reset-test-vm.sh"

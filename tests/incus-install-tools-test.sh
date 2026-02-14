@@ -6,12 +6,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/incus-common.sh"
 
 DISTRO="${DISTRO:?DISTRO is required}"
+DISTRO_VERSION="${DISTRO_VERSION:-}"
 IMAGE="${IMAGE:?IMAGE is required}"
 INSTALL_TOOLS_ARGS="${INSTALL_TOOLS_ARGS:-}"
 TEST_ROOT="${TEST_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 
 SNAPSHOT_NAME="prereq-ready"
-VM_NAME_PREFIX="dotfiles-test-${DISTRO}"
+VM_NAME_PREFIX="dotfiles-${DISTRO}"
+if [[ -n "$DISTRO_VERSION" ]]; then
+  VM_NAME_PREFIX="${VM_NAME_PREFIX}-${DISTRO_VERSION}"
+fi
 VM_LOG_DIR="/home/ci/test-logs"
 VM_REPO_DIR="/home/ci/.local/share/chezmoi"
 
@@ -55,7 +59,19 @@ install_prereqs() {
 }
 
 if [[ "$match_count" -eq 0 ]]; then
-  vm_name="${VM_NAME_PREFIX}-$(date +%s)"
+  vm_name=""
+  for _ in $(seq 1 10); do
+    vm_hash="$(tr -dc 'a-f0-9' </dev/urandom | head -c 4)"
+    candidate_name="${VM_NAME_PREFIX}-${vm_hash}"
+    if ! incus info "$candidate_name" >/dev/null 2>&1; then
+      vm_name="$candidate_name"
+      break
+    fi
+  done
+  if [[ -z "$vm_name" ]]; then
+    echo "[incus-test] could not generate unique VM name for prefix: $VM_NAME_PREFIX" >&2
+    exit 1
+  fi
   echo "[incus-test] creating cached VM: $vm_name"
   incus launch "$IMAGE" "$vm_name" \
     -c user.dotfiles.test=true \
