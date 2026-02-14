@@ -81,7 +81,7 @@ try {
     throw "Missing expected tools file: $toolsFile"
   }
 
-  $installTools = Join-Path $localBin 'install-tools.ps1'
+  $installTools = Join-Path $env:XDG_DATA_HOME 'chris468/bin/install-tools.ps1'
   if (-not (Test-Path $installTools)) {
     throw "Missing install-tools.ps1 script: $installTools"
   }

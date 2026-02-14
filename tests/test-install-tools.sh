@@ -81,7 +81,7 @@ if [[ ! -f "$tools_file" ]]; then
   exit 1
 fi
 
-install_tools="$HOME/.local/bin/install-tools"
+install_tools="$XDG_DATA_HOME/chris468/bin/install-tools"
 if [[ ! -x "$install_tools" ]]; then
   echo "Missing install-tools script: $install_tools" >&2
   exit 1
