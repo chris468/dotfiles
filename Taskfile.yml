@@ -114,9 +114,25 @@ tasks:
         tar -C "{{.TEST_ROOT}}" -cf - . | incus exec "$vm_name" -- tar -C /home/ci/workspace -xf -
         incus exec "$vm_name" -- chown -R ci:ci /home/ci/workspace
 
+        vm_log_dir="/home/ci/test-logs"
+        host_log_dir="{{.TEST_ROOT}}/.test-logs/incus/$vm_name"
+
+        set +e
         incus exec "$vm_name" -- sudo -u ci bash -lc '
           set -euo pipefail
           export GITHUB_WORKSPACE=/home/ci/workspace
           cd /home/ci/workspace
-          ./tests/test-install-tools.sh {{.INSTALL_TOOLS_ARGS}}
+          TEST_LOG_DIR='"$vm_log_dir"' ./tests/test-install-tools.sh {{.INSTALL_TOOLS_ARGS}}
         '
+        test_rc=$?
+        set -e
+
+        if [[ $test_rc -ne 0 ]]; then
+          mkdir -p "$host_log_dir"
+          if incus file pull -r "$vm_name$vm_log_dir" "$host_log_dir/" >/dev/null 2>&1; then
+            echo "Copied VM test logs to: $host_log_dir"
+          else
+            echo "Failed to copy VM logs from $vm_name:$vm_log_dir" >&2
+          fi
+          exit "$test_rc"
+        fi

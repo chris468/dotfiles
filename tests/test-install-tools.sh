@@ -2,8 +2,7 @@
 set -euo pipefail
 
 LOG_DIR="${TEST_LOG_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/install-tools.XXXXXX")}"
-TEST_HOME="${TEST_HOME:-$(mktemp -d "${TMPDIR:-/tmp}/install-tools-home.XXXXXX")}"
-mkdir -p "$LOG_DIR" "$TEST_HOME"
+mkdir -p "$LOG_DIR"
 
 cleanup() {
   local rc=$?
@@ -16,7 +15,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-export HOME="$TEST_HOME"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -89,4 +87,6 @@ if [[ ! -x "$install_tools" ]]; then
   exit 1
 fi
 
-"$install_tools" --all "$@" 2>&1 | tee "$LOG_DIR/install-tools.log"
+install_cmd=("$install_tools" --all "$@")
+printf -v install_cmd_quoted '%q ' "${install_cmd[@]}"
+bash -lc "$install_cmd_quoted" 2>&1 | tee "$LOG_DIR/install-tools.log"
