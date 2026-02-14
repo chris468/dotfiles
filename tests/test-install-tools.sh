@@ -64,10 +64,8 @@ install_chezmoi() {
   os="$(normalize_os)"
   local tarball="chezmoi_${version}_${os}_${arch}.tar.gz"
   local url="https://github.com/twpayne/chezmoi/releases/download/${tag}/${tarball}"
-  local tgz="$LOG_DIR/$tarball"
 
-  curl -fsSL "$url" -o "$tgz"
-  tar -xzf "$tgz" -C "$HOME/.local/bin" chezmoi
+  curl -fsSL "$url" | tar -xzf - -C "$HOME/.local/bin" chezmoi
   chmod +x "$HOME/.local/bin/chezmoi"
 }
 
