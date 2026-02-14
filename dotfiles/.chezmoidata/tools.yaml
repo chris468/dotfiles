@@ -31,13 +31,16 @@ tools:
           os: linux
           family: debian
         manager: nix
-        name: fd-find
       - match:
           os: windows
         name: twpayne.chezmoi
 
     - name: eza
       overrides:
+      - match:
+          os: linux
+          family: debian
+        manager: nix
       - match:
           os: windows
         name: eza-community.eza
@@ -106,6 +109,10 @@ tools:
     - name: lazygit
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+      - match:
           os: windows
         name: JesseDuffield.lazygit
 
@@ -173,6 +180,11 @@ tools:
     - name: step
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+        name: step-cli
+      - match:
           os: windows
         name: Smallstep.step
 
@@ -220,6 +232,7 @@ tools:
 
     - name: nix
       platforms:
+        exclude: true
         matches:
         - match:
             os: linux
@@ -275,6 +288,10 @@ tools:
     - name: lazydocker
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+      - match:
           os: windows
         name: JesseDuffield.Lazydocker
 
@@ -283,17 +300,29 @@ tools:
     - name: helm
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+      - match:
           os: windows
         name: Helm.Helm
 
     - name: k9s
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+      - match:
           os: windows
         name: Derailed.k9s
 
     - name: kubectl
       overrides:
+      - match:
+          os: linux
+          family: debian
+        manager: nix
       - match:
           os: windows
         name: Kubernetes.kubectl
@@ -309,6 +338,10 @@ tools:
     - name: eksctl
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+      - match:
           os: windows
         name: eksctl.eksctl
 
@@ -317,11 +350,20 @@ tools:
     - name: azure-cli
       overrides:
       - match:
+          os: linux
+          family: debian
+        manager: nix
+      - match:
           os: windows
         name: Microsoft.AzureCLI
 
     - name: azure-kubelogin
       overrides:
+      - match:
+          os: linux
+          family: debian
+        manager: nix
+        name: kubelogin
       - match:
           os: windows
         name: Microsoft.Azure.KubeLogin
