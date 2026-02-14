@@ -12,7 +12,7 @@ tasks:
     cmds:
       - task: _test:incus
         vars:
-          IMAGE: images:debian/12/cloud
+          IMAGE: images:debian/13/cloud
           DISTRO: debian
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
@@ -30,7 +30,7 @@ tasks:
     cmds:
       - task: _test:incus
         vars:
-          IMAGE: images:fedora/41/cloud
+          IMAGE: images:fedora/43/cloud
           DISTRO: fedora
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
@@ -57,7 +57,7 @@ tasks:
     cmds:
       - task: _test:incus:reset
         vars:
-          IMAGE: images:debian/12/cloud
+          IMAGE: images:debian/13/cloud
           DISTRO: debian
 
   test:incus:reset:ubuntu:
@@ -73,7 +73,7 @@ tasks:
     cmds:
       - task: _test:incus:reset
         vars:
-          IMAGE: images:fedora/41/cloud
+          IMAGE: images:fedora/43/cloud
           DISTRO: fedora
 
   test:incus:reset:arch:

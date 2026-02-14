@@ -1,9 +1,12 @@
 {{- $tools := .tools | default dict -}}
 {{- $os := .chezmoi.os | default "" -}}
 {{- $family := "" -}}
+{{- $distro := "" -}}
 {{- if eq $os "linux" -}}
   {{- $osRelease := .chezmoi.osRelease | default dict -}}
-  {{- $idLike := (index $osRelease "ID_LIKE") | default (index $osRelease "ID") | default "" -}}
+  {{- $osReleaseId := (index $osRelease "id") | default (index $osRelease "ID") | default "" -}}
+  {{- $distro = lower $osReleaseId -}}
+  {{- $idLike := (index $osRelease "idLike") | default (index $osRelease "ID_LIKE") | default $osReleaseId | default "" -}}
   {{- $idLike = lower $idLike -}}
   {{- if or (contains $idLike "debian") (contains $idLike "ubuntu") -}}
     {{- $family = "debian" -}}
@@ -55,9 +58,11 @@
         {{- $ok := true -}}
         {{- $matchedOs := index $match "os" | default "" -}}
         {{- $matchedFamily := index $match "family" | default "" -}}
+        {{- $matchedDistro := index $match "distro" | default "" -}}
         {{- $matchedManager := index $match "manager" | default "" -}}
         {{- if and $matchedOs (ne $matchedOs $os) -}}{{- $ok = false -}}{{- end -}}
         {{- if and $matchedFamily (ne $matchedFamily $family) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedDistro (ne $matchedDistro $distro) -}}{{- $ok = false -}}{{- end -}}
         {{- if and $matchedManager (ne $matchedManager $resolvedManager) -}}{{- $ok = false -}}{{- end -}}
         {{- if $ok -}}{{- $matched = true -}}{{- end -}}
       {{- end -}}
@@ -76,9 +81,11 @@
         {{- $ok := true -}}
         {{- $matchedOs := index $match "os" | default "" -}}
         {{- $matchedFamily := index $match "family" | default "" -}}
+        {{- $matchedDistro := index $match "distro" | default "" -}}
         {{- $matchedManager := index $match "manager" | default "" -}}
         {{- if and $matchedOs (ne $matchedOs $os) -}}{{- $ok = false -}}{{- end -}}
         {{- if and $matchedFamily (ne $matchedFamily $family) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedDistro (ne $matchedDistro $distro) -}}{{- $ok = false -}}{{- end -}}
         {{- if and $matchedManager (ne $matchedManager $resolvedManager) -}}{{- $ok = false -}}{{- end -}}
         {{- if $ok -}}
           {{- $nameOverride := index . "name" | default "" -}}
