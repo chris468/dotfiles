@@ -204,7 +204,6 @@ tasks:
         incus exec "$vm_name" -- chown -R ci:ci /home/ci/workspace /home/ci/test-logs
 
         vm_log_dir="/home/ci/test-logs"
-        host_log_dir="{{.TEST_ROOT}}/.test-logs/incus/$vm_name"
 
         set +e
         incus exec "$vm_name" -- sudo -u ci bash -lc '
@@ -217,12 +216,8 @@ tasks:
         set -e
 
         if [[ $test_rc -ne 0 ]]; then
-          mkdir -p "$host_log_dir"
-          if incus file pull -r "$vm_name$vm_log_dir" "$host_log_dir/" >/dev/null 2>&1; then
-            echo "Copied VM test logs to: $host_log_dir"
-          else
-            echo "Failed to copy VM logs from $vm_name:$vm_log_dir" >&2
-          fi
+          echo "Test failed in VM: $vm_name" >&2
+          echo "Inspect logs in VM path: $vm_log_dir" >&2
           exit "$test_rc"
         fi
 
