@@ -52,6 +52,55 @@ tasks:
           DISTRO: tumbleweed
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
+  test:incus:reset:debian:
+    desc: Delete cached Debian Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:debian/12/cloud
+          DISTRO: debian
+
+  test:incus:reset:ubuntu:
+    desc: Delete cached Ubuntu Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:ubuntu/24.04/cloud
+          DISTRO: ubuntu
+
+  test:incus:reset:fedora:
+    desc: Delete cached Fedora Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:fedora/41/cloud
+          DISTRO: fedora
+
+  test:incus:reset:arch:
+    desc: Delete cached Arch Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:archlinux/current/cloud
+          DISTRO: arch
+
+  test:incus:reset:tumbleweed:
+    desc: Delete cached openSUSE Tumbleweed Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:opensuse/tumbleweed/cloud
+          DISTRO: tumbleweed
+
+  test:incus:reset:all:
+    desc: Delete all cached Incus VMs used by install-tools tests
+    cmds:
+      - task: test:incus:reset:debian
+      - task: test:incus:reset:ubuntu
+      - task: test:incus:reset:fedora
+      - task: test:incus:reset:arch
+      - task: test:incus:reset:tumbleweed
+
   test:mac:
     desc: Run macOS install-tools test
     cmds:
@@ -77,15 +126,29 @@ tasks:
           exit 1
         fi
 
-        vm_name="dotfiles-test-{{.DISTRO}}-$(date +%s)"
-        cleanup() {
-          incus delete -f "$vm_name" >/dev/null 2>&1 || true
-        }
-        trap cleanup EXIT
+        snapshot_name="prereq-ready"
+        vm_name_prefix="dotfiles-test-{{.DISTRO}}"
+        vm_filter=(
+          "user.dotfiles.test-suite=install-tools"
+          "user.dotfiles.test-distro={{.DISTRO}}"
+          "user.dotfiles.test-image={{.IMAGE}}"
+        )
 
-        incus launch "{{.IMAGE}}" "$vm_name"
+        matching_vms="$(incus list -f csv -c n "${vm_filter[@]}" | sed "/^$/d")"
+        if [[ -n "$matching_vms" ]]; then
+          match_count="$(printf '%s\n' "$matching_vms" | wc -l | tr -d ' ')"
+        else
+          match_count=0
+        fi
+        if [[ $match_count -gt 1 ]]; then
+          echo "Multiple cached VMs match {{.DISTRO}}/{{.IMAGE}}. Refusing to continue:" >&2
+          printf '%s\n' "$matching_vms" | sed 's/^/  /' >&2
+          exit 1
+        fi
 
-        incus exec "$vm_name" -- bash -lc '
+        install_prereqs() {
+          local target_vm="$1"
+          incus exec "$target_vm" -- bash -lc '
           set -euo pipefail
 
           if command -v apt-get >/dev/null 2>&1; then
@@ -109,10 +172,36 @@ tasks:
           echo "ci ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/ci
           chmod 0440 /etc/sudoers.d/ci
         '
+        }
 
+        if [[ $match_count -eq 0 ]]; then
+          vm_name="$vm_name_prefix-$(date +%s)"
+          echo "Creating cached VM: $vm_name"
+          incus launch "{{.IMAGE}}" "$vm_name" \
+            -c user.dotfiles.test=true \
+            -c user.dotfiles.test-suite=install-tools \
+            -c user.dotfiles.test-distro="{{.DISTRO}}" \
+            -c user.dotfiles.test-image="{{.IMAGE}}"
+          install_prereqs "$vm_name"
+          incus snapshot create "$vm_name" "$snapshot_name" --reuse
+        else
+          vm_name="$(printf '%s\n' "$matching_vms" | head -n1)"
+          echo "Reusing cached VM: $vm_name"
+          if ! incus snapshot list "$vm_name" -f csv -c n | grep -Fxq "$snapshot_name"; then
+            echo "Snapshot $snapshot_name not found on existing VM $vm_name. Refusing to continue." >&2
+            exit 1
+          fi
+
+          incus stop "$vm_name" --force >/dev/null 2>&1 || true
+          incus snapshot restore "$vm_name" "$snapshot_name"
+          incus start "$vm_name"
+        fi
+
+        incus exec "$vm_name" -- rm -rf /home/ci/workspace /home/ci/test-logs
         incus exec "$vm_name" -- mkdir -p /home/ci/workspace
+        incus exec "$vm_name" -- mkdir -p /home/ci/test-logs
         tar -C "{{.TEST_ROOT}}" -cf - . | incus exec "$vm_name" -- tar -C /home/ci/workspace -xf -
-        incus exec "$vm_name" -- chown -R ci:ci /home/ci/workspace
+        incus exec "$vm_name" -- chown -R ci:ci /home/ci/workspace /home/ci/test-logs
 
         vm_log_dir="/home/ci/test-logs"
         host_log_dir="{{.TEST_ROOT}}/.test-logs/incus/$vm_name"
@@ -136,3 +225,44 @@ tasks:
           fi
           exit "$test_rc"
         fi
+
+  _test:incus:reset:
+    internal: true
+    requires:
+      vars: [IMAGE, DISTRO]
+    cmds:
+      - |
+        set -euo pipefail
+
+        if ! command -v incus >/dev/null 2>&1; then
+          echo "incus is required for Linux VM tests" >&2
+          exit 1
+        fi
+
+        vm_filter=(
+          "user.dotfiles.test-suite=install-tools"
+          "user.dotfiles.test-distro={{.DISTRO}}"
+          "user.dotfiles.test-image={{.IMAGE}}"
+        )
+
+        matching_vms="$(incus list -f csv -c n "${vm_filter[@]}" | sed "/^$/d")"
+        if [[ -n "$matching_vms" ]]; then
+          match_count="$(printf '%s\n' "$matching_vms" | wc -l | tr -d ' ')"
+        else
+          match_count=0
+        fi
+
+        if [[ $match_count -gt 1 ]]; then
+          echo "Multiple cached VMs match {{.DISTRO}}/{{.IMAGE}}. Refusing to delete:" >&2
+          printf '%s\n' "$matching_vms" | sed 's/^/  /' >&2
+          exit 1
+        fi
+
+        if [[ $match_count -eq 0 ]]; then
+          echo "No cached VM found for {{.DISTRO}}/{{.IMAGE}}."
+          exit 0
+        fi
+
+        vm_name="$(printf '%s\n' "$matching_vms" | head -n1)"
+        echo "Deleting cached VM: $vm_name"
+        incus delete -f "$vm_name"
