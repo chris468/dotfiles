@@ -18,6 +18,14 @@ if [[ -n "$DISTRO_VERSION" ]]; then
 fi
 VM_LOG_DIR="/home/ci/test-logs"
 VM_REPO_DIR="/home/ci/.local/share/chezmoi"
+vm_name=""
+
+stop_vm_on_exit() {
+  if [[ -n "${vm_name:-}" ]]; then
+    incus stop "$vm_name" >/dev/null 2>&1 || true
+  fi
+}
+trap stop_vm_on_exit EXIT
 
 require_incus
 build_vm_filters "$DISTRO" "$IMAGE"
@@ -59,9 +67,11 @@ install_prereqs() {
 }
 
 if [[ "$match_count" -eq 0 ]]; then
-  vm_name=""
   for _ in $(seq 1 10); do
-    vm_hash="$(tr -dc 'a-f0-9' </dev/urandom | head -c 4)"
+    vm_hash="$(tr -dc 'a-f0-9' </dev/urandom | head -c 4 || true)"
+    if [[ ${#vm_hash} -ne 4 ]]; then
+      continue
+    fi
     candidate_name="${VM_NAME_PREFIX}-${vm_hash}"
     if ! incus info "$candidate_name" >/dev/null 2>&1; then
       vm_name="$candidate_name"

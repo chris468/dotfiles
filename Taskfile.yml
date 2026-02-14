@@ -57,6 +57,11 @@ tasks:
           DISTRO_VERSION: ""
           INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
 
+  test:incus:all:
+    desc: Run all Incus install-tools tests (max 3 parallel)
+    cmds:
+      - task --parallel --concurrency 3 test:incus:debian test:incus:ubuntu test:incus:fedora test:incus:arch test:incus:tumbleweed
+
   test:incus:reset:debian:
     desc: Delete cached Debian Incus VM used by install-tools tests
     cmds:
