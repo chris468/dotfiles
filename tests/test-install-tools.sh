@@ -20,8 +20,6 @@ export PATH="$HOME/.local/bin:$PATH"
 
 mkdir -p "$HOME/.local/bin" "$XDG_DATA_HOME"
 
-repo_root="${GITHUB_WORKSPACE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
-
 normalize_arch() {
   case "$(uname -m)" in
   x86_64) echo "amd64" ;;
@@ -71,7 +69,7 @@ install_chezmoi() {
 
 install_chezmoi 2>&1 | tee "$LOG_DIR/chezmoi-install.log"
 
-chezmoi init --promptDefaults --apply --source "$repo_root" 2>&1 | tee "$LOG_DIR/chezmoi-init.log"
+chezmoi init --promptDefaults --apply 2>&1 | tee "$LOG_DIR/chezmoi-init.log"
 
 tools_file="$XDG_DATA_HOME/chris468/tools/tools.yaml"
 if [[ ! -f "$tools_file" ]]; then

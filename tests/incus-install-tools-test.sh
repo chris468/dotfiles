@@ -13,6 +13,7 @@ TEST_ROOT="${TEST_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 SNAPSHOT_NAME="prereq-ready"
 VM_NAME_PREFIX="dotfiles-test-${DISTRO}"
 VM_LOG_DIR="/home/ci/test-logs"
+VM_REPO_DIR="/home/ci/.local/share/chezmoi"
 
 require_incus
 build_vm_filters "$DISTRO" "$IMAGE"
@@ -79,11 +80,12 @@ else
   incus start "$vm_name"
 fi
 
-echo "[incus-test] preparing workspace"
-incus exec "$vm_name" -- rm -rf /home/ci/workspace "$VM_LOG_DIR"
-incus exec "$vm_name" -- mkdir -p /home/ci/workspace "$VM_LOG_DIR"
-tar -C "$TEST_ROOT" -cf - . | incus exec "$vm_name" -- tar -C /home/ci/workspace -xf -
-incus exec "$vm_name" -- chown -R ci:ci /home/ci/workspace "$VM_LOG_DIR"
+echo "[incus-test] preparing source tree"
+incus exec "$vm_name" -- rm -rf "$VM_REPO_DIR" "$VM_LOG_DIR"
+incus exec "$vm_name" -- mkdir -p "$VM_REPO_DIR" "$VM_LOG_DIR"
+tar -C "$TEST_ROOT" -cf - . | incus exec "$vm_name" -- tar -C "$VM_REPO_DIR" -xf -
+incus exec "$vm_name" -- mkdir -p /home/ci/.local/bin /home/ci/.local/share
+incus exec "$vm_name" -- chown -R ci:ci /home/ci/.local "$VM_REPO_DIR" "$VM_LOG_DIR"
 
 install_cmd=(./tests/test-install-tools.sh)
 if [[ -n "$INSTALL_TOOLS_ARGS" ]]; then
@@ -97,8 +99,8 @@ echo "[incus-test] running install-tools test"
 set +e
 incus exec "$vm_name" -- sudo -u ci bash -lc '
   set -euo pipefail
-  export GITHUB_WORKSPACE=/home/ci/workspace
-  cd /home/ci/workspace
+  export GITHUB_WORKSPACE='"$VM_REPO_DIR"'
+  cd '"$VM_REPO_DIR"'
   TEST_LOG_DIR='"$VM_LOG_DIR"' '"$install_cmd_quoted"'
 '
 test_rc=$?
