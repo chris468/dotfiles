@@ -66,7 +66,7 @@ install_prereqs() {
   '
 }
 
-if [[ "$match_count" -eq 0 ]]; then
+create_cached_vm() {
   for _ in $(seq 1 10); do
     vm_hash="$(tr -dc 'a-f0-9' </dev/urandom | head -c 4 || true)"
     if [[ ${#vm_hash} -ne 4 ]]; then
@@ -92,18 +92,25 @@ if [[ "$match_count" -eq 0 ]]; then
   install_prereqs "$vm_name"
   echo "[incus-test] creating snapshot: $SNAPSHOT_NAME"
   incus snapshot create "$vm_name" "$SNAPSHOT_NAME" --reuse
+}
+
+if [[ "$match_count" -eq 0 ]]; then
+  create_cached_vm
 else
   vm_name="$(printf '%s\n' "$matching_vms" | head -n1)"
   echo "[incus-test] reusing cached VM: $vm_name"
   if ! incus snapshot list "$vm_name" -f csv -c n | grep -Fxq "$SNAPSHOT_NAME"; then
-    echo "[incus-test] snapshot $SNAPSHOT_NAME not found on existing VM $vm_name; refusing to continue." >&2
-    exit 1
+    echo "[incus-test] snapshot $SNAPSHOT_NAME not found on existing VM $vm_name; recreating VM." >&2
+    incus stop "$vm_name" --force >/dev/null 2>&1 || true
+    incus delete "$vm_name"
+    vm_name=""
+    create_cached_vm
+  else
+    echo "[incus-test] restoring snapshot: $SNAPSHOT_NAME"
+    incus stop "$vm_name" --force >/dev/null 2>&1 || true
+    incus snapshot restore "$vm_name" "$SNAPSHOT_NAME"
+    incus start "$vm_name"
   fi
-
-  echo "[incus-test] restoring snapshot: $SNAPSHOT_NAME"
-  incus stop "$vm_name" --force >/dev/null 2>&1 || true
-  incus snapshot restore "$vm_name" "$SNAPSHOT_NAME"
-  incus start "$vm_name"
 fi
 
 echo "[incus-test] preparing source tree"
