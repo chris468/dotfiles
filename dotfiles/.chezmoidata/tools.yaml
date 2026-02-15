@@ -39,6 +39,10 @@ tools:
       - match:
           os: windows
         name: eza-community.eza
+      - match:
+          distro: fedora
+          manager: os
+        manager: nix
 
     - name: fd
       overrides:
@@ -49,6 +53,10 @@ tools:
         symlinks:
           - source: /usr/bin/fdfind
             target: /usr/local/bin/fd
+      - match:
+          family: redhat
+          manager: os
+        name: fd-find
       - match:
           os: windows
         name: sharkdp.fd
