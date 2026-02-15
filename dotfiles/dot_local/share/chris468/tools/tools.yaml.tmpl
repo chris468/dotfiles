@@ -8,13 +8,13 @@
   {{- $distro = lower $osReleaseId -}}
   {{- $idLike := (index $osRelease "idLike") | default (index $osRelease "ID_LIKE") | default $osReleaseId | default "" -}}
   {{- $idLike = lower $idLike -}}
-  {{- if or (contains $idLike "debian") (contains $idLike "ubuntu") -}}
+  {{- if or (contains "debian" $idLike) (contains "ubuntu" $idLike) -}}
     {{- $family = "debian" -}}
-  {{- else if or (contains $idLike "rhel") (contains $idLike "fedora") (contains $idLike "centos") -}}
+  {{- else if or (contains "rhel" $idLike) (contains "fedora" $idLike) (contains "centos" $idLike) -}}
     {{- $family = "redhat" -}}
-  {{- else if or (contains $idLike "arch") (contains $idLike "manjaro") -}}
+  {{- else if or (contains "arch" $idLike) (contains "manjaro" $idLike) -}}
     {{- $family = "arch" -}}
-  {{- else if or (contains $idLike "suse") (contains $idLike "opensuse") -}}
+  {{- else if or (contains "suse" $idLike) (contains "opensuse" $idLike) -}}
     {{- $family = "suse" -}}
   {{- end -}}
 {{- end -}}
