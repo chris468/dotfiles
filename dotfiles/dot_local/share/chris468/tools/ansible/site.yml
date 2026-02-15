@@ -284,6 +284,22 @@
         - use_nix | bool
         - nix_install_mode_normalized == 'single'
 
+    - name: Ensure nix-daemon is enabled and started
+      ansible.builtin.service:
+        name: nix-daemon
+        enabled: true
+        state: started
+      become: true
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+
+    - name: Reset ansible connection after starting nix-daemon
+      ansible.builtin.meta: reset_connection
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+
     - name: Read enabled categories from home-manager tools file
       ansible.builtin.command: >-
         nix eval --raw --impure --expr
@@ -345,7 +361,49 @@
         PATH: "{{ nix_path }}"
 
     - name: Run home-manager via nix
-      ansible.builtin.command: nix run home-manager/release-25.05 -- switch
+      block:
+        - name: Run home-manager via nix command
+          ansible.builtin.command: nix run home-manager/release-25.05 -- switch
+          register: hm_nix_run
+      rescue:
+        - name: Collect nix diagnostics after home-manager failure
+          ansible.builtin.shell: |
+            set -o pipefail
+            echo "=== nix diagnostics start ==="
+            date
+            id
+            whoami
+            echo "NIX_REMOTE=${NIX_REMOTE:-<unset>}"
+            echo "PATH=$PATH"
+            command -v nix || true
+            nix --version || true
+            nix show-config | grep -E '^(experimental-features|extra-experimental-features|store)' || true
+            ls -ld /nix /nix/store /nix/var /nix/var/nix /nix/var/nix/daemon-socket || true
+            ls -l /nix/var/nix/daemon-socket/socket || true
+            systemctl is-active nix-daemon || true
+            systemctl status --no-pager nix-daemon | tail -n 40 || true
+            nix store ping || true
+            echo "=== nix diagnostics end ==="
+          register: hm_nix_diag
+          changed_when: false
+
+        - name: Print nix diagnostics after home-manager failure
+          ansible.builtin.debug:
+            msg: "{{ hm_nix_diag.stdout_lines | default([]) }}"
+
+        - name: Print nix diagnostics stderr after home-manager failure
+          ansible.builtin.debug:
+            msg: "{{ hm_nix_diag.stderr_lines | default([]) }}"
+          when:
+            - hm_nix_diag.stderr_lines is defined
+            - hm_nix_diag.stderr_lines | length > 0
+
+        - name: Fail after collecting nix diagnostics
+          ansible.builtin.fail:
+            msg: >-
+              home-manager via nix failed (rc={{ hm_nix_run.rc | default('unknown') }}).
+              stderr={{ hm_nix_run.stderr | default('') }}
+              Diagnostics were emitted above.
       when:
         - use_nix | bool
         - nix_packages | length > 0
