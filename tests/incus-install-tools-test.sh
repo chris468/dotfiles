@@ -75,11 +75,9 @@ install_prereqs() {
     elif command -v dnf >/dev/null 2>&1; then
       dnf -y install curl git python3 python3-pip pipx sudo ca-certificates shadow-utils
     elif command -v pacman >/dev/null 2>&1; then
-      pacman -Sy --noconfirm curl git python python-pip sudo ca-certificates
-      python -m pip install --break-system-packages pipx
+      pacman -Sy --noconfirm curl git python python-pipx sudo ca-certificates
     elif command -v zypper >/dev/null 2>&1; then
-      zypper --non-interactive install -y curl git python3 python3-pip sudo ca-certificates shadow ncurses-devel
-      python3 -m pip install --break-system-packages pipx
+      zypper --non-interactive install -y curl git python3 python3-pipx sudo ca-certificates shadow ncurses-devel
     else
       echo "Unsupported package manager in VM" >&2
       exit 1
