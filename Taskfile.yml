@@ -15,7 +15,7 @@ tasks:
           IMAGE: images:debian/13/cloud
           DISTRO: debian
           DISTRO_VERSION: "13"
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
 
   test:incus:ubuntu:
     desc: Run install-tools test in Ubuntu Incus VM
@@ -25,7 +25,7 @@ tasks:
           IMAGE: images:ubuntu/24.04/cloud
           DISTRO: ubuntu
           DISTRO_VERSION: "2404"
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
 
   test:incus:fedora:
     desc: Run install-tools test in Fedora Incus VM
@@ -35,7 +35,7 @@ tasks:
           IMAGE: images:fedora/43/cloud
           DISTRO: fedora
           DISTRO_VERSION: "43"
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
 
   test:incus:arch:
     desc: Run install-tools test in Arch Incus VM
@@ -45,7 +45,7 @@ tasks:
           IMAGE: images:archlinux/current/cloud
           DISTRO: arch
           DISTRO_VERSION: ""
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
 
   test:incus:tumbleweed:
     desc: Run install-tools test in openSUSE Tumbleweed Incus VM
@@ -55,7 +55,7 @@ tasks:
           IMAGE: images:opensuse/tumbleweed/cloud
           DISTRO: tumbleweed
           DISTRO_VERSION: ""
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
 
   test:incus:all:
     desc: Run all Incus install-tools tests (max 3 parallel)
