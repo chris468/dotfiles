@@ -341,6 +341,9 @@ tools:
           family: redhat
         name: awscli2
       - match:
+          family: arch
+        name: aws-cli-v2
+      - match:
           os: windows
         name: Amazon.AWSCLI
 
