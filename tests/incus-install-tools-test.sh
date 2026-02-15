@@ -68,19 +68,40 @@ install_prereqs() {
 
 wait_for_cloud_init() {
   local target_vm="$1"
+  local attempt
+  local max_attempts=60
+  local cloud_init_log
+  local cloud_init_rc
   echo "[incus-test] waiting for cloud-init in VM: $target_vm"
-  for _ in $(seq 1 60); do
-    if incus exec "$target_vm" -- bash -lc '
+  for attempt in $(seq 1 "$max_attempts"); do
+    echo "[incus-test] cloud-init check attempt ${attempt}/${max_attempts} for VM: $target_vm"
+    if cloud_init_log="$(incus exec "$target_vm" -- bash -lc '
       set -euo pipefail
       if command -v cloud-init >/dev/null 2>&1; then
         cloud-init status --wait
+      else
+        echo "cloud-init is not installed; skipping wait"
       fi
-    ' >/dev/null 2>&1; then
+    ' 2>&1)"; then
+      cloud_init_rc=0
+    else
+      cloud_init_rc=$?
+    fi
+    echo "[incus-test] cloud-init check exit code for VM $target_vm: $cloud_init_rc"
+    if [[ $cloud_init_rc -eq 0 || $cloud_init_rc -eq 2 ]]; then
+      if [[ -n "$cloud_init_log" ]]; then
+        echo "$cloud_init_log" | sed 's/^/[incus-test]   /'
+      fi
+      echo "[incus-test] cloud-init ready in VM: $target_vm (exit=$cloud_init_rc)"
       return
+    fi
+    echo "[incus-test] cloud-init not ready yet for VM: $target_vm (exit=$cloud_init_rc)" >&2
+    if [[ -n "$cloud_init_log" ]]; then
+      echo "$cloud_init_log" | sed 's/^/[incus-test]   /' >&2
     fi
     sleep 2
   done
-  echo "[incus-test] cloud-init did not complete in time for VM: $target_vm" >&2
+  echo "[incus-test] cloud-init did not complete in time after ${max_attempts} attempts for VM: $target_vm" >&2
   exit 1
 }
 
