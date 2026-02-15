@@ -1,5 +1,7 @@
 [CmdletBinding()]
 param(
+  [switch]$VerboseLogs,
+
   [Parameter(ValueFromRemainingArguments = $true)]
   [string[]]$InstallToolsArgs
 )
@@ -9,6 +11,8 @@ Set-StrictMode -Version Latest
 
 $logsRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("install-tools-" + [Guid]::NewGuid().ToString('N'))
 $null = New-Item -ItemType Directory -Path $logsRoot -Force
+$workRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("install-tools-work-" + [Guid]::NewGuid().ToString('N'))
+$null = New-Item -ItemType Directory -Path $workRoot -Force
 
 $testHome = if ($env:TEST_HOME) {
   $env:TEST_HOME
@@ -31,6 +35,34 @@ $repoRoot = if ($env:GITHUB_WORKSPACE) {
   $env:GITHUB_WORKSPACE
 } else {
   Split-Path -Parent $PSScriptRoot
+}
+
+$logPrefix = if ($env:TEST_LOG_PREFIX) { $env:TEST_LOG_PREFIX } else { 'install-test' }
+$logContext = if ($env:TEST_LOG_CONTEXT) { $env:TEST_LOG_CONTEXT } else { 'windows' }
+
+function Write-ProgressLine {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Message
+  )
+
+  Write-Host "[$logPrefix|$logContext] $Message"
+}
+
+function Invoke-LoggedStep {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$LogFile,
+
+    [Parameter(Mandatory = $true)]
+    [scriptblock]$ScriptBlock
+  )
+
+  if ($VerboseLogs) {
+    & $ScriptBlock 2>&1 | Tee-Object -FilePath $LogFile | Out-Host
+  } else {
+    & $ScriptBlock 2>&1 | Tee-Object -FilePath $LogFile | Out-Null
+  }
 }
 
 function Get-ChezmoiArch {
@@ -57,12 +89,12 @@ function Install-Chezmoi {
   $arch = Get-ChezmoiArch
   $zipName = "chezmoi_${version}_windows_${arch}.zip"
   $zipUrl = "https://github.com/twpayne/chezmoi/releases/download/$tag/$zipName"
-  $zipPath = Join-Path $logsRoot $zipName
+  $zipPath = Join-Path $workRoot $zipName
 
   Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath
-  Expand-Archive -Path $zipPath -DestinationPath $logsRoot -Force
+  Expand-Archive -Path $zipPath -DestinationPath $workRoot -Force
 
-  $chezmoiExe = Join-Path $logsRoot 'chezmoi.exe'
+  $chezmoiExe = Join-Path $workRoot 'chezmoi.exe'
   if (-not (Test-Path $chezmoiExe)) {
     throw "chezmoi.exe was not found in extracted archive: $zipPath"
   }
@@ -71,10 +103,23 @@ function Install-Chezmoi {
 }
 
 try {
-  Install-Chezmoi 2>&1 | Tee-Object -FilePath (Join-Path $logsRoot 'chezmoi-install.log') | Out-Host
+  $chezmoiCommandPath = $null
+  if (Get-Command chezmoi -ErrorAction SilentlyContinue) {
+    Write-ProgressLine 'using existing chezmoi'
+    Set-Content -Path (Join-Path $logsRoot 'chezmoi-install.log') -Value "[$logPrefix|$logContext] using existing chezmoi"
+    $chezmoiCommandPath = (Get-Command chezmoi -ErrorAction Stop).Source
+  } else {
+    Write-ProgressLine 'downloading chezmoi'
+    Invoke-LoggedStep -LogFile (Join-Path $logsRoot 'chezmoi-install.log') -ScriptBlock {
+      Install-Chezmoi
+    }
+    $chezmoiCommandPath = (Join-Path $localBin 'chezmoi.exe')
+  }
 
-  & (Join-Path $localBin 'chezmoi.exe') init --promptDefaults --apply --source $repoRoot 2>&1 |
-    Tee-Object -FilePath (Join-Path $logsRoot 'chezmoi-init.log') | Out-Host
+  Write-ProgressLine 'applying dotfiles'
+  Invoke-LoggedStep -LogFile (Join-Path $logsRoot 'chezmoi-init.log') -ScriptBlock {
+    & $chezmoiCommandPath init --promptDefaults --apply --source $repoRoot
+  }
 
   $toolsFile = Join-Path $env:XDG_DATA_HOME 'chris468/tools/tools.yaml'
   if (-not (Test-Path $toolsFile)) {
@@ -86,12 +131,18 @@ try {
     throw "Missing install-tools.ps1 script: $installTools"
   }
 
-  & pwsh -NoLogo -NoProfile -File $installTools -All @InstallToolsArgs 2>&1 |
-    Tee-Object -FilePath (Join-Path $logsRoot 'install-tools.log') | Out-Host
+  Write-ProgressLine 'running install-tools'
+  Invoke-LoggedStep -LogFile (Join-Path $logsRoot 'install-tools.log') -ScriptBlock {
+    & pwsh -NoLogo -NoProfile -File $installTools -All @InstallToolsArgs
+  }
 
-  Write-Host "Test succeeded. Logs are in: $logsRoot"
+  Write-Host "[$logPrefix|$logContext] Test succeeded. Logs are in: $logsRoot"
 } catch {
   Write-Error $_
-  Write-Host "Test failed. Logs are in: $logsRoot"
+  Write-Host "[$logPrefix|$logContext] Test failed. Logs are in: $logsRoot"
   exit 1
+} finally {
+  if (Test-Path $workRoot) {
+    Remove-Item -Path $workRoot -Recurse -Force
+  }
 }

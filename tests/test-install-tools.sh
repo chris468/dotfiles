@@ -4,12 +4,41 @@ set -euo pipefail
 LOG_DIR="${TEST_LOG_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/install-tools.XXXXXX")}"
 mkdir -p "$LOG_DIR"
 
+log_prefix="${TEST_LOG_PREFIX:-install-test}"
+log_context="${TEST_LOG_CONTEXT:-}"
+if [[ -z "$log_context" ]]; then
+  log_context="$(uname -s | tr '[:upper:]' '[:lower:]')"
+fi
+
+TEST_VERBOSE_VALUE="${TEST_VERBOSE:-0}"
+shopt -s nocasematch
+case "$TEST_VERBOSE_VALUE" in
+1 | true | yes | on) verbose_mode=1 ;;
+*) verbose_mode=0 ;;
+esac
+shopt -u nocasematch
+
+progress() {
+  printf '[%s|%s] %s\n' "$log_prefix" "$log_context" "$*"
+}
+
+run_and_log() {
+  local logfile="$1"
+  shift
+  : >"$logfile"
+  if [[ "$verbose_mode" -eq 1 ]]; then
+    "$@" 2>&1 | tee "$logfile"
+  else
+    "$@" >>"$logfile" 2>&1
+  fi
+}
+
 cleanup() {
   local rc=$?
   if [[ $rc -ne 0 ]]; then
-    echo "Test failed. Logs are in: $LOG_DIR" >&2
+    printf '[%s|%s] Test failed. Logs are in: %s\n' "$log_prefix" "$log_context" "$LOG_DIR" >&2
   else
-    echo "Test succeeded. Logs are in: $LOG_DIR"
+    printf '[%s|%s] Test succeeded. Logs are in: %s\n' "$log_prefix" "$log_context" "$LOG_DIR"
   fi
   exit "$rc"
 }
@@ -43,10 +72,6 @@ normalize_os() {
 }
 
 install_chezmoi() {
-  if command -v chezmoi >/dev/null 2>&1; then
-    return 0
-  fi
-
   local api_url="https://api.github.com/repos/twpayne/chezmoi/releases/latest"
   local tag
   tag="$(curl -fsSL "$api_url" | sed -nE 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' | head -n1)"
@@ -67,9 +92,16 @@ install_chezmoi() {
   chmod +x "$HOME/.local/bin/chezmoi"
 }
 
-install_chezmoi 2>&1 | tee "$LOG_DIR/chezmoi-install.log"
+if command -v chezmoi >/dev/null 2>&1; then
+  progress "using existing chezmoi"
+  printf '[%s|%s] using existing chezmoi\n' "$log_prefix" "$log_context" >"$LOG_DIR/chezmoi-install.log"
+else
+  progress "downloading chezmoi"
+  run_and_log "$LOG_DIR/chezmoi-install.log" install_chezmoi
+fi
 
-chezmoi init --promptDefaults --apply 2>&1 | tee "$LOG_DIR/chezmoi-init.log"
+progress "applying dotfiles"
+run_and_log "$LOG_DIR/chezmoi-init.log" chezmoi init --promptDefaults --apply
 
 tools_file="$XDG_DATA_HOME/chris468/tools/tools.yaml"
 if [[ ! -f "$tools_file" ]]; then
@@ -85,4 +117,5 @@ fi
 
 install_cmd=("$install_tools" --all "$@")
 printf -v install_cmd_quoted '%q ' "${install_cmd[@]}"
-bash -lc "$install_cmd_quoted" 2>&1 | tee "$LOG_DIR/install-tools.log"
+progress "running install-tools"
+run_and_log "$LOG_DIR/install-tools.log" bash -lc "$install_cmd_quoted"
