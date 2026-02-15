@@ -52,7 +52,7 @@ install_prereqs() {
       pacman -Sy --noconfirm curl git python python-pip sudo ca-certificates
       python -m pip install --break-system-packages pipx
     elif command -v zypper >/dev/null 2>&1; then
-      zypper --non-interactive install -y curl git python3 python3-pip sudo ca-certificates shadow
+      zypper --non-interactive install -y curl git python3 python3-pip sudo ca-certificates shadow ncurses-devel
       python3 -m pip install --break-system-packages pipx
     else
       echo "Unsupported package manager in VM" >&2
