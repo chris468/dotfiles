@@ -105,6 +105,43 @@ wait_for_cloud_init() {
   exit 1
 }
 
+wait_for_dns() {
+  local target_vm="$1"
+  local dns_name="${2:-api.github.com}"
+  local attempt
+  local max_attempts=60
+  local dns_log
+  local dns_rc
+
+  echo "[incus-test] waiting for DNS in VM: $target_vm (name=$dns_name)"
+  for attempt in $(seq 1 "$max_attempts"); do
+    echo "[incus-test] DNS check attempt ${attempt}/${max_attempts} for VM: $target_vm (name=$dns_name)"
+    if dns_log="$(incus exec "$target_vm" -- bash -lc '
+      set -euo pipefail
+      getent hosts "'"$dns_name"'"
+    ' 2>&1)"; then
+      dns_rc=0
+    else
+      dns_rc=$?
+    fi
+
+    echo "[incus-test] DNS check exit code for VM $target_vm: $dns_rc"
+    if [[ -n "$dns_log" ]]; then
+      echo "$dns_log" | sed 's/^/[incus-test]   /'
+    fi
+    if [[ "$dns_rc" -eq 0 ]]; then
+      echo "[incus-test] DNS ready in VM: $target_vm (name=$dns_name)"
+      return
+    fi
+
+    echo "[incus-test] DNS not ready yet for VM: $target_vm (name=$dns_name)" >&2
+    sleep 2
+  done
+
+  echo "[incus-test] DNS did not become ready in time after ${max_attempts} attempts for VM: $target_vm (name=$dns_name)" >&2
+  exit 1
+}
+
 create_cached_vm() {
   for _ in $(seq 1 10); do
     vm_hash="$(tr -dc 'a-f0-9' </dev/urandom | head -c 4 || true)"
@@ -150,6 +187,7 @@ else
     incus stop "$vm_name" --force >/dev/null 2>&1 || true
     incus snapshot restore "$vm_name" "$SNAPSHOT_NAME"
     incus start "$vm_name"
+    wait_for_dns "$vm_name"
   fi
 fi
 
