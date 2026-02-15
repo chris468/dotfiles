@@ -19,7 +19,7 @@ jobs:
         uses: go-task/setup-task@v1
 
       - name: Run validation
-        run: task test:incus:${{ matrix.distro }}
+        run: task -v test:incus:${{ matrix.distro }}
 
   macos:
     name: macOS
@@ -32,7 +32,7 @@ jobs:
         uses: go-task/setup-task@v1
 
       - name: Run validation
-        run: task test:mac
+        run: task -v test:mac
 
   windows:
     name: Windows
@@ -46,4 +46,4 @@ jobs:
 
       - name: Run validation
         shell: pwsh
-        run: task test:win
+        run: task -v test:win
