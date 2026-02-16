@@ -13,7 +13,6 @@
       "configHome" $_configHome
       "dataHome" $_dataHome
       "externals" $_externals
-      "gitCredentialManager" (joinPath $_externals "git-credential-manager")
       "homebrew" "/opt/homebrew"
       "ipython" $_ipython
       "bin" $_bin

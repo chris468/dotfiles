@@ -7,10 +7,6 @@ defaults:
     family: Hack Nerd Font Mono
     size: 14
 
-  gitCredentialManager:
-    configure: true
-    install: false
-
   ssh_hosts: []
 
   packageManager:
@@ -31,9 +27,6 @@ defaults:
         size: 11
 
     linux:
-      gitCredentialManager:
-        store: plaintext
-        install: true
       packageManager:
         mise:
           enable: true
