@@ -277,6 +277,10 @@ tools:
 
     - name: PSFzf
       manager: psmodule
+      platforms:
+        matches:
+        - match:
+            os: windows
 
   container:
     packages:
