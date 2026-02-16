@@ -1,0 +1,122 @@
+{{- $tools := .tools | default dict -}}
+{{- $os := .chezmoi.os | default "" -}}
+{{- $family := "" -}}
+{{- $distro := "" -}}
+{{- if eq $os "linux" -}}
+  {{- $osRelease := .chezmoi.osRelease | default dict -}}
+  {{- $osReleaseId := (index $osRelease "id") | default (index $osRelease "ID") | default "" -}}
+  {{- $distro = lower $osReleaseId -}}
+  {{- $idLike := (index $osRelease "idLike") | default (index $osRelease "ID_LIKE") | default $osReleaseId | default "" -}}
+  {{- $idLike = lower $idLike -}}
+  {{- if or (contains "debian" $idLike) (contains "ubuntu" $idLike) -}}
+    {{- $family = "debian" -}}
+  {{- else if or (contains "rhel" $idLike) (contains "fedora" $idLike) (contains "centos" $idLike) -}}
+    {{- $family = "redhat" -}}
+  {{- else if or (contains "arch" $idLike) (contains "manjaro" $idLike) -}}
+    {{- $family = "arch" -}}
+  {{- else if or (contains "suse" $idLike) (contains "opensuse" $idLike) -}}
+    {{- $family = "suse" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $outputTools := dict -}}
+{{- $categories := keys $tools | sortAlpha -}}
+{{- range $categories -}}
+  {{- $categoryName := . -}}
+  {{- $category := index $tools $categoryName | default dict -}}
+  {{- $categoryOutput := dict -}}
+  {{- $packagesOutput := list -}}
+  {{- $fontsOutput := list -}}
+  {{- $psModulesOutput := list -}}
+
+  {{- $fonts := index $category "nerdfonts" | default list -}}
+  {{- range $fonts -}}
+    {{- $fontName := "" -}}
+    {{- if kindIs "map" . -}}
+      {{- $fontName = index . "name" | default "" -}}
+    {{- else if kindIs "string" . -}}
+      {{- $fontName = . -}}
+    {{- end -}}
+    {{- if $fontName -}}
+      {{- $fontsOutput = append $fontsOutput (dict "name" $fontName) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $packages := index $category "packages" | default list -}}
+  {{- range $packages -}}
+    {{- $package := . | default dict -}}
+    {{- $include := true -}}
+    {{- $resolvedManager := index $package "manager" | default "os" -}}
+    {{- $resolvedSymlinks := index $package "symlinks" | default list -}}
+    {{- $platforms := index $package "platforms" | default dict -}}
+    {{- if $platforms -}}
+      {{- $exclude := index $platforms "exclude" | default false -}}
+      {{- $matches := index $platforms "matches" | default list -}}
+      {{- $matched := false -}}
+      {{- range $matches -}}
+        {{- $match := index . "match" | default dict -}}
+        {{- $ok := true -}}
+        {{- $matchedOs := index $match "os" | default "" -}}
+        {{- $matchedFamily := index $match "family" | default "" -}}
+        {{- $matchedDistro := index $match "distro" | default "" -}}
+        {{- $matchedManager := index $match "manager" | default "" -}}
+        {{- if and $matchedOs (ne $matchedOs $os) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedFamily (ne $matchedFamily $family) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedDistro (ne $matchedDistro $distro) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedManager (ne $matchedManager $resolvedManager) -}}{{- $ok = false -}}{{- end -}}
+        {{- if $ok -}}{{- $matched = true -}}{{- end -}}
+      {{- end -}}
+      {{- if $exclude -}}
+        {{- $include = not $matched -}}
+      {{- else -}}
+        {{- $include = $matched -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if $include -}}
+      {{- $resolvedName := index $package "name" | default "" -}}
+      {{- $overrides := index $package "overrides" | default list -}}
+      {{- range $overrides -}}
+        {{- $match := index . "match" | default dict -}}
+        {{- $ok := true -}}
+        {{- $matchedOs := index $match "os" | default "" -}}
+        {{- $matchedFamily := index $match "family" | default "" -}}
+        {{- $matchedDistro := index $match "distro" | default "" -}}
+        {{- $matchedManager := index $match "manager" | default "" -}}
+        {{- if and $matchedOs (ne $matchedOs $os) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedFamily (ne $matchedFamily $family) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedDistro (ne $matchedDistro $distro) -}}{{- $ok = false -}}{{- end -}}
+        {{- if and $matchedManager (ne $matchedManager $resolvedManager) -}}{{- $ok = false -}}{{- end -}}
+        {{- if $ok -}}
+          {{- $nameOverride := index . "name" | default "" -}}
+          {{- $managerOverride := index . "manager" | default "" -}}
+          {{- $symlinksOverride := index . "symlinks" -}}
+          {{- if $nameOverride -}}{{- $resolvedName = $nameOverride -}}{{- end -}}
+          {{- if $managerOverride -}}{{- $resolvedManager = $managerOverride -}}{{- end -}}
+          {{- if $symlinksOverride -}}{{- $resolvedSymlinks = $symlinksOverride -}}{{- end -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if $resolvedName -}}
+        {{- if and $resolvedSymlinks (or (eq $os "linux") (eq $os "darwin")) -}}
+          {{- $packagesOutput = append $packagesOutput (dict "name" $resolvedName "manager" $resolvedManager "symlinks" $resolvedSymlinks) -}}
+        {{- else -}}
+          {{- $packagesOutput = append $packagesOutput (dict "name" $resolvedName "manager" $resolvedManager) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $fontsOutput -}}
+    {{- $_ := set $categoryOutput "nerdfonts" $fontsOutput -}}
+  {{- end -}}
+  {{- if $packagesOutput -}}
+    {{- $_ := set $categoryOutput "packages" $packagesOutput -}}
+  {{- end -}}
+
+  {{- if $categoryOutput -}}
+    {{- $_ := set $outputTools $categoryName $categoryOutput -}}
+  {{- end -}}
+{{- end -}}
+
+{{- dict "tools" $outputTools | toYaml -}}

@@ -18,16 +18,14 @@
 	ff = only
 [init]
 	defaultBranch = main
-{{ if $config.gitCredentialManager.configure -}}
 [credential]
 	helper =
 	helper = manager
-{{   if "store" | hasKey $config.gitCredentialManager -}}
-    credentialStore = {{ "store" | index $config.gitCredentialManager }}
-{{-  end }}
+{{ if "linux" | eq .chezmoi.os -}}
+    credentialStore = plaintext
+{{- end }}
 [credential "https://dev.azure.com"]
 	useHttpPath = true
-{{- end }}
 [delta]
     navigate = true
     light = false

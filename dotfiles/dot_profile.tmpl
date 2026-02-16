@@ -6,6 +6,7 @@ chezmoi:template:missing-key=zero
           "unset" "unset {NAME}"
           "set" "export {NAME}=\"{VALUE}\""
           "prepend" "[[ \"${NAME}\" == *\"{VALUE}\"* ]] || export {NAME}=\"{VALUE}:${NAME}\""
+          "append" "[[ \"${NAME}\" == *\"{VALUE}\"* ]] || export {NAME}=\"${NAME}:{VALUE}\""
         )
         "convertPathsToUnix" ("windows" | eq .chezmoi.os)
     )

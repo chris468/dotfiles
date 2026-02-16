@@ -1,0 +1,141 @@
+version: '3'
+
+vars:
+  TEST_ROOT: '{{.TASKFILE_DIR}}'
+  TESTS_DIR: '{{.TASKFILE_DIR}}/tests'
+
+silent: false
+
+tasks:
+  test:incus:debian:
+    desc: Run install-tools test in Debian Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:debian/13/cloud
+          DISTRO: debian
+          DISTRO_VERSION: "13"
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+
+  test:incus:ubuntu:
+    desc: Run install-tools test in Ubuntu Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:ubuntu/24.04/cloud
+          DISTRO: ubuntu
+          DISTRO_VERSION: "2404"
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+
+  test:incus:fedora:
+    desc: Run install-tools test in Fedora Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:fedora/43/cloud
+          DISTRO: fedora
+          DISTRO_VERSION: "43"
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+
+  test:incus:arch:
+    desc: Run install-tools test in Arch Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:archlinux/current/cloud
+          DISTRO: arch
+          DISTRO_VERSION: ""
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+
+  test:incus:tumbleweed:
+    desc: Run install-tools test in openSUSE Tumbleweed Incus VM
+    cmds:
+      - task: _test:incus
+        vars:
+          IMAGE: images:opensuse/tumbleweed/cloud
+          DISTRO: tumbleweed
+          DISTRO_VERSION: ""
+          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+
+  test:incus:all:
+    desc: Run all Incus install-tools tests (max 3 parallel)
+    cmds:
+      - task --parallel --concurrency 3 test:incus:debian test:incus:ubuntu test:incus:fedora test:incus:arch test:incus:tumbleweed
+
+  test:incus:reset:debian:
+    desc: Delete cached Debian Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:debian/13/cloud
+          DISTRO: debian
+          DISTRO_VERSION: "13"
+
+  test:incus:reset:ubuntu:
+    desc: Delete cached Ubuntu Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:ubuntu/24.04/cloud
+          DISTRO: ubuntu
+          DISTRO_VERSION: "24_04"
+
+  test:incus:reset:fedora:
+    desc: Delete cached Fedora Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:fedora/43/cloud
+          DISTRO: fedora
+          DISTRO_VERSION: "43"
+
+  test:incus:reset:arch:
+    desc: Delete cached Arch Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:archlinux/current/cloud
+          DISTRO: arch
+          DISTRO_VERSION: ""
+
+  test:incus:reset:tumbleweed:
+    desc: Delete cached openSUSE Tumbleweed Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:opensuse/tumbleweed/cloud
+          DISTRO: tumbleweed
+          DISTRO_VERSION: ""
+
+  test:incus:reset:all:
+    desc: Delete all cached Incus VMs used by install-tools tests
+    cmds:
+      - task: test:incus:reset:debian
+      - task: test:incus:reset:ubuntu
+      - task: test:incus:reset:fedora
+      - task: test:incus:reset:arch
+      - task: test:incus:reset:tumbleweed
+
+  test:mac:
+    desc: Run macOS install-tools test
+    cmds:
+      - TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/test-install-tools.sh"
+
+  test:win:
+    desc: Run Windows install-tools test
+    cmds:
+      - pwsh -NoLogo -NoProfile -File "{{.TESTS_DIR}}/test-install-tools.ps1" {{if .CLI_VERBOSE}}-VerboseLogs{{end}}
+
+  _test:incus:
+    internal: true
+    requires:
+      vars: [IMAGE, DISTRO]
+    cmds:
+      - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" INSTALL_TOOLS_ARGS="{{.INSTALL_TOOLS_ARGS}}" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
+
+  _test:incus:reset:
+    internal: true
+    requires:
+      vars: [IMAGE, DISTRO]
+    cmds:
+      - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" "{{.TESTS_DIR}}/incus-reset-test-vm.sh"

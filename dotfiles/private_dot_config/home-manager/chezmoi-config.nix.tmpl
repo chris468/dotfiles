@@ -1,0 +1,12 @@
+{{-
+  $arch := .chezmoi.arch | get (dict
+    "arm64" "aarch64"
+    "amd64" "x86_64"
+  ) | default .chezmoi.arch
+-}}
+{
+  username = "{{ .chezmoi.username }}";
+  homeDirectory = "{{ .chezmoi.homeDir }}";
+  system = "{{ $arch }}-{{ .chezmoi.os }}";
+  toolsRoot = {{ joinPath (includeTemplate "path" (dict "path" "dataHome" "chezmoi" .chezmoi)) "chris468" "tools" }};
+}

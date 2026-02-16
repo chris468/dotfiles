@@ -1,0 +1,8 @@
+{{- $release := gitHubLatestRelease "wezterm/wezterm" }}
+.terminfo:
+  type: archive
+  url: {{ $release.TarballURL }}
+  stripComponents: 3
+  include:
+    - "*/termwiz/data/wezterm.terminfo"
+  refreshPeriod: "168h"

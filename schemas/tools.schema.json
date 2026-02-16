@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/tools.schema.json",
+  "title": "Chezmoi Tools Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tools"
+  ],
+  "properties": {
+    "tools": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "nerdfonts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "packages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/package"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "os": {
+          "type": "string",
+          "enum": [
+            "linux",
+            "darwin",
+            "windows"
+          ]
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "debian",
+            "redhat",
+            "arch",
+            "suse"
+          ]
+        },
+        "distro": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manager": {
+          "type": "string",
+          "enum": [
+            "os",
+            "nix",
+            "psmodule"
+          ]
+        }
+      }
+    },
+    "matchWrapper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "match"
+      ],
+      "properties": {
+        "match": {
+          "$ref": "#/$defs/match"
+        }
+      }
+    },
+    "platforms": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exclude": {
+          "type": "boolean",
+          "default": false
+        },
+        "matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/matchWrapper"
+          }
+        }
+      },
+      "required": [
+        "matches"
+      ]
+    },
+    "override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "match"
+      ],
+      "properties": {
+        "match": {
+          "$ref": "#/$defs/match"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "symlinks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/symlinkEntry"
+          }
+        },
+        "manager": {
+          "type": "string",
+          "enum": [
+            "os",
+            "nix",
+            "psmodule"
+          ]
+        }
+      }
+    },
+    "symlinkEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "target"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manager": {
+          "type": "string",
+          "enum": [
+            "os",
+            "nix",
+            "psmodule"
+          ]
+        },
+        "symlinks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/symlinkEntry"
+          }
+        },
+        "platforms": {
+          "$ref": "#/$defs/platforms"
+        },
+        "overrides": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/override"
+          }
+        }
+      }
+    }
+  }
+}

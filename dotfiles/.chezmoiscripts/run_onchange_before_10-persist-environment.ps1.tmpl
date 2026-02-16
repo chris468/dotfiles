@@ -12,6 +12,7 @@ chezmoi:template:missing-key=zero
           "unset" "[Environment]::SetEnvironmentVariable('{NAME}', $null, 'User')"
           "set" "[Environment]::SetEnvironmentVariable('{NAME}', '{VALUE}', 'User')"
           "prepend" "& { $v = [Environment]::GetEnvironmentVariable('{NAME}', 'User') ; if (\"$v\" -NotLike '*{VALUE}*') { [Environment]::SetEnvironmentVariable('{NAME}', \"{VALUE};$v\", 'User') } }"
+          "append" "& { $v = [Environment]::GetEnvironmentVariable('{NAME}', 'User') ; if (\"$v\" -NotLike '*{VALUE}*') { [Environment]::SetEnvironmentVariable('{NAME}', \"$v;{VALUE}\", 'User') } }"
         )
       )
 -}}

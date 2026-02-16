@@ -36,13 +36,6 @@ data:
                        # needs to be a nerd font.
       size: <number>   # size of the font for terminals / code editors.
 
-    gitCredentialManager: # will be filled with defaults.
-      configure: <bool>   # whether to add the prompt configuration into gitconfig.
-                          # defaults to true.
-      install:   <bool>   # whether to install git credential manager.
-                          # Defaults to true on linux, false elsewhere.
-                          # On windows it is distributed w/ git.
-                          # On mac, needs to be installed w/ brew.
     ssh_hosts:
       - name: <string>  # required, friendly/short name of the ssh host.
         host: <string>  # optional, defaults to name if unset. actual host name.

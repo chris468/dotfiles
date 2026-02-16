@@ -1,0 +1,434 @@
+---
+- name: Install system tools (local)
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    tools_file: >-
+      {{
+        lookup('env', 'XDG_DATA_HOME')
+          | default(lookup('env','HOME') + '/.local/share', true)
+      }}/chris468/tools/tools.yaml
+    categories:
+      - essential
+    use_nix: false
+    nix_install_mode: daemon
+
+  tasks:
+    - name: Normalize categories list
+      ansible.builtin.set_fact:
+        categories_list: "{{ (categories is string) | ternary(categories | from_yaml, categories) }}"
+
+    - name: Load tool definitions
+      ansible.builtin.include_vars:
+        file: "{{ tools_file }}"
+        name: tools_data
+
+    - name: Compute platform keys
+      ansible.builtin.set_fact:
+        os_key: >-
+          {{
+            'windows' if ansible_facts['system'] == 'Windows'
+            else 'macos' if ansible_facts['system'] == 'Darwin'
+            else 'linux'
+          }}
+        linux_pkg_key: >-
+          {{
+            'apt' if ansible_facts['os_family'] == 'Debian'
+            else 'dnf' if ansible_facts['os_family'] == 'RedHat'
+            else 'pacman' if ansible_facts['distribution'] in ['Archlinux', 'Arch Linux', 'Manjaro']
+            else 'zypper' if ansible_facts['os_family'] == 'Suse'
+            else 'default'
+          }}
+
+    - name: Set nix PATH
+      ansible.builtin.set_fact:
+        nix_path: >-
+          {{
+            ansible_facts['env']['HOME'] + '/.nix-profile/bin' +
+            ':/nix/var/nix/profiles/default/bin:' +
+            ansible_facts['env']['PATH']
+          }}
+        nix_install_mode_normalized: "{{ nix_install_mode | string | lower }}"
+
+    - name: Validate nix install mode
+      ansible.builtin.fail:
+        msg: "nix_install_mode must be either 'daemon' or 'single'."
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized not in ['daemon', 'single']
+
+    - name: Compute nix installation policy
+      ansible.builtin.set_fact:
+        install_nix: >-
+          {{
+            install_nix
+              | default(os_key == 'linux' and ansible_facts['os_family'] == 'Debian')
+              | bool
+          }}
+
+
+    - name: Build package lists
+      ansible.builtin.set_fact:
+        os_packages: >-
+          {%- set pkgs = [] -%}
+          {%- for category in categories_list -%}
+          {%-   set category_packages = tools_data.tools.get(category, {}).get('packages', []) -%}
+          {%-   for item in category_packages -%}
+          {%-     set name = item.get('name', '') -%}
+          {%-     set manager = item.get('manager', 'os') -%}
+          {%-     if not manager -%}
+          {%-       set manager = 'os' -%}
+          {%-     endif -%}
+          {%-     if name and manager == 'os' -%}
+          {%-       set _ = pkgs.append(name) -%}
+          {%-     endif -%}
+          {%-   endfor -%}
+          {%- endfor -%}
+          {{ pkgs | unique | sort }}
+        nix_packages: >-
+          {%- set pkgs = [] -%}
+          {%- for category in categories_list -%}
+          {%-   set category_packages = tools_data.tools.get(category, {}).get('packages', []) -%}
+          {%-   for item in category_packages -%}
+          {%-     set name = item.get('name', '') -%}
+          {%-     set manager = item.get('manager', 'os') -%}
+          {%-     if not manager -%}
+          {%-       set manager = 'os' -%}
+          {%-     endif -%}
+          {%-     if name and manager == 'nix' -%}
+          {%-       set _ = pkgs.append(name) -%}
+          {%-     endif -%}
+          {%-   endfor -%}
+          {%- endfor -%}
+          {{ pkgs | unique | sort }}
+        nerdfonts_list: >-
+          {%- set fonts = [] -%}
+          {%- for category in categories_list -%}
+          {%-   set category_tools = tools_data.tools.get(category, {}) -%}
+          {%-   set category_fonts = category_tools.get('nerdfonts', []) -%}
+          {%-   if category_fonts -%}
+          {%-     for font in category_fonts -%}
+          {%-       if font is mapping and font.get('name', '') -%}
+          {%-         set _ = fonts.append(font.get('name')) -%}
+          {%-       elif font is string -%}
+          {%-         set _ = fonts.append(font) -%}
+          {%-       endif -%}
+          {%-     endfor -%}
+          {%-   endif -%}
+          {%- endfor -%}
+          {{ fonts | unique | sort }}
+        symlink_items: >-
+          {%- set links = [] -%}
+          {%- for category in categories_list -%}
+          {%-   set category_packages = tools_data.tools.get(category, {}).get('packages', []) -%}
+          {%-   for item in category_packages -%}
+          {%-     set symlinks = item.get('symlinks', []) -%}
+          {%-     if symlinks -%}
+          {%-       for link in symlinks -%}
+          {%-         if link is mapping and link.get('source', '') and link.get('target', '') -%}
+          {%-           set _ = links.append({'source': link.get('source'), 'target': link.get('target')}) -%}
+          {%-         endif -%}
+          {%-       endfor -%}
+          {%-     endif -%}
+          {%-   endfor -%}
+          {%- endfor -%}
+          {{ links }}
+
+
+    - name: Install OS packages (macOS)
+      ansible.builtin.homebrew:
+        name: "{{ os_packages }}"
+        state: present
+      when:
+        - os_key == 'macos'
+        - os_packages | length > 0
+
+    - name: Install OS packages (Linux)
+      ansible.builtin.package:
+        name: "{{ os_packages }}"
+        state: present
+      become: true
+      when:
+        - os_key == 'linux'
+        - os_packages | length > 0
+
+    - name: Check for nix
+      ansible.builtin.shell: command -v nix
+      register: nix_command
+      changed_when: false
+      failed_when: false
+      when: use_nix | bool
+      environment:
+        PATH: "{{ nix_path }}"
+
+    - name: Fetch nix tags from GitHub
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/NixOS/nix/tags
+        return_content: true
+      register: nix_github_tags
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - install_nix | bool
+
+    - name: Set nix version from GitHub
+      ansible.builtin.set_fact:
+        nix_version: >-
+          {{
+            (nix_github_tags.json | default([]) | first | default({})).name
+            | default('')
+          }}
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - install_nix | bool
+
+    - name: Fail if nix version could not be determined
+      ansible.builtin.fail:
+        msg: "Failed to determine latest nix version."
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - install_nix | bool
+        - nix_version | length == 0
+
+    - name: Note nix installer URLs
+      ansible.builtin.set_fact:
+        nix_install_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install"
+        nix_install_checksum_url: "https://releases.nixos.org/nix/nix-{{ nix_version }}/install.sha256"
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - install_nix | bool
+
+    - name: Install nix (verified)
+      block:
+        - name: Create temp dir for nix installer
+          ansible.builtin.tempfile:
+            state: directory
+            suffix: nix-install
+          register: nix_tmp
+
+        - name: Download nix installer
+          ansible.builtin.get_url:
+            url: "{{ nix_install_url }}"
+            dest: "{{ nix_tmp.path }}/install"
+            mode: "0755"
+            checksum: "sha256:{{ nix_install_checksum_url }}"
+
+        - name: Ensure user nix config directory exists
+          ansible.builtin.file:
+            path: "{{ ansible_facts['user_dir'] }}/.config/nix"
+            state: directory
+            mode: "0755"
+          when: nix_install_mode_normalized == 'single'
+
+        - name: Run nix installer
+          ansible.builtin.command: >-
+            {{ nix_tmp.path }}/install
+            {{ '--no-daemon' if nix_install_mode_normalized == 'single' else '--daemon' }}
+          environment:
+            PATH: >-
+              {{
+                '/usr/sbin:/sbin:' + ansible_facts['env']['PATH']
+                if nix_install_mode_normalized == 'daemon'
+                else ansible_facts['env']['PATH']
+              }}
+
+      become: "{{ nix_install_mode_normalized == 'daemon' }}"
+      when:
+        - use_nix | bool
+        - nix_command.rc != 0
+        - install_nix | bool
+
+    - name: Ensure nix configuration directory exists (daemon)
+      ansible.builtin.file:
+        path: /etc/nix
+        state: directory
+        mode: "0755"
+      become: true
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+
+    - name: Ensure nix configuration directory exists (single)
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/.config/nix"
+        state: directory
+        mode: "0755"
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'single'
+
+    - name: Enable nix-command and flakes (daemon)
+      ansible.builtin.copy:
+        dest: /etc/nix/nix.conf
+        content: |
+          experimental-features = nix-command flakes
+        mode: "0644"
+      become: true
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+
+    - name: Enable nix-command and flakes (single)
+      ansible.builtin.copy:
+        dest: "{{ ansible_facts['user_dir'] }}/.config/nix/nix.conf"
+        content: |
+          experimental-features = nix-command flakes
+        mode: "0644"
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'single'
+
+    - name: Ensure nix-daemon is enabled and started
+      ansible.builtin.service:
+        name: nix-daemon
+        enabled: true
+        state: started
+      become: true
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+
+    - name: Reset ansible connection after starting nix-daemon
+      ansible.builtin.meta: reset_connection
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+
+    - name: Read enabled categories from home-manager tools file
+      ansible.builtin.command: >-
+        nix eval --raw --impure --expr
+        "let lib = import <nixpkgs/lib>;
+         tools = ((import {{ ansible_facts['user_dir'] }}/.config/home-manager/tools.nix) {}).tiers or {};
+         in (builtins.concatStringsSep \" \" (builtins.attrNames (lib.filterAttrs(name: value: value.enable) tools)))"
+      environment:
+        PATH: "{{ nix_path }}"
+      register: hm_enabled
+      changed_when: false
+      failed_when: false
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+
+    - name: Build home-manager tools file content
+      ansible.builtin.set_fact:
+        hm_tools_file: "{{ ansible_facts['user_dir'] }}/.config/home-manager/tools.nix"
+        hm_enabled_categories: "{{ (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list) }}"
+        hm_all_categories: "{{ (categories_list + (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list)) | unique | sort }}"
+        hm_tools_content: >-
+          { ... }: {
+            tiers = {
+          {%- for category in (categories_list + (hm_enabled.stdout | default('') | trim | regex_replace('\\s+', ' ') | split(' ') | reject('equalto', '') | list)) | unique | sort -%}
+              {{ category }}.enable=true;
+          {%- endfor -%}
+            };
+          }
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+
+    - name: Configure nix packages
+      ansible.builtin.copy:
+        dest: "{{ hm_tools_file }}"
+        content: "{{ hm_tools_content }}"
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+
+    - name: Check for home-manager
+      ansible.builtin.shell: command -v home-manager
+      register: hm_command
+      changed_when: false
+      failed_when: false
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+      environment:
+        PATH: "{{ nix_path }}"
+
+    - name: Run home-manager switch
+      ansible.builtin.command: home-manager switch
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+        - hm_command.rc == 0
+      environment:
+        PATH: "{{ nix_path }}"
+
+    - name: Run home-manager via nix
+      block:
+        - name: Run home-manager via nix command
+          ansible.builtin.command: nix run home-manager/release-25.05 -- switch
+          register: hm_nix_run
+      rescue:
+        - name: Collect nix diagnostics after home-manager failure
+          ansible.builtin.shell: |
+            set -o pipefail
+            echo "=== nix diagnostics start ==="
+            date
+            id
+            whoami
+            echo "NIX_REMOTE=${NIX_REMOTE:-<unset>}"
+            echo "PATH=$PATH"
+            command -v nix || true
+            nix --version || true
+            nix show-config | grep -E '^(experimental-features|extra-experimental-features|store)' || true
+            ls -ld /nix /nix/store /nix/var /nix/var/nix /nix/var/nix/daemon-socket || true
+            ls -l /nix/var/nix/daemon-socket/socket || true
+            systemctl is-active nix-daemon || true
+            systemctl status --no-pager nix-daemon | tail -n 40 || true
+            nix store ping || true
+            echo "=== nix diagnostics end ==="
+          register: hm_nix_diag
+          changed_when: false
+
+        - name: Print nix diagnostics after home-manager failure
+          ansible.builtin.debug:
+            msg: "{{ hm_nix_diag.stdout_lines | default([]) }}"
+
+        - name: Print nix diagnostics stderr after home-manager failure
+          ansible.builtin.debug:
+            msg: "{{ hm_nix_diag.stderr_lines | default([]) }}"
+          when:
+            - hm_nix_diag.stderr_lines is defined
+            - hm_nix_diag.stderr_lines | length > 0
+
+        - name: Fail after collecting nix diagnostics
+          ansible.builtin.fail:
+            msg: >-
+              home-manager via nix failed (rc={{ hm_nix_run.rc | default('unknown') }}).
+              stderr={{ hm_nix_run.stderr | default('') }}
+              Diagnostics were emitted above.
+      when:
+        - use_nix | bool
+        - nix_packages | length > 0
+        - hm_command.rc != 0
+      environment:
+        PATH: "{{ nix_path }}"
+
+    - name: Install Nerd Fonts via oh-my-posh
+      block: 
+        - ansible.builtin.command: env
+        - ansible.builtin.command: "oh-my-posh font install --headless {{ item }}"
+          loop: "{{ nerdfonts_list }}"
+      when:
+        - nerdfonts_list | length > 0
+      environment:
+        PATH: "{{ (use_nix | bool) | ternary(nix_path, ansible_facts['env']['PATH']) }}"
+
+    - name: Create symlinks (Linux/macOS)
+      ansible.builtin.file:
+        src: "{{ item.source }}"
+        dest: "{{ item.target }}"
+        state: link
+      loop: "{{ symlink_items }}"
+      loop_control:
+        label: "{{ item.source }} -> {{ item.target }}"
+      become: "{{ (item.target | default('')) is match('^/(usr(/|$)|opt(/|$))') }}"
+      when:
+        - os_key in ['linux', 'macos']
+        - symlink_items | length > 0

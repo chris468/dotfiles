@@ -1,33 +1,23 @@
-{{- $_local := ".local" -}}
-{{- $_localInstall := joinPath $_local "opt" -}}
-{{- $_localInstallBin := joinPath $_local "bin" -}}
-{{- $_localInstallSbin := joinPath $_local "sbin" -}}
-{{- $_dataHome := joinPath $_local "share" -}}
+{{- $_externals := joinPath ".local" "share" "chris468" "externals" -}}
+{{- $_bin := joinPath ".local" "share" "chris468" "bin" -}}
+{{- $_dataHome := joinPath ".local" "share" -}}
 {{- $_configHome := ".config" -}}
 {{- $_cacheHome := ".cache" -}}
+{{- $_catppuccin := joinPath $_externals "catppuccin" -}}
 {{- $_ipython := joinPath $_configHome "ipython" -}}
-{{- $_zshConfig := joinPath $_configHome "zsh" -}}
-{{- $_zshPlugins := joinPath $_zshConfig "plugins" -}}
-{{- $_fzf := joinPath $_localInstall "fzf" -}}
-{{- $_fzfBin := joinPath $_fzf "bin" -}}
-{{- $_tokyonight := joinPath $_localInstall "tokyonight.nvim" -}}
+{{- $_nuscripts_themes := joinPath $_externals "nu_scripts" "themes" -}}
+{{- $_tokyonight := joinPath $_externals "tokyonight.nvim" -}}
 {{- $paths := dict
-      "local" $_local
-      "localInstall" $_localInstall
-      "localInstallBin" $_localInstallBin
-      "localInstallSbin" $_localInstallSbin
-      "asdf" ".asdf"
-      "dataHome" $_dataHome
-      "configHome" $_configHome
-      "fzf" $_fzf
-      "fzfBin" $_fzfBin
-      "tokyonight" $_tokyonight
-      "homebrew" "/opt/homebrew"
       "cacheHome" $_cacheHome
+      "catppuccin" $_catppuccin
+      "configHome" $_configHome
+      "dataHome" $_dataHome
+      "externals" $_externals
+      "homebrew" "/opt/homebrew"
       "ipython" $_ipython
-      "gitCredentialManager" (joinPath $_localInstall "git-credential-manager")
-      "zshConfig" $_zshConfig
-      "zshPlugins" $_zshPlugins
+      "bin" $_bin
+      "nuscripts_themes" $_nuscripts_themes
+      "tokyonight" $_tokyonight
 -}}
 {{- if eq "windows" .chezmoi.os -}}
 {{-   $paths = set $paths "bash" (joinPath "C:\\" "Program Files" "git" "bin" "bash.exe") -}}

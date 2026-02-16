@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+
+# Remove everything before / to convert GNU/Linux to Linux
+# Convert upper to lower
+#
+OS=$(uname -o | sed -E 's|^.*/||' | tr '[:upper:]' '[:lower:]')
+[[ "$OS" != "msys" ]] || exec pwsh -nologo $HOME/.local/bin/install-tools.ps1 "$@"
+
+function _sudo() {
+  echo sudo "$@"
+  sudo "$@"
+}
+
+function _read_packages() {
+  local filename="$1"
+  shift
+  local -a categories=("$@")
+  local -a packages=()
+  for category in "${categories[@]}"; do
+    local packages_file="$XDG_DATA_HOME/chris468/tools/$category/$filename"
+    [[ -f "$packages_file" ]] || continue
+    cat "$packages_file"
+  done
+}
+
+function install_darwin() {
+  local -a categories=("$@")
+  install_with_ansible "${categories[@]}"
+}
+
+function install_with_ansible() {
+  local -a categories=("$@")
+  local playbook="$XDG_DATA_HOME/chris468/tools/ansible/site.yml"
+  [[ -f "$playbook" ]] || {
+    echo "Missing ansible playbook: $playbook" >&2
+    return 1
+  }
+  command -v pipx >/dev/null || {
+    echo "pipx not found in PATH" >&2
+    return 1
+  }
+
+  local categories_json="["
+  local first=1
+  for category in "${categories[@]}"; do
+    if [[ -z "$first" ]]; then
+      categories_json+=","
+    else
+      first=
+    fi
+    categories_json+="\"$category\""
+  done
+  categories_json+="]"
+
+  local -a args=()
+  args+=("$playbook")
+  args+=("-e" "categories=$categories_json")
+
+  if [[ "$OS" == "linux" ]]; then
+    args+=("-e" "use_nix=true")
+    args+=("-e" "nix_install_mode=$NIX_INSTALL_MODE")
+  fi
+  args+=("-e" "sudo_password_prompt=$([[ -n "$SUDO_PASSWORD_PROMPT" ]] && echo true || echo false)")
+  [[ -n "$SUDO_PASSWORD_PROMPT" ]] && args+=("--ask-become-pass")
+
+  echo
+  echo "Installing tools via ansible for ${categories[*]}..."
+  pipx run --spec ansible ansible-playbook "${args[@]}"
+}
+
+function install_linux() {
+  local -a categories=("$@")
+  install_with_ansible "${categories[@]}"
+}
+
+declare -ar ORDER=(essential container kubernetes aws azure)
+ALL=
+ANY=
+NIX_INSTALL_MODE=daemon
+SUDO_PASSWORD_PROMPT=1
+for category in "${ORDER[@]}"; do
+  declare "category_$category"
+done
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  --all)
+    ALL=1
+    shift
+    continue
+    ;;
+
+  --nix-daemon)
+    NIX_INSTALL_MODE=daemon
+    shift
+    continue
+    ;;
+
+  --no-nix-daemon)
+    NIX_INSTALL_MODE=single
+    shift
+    continue
+    ;;
+
+  --sudo-password-prompt)
+    SUDO_PASSWORD_PROMPT=1
+    shift
+    continue
+    ;;
+
+  --no-sudo-password-prompt)
+    SUDO_PASSWORD_PROMPT=
+    shift
+    continue
+    ;;
+
+  --*)
+    c="${1#--}"
+    [[ -d "$XDG_DATA_HOME/chris468/tools/$c" ]] || {
+      echo "Unknown option: $1" >&2
+      exit 1
+    }
+
+    declare "category_$c"=1
+    ANY=1
+    shift
+    ;;
+
+  *)
+    echo "Unknown option: $1" >&2
+    exit 1
+    ;;
+  esac
+done
+
+[[ -n "$ANY" ]] || category_essential=1
+
+# Force sudo to prompt for a password
+[[ -z "$SUDO_PASSWORD_PROMPT" ]] || ! command -v sudo >&/dev/null || sudo -k
+
+declare -a INSTALL_CATEGORIES=()
+for category in "${ORDER[@]}"; do
+  v="category_$category"
+  [[ -n "$ALL" ]] || [[ -n "${!v}" ]] || continue
+  INSTALL_CATEGORIES+=("$category")
+done
+
+"install_$OS" "${INSTALL_CATEGORIES[@]}"

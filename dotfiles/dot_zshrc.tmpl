@@ -1,5 +1,5 @@
-{{- $localInstall := includeTemplate "path" (dict "path" "localInstall" "unix" true "chezmoi" .chezmoi) -}}
-export ZSH="{{ $localInstall }}/oh-my-zsh"
+{{- $externals := includeTemplate "path" (dict "path" "externals" "unix" true "chezmoi" .chezmoi) -}}
+export ZSH="{{ $externals }}/ohmyzsh"
 
 zstyle ':omz:update' mode disabled  # disable automatic updates
 

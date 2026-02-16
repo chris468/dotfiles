@@ -1,17 +1,14 @@
 function __find_editor {
-    editors=('nvim' 'vim' 'vi' 'gvim')
-    for e in ${editors[@]}
-    do
-        if command -v "$e"
-        then
-            return
-        fi
-    done
+  declare -la editors
+  editors=('nvim' 'vim' 'vi' 'gvim')
+  declare -l e
+  for e in ${editors[@]}; do
+    if command -v "$e" &>/dev/null; then
+      export EDITOR="$e"
+      break
+    fi
+  done
+  unset -f __find_editor
 }
 
-__editor=$(__find_editor)
-if [ -n "$__editor" ]
-then
-    export EDITOR="$__editor"
-fi
-unset __editor
+__find_editor

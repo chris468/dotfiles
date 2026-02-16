@@ -1,0 +1,19 @@
+{ config, lib, pkgs, ... }: {
+  config = lib.mkIf config.tiers.{{ .category }}.enable {
+    home.packages = with pkgs; # packages
+      [
+{{- $category := (index . "category") | default "" -}}
+{{- $rendered := includeTemplate "dot_local/share/chris468/tools/tools.yaml.tmpl" . | fromYaml -}}
+{{- $tools := (index $rendered "tools") | default dict -}}
+{{- $categoryTools := (index $tools $category) | default dict -}}
+{{- $categoryPackages := (index $categoryTools "packages") | default list -}}
+{{- range $categoryPackages -}}
+{{- $name := (index . "name") | default "" -}}
+{{- $manager := (index . "manager") | default "os" -}}
+{{- if and $name (eq $manager "nix") -}}
+{{- $name | nindent 8 }}
+{{- end -}}
+{{- end -}}
+      ];
+  };
+}

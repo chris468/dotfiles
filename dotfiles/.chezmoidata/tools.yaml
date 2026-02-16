@@ -1,0 +1,400 @@
+# yaml-language-server: $schema=../../schemas/tools.schema.json
+tools:
+  essential:
+    nerdfonts:
+    - name: Hack
+    packages:
+    - name: bat
+      overrides:
+      - match:
+          os: windows
+        name: sharkdp.bat
+
+    - name: aristocratos.btop4win
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: carapace
+      overrides:
+      - match:
+          os: windows
+        name: rsteube.Carapace
+      - match:
+          os: linux
+        manager: nix
+
+    - name: chezmoi
+      overrides:
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          os: windows
+        name: twpayne.chezmoi
+
+    - name: eza
+      overrides:
+      - match:
+          os: windows
+        name: eza-community.eza
+      - match:
+          distro: fedora
+          manager: os
+        manager: nix
+
+    - name: fd
+      overrides:
+      - match:
+          family: debian
+          manager: os
+        name: fd-find
+        symlinks:
+          - source: /usr/bin/fdfind
+            target: /usr/local/bin/fd
+      - match:
+          family: redhat
+          manager: os
+        name: fd-find
+      - match:
+          os: windows
+        name: sharkdp.fd
+
+    - name: fzf
+      overrides:
+      - match:
+          os: windows
+        name: junegunn.fzf
+
+    - name: gh
+      overrides:
+      - match:
+          os: windows
+        name: Github.cli
+      - match:
+          family: arch
+        name: github-cli
+
+    - name: git-delta
+      overrides:
+      - match:
+          os: windows
+        name: dandavison.delta
+      - match:
+          manager: nix
+        name: delta
+
+    - name: git-credential-manager
+      platforms:
+        matches:
+        - match:
+            os: linux
+        - match:
+            os: darwin
+      overrides:
+        - match:
+            os: linux
+          manager: nix
+
+    - name: jq
+      overrides:
+      - match:
+          os: windows
+        name: jqlang.jq
+
+    - name: lazygit
+      overrides:
+      - match:
+          distro: ubuntu
+        manager: nix
+      - match:
+          family: redhat
+        manager: nix
+      - match:
+          os: windows
+        name: JesseDuffield.lazygit
+
+    - name: lsd
+      overrides:
+      - match:
+          os: windows
+        name: lsd-rs.lsd
+
+    - name: neovim
+      overrides:
+      - match:
+          os: windows
+        name: Neovim.Neovim
+      - match:
+          family: debian
+        manager: nix
+
+    - name: nodejs
+      overrides:
+      - match:
+          family: arch
+        name: nodejs-lts
+      - match:
+          os: darwin
+        name: node@24
+      - match:
+          os: windows
+        name: OpenJS.NodeJS.LTS
+
+    - name: oh-my-posh
+      overrides:
+      - match:
+          os: windows
+        name: JanDeDobbeleer.OhMyPosh
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          family: arch
+        manager: nix
+      - match:
+          family: suse
+        manager: nix
+
+    - name: python3
+      overrides:
+      - match:
+          family: arch
+        name: python
+      - match:
+          os: darwin
+        name: python@3.14
+      - match:
+          os: windows
+        name: Python.Python.3.14
+
+    - name: ripgrep
+      overrides:
+      - match:
+          os: windows
+        name: BurntSushi.ripgrep.MSVC
+
+    - name: step-cli
+      overrides:
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          family: redhat
+        manager: nix
+      - match:
+          os: darwin
+        name: step
+      - match:
+          os: windows
+        name: Smallstep.step
+
+    - name: wezterm
+      overrides:
+      - match:
+          os: windows
+        name: wez.wezterm
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          family: redhat
+        manager: nix
+
+    - name: yq
+      overrides:
+      - match:
+          os: windows
+        name: MikeFarah.yq
+
+    - name: zoxide
+      overrides:
+      - match:
+          os: windows
+        name: ajeetdsouza.zoxide
+
+    - name: gnupg
+      overrides:
+      - match:
+          family: redhat
+        name: gnupg2
+      - match:
+          family: suse
+        name: gpg2
+
+    - name: xz
+      platforms:
+        exclude: true
+        matches:
+          - match:
+              os: windows
+      overrides:
+      - match:
+          family: debian
+        name: xz-utils
+
+    - name: nix
+      platforms:
+        exclude: true
+        matches:
+        - match:
+            family: debian
+        - match:
+            os: darwin
+
+    - name: BrechtSanders.WinLibs.POSIX.UCRT
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: Microsoft.VCRedist.2015+.x64
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: GnuWin32.File
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: GnuWin32.FindUtils
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: GnuWin32.Grep
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: GnuWin32.Tree
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: GnuWin32.Which
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+    - name: PSFzf
+      manager: psmodule
+      platforms:
+        matches:
+        - match:
+            os: windows
+
+  container:
+    packages:
+    - name: lazydocker
+      overrides:
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          family: redhat
+        manager: nix
+      - match:
+          family: suse
+        manager: nix
+      - match:
+          os: windows
+        name: JesseDuffield.Lazydocker
+
+  kubernetes:
+    packages:
+    - name: helm
+      overrides:
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          os: windows
+        name: Helm.Helm
+
+    - name: k9s
+      overrides:
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          os: windows
+        name: Derailed.k9s
+
+    - name: kubectl
+      overrides:
+      - match:
+          distro: ubuntu
+        manager: nix
+      - match:
+          family: redhat
+        name: kubernetes1.30-client
+      - match:
+          family: suse
+        name: kubernetes-client
+      - match:
+          os: windows
+        name: Kubernetes.kubectl
+
+  aws:
+    packages:
+    - name: awscli
+      overrides:
+      - match:
+          distro: ubuntu
+        manager: nix
+      - match:
+          family: redhat
+        name: awscli2
+      - match:
+          family: arch
+        name: aws-cli-v2
+      - match:
+          os: windows
+        name: Amazon.AWSCLI
+
+    - name: eksctl
+      overrides:
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          family: redhat
+        manager: nix
+      - match:
+          os: windows
+        name: eksctl.eksctl
+
+  azure:
+    packages:
+    - name: azure-cli
+      overrides:
+      - match:
+          distro: ubuntu
+        manager: nix
+      - match:
+          os: windows
+        name: Microsoft.AzureCLI
+
+    - name: kubelogin
+      overrides:
+      - match:
+          family: debian
+        manager: nix
+      - match:
+          family: redhat
+        manager: nix
+      - match:
+          family: arch
+        name: azure-kubelogin
+      - match:
+          os: windows
+        name: Microsoft.Azure.KubeLogin
