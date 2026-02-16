@@ -104,6 +104,18 @@ install_prereqs() {
   rm -f "$prereq_log"
 }
 
+create_cloud_init_user_data() {
+  local user_data_file
+  user_data_file="$(mktemp "${TMPDIR:-/tmp}/incus-cloud-init-user-data.XXXXXX.yaml")"
+  cat >"$user_data_file" <<'EOF'
+#cloud-config
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+EOF
+  printf '%s\n' "$user_data_file"
+}
+
 wait_for_cloud_init() {
   local target_vm="$1"
   local attempt
@@ -181,6 +193,19 @@ wait_for_dns() {
 }
 
 create_cached_vm() {
+  local cloud_init_user_data_file
+  local cloud_init_user_data
+
+  cleanup_cloud_init_user_data_file() {
+    if [[ -n "${cloud_init_user_data_file:-}" ]]; then
+      rm -f "$cloud_init_user_data_file"
+    fi
+  }
+
+  cloud_init_user_data_file="$(create_cloud_init_user_data)"
+  trap cleanup_cloud_init_user_data_file RETURN
+  cloud_init_user_data="$(cat "$cloud_init_user_data_file")"
+
   for _ in $(seq 1 10); do
     vm_hash="$(tr -dc 'a-f0-9' </dev/urandom | head -c 4 || true)"
     if [[ ${#vm_hash} -ne 4 ]]; then
@@ -198,10 +223,13 @@ create_cached_vm() {
   fi
   log_info "creating cached VM: $vm_name"
   incus launch "$IMAGE" "$vm_name" \
+    -c user.user-data="$cloud_init_user_data" \
     -c user.dotfiles.test=true \
     -c user.dotfiles.test-suite=install-tools \
     -c user.dotfiles.test-distro="$DISTRO" \
     -c user.dotfiles.test-image="$IMAGE"
+  trap - RETURN
+  cleanup_cloud_init_user_data_file
   wait_for_cloud_init "$vm_name"
   log_info "installing prerequisite packages"
   install_prereqs "$vm_name"
