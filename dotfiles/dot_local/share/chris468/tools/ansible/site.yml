@@ -141,7 +141,6 @@
       ansible.builtin.homebrew:
         name: "{{ os_packages }}"
         state: present
-      become: true
       when:
         - os_key == 'macos'
         - os_packages | length > 0
