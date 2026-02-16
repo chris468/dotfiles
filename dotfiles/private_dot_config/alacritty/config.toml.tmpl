@@ -1,11 +1,8 @@
 {{- $config := includeTemplate "config" . | fromJson -}}
-{{- $catppuccin := includeTemplate "path" (dict "path" "catppuccin" "chezmoi" .chezmoi) -}}
-{{- $tokyonight := includeTemplate "path" (dict "path" "tokyonight" "chezmoi" .chezmoi) -}}
-{{- $configHome := includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) -}}
 {{- $themes := dict
-  "nord" (joinPath $configHome "alacritty" "themes" "nord.toml")
-  "tokyonight-night" (joinPath $tokyonight "extras" "alacritty" "tokyonight_night.toml")
-  "catppuccin-mocha" (joinPath $catppuccin "alacritty" "catppuccin-mocha.toml")
+  "nord" (joinPath .chezmoi.os .path.configHome "alacritty" "themes" "nord.toml")
+  "tokyonight-night" (joinPath .chezmoi.homeDir .path.tokyonight "extras" "alacritty" "tokyonight_night.toml")
+  "catppuccin-mocha" (joinPath .chezmoi.homeDir .path.catppuccin "alacritty" "catppuccin-mocha.toml")
 -}}
 [general]
 working_directory = "{{ .chezmoi.homeDir }}"

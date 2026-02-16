@@ -1,5 +1,4 @@
-{{- $externals := includeTemplate "path" (dict "path" "externals" "unix" true "chezmoi" .chezmoi) -}}
-export ZSH="{{ $externals }}/ohmyzsh"
+export ZSH="{{ includeTemplate "asUnixPath" .chezmoi.homeDir }}/{{ .path.externals }}/ohmyzsh"
 
 zstyle ':omz:update' mode disabled  # disable automatic updates
 

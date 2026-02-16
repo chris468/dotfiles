@@ -1,6 +1,5 @@
-{{- $cacheHome := includeTemplate "path" (dict "path" "cacheHome" "chezmoi" .chezmoi) -}}
 export def main [] {
-    let last_chezmoi_upgrade = ('{{ $cacheHome }}' | path join dotfiles last-chezmoi-upgrade)
+    let last_chezmoi_upgrade = ('{{ joinPath .chezmoi.homeDir .path.cacheHome }}' | path join dotfiles last-chezmoi-upgrade)
 
     let need_update = (if ($last_chezmoi_upgrade | path exists) { ((date now) - (ls $last_chezmoi_upgrade | first).modified) > 1day } else { true }) 
 

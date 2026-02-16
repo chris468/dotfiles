@@ -1,1 +1,1 @@
-{{ joinPath (includeTemplate "path" (dict "path" "tokyonight" "chezmoi" .chezmoi )) "extras" "alacritty" "tokyonight_night.toml"  }}
+{{ joinPath .chezmoi.homeDir .path.tokyonight "extras" "alacritty" "tokyonight_night.toml"  }}

@@ -1,0 +1,10 @@
+path:
+  homebrew: /opt/homebrew
+  configHome: .config
+  cacheHome: .cache
+  dataHome: .local/share
+  bin: .local/share/chris468/bin
+  externals: .local/share/chris468/externals
+  catppuccin: .local/share/chris468/externals/catppuccin
+  nuscripts_themes: .local/share/chris468/externals/nu_scripts/themes
+  tokyonight: .local/share/chris468/externals/tokyonight.nvim

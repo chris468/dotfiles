@@ -1,4 +1,4 @@
 import = ['~/.config/alacritty/alacritty.toml']
 
 [shell]
-program = '{{ includeTemplate "path" (dict "path" "bash" "chezmoi" .chezmoi)}}'
+program = '{{ joinPath "C:\\" "Program Files" "git" "bin" "bash.exe" }}'

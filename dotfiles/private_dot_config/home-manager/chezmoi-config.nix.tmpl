@@ -8,5 +8,5 @@
   username = "{{ .chezmoi.username }}";
   homeDirectory = "{{ .chezmoi.homeDir }}";
   system = "{{ $arch }}-{{ .chezmoi.os }}";
-  toolsRoot = {{ joinPath (includeTemplate "path" (dict "path" "dataHome" "chezmoi" .chezmoi)) "chris468" "tools" }};
+  toolsRoot = {{ joinPath .chezmoi.homeDir .path.dataHome "chris468" "tools" }};
 }

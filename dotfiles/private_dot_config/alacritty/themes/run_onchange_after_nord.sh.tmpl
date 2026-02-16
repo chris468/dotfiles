@@ -1,5 +1,4 @@
-{{- $configHome := includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) -}}
-{{- $nordPath := joinPath $configHome "alacritty" "themes" "nord.yaml" -}}
+{{- $nordPath := joinPath .chezmoi.homeDir .path.configHome "alacritty" "themes" "nord.yaml" -}}
 {{- if stat $nordPath -}}
 {{- $nordYaml := include $nordPath -}}
 {{- $nord := $nordYaml | fromYaml -}}
@@ -13,7 +12,7 @@
 
 # signature: {{ $nordYaml | sha256sum }}
 
-echo <<EOF >{{ joinPath $configHome "alacritty" "themes" "nord.toml" }}
+echo <<EOF >{{ joinPath .chezmoi.homeDir .path.configHome "alacritty" "themes" "nord.toml" }}
 {{ $nord | toToml }}
 EOF
 {{- end -}}

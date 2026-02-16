@@ -15,30 +15,27 @@
   action: unset
 - name: KUBECONFIG
   action: unset
-- name: IPYTHONDIR
-  path: true
-  value: {{ includeTemplate "path" (dict "path" "ipython" "chezmoi" .chezmoi) }}
 - name: XDG_DATA_HOME
   path: true
   persist: true
-  value: {{ includeTemplate "path" (dict "path" "dataHome" "chezmoi" .chezmoi) }}
+  value: {{ joinPath .chezmoi.homeDir .path.dataHome }}
 - name: XDG_CONFIG_HOME
   path: true
   persist: true
-  value: {{ includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi) }}
+  value: {{ joinPath .chezmoi.homeDir .path.configHome }}
 - name: XDG_CACHE_HOME
   path: true
   persist: true
-  value: {{ includeTemplate "path" (dict "path" "cacheHome" "chezmoi" .chezmoi) }}
+  value: {{ joinPath .chezmoi.homeDir .path.cacheHome }}
 - name: PATH
   path: true
   action: prepend
   persist: true
   value:
 {{- if $config.packageManager.homebrew.enable }}
-    - {{ "bin" | joinPath (includeTemplate "path" (dict "path" "homebrew" "chezmoi" .chezmoi)) }}
+    - {{ joinPath .path.homebrew "bin" }}
 {{- end }}
-    - {{ includeTemplate "path" (dict "path" "bin" "chezmoi" .chezmoi) }}
+    - {{ joinPath .chezmoi.homeDir .path.bin }}
     - {{ joinPath .chezmoi.homeDir ".local" "bin" }}
 {{- if "windows" | eq .chezmoi.os }}
 - name: PATH

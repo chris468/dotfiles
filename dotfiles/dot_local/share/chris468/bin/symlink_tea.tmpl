@@ -1,8 +1,1 @@
-{{ joinPath
-  (includeTemplate "path" (dict "path" "configHome" "chezmoi" .chezmoi))
-  "tmux"
-  "plugins"
-  "tmux-tea"
-  "bin"
-  "tea.sh"
- }}
+{{ joinPath .chezmoi.homeDir .path.configHome "tmux" "plugins" "tmux-tea" "bin" "tea.sh" }}
