@@ -221,6 +221,11 @@ tools:
         name: gpg2
 
     - name: xz
+      platforms:
+        exclude: true
+        matches:
+          - match:
+              os: windows
       overrides:
       - match:
           family: debian
