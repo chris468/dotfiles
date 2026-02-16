@@ -184,6 +184,9 @@ tools:
           family: redhat
         manager: nix
       - match:
+          os: darwin
+        name: step
+      - match:
           os: windows
         name: Smallstep.step
 
@@ -237,6 +240,8 @@ tools:
         matches:
         - match:
             family: debian
+        - match:
+            os: darwin
 
     - name: BrechtSanders.WinLibs.POSIX.UCRT
       platforms:
