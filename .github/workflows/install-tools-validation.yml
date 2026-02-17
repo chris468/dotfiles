@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux-incus:
-    name: Linux Incus (${{ matrix.distro }})
-    runs-on: [self-hosted, linux, incus]
+  linux-docker:
+    name: Linux Docker (${{ matrix.distro }})
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -19,7 +19,7 @@ jobs:
         uses: go-task/setup-task@v1
 
       - name: Run validation
-        run: task -v test:incus:${{ matrix.distro }}
+        run: task -v test:docker:${{ matrix.distro }}
 
   macos:
     name: macOS

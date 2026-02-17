@@ -116,6 +116,61 @@ tasks:
       - task: test:incus:reset:arch
       - task: test:incus:reset:tumbleweed
 
+  test:docker:debian:
+    desc: Run install-tools test in Debian Docker container
+    cmds:
+      - task: _test:docker
+        vars:
+          IMAGE: debian:13
+          DISTRO: debian
+          DISTRO_VERSION: "13"
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:docker:ubuntu:
+    desc: Run install-tools test in Ubuntu Docker container
+    cmds:
+      - task: _test:docker
+        vars:
+          IMAGE: ubuntu:24.04
+          DISTRO: ubuntu
+          DISTRO_VERSION: "2404"
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:docker:fedora:
+    desc: Run install-tools test in Fedora Docker container
+    cmds:
+      - task: _test:docker
+        vars:
+          IMAGE: fedora:43
+          DISTRO: fedora
+          DISTRO_VERSION: "43"
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:docker:arch:
+    desc: Run install-tools test in Arch Docker container
+    cmds:
+      - task: _test:docker
+        vars:
+          IMAGE: archlinux:latest
+          DISTRO: arch
+          DISTRO_VERSION: ""
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:docker:tumbleweed:
+    desc: Run install-tools test in openSUSE Tumbleweed Docker container
+    cmds:
+      - task: _test:docker
+        vars:
+          IMAGE: opensuse/tumbleweed:latest
+          DISTRO: tumbleweed
+          DISTRO_VERSION: ""
+          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+
+  test:docker:all:
+    desc: Run all Docker install-tools tests (max 3 parallel)
+    cmds:
+      - task --parallel --concurrency 3 test:docker:debian test:docker:ubuntu test:docker:fedora test:docker:arch test:docker:tumbleweed
+
   test:mac:
     desc: Run macOS install-tools test
     cmds:
@@ -139,3 +194,10 @@ tasks:
       vars: [IMAGE, DISTRO]
     cmds:
       - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" "{{.TESTS_DIR}}/incus-reset-test-vm.sh"
+
+  _test:docker:
+    internal: true
+    requires:
+      vars: [IMAGE, DISTRO]
+    cmds:
+      - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" INSTALL_TOOLS_ARGS="{{.INSTALL_TOOLS_ARGS}}" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
