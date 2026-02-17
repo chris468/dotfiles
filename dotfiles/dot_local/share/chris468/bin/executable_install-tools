@@ -4,7 +4,7 @@
 # Convert upper to lower
 #
 OS=$(uname -o | sed -E 's|^.*/||' | tr '[:upper:]' '[:lower:]')
-[[ "$OS" != "msys" ]] || exec pwsh -nologo $HOME/.local/bin/install-tools.ps1 "$@"
+[[ "$OS" != "msys" ]] || exec pwsh -nologo $HOME/.local/share/chris468/bin/install-tools.ps1 "$@"
 
 function _sudo() {
   echo sudo "$@"

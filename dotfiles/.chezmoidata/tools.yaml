@@ -222,6 +222,9 @@ tools:
       - match:
           family: suse
         name: gpg2
+      - match:
+            os: windows
+        name: GnuPG.GnuPG
 
     - name: xz
       platforms:
@@ -242,6 +245,8 @@ tools:
             family: debian
         - match:
             os: darwin
+        - match:
+            os: windows
 
     - name: BrechtSanders.WinLibs.POSIX.UCRT
       platforms:
