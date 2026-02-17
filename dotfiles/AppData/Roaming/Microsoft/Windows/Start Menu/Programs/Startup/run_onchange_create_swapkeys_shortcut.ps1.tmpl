@@ -1,0 +1,28 @@
+{{- $config := includeTemplate "config" . | fromJson -}}
+$ErrorActionPreference = 'Stop'
+
+$startupDir = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Startup'
+$shortcutPath = Join-Path $startupDir 'swapkeys.ahk.lnk'
+$targetPath = Join-Path '{{ .chezmoi.homeDir }}' '.config\ahk\swapkeys.ahk'
+$workingDir = Join-Path '{{ .chezmoi.homeDir }}' '.config\ahk'
+
+if (-not (Test-Path -LiteralPath $startupDir)) {
+  New-Item -ItemType Directory -Path $startupDir -Force | Out-Null
+}
+
+{{- if $config.swapkeys }}
+if (-not (Test-Path -LiteralPath $targetPath)) {
+  Write-Host "swapkeys target not found: $targetPath"
+  exit 0
+}
+
+$shell = New-Object -ComObject WScript.Shell
+$shortcut = $shell.CreateShortcut($shortcutPath)
+$shortcut.TargetPath = $targetPath
+$shortcut.WorkingDirectory = $workingDir
+$shortcut.Save()
+{{- else }}
+if (Test-Path -LiteralPath $shortcutPath) {
+  Remove-Item -LiteralPath $shortcutPath -Force
+}
+{{- end }}

@@ -5,8 +5,6 @@ private_dot_config/powershell/
 Documents/
 AppData/
 .vsvimrc
-_vimrc
-vimfiles
 {{- end }}
 
 {{- if ne .chezmoi.os "darwin" }}

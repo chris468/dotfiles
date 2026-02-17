@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+target="$HOME/.config/tmux/plugins/tmux-tea/bin/tea.sh"
+
+if [ ! -x "$target" ]; then
+  echo "tmux-tea executable not found: $target" >&2
+  exit 1
+fi
+
+exec "$target" "$@"

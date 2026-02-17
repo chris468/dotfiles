@@ -1,0 +1,4 @@
+catppuccin-mocha.yaml:
+  type: file
+  url: https://raw.githubusercontent.com/catppuccin/k9s/main/dist/catppuccin-mocha.yaml
+  refreshPeriod: "168h"
