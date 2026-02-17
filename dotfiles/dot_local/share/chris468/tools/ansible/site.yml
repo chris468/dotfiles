@@ -297,7 +297,6 @@
       ansible.builtin.meta: reset_connection
       when:
         - use_nix | bool
-        - nix_install_mode_normalized == 'daemon'
 
     - name: Read enabled categories from home-manager tools file
       ansible.builtin.command: >-
