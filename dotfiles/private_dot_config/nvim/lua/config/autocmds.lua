@@ -1,5 +1,6 @@
 require("config.autocmds.linenumbers")
 require("config.autocmds.lang")
+require("config.autocmds.obsidian")
 require("config.autocmds.treesitter")
 
 local group = vim.api.nvim_create_augroup("chris468.autocmds", { clear = true })
