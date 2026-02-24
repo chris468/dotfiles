@@ -96,7 +96,9 @@ build_host_log_base() {
   base="${base#dotfiles-}"
   base="$(printf '%s' "$base" | sed -E 's/-[a-f0-9]{4}$//')"
   if [[ -z "$base" ]]; then
-    base="container"
+    base="docker-container"
+  else
+    base="docker-$base"
   fi
   printf '%s' "$base"
 }
