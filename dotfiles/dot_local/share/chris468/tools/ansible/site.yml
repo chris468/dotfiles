@@ -14,6 +14,8 @@
       - essential
     use_nix: false
     nix_install_mode: daemon
+    nix_daemon_start_direct: false
+    nix_daemon_direct_diagnostics: true
 
   tasks:
     - name: Normalize categories list
@@ -51,6 +53,7 @@
             ansible_facts['env']['PATH']
           }}
         nix_install_mode_normalized: "{{ nix_install_mode | string | lower }}"
+        nix_daemon_start_direct_effective: "{{ (nix_daemon_start_direct | bool) and ((nix_install_mode | string | lower) == 'daemon') }}"
 
     - name: Validate nix install mode
       ansible.builtin.fail:
@@ -292,11 +295,65 @@
       when:
         - use_nix | bool
         - nix_install_mode_normalized == 'daemon'
+        - not (nix_daemon_start_direct_effective | bool)
+
+    - name: Ensure nix daemon runtime paths exist (direct mode)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - /nix
+        - /nix/store
+        - /nix/var
+        - /nix/var/nix
+        - /nix/var/nix/daemon-socket
+      become: true
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+        - nix_daemon_start_direct_effective | bool
+
+    - name: Start nix-daemon directly in background
+      ansible.builtin.shell: |
+        {
+          if command -v nix >/dev/null 2>&1; then
+            nix daemon
+          else
+            "$(command -v nix-daemon || echo /nix/var/nix/profiles/default/bin/nix-daemon)"
+          fi
+        } >> /tmp/nix-daemon-direct.log 2>&1
+      async: 86400
+      poll: 0
+      register: nix_daemon_direct_job
+      become: true
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+        - nix_daemon_start_direct_effective | bool
 
     - name: Reset ansible connection after starting nix-daemon
       ansible.builtin.meta: reset_connection
       when:
         - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
+
+    - name: Wait for nix daemon readiness
+      ansible.builtin.command:
+        argv:
+          - nix
+          - store
+          - ping
+      environment:
+        PATH: "{{ nix_path }}"
+      register: nix_store_ping
+      changed_when: false
+      retries: 10
+      delay: 3
+      until: nix_store_ping.rc == 0
+      when:
+        - use_nix | bool
+        - nix_install_mode_normalized == 'daemon'
 
     - name: Read enabled categories from home-manager tools file
       ansible.builtin.command: >-
@@ -339,7 +396,10 @@
         - nix_packages | length > 0
 
     - name: Check for home-manager
-      ansible.builtin.shell: command -v home-manager
+      ansible.builtin.command:
+        argv:
+          - home-manager
+          - --version
       register: hm_command
       changed_when: false
       failed_when: false
@@ -348,20 +408,35 @@
         - nix_packages | length > 0
       environment:
         PATH: "{{ nix_path }}"
+        USER: "{{ ansible_facts.user_id }}"
+        LOGNAME: "{{ ansible_facts.user_id }}"
+        HOME: "{{ ansible_facts.user_dir }}"
 
     - name: Run home-manager switch
-      ansible.builtin.command: home-manager switch
+      ansible.builtin.command:
+        argv:
+          - home-manager
+          - switch
       when:
         - use_nix | bool
         - nix_packages | length > 0
         - hm_command.rc == 0
       environment:
         PATH: "{{ nix_path }}"
+        USER: "{{ ansible_facts.user_id }}"
+        LOGNAME: "{{ ansible_facts.user_id }}"
+        HOME: "{{ ansible_facts.user_dir }}"
 
     - name: Run home-manager via nix
       block:
         - name: Run home-manager via nix command
-          ansible.builtin.command: nix run home-manager/release-25.05 -- switch
+          ansible.builtin.command:
+            argv:
+              - nix
+              - run
+              - home-manager/release-25.05
+              - --
+              - switch
           register: hm_nix_run
       rescue:
         - name: Collect nix diagnostics after home-manager failure
@@ -408,11 +483,13 @@
         - hm_command.rc != 0
       environment:
         PATH: "{{ nix_path }}"
+        USER: "{{ ansible_facts.user_id }}"
+        LOGNAME: "{{ ansible_facts.user_id }}"
+        HOME: "{{ ansible_facts.user_dir }}"
 
     - name: Install Nerd Fonts via oh-my-posh
       block: 
-        - ansible.builtin.command: env
-        - ansible.builtin.command: "oh-my-posh font install --headless {{ item }}"
+        - ansible.builtin.shell: "oh-my-posh font install --headless {{ item }}"
           loop: "{{ nerdfonts_list }}"
       when:
         - nerdfonts_list | length > 0

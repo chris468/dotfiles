@@ -10,57 +10,36 @@ tasks:
   test:incus:debian:
     desc: Run install-tools test in Debian Incus VM
     cmds:
-      - task: _test:incus
-        vars:
-          IMAGE: images:debian/13/cloud
-          DISTRO: debian
-          DISTRO_VERSION: "13"
-          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+      - DISTRO="debian" DISTRO_VERSION="13" IMAGE="images:debian/13/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
   test:incus:ubuntu:
     desc: Run install-tools test in Ubuntu Incus VM
     cmds:
-      - task: _test:incus
-        vars:
-          IMAGE: images:ubuntu/24.04/cloud
-          DISTRO: ubuntu
-          DISTRO_VERSION: "2404"
-          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+      - DISTRO="ubuntu" DISTRO_VERSION="2404" IMAGE="images:ubuntu/24.04/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
   test:incus:fedora:
     desc: Run install-tools test in Fedora Incus VM
     cmds:
-      - task: _test:incus
-        vars:
-          IMAGE: images:fedora/43/cloud
-          DISTRO: fedora
-          DISTRO_VERSION: "43"
-          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+      - DISTRO="fedora" DISTRO_VERSION="43" IMAGE="images:fedora/43/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
   test:incus:arch:
     desc: Run install-tools test in Arch Incus VM
     cmds:
-      - task: _test:incus
-        vars:
-          IMAGE: images:archlinux/current/cloud
-          DISTRO: arch
-          DISTRO_VERSION: ""
-          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+      - DISTRO="arch" DISTRO_VERSION="" IMAGE="images:archlinux/current/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
   test:incus:tumbleweed:
     desc: Run install-tools test in openSUSE Tumbleweed Incus VM
     cmds:
-      - task: _test:incus
-        vars:
-          IMAGE: images:opensuse/tumbleweed/cloud
-          DISTRO: tumbleweed
-          DISTRO_VERSION: ""
-          INSTALL_TOOLS_ARGS: --nix-daemon --no-sudo-password-prompt
+      - DISTRO="tumbleweed" DISTRO_VERSION="" IMAGE="images:opensuse/tumbleweed/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
   test:incus:all:
-    desc: Run all Incus install-tools tests (max 3 parallel)
+    desc: Run all Incus install-tools tests sequentially
     cmds:
-      - task --parallel --concurrency 3 test:incus:debian test:incus:ubuntu test:incus:fedora test:incus:arch test:incus:tumbleweed
+      - task test:incus:debian
+      - task test:incus:ubuntu
+      - task test:incus:fedora
+      - task test:incus:arch
+      - task test:incus:tumbleweed
 
   test:incus:reset:debian:
     desc: Delete cached Debian Incus VM used by install-tools tests
@@ -119,57 +98,36 @@ tasks:
   test:docker:debian:
     desc: Run install-tools test in Debian Docker container
     cmds:
-      - task: _test:docker
-        vars:
-          IMAGE: debian:13
-          DISTRO: debian
-          DISTRO_VERSION: "13"
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+      - DISTRO="debian" DISTRO_VERSION="13" IMAGE="debian:13" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
 
   test:docker:ubuntu:
     desc: Run install-tools test in Ubuntu Docker container
     cmds:
-      - task: _test:docker
-        vars:
-          IMAGE: ubuntu:24.04
-          DISTRO: ubuntu
-          DISTRO_VERSION: "2404"
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+      - DISTRO="ubuntu" DISTRO_VERSION="2404" IMAGE="ubuntu:24.04" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
 
   test:docker:fedora:
     desc: Run install-tools test in Fedora Docker container
     cmds:
-      - task: _test:docker
-        vars:
-          IMAGE: fedora:43
-          DISTRO: fedora
-          DISTRO_VERSION: "43"
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+      - DISTRO="fedora" DISTRO_VERSION="43" IMAGE="fedora:43" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
 
   test:docker:arch:
     desc: Run install-tools test in Arch Docker container
     cmds:
-      - task: _test:docker
-        vars:
-          IMAGE: archlinux:latest
-          DISTRO: arch
-          DISTRO_VERSION: ""
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+      - DISTRO="arch" DISTRO_VERSION="" IMAGE="archlinux:latest" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
 
   test:docker:tumbleweed:
     desc: Run install-tools test in openSUSE Tumbleweed Docker container
     cmds:
-      - task: _test:docker
-        vars:
-          IMAGE: opensuse/tumbleweed:latest
-          DISTRO: tumbleweed
-          DISTRO_VERSION: ""
-          INSTALL_TOOLS_ARGS: --no-nix-daemon --no-sudo-password-prompt
+      - DISTRO="tumbleweed" DISTRO_VERSION="" IMAGE="opensuse/tumbleweed:latest" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
 
   test:docker:all:
-    desc: Run all Docker install-tools tests (max 3 parallel)
+    desc: Run all Docker install-tools tests sequentially
     cmds:
-      - task --parallel --concurrency 3 test:docker:debian test:docker:ubuntu test:docker:fedora test:docker:arch test:docker:tumbleweed
+      - task test:docker:debian
+      - task test:docker:ubuntu
+      - task test:docker:fedora
+      - task test:docker:arch
+      - task test:docker:tumbleweed
 
   test:mac:
     desc: Run macOS install-tools test
@@ -181,23 +139,9 @@ tasks:
     cmds:
       - pwsh -NoLogo -NoProfile -File "{{.TESTS_DIR}}/test-install-tools.ps1" {{if .CLI_VERBOSE}}-VerboseLogs{{end}}
 
-  _test:incus:
-    internal: true
-    requires:
-      vars: [IMAGE, DISTRO]
-    cmds:
-      - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" INSTALL_TOOLS_ARGS="{{.INSTALL_TOOLS_ARGS}}" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
-
   _test:incus:reset:
     internal: true
     requires:
       vars: [IMAGE, DISTRO]
     cmds:
       - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" "{{.TESTS_DIR}}/incus-reset-test-vm.sh"
-
-  _test:docker:
-    internal: true
-    requires:
-      vars: [IMAGE, DISTRO]
-    cmds:
-      - DISTRO="{{.DISTRO}}" DISTRO_VERSION="{{.DISTRO_VERSION}}" IMAGE="{{.IMAGE}}" INSTALL_TOOLS_ARGS="{{.INSTALL_TOOLS_ARGS}}" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
