@@ -3,9 +3,14 @@ local M = {}
 ---@param path string
 ---@return string|false
 function M.find_obsidian_vault(path)
-  local obsidian_parents = vim.fs.find(".obsidian", { upward = true, path = path })
+  local start_path = path
+  if vim.fn.isdirectory(start_path) == 0 then
+    start_path = vim.fs.dirname(start_path) or start_path
+  end
+
+  local obsidian_parents = vim.fs.find(".obsidian", { upward = true, path = start_path })
   if obsidian_parents and obsidian_parents[1] then
-    return obsidian_parents[1]
+    return vim.fs.dirname(obsidian_parents[1]) or false
   end
   return false
 end
@@ -19,7 +24,7 @@ function M.slugify_note_title(title)
   end
 
   slug = slug:gsub("[%s_]+", "-")
-  slug = slug:gsub("[/\\:<>\"|%?%*%.]+", "-")
+  slug = slug:gsub('[/\\:<>"|%?%*%.]+', "-")
   slug = slug:gsub("[^%w%-]", "-")
   slug = slug:gsub("%-+", "-")
   slug = slug:gsub("^%-+", "")
