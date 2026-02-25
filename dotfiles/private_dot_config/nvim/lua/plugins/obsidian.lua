@@ -10,6 +10,7 @@ return {
       { "<leader>Nn", "<cmd>Obsidian new<CR>", desc = "Obsidian New" },
       { "<leader>Nf", "<cmd>Obsidian quick_switch<CR>", desc = "Obsidian Quick Switch" },
       { "<leader>Ns", "<cmd>Obsidian search<CR>", desc = "Obsidian Search" },
+      { "<leader>Ng", "<cmd>Obsidian tags<CR>", desc = "Obsidian Tags" },
       { "<leader>Nt", "<cmd>Obsidian today<CR>", desc = "Obsidian Today" },
       { "<leader>Ny", "<cmd>Obsidian yesterday<CR>", desc = "Obsidian Yesterday" },
       { "<leader>Nm", "<cmd>Obsidian tomorrow<CR>", desc = "Obsidian Tomorrow" },
