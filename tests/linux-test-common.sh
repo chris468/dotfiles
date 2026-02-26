@@ -17,12 +17,16 @@ set -euo pipefail
 
 if command -v apt-get >/dev/null 2>&1; then
   apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
   DEBIAN_FRONTEND=noninteractive apt-get install -y curl git python3 python3-pip python3-venv pipx sudo ca-certificates
 elif command -v dnf >/dev/null 2>&1; then
+  dnf -y upgrade
   dnf -y install curl git python3 python3-pip pipx sudo ca-certificates shadow-utils nix-daemon
 elif command -v pacman >/dev/null 2>&1; then
+  pacman -Syu --noconfirm
   pacman -Sy --noconfirm curl git python python-pipx sudo ca-certificates
 elif command -v zypper >/dev/null 2>&1; then
+  zypper --non-interactive update -y
   zypper --non-interactive install -y curl git python3 python3-pipx sudo ca-certificates shadow ncurses-devel
 else
   echo "Unsupported package manager in Linux target" >&2
