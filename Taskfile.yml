@@ -137,7 +137,7 @@ tasks:
   test:win:
     desc: Run Windows install-tools test
     cmds:
-      - DOTFILES="{{.TEST_ROOT}}/dotfiles" pwsh -NoLogo -NoProfile -File "{{.TESTS_DIR}}/test-install-tools.ps1" {{if .CLI_VERBOSE}}-VerboseLogs{{end}}
+      - CI="true" DOTFILES="{{.TEST_ROOT}}/dotfiles" pwsh -NoLogo -NoProfile -File "{{.TESTS_DIR}}/test-install-tools.ps1" {{if .CLI_VERBOSE}}-VerboseLogs{{end}}
 
   _test:incus:reset:
     internal: true
