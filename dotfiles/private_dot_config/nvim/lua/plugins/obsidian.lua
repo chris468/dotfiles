@@ -89,5 +89,24 @@ return {
         enable = false,
       },
     },
+    config = function(_, opts)
+      require("obsidian").setup(opts)
+
+      if opts.picker and opts.picker.name == "snacks" and Obsidian and Obsidian.picker then
+        local picker = Obsidian.picker
+        if not picker._chris468_string_user_data_fix then
+          local original_pick = picker.pick
+          picker.pick = function(values, pick_opts)
+            if type(values) == "table" and #values > 0 and type(values[1]) == "string" then
+              values = vim.tbl_map(function(v)
+                return { text = v, user_data = v }
+              end, values)
+            end
+            return original_pick(values, pick_opts)
+          end
+          picker._chris468_string_user_data_fix = true
+        end
+      end
+    end,
   },
 }
