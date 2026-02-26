@@ -132,12 +132,12 @@ tasks:
   test:mac:
     desc: Run macOS install-tools test
     cmds:
-      - TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/test-install-tools.sh"
+      - DOTFILES="{{.TEST_ROOT}}/dotfiles" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/test-install-tools.sh"
 
   test:win:
     desc: Run Windows install-tools test
     cmds:
-      - pwsh -NoLogo -NoProfile -File "{{.TESTS_DIR}}/test-install-tools.ps1" {{if .CLI_VERBOSE}}-VerboseLogs{{end}}
+      - DOTFILES="{{.TEST_ROOT}}/dotfiles" pwsh -NoLogo -NoProfile -File "{{.TESTS_DIR}}/test-install-tools.ps1" {{if .CLI_VERBOSE}}-VerboseLogs{{end}}
 
   _test:incus:reset:
     internal: true

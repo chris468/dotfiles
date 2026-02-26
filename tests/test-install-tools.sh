@@ -101,7 +101,12 @@ else
 fi
 
 progress "applying dotfiles"
-run_and_log "$LOG_DIR/chezmoi-init.log" chezmoi init --promptDefaults --apply
+if [[ -n "${DOTFILES:-}" ]]; then
+  progress "using source directory from DOTFILES: $DOTFILES"
+  run_and_log "$LOG_DIR/chezmoi-init.log" chezmoi init --promptDefaults --apply --source "$DOTFILES"
+else
+  run_and_log "$LOG_DIR/chezmoi-init.log" chezmoi init --promptDefaults --apply
+fi
 
 tools_file="$XDG_DATA_HOME/chris468/tools/tools.yaml"
 if [[ ! -f "$tools_file" ]]; then

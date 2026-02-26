@@ -31,12 +31,6 @@ $null = New-Item -ItemType Directory -Path $localBin -Force
 $null = New-Item -ItemType Directory -Path $env:XDG_DATA_HOME -Force
 $env:PATH = "$localBin;$env:PATH"
 
-$repoRoot = if ($env:GITHUB_WORKSPACE) {
-  $env:GITHUB_WORKSPACE
-} else {
-  Split-Path -Parent $PSScriptRoot
-}
-
 $logPrefix = if ($env:TEST_LOG_PREFIX) { $env:TEST_LOG_PREFIX } else { 'install-test' }
 $logContext = if ($env:TEST_LOG_CONTEXT) { $env:TEST_LOG_CONTEXT } else { 'windows' }
 
@@ -118,7 +112,12 @@ try {
 
   Write-ProgressLine 'applying dotfiles'
   Invoke-LoggedStep -LogFile (Join-Path $logsRoot 'chezmoi-init.log') -ScriptBlock {
-    & $chezmoiCommandPath init --promptDefaults --apply --source $repoRoot
+    if ($env:DOTFILES) {
+      Write-ProgressLine "using source directory from DOTFILES: $($env:DOTFILES)"
+      & $chezmoiCommandPath init --promptDefaults --apply --source $env:DOTFILES
+    } else {
+      & $chezmoiCommandPath init --promptDefaults --apply
+    }
   }
 
   $toolsFile = Join-Path $env:XDG_DATA_HOME 'chris468/tools/tools.yaml'
