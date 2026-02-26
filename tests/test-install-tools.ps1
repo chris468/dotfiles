@@ -13,6 +13,8 @@ $logsRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("install-tools-" + [Gui
 $null = New-Item -ItemType Directory -Path $logsRoot -Force
 $workRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("install-tools-work-" + [Guid]::NewGuid().ToString('N'))
 $null = New-Item -ItemType Directory -Path $workRoot -Force
+$chezmoiBinDir = Join-Path $workRoot 'chezmoi-bin'
+$null = New-Item -ItemType Directory -Path $chezmoiBinDir -Force
 
 $testHome = if ($env:TEST_HOME) {
   $env:TEST_HOME
@@ -93,7 +95,7 @@ function Install-Chezmoi {
     throw "chezmoi.exe was not found in extracted archive: $zipPath"
   }
 
-  Copy-Item -Path $chezmoiExe -Destination (Join-Path $localBin 'chezmoi.exe') -Force
+  Copy-Item -Path $chezmoiExe -Destination (Join-Path $chezmoiBinDir 'chezmoi.exe') -Force
 }
 
 try {
@@ -107,7 +109,7 @@ try {
     Invoke-LoggedStep -LogFile (Join-Path $logsRoot 'chezmoi-install.log') -ScriptBlock {
       Install-Chezmoi
     }
-    $chezmoiCommandPath = (Join-Path $localBin 'chezmoi.exe')
+    $chezmoiCommandPath = (Join-Path $chezmoiBinDir 'chezmoi.exe')
   }
 
   Write-ProgressLine 'applying dotfiles'

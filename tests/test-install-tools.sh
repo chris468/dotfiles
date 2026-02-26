@@ -2,6 +2,7 @@
 set -euo pipefail
 
 LOG_DIR="${TEST_LOG_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/install-tools.XXXXXX")}"
+CHEZMOI_BIN_DIR="${TEST_CHEZMOI_BIN_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/chezmoi-bin.XXXXXX")}"
 mkdir -p "$LOG_DIR"
 
 log_prefix="${TEST_LOG_PREFIX:-install-test}"
@@ -35,6 +36,7 @@ run_and_log() {
 
 cleanup() {
   local rc=$?
+  rm -rf "$CHEZMOI_BIN_DIR"
   if [[ $rc -ne 0 ]]; then
     printf '[%s|%s] Test failed. Logs are in: %s\n' "$log_prefix" "$log_context" "$LOG_DIR" >&2
   else
@@ -88,24 +90,27 @@ install_chezmoi() {
   local tarball="chezmoi_${version}_${os}_${arch}.tar.gz"
   local url="https://github.com/twpayne/chezmoi/releases/download/${tag}/${tarball}"
 
-  curl -fsSL "$url" | tar -xzf - -C "$HOME/.local/bin" chezmoi
-  chmod +x "$HOME/.local/bin/chezmoi"
+  curl -fsSL "$url" | tar -xzf - -C "$CHEZMOI_BIN_DIR" chezmoi
+  chmod +x "$CHEZMOI_BIN_DIR/chezmoi"
 }
 
+chezmoi_cmd=""
 if command -v chezmoi >/dev/null 2>&1; then
   progress "using existing chezmoi"
   printf '[%s|%s] using existing chezmoi\n' "$log_prefix" "$log_context" >"$LOG_DIR/chezmoi-install.log"
+  chezmoi_cmd="$(command -v chezmoi)"
 else
   progress "downloading chezmoi"
   run_and_log "$LOG_DIR/chezmoi-install.log" install_chezmoi
+  chezmoi_cmd="$CHEZMOI_BIN_DIR/chezmoi"
 fi
 
 progress "applying dotfiles"
 if [[ -n "${DOTFILES:-}" ]]; then
   progress "using source directory from DOTFILES: $DOTFILES"
-  run_and_log "$LOG_DIR/chezmoi-init.log" chezmoi init --promptDefaults --apply --source "$DOTFILES"
+  run_and_log "$LOG_DIR/chezmoi-init.log" "$chezmoi_cmd" init --promptDefaults --apply --source "$DOTFILES"
 else
-  run_and_log "$LOG_DIR/chezmoi-init.log" chezmoi init --promptDefaults --apply
+  run_and_log "$LOG_DIR/chezmoi-init.log" "$chezmoi_cmd" init --promptDefaults --apply
 fi
 
 tools_file="$XDG_DATA_HOME/chris468/tools/tools.yaml"
