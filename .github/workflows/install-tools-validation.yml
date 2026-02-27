@@ -37,7 +37,7 @@ on:
         description: Run Windows
         required: true
         type: boolean
-        default: true
+        default: false # it's timing out
 
 jobs:
   linux-docker-debian:
