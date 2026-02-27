@@ -4,6 +4,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=tests/incus-common.sh
 source "$SCRIPT_DIR/incus-common.sh"
+# shellcheck source=tests/linux-test-common.sh
+source "$SCRIPT_DIR/linux-test-common.sh"
 
 DISTRO="${DISTRO:?DISTRO is required}"
 DISTRO_VERSION="${DISTRO_VERSION:-}"
@@ -35,12 +37,7 @@ host_log_dest=""
 copy_logs_rc=0
 verbose_mode=0
 
-shopt -s nocasematch
-case "$TEST_VERBOSE" in
-1 | true | yes | on) verbose_mode=1 ;;
-*) verbose_mode=0 ;;
-esac
-shopt -u nocasematch
+parse_verbose_mode "$TEST_VERBOSE"
 
 stop_vm_on_exit() {
   if [[ -n "${vm_name:-}" ]]; then
@@ -60,48 +57,10 @@ if [[ "$match_count" -gt 1 ]]; then
   exit 1
 fi
 
-install_prereqs() {
+incus_exec() {
   local target_vm="$1"
-  local prereq_log
-  local rc=0
-  prereq_log="$(mktemp "${TMPDIR:-/tmp}/incus-install-prereqs.XXXXXX.log")"
-
-  if incus exec "$target_vm" -- bash -lc '
-    set -euo pipefail
-
-    if command -v apt-get >/dev/null 2>&1; then
-      apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get install -y curl git python3 python3-pip python3-venv pipx sudo ca-certificates
-    elif command -v dnf >/dev/null 2>&1; then
-      dnf -y install curl git python3 python3-pip pipx sudo ca-certificates shadow-utils
-    elif command -v pacman >/dev/null 2>&1; then
-      pacman -Sy --noconfirm curl git python python-pipx sudo ca-certificates
-    elif command -v zypper >/dev/null 2>&1; then
-      zypper --non-interactive install -y curl git python3 python3-pipx sudo ca-certificates shadow ncurses-devel
-    else
-      echo "Unsupported package manager in VM" >&2
-      exit 1
-    fi
-
-    useradd --create-home --shell /bin/bash ci || true
-    usermod -aG sudo ci || true
-    echo "ci ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/ci
-    chmod 0440 /etc/sudoers.d/ci
-  ' >"$prereq_log" 2>&1; then
-    if [[ "$verbose_mode" -eq 1 ]]; then
-      sed "s/^/[incus-test|${LOG_CONTEXT}] [install-prereqs] /" "$prereq_log"
-    fi
-  else
-    rc=$?
-    log_error "install prerequisite step failed in VM: $target_vm"
-    if [[ -s "$prereq_log" ]]; then
-      sed "s/^/[incus-test|${LOG_CONTEXT}] [install-prereqs] /" "$prereq_log" >&2
-    fi
-    rm -f "$prereq_log"
-    return "$rc"
-  fi
-
-  rm -f "$prereq_log"
+  local script="$2"
+  incus exec "$target_vm" -- bash -lc "$script"
 }
 
 create_cloud_init_user_data() {
@@ -232,7 +191,7 @@ create_cached_vm() {
   cleanup_cloud_init_user_data_file
   wait_for_cloud_init "$vm_name"
   log_info "installing prerequisite packages"
-  install_prereqs "$vm_name"
+  run_prereqs incus_exec "$vm_name" "$LOG_CONTEXT" "incus-test"
   log_info "creating snapshot: $SNAPSHOT_NAME"
   incus snapshot create "$vm_name" "$SNAPSHOT_NAME" --reuse
 }
@@ -242,7 +201,9 @@ build_host_log_base() {
   base="${base#dotfiles-}"
   base="$(printf '%s' "$base" | sed -E 's/-[a-f0-9]{4}$//')"
   if [[ -z "$base" ]]; then
-    base="vm"
+    base="incus-vm"
+  else
+    base="incus-$base"
   fi
   printf '%s' "$base"
 }

@@ -59,6 +59,7 @@ function install_with_ansible() {
   if [[ "$OS" == "linux" ]]; then
     args+=("-e" "use_nix=true")
     args+=("-e" "nix_install_mode=$NIX_INSTALL_MODE")
+    [[ -n "$NIX_DAEMON_START_DIRECT" ]] && args+=("-e" "nix_daemon_start_direct=true")
   fi
   args+=("-e" "sudo_password_prompt=$([[ -n "$SUDO_PASSWORD_PROMPT" ]] && echo true || echo false)")
   [[ -n "$SUDO_PASSWORD_PROMPT" ]] && args+=("--ask-become-pass")
@@ -77,6 +78,7 @@ declare -ar ORDER=(essential container kubernetes aws azure)
 ALL=
 ANY=
 NIX_INSTALL_MODE=daemon
+NIX_DAEMON_START_DIRECT=
 SUDO_PASSWORD_PROMPT=1
 for category in "${ORDER[@]}"; do
   declare "category_$category"
@@ -98,6 +100,13 @@ while [[ $# -gt 0 ]]; do
 
   --no-nix-daemon)
     NIX_INSTALL_MODE=single
+    shift
+    continue
+    ;;
+
+  --nix-daemon-direct)
+    NIX_DAEMON_START_DIRECT=1
+    NIX_INSTALL_MODE=daemon
     shift
     continue
     ;;

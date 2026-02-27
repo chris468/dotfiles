@@ -2,15 +2,48 @@ name: Install Tools Validation
 
 on:
   workflow_dispatch:
+    inputs:
+      linux_debian:
+        description: Run Linux Docker (debian)
+        required: true
+        type: boolean
+        default: true
+      linux_ubuntu:
+        description: Run Linux Docker (ubuntu)
+        required: true
+        type: boolean
+        default: true
+      linux_fedora:
+        description: Run Linux Docker (fedora)
+        required: true
+        type: boolean
+        default: true
+      linux_arch:
+        description: Run Linux Docker (arch)
+        required: true
+        type: boolean
+        default: true
+      linux_tumbleweed:
+        description: Run Linux Docker (tumbleweed)
+        required: true
+        type: boolean
+        default: true
+      macos:
+        description: Run macOS
+        required: true
+        type: boolean
+        default: true
+      windows:
+        description: Run Windows
+        required: true
+        type: boolean
+        default: false # it's timing out
 
 jobs:
-  linux-incus:
-    name: Linux Incus (${{ matrix.distro }})
-    runs-on: [self-hosted, linux, incus]
-    strategy:
-      fail-fast: false
-      matrix:
-        distro: [debian, ubuntu, fedora, arch, tumbleweed]
+  linux-docker-debian:
+    name: Linux Docker (debian)
+    if: ${{ inputs.linux_debian }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,10 +52,67 @@ jobs:
         uses: go-task/setup-task@v1
 
       - name: Run validation
-        run: task -v test:incus:${{ matrix.distro }}
+        run: task -v test:docker:debian
+
+  linux-docker-ubuntu:
+    name: Linux Docker (ubuntu)
+    if: ${{ inputs.linux_ubuntu }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Task
+        uses: go-task/setup-task@v1
+
+      - name: Run validation
+        run: task -v test:docker:ubuntu
+
+  linux-docker-fedora:
+    name: Linux Docker (fedora)
+    if: ${{ inputs.linux_fedora }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Task
+        uses: go-task/setup-task@v1
+
+      - name: Run validation
+        run: task -v test:docker:fedora
+
+  linux-docker-arch:
+    name: Linux Docker (arch)
+    if: ${{ inputs.linux_arch }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Task
+        uses: go-task/setup-task@v1
+
+      - name: Run validation
+        run: task -v test:docker:arch
+
+  linux-docker-tumbleweed:
+    name: Linux Docker (tumbleweed)
+    if: ${{ inputs.linux_tumbleweed }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Task
+        uses: go-task/setup-task@v1
+
+      - name: Run validation
+        run: task -v test:docker:tumbleweed
 
   macos:
     name: macOS
+    if: ${{ inputs.macos }}
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -36,6 +126,7 @@ jobs:
 
   windows:
     name: Windows
+    if: ${{ inputs.windows }}
     runs-on: windows-latest
     steps:
       - name: Checkout

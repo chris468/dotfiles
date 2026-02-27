@@ -19,6 +19,22 @@ $allCategories = @(
 
 Set-PSRepository PSGallery https://www.powershellgallery.com/api/v2 -InstallationPolicy Trusted
 
+function Test-EnvTruthy {
+  param(
+    [string]$Value
+  )
+
+  if (-not $Value) {
+    return $false
+  }
+
+  switch ($Value.Trim().ToLowerInvariant()) {
+    "1" { return $true }
+    "true" { return $true }
+    default { return $false }
+  }
+}
+
 $yamlModuleName = "PowerShell-Yaml"
 if (-not (Get-Module -ListAvailable -Name $yamlModuleName)) {
   Install-Module -Name $yamlModuleName -Scope CurrentUser
@@ -32,6 +48,7 @@ $categories = @(foreach ($category in $allCategories) {
   }
 })
 $categories = if ($categories) { $categories } else { @("Essential") }
+$isCi = (Test-EnvTruthy $env:CI) -or (Test-EnvTruthy $env:GITHUB_ACTIONS)
 
 $wingetPackageIds = @()
 $wingetSourceDetails = $null
@@ -95,10 +112,17 @@ if ($wingetPackageIds.Count -gt 0) {
   $wingetImportPayload | ConvertTo-Json -Depth 6 | Set-Content -Path $wingetImportFile -Encoding utf8
 
   Write-Host "`nInstalling tool winget packages..." -ForegroundColor Green
-  winget import `
-    --import-file $wingetImportFile `
-    --accept-package-agreements `
-    --accept-source-agreements
+  $wingetArgs = @(
+    "import",
+    "--import-file", $wingetImportFile,
+    "--accept-package-agreements",
+    "--accept-source-agreements"
+  )
+  if ($isCi) {
+    Write-Host "CI mode detected (CI/GITHUB_ACTIONS). Using log-friendly winget flags." -ForegroundColor DarkGray
+    $wingetArgs += @("--disable-interactivity", "--ignore-warnings")
+  }
+  & winget @wingetArgs
 }
 
 if ($psModules.Count -gt 0) {

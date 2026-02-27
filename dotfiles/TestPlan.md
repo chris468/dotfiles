@@ -1,12 +1,12 @@
 # Test Plan: Install-Tools Cross-OS Validation
 
 ## Summary
-This plan validates that `install-tools` can find and install packages across supported OSes. Linux testing is Incus-first locally and in CI when available. Tests are driven by Taskfile tasks and use shared scripts placed in `tests/` at the repo root (sibling of `dotfiles/`). GitHub Actions runs are manual-only.
+This plan validates that `install-tools` can find and install packages across supported OSes. Linux testing is Incus-first locally and Docker-based in CI. Tests are driven by Taskfile tasks and use shared scripts placed in `tests/` at the repo root (sibling of `dotfiles/`). GitHub Actions runs are manual-only.
 
 ## Goals
 - Confirm packages are found and installed across OS matrix.
 - Avoid service enablement requirements (package install success only).
-- Prefer Incus for Linux tests locally and in CI.
+- Prefer Incus for Linux tests locally and Docker in CI.
 - Use Taskfile tasks as the single entrypoint for local + CI.
 
 ## Non-Goals
@@ -55,8 +55,8 @@ Create `Taskfile.yml` at the repo root (sibling of `dotfiles/`).
 6. Fail on error; write logs.
 
 ## Local Testing
-### Linux (Incus only)
-Use Incus VMs for all Linux distros. Create a normal user via `useradd --create-home ci`.
+### Linux (Incus)
+Use Incus VMs for all Linux distros locally. Create a normal user via `useradd --create-home ci`.
 
 Taskfile tasks (local):
 - `task test:incus:debian`
@@ -67,6 +67,23 @@ Taskfile tasks (local):
 
 Each task:
 1. Launch Incus VM for the distro.
+2. Create `ci` user.
+3. Install prerequisites (`curl`, `git`, `python3`, `pipx`, `sudo`).
+4. Install `chezmoi`.
+5. Run `tests/test-install-tools.sh`.
+
+### Linux (Docker)
+Use Docker containers for Linux CI and optional local runs.
+
+Taskfile tasks (local/CI):
+- `task test:docker:debian`
+- `task test:docker:ubuntu`
+- `task test:docker:fedora`
+- `task test:docker:arch`
+- `task test:docker:tumbleweed`
+
+Each task:
+1. Launch container for the distro.
 2. Create `ci` user.
 3. Install prerequisites (`curl`, `git`, `python3`, `pipx`, `sudo`).
 4. Install `chezmoi`.
@@ -87,11 +104,11 @@ Taskfile task: `task test:win`.
 ## CI Strategy (GitHub Actions)
 - Manual-only trigger: `workflow_dispatch`.
 - Actions call Taskfile tasks.
-- Linux jobs use Incus-capable runners.
+- Linux jobs use Docker on `ubuntu-latest`.
 - Windows/macOS jobs call `test:win` and `test:mac` tasks.
 
 ### CI Matrix
-Linux (Incus):
+Linux (Docker):
 - Debian
 - Ubuntu
 - Fedora
@@ -103,7 +120,8 @@ Other:
 - Windows
 
 ## Nix Mode
-- Linux Incus tests: `--no-nix-daemon` (single-user) and `--no-sudo-password-prompt`.
+- Linux Incus tests: `--nix-daemon` and `--no-sudo-password-prompt`.
+- Linux Docker tests: `--no-nix-daemon` (single-user) and `--no-sudo-password-prompt`.
 - macOS/Windows: defaults (no Nix on Windows; macOS uses brew).
 
 ## Acceptance Criteria
@@ -121,4 +139,4 @@ Total ≈ 56 minutes per full run.
 
 ## Notes
 - Service enablement is not required for test success.
-- Incus availability is required for Linux CI; use self-hosted runners if GitHub-hosted runners do not support Incus.
+- Incus availability is required for local Incus tests; CI uses Docker.
