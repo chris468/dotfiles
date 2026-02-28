@@ -3,6 +3,27 @@ local uv = vim.uv or vim.loop
 local session_org_dir
 local configured_org_dir
 
+---@param data { title: string, prompt: string, items: table[] }
+local function org_menu_handler(data)
+  local options = {}
+  for _, item in ipairs(data.items or {}) do
+    if item.key and item.label then
+      table.insert(options, item)
+    end
+  end
+
+  vim.ui.select(options, {
+    prompt = data.prompt,
+    format_item = function(item)
+      return ("[%s] %s"):format(item.key, item.label)
+    end,
+  }, function(choice)
+    if choice and choice.action then
+      choice.action()
+    end
+  end)
+end
+
 local function path_exists(path)
   local stat = uv.fs_stat(path)
   return stat and stat.type == "directory"
@@ -39,6 +60,14 @@ local function ensure_org_setup()
   require("orgmode").setup({
     org_agenda_files = { session_org_dir .. "/**/*.org" },
     org_default_notes_file = session_org_dir .. "/inbox.org",
+    ui = {
+      input = {
+        use_vim_ui = true,
+      },
+      menu = {
+        handler = org_menu_handler,
+      },
+    },
   })
   configured_org_dir = session_org_dir
 
