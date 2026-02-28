@@ -8,6 +8,14 @@ local capture_templates = {
     template = "* TODO %?\n  %u",
   },
 }
+local agenda_custom_commands = {}
+local agenda_builtin_commands = {
+  a = "Agenda for current week or day",
+  t = "List of all TODO entries",
+  m = "Match a TAGS/PROP/TODO query",
+  M = "Like m, but only for TODO entries",
+  s = "Search for keywords",
+}
 
 ---@param data { title: string, prompt: string, items: table[] }
 local function org_menu_handler(data)
@@ -65,6 +73,7 @@ local function ensure_org_setup()
 
   require("orgmode").setup({
     org_agenda_files = { session_org_dir .. "/**/*.org" },
+    org_agenda_custom_commands = agenda_custom_commands,
     org_capture_templates = capture_templates,
     org_default_notes_file = session_org_dir .. "/inbox.org",
     ui = {
@@ -115,13 +124,7 @@ return {
     keys = function()
       ---@type LazyKeysSpec[]
       local keys = {
-        {
-          "<leader>Na",
-          function()
-            run_org_subcommand({ "agenda" })
-          end,
-          desc = "Agenda",
-        },
+        { "<leader>NA", function() run_org_subcommand({ "agenda" }) end, desc = "Agenda prompt" },
         {
           "<leader>Nt",
           function()
@@ -144,6 +147,26 @@ return {
             run_org_subcommand({ "capture", template_key })
           end,
           desc = ("Capture: %s"):format(description),
+        })
+      end
+
+      local agenda_keys = vim.tbl_keys(agenda_builtin_commands)
+      if next(agenda_custom_commands) ~= nil then
+        vim.list_extend(agenda_keys, vim.tbl_keys(agenda_custom_commands))
+      end
+      table.sort(agenda_keys)
+      for _, key in ipairs(agenda_keys) do
+        local agenda_key = key
+        local description = agenda_builtin_commands[agenda_key]
+        if not description and agenda_custom_commands[agenda_key] then
+          description = agenda_custom_commands[agenda_key].description or agenda_key
+        end
+        table.insert(keys, {
+          ("<leader>Na%s"):format(agenda_key),
+          function()
+            run_org_subcommand({ "agenda", agenda_key })
+          end,
+          desc = ("Agenda: %s"):format(description or agenda_key),
         })
       end
 
