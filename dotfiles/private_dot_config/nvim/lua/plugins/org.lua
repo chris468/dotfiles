@@ -2,6 +2,12 @@ local uv = vim.uv or vim.loop
 
 local session_org_dir
 local configured_org_dir
+local capture_templates = {
+  t = {
+    description = "Task",
+    template = "* TODO %?\n  %u",
+  },
+}
 
 ---@param data { title: string, prompt: string, items: table[] }
 local function org_menu_handler(data)
@@ -59,6 +65,7 @@ local function ensure_org_setup()
 
   require("orgmode").setup({
     org_agenda_files = { session_org_dir .. "/**/*.org" },
+    org_capture_templates = capture_templates,
     org_default_notes_file = session_org_dir .. "/inbox.org",
     ui = {
       input = {
@@ -105,12 +112,43 @@ return {
     "nvim-orgmode/orgmode",
     ft = { "org" },
     cmd = { "Org" },
-    keys = {
-      { "<leader>Na", function() run_org_subcommand({ "agenda" }) end, desc = "Agenda" },
-      { "<leader>Nc", function() run_org_subcommand({ "capture" }) end, desc = "Capture" },
-      { "<leader>Nt", function() run_org_action("org_mappings.todo_next_state") end, desc = "Todo next state" },
-      { "<leader>NI", open_org_inbox, desc = "Inbox" },
-    },
+    keys = function()
+      ---@type LazyKeysSpec[]
+      local keys = {
+        {
+          "<leader>Na",
+          function()
+            run_org_subcommand({ "agenda" })
+          end,
+          desc = "Agenda",
+        },
+        {
+          "<leader>Nt",
+          function()
+            run_org_action("org_mappings.todo_next_state")
+          end,
+          desc = "Todo next state",
+        },
+        { "<leader>NI", open_org_inbox, desc = "Inbox" },
+      }
+
+      local template_keys = vim.tbl_keys(capture_templates)
+      table.sort(template_keys)
+      for _, key in ipairs(template_keys) do
+        local template_key = key
+        local template = capture_templates[template_key] or {}
+        local description = template.description or template_key
+        table.insert(keys, {
+          ("<leader>Nc%s"):format(template_key),
+          function()
+            run_org_subcommand({ "capture", template_key })
+          end,
+          desc = ("Capture: %s"):format(description),
+        })
+      end
+
+      return keys
+    end,
     dependencies = {
       {
         "nvim-treesitter/nvim-treesitter",
