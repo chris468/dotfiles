@@ -90,7 +90,7 @@ local function ensure_org_setup()
   return session_org_dir
 end
 
-local function run_org_subcommand(args)
+local function exec_org(args)
   if not ensure_org_setup() then
     return
   end
@@ -115,63 +115,77 @@ local function open_org_inbox()
   vim.cmd.edit(dir .. "/inbox.org")
 end
 
+---@type LazyKeysSpec[]
+local keys = {
+  {
+    "<leader>NA",
+    function()
+      exec_org({ "agenda" })
+    end,
+    desc = "Agenda prompt",
+  },
+  {
+    "<leader>NC",
+    function()
+      exec_org({ "capture" })
+    end,
+    desc = "Capture prompt",
+  },
+  {
+    "<leader>Nt",
+    function()
+      run_org_action("org_mappings.todo_next_state")
+    end,
+    desc = "Todo next state",
+  },
+  { "<leader>NI", open_org_inbox, desc = "Inbox" },
+}
+
+do
+  local template_keys = vim.tbl_keys(capture_templates)
+  table.sort(template_keys)
+  for _, key in ipairs(template_keys) do
+    local template_key = key
+    local template = capture_templates[template_key] or {}
+    local description = template.description or template_key
+    table.insert(keys, {
+      ("<leader>Nc%s"):format(template_key),
+      function()
+        exec_org({ "capture", template_key })
+      end,
+      desc = ("Capture: %s"):format(description),
+    })
+  end
+
+  local agenda_keys = vim.tbl_keys(agenda_builtin_commands)
+  if next(agenda_custom_commands) ~= nil then
+    vim.list_extend(agenda_keys, vim.tbl_keys(agenda_custom_commands))
+  end
+  table.sort(agenda_keys)
+  for _, key in ipairs(agenda_keys) do
+    local agenda_key = key
+    local description = agenda_builtin_commands[agenda_key]
+    if not description and agenda_custom_commands[agenda_key] then
+      description = agenda_custom_commands[agenda_key].description or agenda_key
+    end
+    table.insert(keys, {
+      ("<leader>Na%s"):format(agenda_key),
+      function()
+        exec_org({ "agenda", agenda_key })
+      end,
+      desc = ("Agenda: %s"):format(description or agenda_key),
+    })
+  end
+end
+
+---@module 'lazy'
 ---@type LazyPluginSpec[]
 return {
   {
     "nvim-orgmode/orgmode",
     ft = { "org" },
     cmd = { "Org" },
-    keys = function()
-      ---@type LazyKeysSpec[]
-      local keys = {
-        { "<leader>NA", function() run_org_subcommand({ "agenda" }) end, desc = "Agenda prompt" },
-        {
-          "<leader>Nt",
-          function()
-            run_org_action("org_mappings.todo_next_state")
-          end,
-          desc = "Todo next state",
-        },
-        { "<leader>NI", open_org_inbox, desc = "Inbox" },
-      }
-
-      local template_keys = vim.tbl_keys(capture_templates)
-      table.sort(template_keys)
-      for _, key in ipairs(template_keys) do
-        local template_key = key
-        local template = capture_templates[template_key] or {}
-        local description = template.description or template_key
-        table.insert(keys, {
-          ("<leader>Nc%s"):format(template_key),
-          function()
-            run_org_subcommand({ "capture", template_key })
-          end,
-          desc = ("Capture: %s"):format(description),
-        })
-      end
-
-      local agenda_keys = vim.tbl_keys(agenda_builtin_commands)
-      if next(agenda_custom_commands) ~= nil then
-        vim.list_extend(agenda_keys, vim.tbl_keys(agenda_custom_commands))
-      end
-      table.sort(agenda_keys)
-      for _, key in ipairs(agenda_keys) do
-        local agenda_key = key
-        local description = agenda_builtin_commands[agenda_key]
-        if not description and agenda_custom_commands[agenda_key] then
-          description = agenda_custom_commands[agenda_key].description or agenda_key
-        end
-        table.insert(keys, {
-          ("<leader>Na%s"):format(agenda_key),
-          function()
-            run_org_subcommand({ "agenda", agenda_key })
-          end,
-          desc = ("Agenda: %s"):format(description or agenda_key),
-        })
-      end
-
-      return keys
-    end,
+    keys = keys,
     dependencies = {
       {
         "nvim-treesitter/nvim-treesitter",
