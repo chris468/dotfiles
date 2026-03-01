@@ -1,5 +1,3 @@
-local uv = vim.uv or vim.loop
-
 local session_org_dir
 local configured_org_dir
 local org_dir_history_file = vim.fn.stdpath("state") .. "/org_dir_history.json"
@@ -15,12 +13,6 @@ end
 
 ---@param data { title: string, prompt: string, items: table[] }
 local function org_menu_handler(data)
-  local ok_snacks_win, snacks_win = pcall(require, "snacks.win")
-  if not ok_snacks_win then
-    vim.notify("Org menu requires snacks.win, but it could not be loaded", vim.log.levels.ERROR)
-    return
-  end
-
   local options = {}
   local seen_keys = {}
   local duplicate_keys = {}
@@ -120,7 +112,7 @@ local function org_menu_handler(data)
     end
   end
 
-  menu_win = snacks_win({
+  menu_win = Snacks.win({
     border = "rounded",
     bo = {
       bufhidden = "wipe",
@@ -160,13 +152,13 @@ local function org_menu_handler(data)
 end
 
 local function path_exists(path)
-  local stat = uv.fs_stat(path)
+  local stat = vim.uv.fs_stat(path)
   return stat and stat.type == "directory"
 end
 
 ---@return string[]
 local function load_org_dir_history()
-  local stat = uv.fs_stat(org_dir_history_file)
+  local stat = vim.uv.fs_stat(org_dir_history_file)
   if not stat or stat.type ~= "file" then
     return {}
   end
