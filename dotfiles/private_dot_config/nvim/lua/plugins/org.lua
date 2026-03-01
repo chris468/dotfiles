@@ -113,11 +113,7 @@ local function ensure_dir_exists(dir)
     return true
   end
 
-  local choice = vim.fn.confirm(
-    ("Org notes path does not exist:\n%s\n\nCreate it?"):format(dir),
-    "&Yes\n&No",
-    1
-  )
+  local choice = vim.fn.confirm(("Org notes path does not exist:\n%s\n\nCreate it?"):format(dir), "&Yes\n&No", 1)
   if choice ~= 1 then
     return false
   end
@@ -219,6 +215,13 @@ local function ensure_org_setup_async(on_ready)
         org_agenda_custom_commands = agenda_custom_commands,
         org_capture_templates = capture_templates,
         org_default_notes_file = session_org_dir .. "/inbox.org",
+        mappings = {
+          prefix = "<Leader>N",
+          global = {
+            org_agenda = "<Leader>Na/",
+            org_capture = "<Leader>Nc/",
+          },
+        },
         ui = {
           input = {
             use_vim_ui = true,
@@ -258,12 +261,6 @@ local function exec_org(args)
   end)
 end
 
-local function run_org_action(action)
-  ensure_org_setup_async(function()
-    require("orgmode").action(action)
-  end)
-end
-
 local function open_org_inbox()
   ensure_org_setup_async(function()
     vim.cmd.edit(session_org_dir .. "/inbox.org")
@@ -272,27 +269,6 @@ end
 
 ---@type LazyKeysSpec[]
 local keys = {
-  {
-    "<leader>NA",
-    function()
-      exec_org({ "agenda" })
-    end,
-    desc = "Agenda prompt",
-  },
-  {
-    "<leader>NC",
-    function()
-      exec_org({ "capture" })
-    end,
-    desc = "Capture prompt",
-  },
-  {
-    "<leader>Nt",
-    function()
-      run_org_action("org_mappings.todo_next_state")
-    end,
-    desc = "Todo next state",
-  },
   { "<leader>NI", open_org_inbox, desc = "Inbox" },
 }
 
