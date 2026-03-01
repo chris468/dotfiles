@@ -2,20 +2,6 @@ local uv = vim.uv or vim.loop
 
 local session_org_dir
 local configured_org_dir
-local capture_templates = {
-  t = {
-    description = "Task",
-    template = "* TODO %?\n  %u",
-  },
-}
-local agenda_custom_commands = {}
-local agenda_builtin_commands = {
-  a = "Agenda for current week or day",
-  t = "List of all TODO entries",
-  m = "Match a TAGS/PROP/TODO query",
-  M = "Like m, but only for TODO entries",
-  s = "Search for keywords",
-}
 local org_dir_history_file = vim.fn.stdpath("state") .. "/org_dir_history.json"
 local org_dir_history_limit = 20
 local setup_state = "idle"
@@ -29,23 +15,148 @@ end
 
 ---@param data { title: string, prompt: string, items: table[] }
 local function org_menu_handler(data)
+  local ok_snacks_win, snacks_win = pcall(require, "snacks.win")
+  if not ok_snacks_win then
+    vim.notify("Org menu requires snacks.win, but it could not be loaded", vim.log.levels.ERROR)
+    return
+  end
+
   local options = {}
+  local seen_keys = {}
+  local duplicate_keys = {}
   for _, item in ipairs(data.items or {}) do
     if item.key and item.label then
+      if seen_keys[item.key] then
+        duplicate_keys[item.key] = true
+      else
+        seen_keys[item.key] = true
+      end
       table.insert(options, item)
     end
   end
 
-  vim.ui.select(options, {
-    prompt = data.prompt,
-    format_item = function(item)
-      return ("[%s] %s"):format(item.key, item.label)
-    end,
-  }, function(choice)
-    if choice and choice.action then
-      choice.action()
+  if #options == 0 then
+    vim.notify("Org menu has no selectable items", vim.log.levels.WARN)
+    return
+  end
+
+  local duplicate_list = vim.tbl_keys(duplicate_keys)
+  if #duplicate_list > 0 then
+    table.sort(duplicate_list)
+    vim.notify(
+      ("Org menu has duplicate shortcut keys: %s"):format(table.concat(duplicate_list, ", ")),
+      vim.log.levels.WARN
+    )
+  end
+
+  local title = type(data.title) == "string" and data.title ~= "" and data.title or "Org menu"
+  local prompt = type(data.prompt) == "string" and data.prompt ~= "" and data.prompt or "Select action"
+  local lines = {
+    prompt,
+    "",
+  }
+  local first_option_row = #lines + 1
+  for _, item in ipairs(options) do
+    table.insert(lines, ("[%s] %s"):format(item.key, item.label))
+  end
+  table.insert(lines, "")
+  table.insert(lines, "Esc cancel")
+
+  local max_line_width = 0
+  for _, line in ipairs(lines) do
+    max_line_width = math.max(max_line_width, vim.api.nvim_strwidth(line))
+  end
+
+  local max_width = math.max(32, math.min(max_line_width + 2, vim.o.columns - 6))
+  local max_height = math.max(6, math.min(#lines, vim.o.lines - 6))
+
+  local menu_done = false
+  ---@type snacks.win?
+  local menu_win = nil
+  local function close_menu()
+    if menu_win and menu_win:valid() then
+      menu_win:close()
     end
-  end)
+  end
+
+  ---@param action? fun()
+  local function finish_menu(action)
+    if menu_done then
+      return
+    end
+    menu_done = true
+    close_menu()
+    if action then
+      local ok, err = pcall(action)
+      if not ok then
+        vim.notify(("Org action failed: %s"):format(err), vim.log.levels.ERROR)
+      end
+    end
+  end
+
+  local keys = {
+    ["<Esc>"] = {
+      "<Esc>",
+      function()
+        finish_menu()
+      end,
+      mode = "n",
+      nowait = true,
+      desc = "Cancel",
+    },
+  }
+
+  for _, item in ipairs(options) do
+    if not keys[item.key] then
+      keys[item.key] = {
+        item.key,
+        function()
+          finish_menu(item.action)
+        end,
+        mode = "n",
+        nowait = true,
+        desc = item.label,
+      }
+    end
+  end
+
+  menu_win = snacks_win({
+    border = "rounded",
+    bo = {
+      bufhidden = "wipe",
+      buftype = "nofile",
+      modifiable = false,
+      readonly = true,
+      swapfile = false,
+      filetype = "org",
+    },
+    enter = true,
+    focusable = true,
+    footer_keys = { "<Esc>" },
+    height = max_height,
+    keys = keys,
+    position = "float",
+    relative = "editor",
+    text = lines,
+    title = title,
+    title_pos = "center",
+    width = max_width,
+    wo = {
+      cursorline = true,
+      foldenable = false,
+      number = false,
+      relativenumber = false,
+      signcolumn = "no",
+      spell = false,
+      statuscolumn = "",
+      wrap = false,
+    },
+    on_win = function(win)
+      if first_option_row <= vim.api.nvim_buf_line_count(win.buf) then
+        pcall(vim.api.nvim_win_set_cursor, win.win, { first_option_row, 0 })
+      end
+    end,
+  })
 end
 
 local function path_exists(path)
@@ -188,8 +299,9 @@ local function prompt_org_dir_async(on_done)
   end)
 end
 
----@param on_ready fun()
-local function ensure_org_setup_async(on_ready)
+---@param on_ready? fun()
+local function select_org_path(on_ready)
+  on_ready = on_ready or function() end
   if setup_state == "ready" then
     on_ready()
     return
@@ -212,24 +324,7 @@ local function ensure_org_setup_async(on_ready)
     if configured_org_dir ~= session_org_dir then
       local ok, err = pcall(require("orgmode").setup, {
         org_agenda_files = { session_org_dir .. "/**/*.org" },
-        org_agenda_custom_commands = agenda_custom_commands,
-        org_capture_templates = capture_templates,
         org_default_notes_file = session_org_dir .. "/inbox.org",
-        mappings = {
-          prefix = "<Leader>N",
-          global = {
-            org_agenda = "<Leader>Na/",
-            org_capture = "<Leader>Nc/",
-          },
-        },
-        ui = {
-          input = {
-            use_vim_ui = true,
-          },
-          menu = {
-            handler = org_menu_handler,
-          },
-        },
       })
       if not ok then
         vim.notify(("Failed to configure orgmode: %s"):format(err), vim.log.levels.ERROR)
@@ -252,63 +347,6 @@ local function ensure_org_setup_async(on_ready)
   end)
 end
 
-local function exec_org(args)
-  ensure_org_setup_async(function()
-    vim.cmd({
-      cmd = "Org",
-      args = args,
-    })
-  end)
-end
-
-local function open_org_inbox()
-  ensure_org_setup_async(function()
-    vim.cmd.edit(session_org_dir .. "/inbox.org")
-  end)
-end
-
----@type LazyKeysSpec[]
-local keys = {
-  { "<leader>NI", open_org_inbox, desc = "Inbox" },
-}
-
-do
-  local template_keys = vim.tbl_keys(capture_templates)
-  table.sort(template_keys)
-  for _, key in ipairs(template_keys) do
-    local template_key = key
-    local template = capture_templates[template_key] or {}
-    local description = template.description or template_key
-    table.insert(keys, {
-      ("<leader>Nc%s"):format(template_key),
-      function()
-        exec_org({ "capture", template_key })
-      end,
-      desc = ("Capture: %s"):format(description),
-    })
-  end
-
-  local agenda_keys = vim.tbl_keys(agenda_builtin_commands)
-  if next(agenda_custom_commands) ~= nil then
-    vim.list_extend(agenda_keys, vim.tbl_keys(agenda_custom_commands))
-  end
-  table.sort(agenda_keys)
-  for _, key in ipairs(agenda_keys) do
-    local agenda_key = key
-    local description = agenda_builtin_commands[agenda_key]
-    if not description and agenda_custom_commands[agenda_key] then
-      description = agenda_custom_commands[agenda_key].description or agenda_key
-    end
-    table.insert(keys, {
-      ("<leader>Na%s"):format(agenda_key),
-      function()
-        exec_org({ "agenda", agenda_key })
-      end,
-      desc = ("Agenda: %s"):format(description or agenda_key),
-    })
-  end
-end
-
 ---@module 'lazy'
 ---@type LazyPluginSpec[]
 return {
@@ -316,7 +354,9 @@ return {
     "nvim-orgmode/orgmode",
     ft = { "org" },
     cmd = { "Org" },
-    keys = keys,
+    keys = {
+      { "<Leader>NO", select_org_path, desc = "Select path" },
+    },
     dependencies = {
       {
         "nvim-treesitter/nvim-treesitter",
@@ -326,6 +366,19 @@ return {
             table.insert(opts.ensure_installed, "org")
           end
         end,
+      },
+    },
+    opts = {
+      mappings = {
+        prefix = "<Leader>N",
+      },
+      ui = {
+        input = {
+          use_vim_ui = true,
+        },
+        menu = {
+          handler = org_menu_handler,
+        },
       },
     },
   },
