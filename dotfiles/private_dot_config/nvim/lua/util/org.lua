@@ -204,11 +204,16 @@ function M.select_org_path(on_ready)
   end)
 end
 
----@param data { title: string, prompt: string, items: table[] }
+---@param data { title?: string, prompt?: string, items?: table[] }
 function M.org_menu_handler(data)
+  local title = data.title or "Org menu"
+  local prompt = data.prompt
+  if prompt and prompt == title then
+    prompt = nil
+  end
   menu.open({
-    title = data.title or "Org menu",
-    prompt = data.prompt or "Select action",
+    title = title,
+    prompt = prompt,
     items = data.items or {},
     on_error = function(err)
       vim.notify(("Org action failed: %s"):format(err), vim.log.levels.ERROR)
