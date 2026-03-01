@@ -1,12 +1,19 @@
 local M = {}
 local menu = require("util.ui.menu")
+local async = require("plenary.async")
 
 local session_org_dir
 local configured_org_dir
 local org_dir_history_file = vim.fn.stdpath("state") .. "/org_dir_history.json"
 local org_dir_history_limit = 20
-local setup_state = "idle"
-local setup_queue = {}
+local in_flight
+
+local input = async.wrap(function(opts, callback)
+  return vim.ui.input(opts, callback)
+end, 2)
+local select = async.wrap(function(items, opts, callback)
+  return vim.ui.select(items, opts, callback)
+end, 3)
 
 ---@param input string
 ---@return string
@@ -81,8 +88,10 @@ local function ensure_dir_exists(dir)
     return true
   end
 
-  local choice = vim.fn.confirm(("Org notes path does not exist:\n%s\n\nCreate it?"):format(dir), "&Yes\n&No", 1)
-  if choice ~= 1 then
+  local choice = select({ "Create directory", "Cancel" }, {
+    prompt = ("Org notes path does not exist: %s"):format(dir),
+  })
+  if choice ~= "Create directory" then
     return false
   end
 
@@ -95,39 +104,35 @@ local function ensure_dir_exists(dir)
   return true
 end
 
----@param input string
----@param on_done fun(dir: string?)
-local function resolve_org_dir_input_async(input, on_done)
+---@param input string?
+---@return string?
+local function prepare_org_dir(input)
   if input == nil or input == "" then
     vim.notify("Org notes path is required", vim.log.levels.ERROR)
-    on_done(nil)
-    return
+    return nil
   end
 
   local dir = normalize_path(input)
   if not ensure_dir_exists(dir) then
-    on_done(nil)
-    return
+    return nil
   end
 
   record_org_dir_history(dir)
-  on_done(dir)
+  return dir
 end
 
 ---@param initial string
----@param on_done fun(dir: string?)
-local function prompt_new_org_dir_async(initial, on_done)
-  vim.ui.input({ prompt = "Org notes path: ", default = initial }, function(input)
-    resolve_org_dir_input_async(input, on_done)
-  end)
+---@return string?
+local function prompt_new_org_dir(initial)
+  local input = input({ prompt = "Org notes path: ", default = initial })
+  return prepare_org_dir(input)
 end
 
----@param on_done fun(dir: string?)
-local function prompt_org_dir_async(on_done)
+---@return string?
+local function prompt_org_dir()
   local history = load_org_dir_history()
   if #history == 0 then
-    prompt_new_org_dir_async(vim.fn.expand("~"), on_done)
-    return
+    return prompt_new_org_dir(vim.fn.expand("~"))
   end
 
   local items = vim.tbl_map(function(dir)
@@ -135,7 +140,7 @@ local function prompt_org_dir_async(on_done)
   end, history)
   table.insert(items, { kind = "new", value = "" })
 
-  vim.ui.select(items, {
+  local choice = select(items, {
     prompt = "Select Org notes path",
     format_item = function(item)
       if item.kind == "new" then
@@ -143,63 +148,59 @@ local function prompt_org_dir_async(on_done)
       end
       return item.value
     end,
-  }, function(choice)
-    if not choice then
-      on_done(nil)
-      return
-    end
-    if choice.kind == "history" then
-      resolve_org_dir_input_async(choice.value, on_done)
-      return
-    end
-    prompt_new_org_dir_async(history[1], on_done)
-  end)
+  })
+  if not choice then
+    return nil
+  end
+  if choice.kind == "history" then
+    return prepare_org_dir(choice.value)
+  end
+  return prompt_new_org_dir(history[1])
 end
 
----@param on_ready? fun()
-function M.select_org_path(on_ready)
-  on_ready = on_ready or function() end
-  if setup_state == "ready" then
-    on_ready()
+---@return boolean
+local function configure_org_path()
+  local dir = prompt_org_dir()
+  if not dir then
+    return false
+  end
+
+  session_org_dir = dir
+  if configured_org_dir == session_org_dir then
+    return true
+  end
+
+  local ok, err = pcall(require("orgmode").setup, {
+    org_agenda_files = { session_org_dir .. "/**/*.org" },
+    org_default_notes_file = session_org_dir .. "/inbox.org",
+  })
+  if not ok then
+    vim.notify(("Failed to configure orgmode: %s"):format(err), vim.log.levels.ERROR)
+    return false
+  end
+
+  configured_org_dir = session_org_dir
+  return true
+end
+
+function M.select_org_path()
+  if in_flight ~= nil then
     return
   end
 
-  table.insert(setup_queue, on_ready)
-  if setup_state == "prompting" then
-    return
-  end
+  in_flight = true
 
-  setup_state = "prompting"
-  prompt_org_dir_async(function(dir)
-    if not dir then
-      setup_state = "idle"
-      setup_queue = {}
+  async.run(function()
+    local ok, result = pcall(configure_org_path)
+    return ok, result
+  end, function(stat, ok, result)
+    in_flight = nil
+    if not stat then
+      vim.notify(("Org action failed: %s"):format(ok), vim.log.levels.ERROR)
       return
     end
-
-    session_org_dir = dir
-    if configured_org_dir ~= session_org_dir then
-      local ok, err = pcall(require("orgmode").setup, {
-        org_agenda_files = { session_org_dir .. "/**/*.org" },
-        org_default_notes_file = session_org_dir .. "/inbox.org",
-      })
-      if not ok then
-        vim.notify(("Failed to configure orgmode: %s"):format(err), vim.log.levels.ERROR)
-        setup_state = "idle"
-        setup_queue = {}
-        return
-      end
-      configured_org_dir = session_org_dir
-    end
-
-    setup_state = "ready"
-    local queued = setup_queue
-    setup_queue = {}
-    for _, callback in ipairs(queued) do
-      local ok, err = pcall(callback)
-      if not ok then
-        vim.notify(("Org action failed: %s"):format(err), vim.log.levels.ERROR)
-      end
+    if not ok then
+      vim.notify(("Org action failed: %s"):format(result), vim.log.levels.ERROR)
     end
   end)
 end
