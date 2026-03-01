@@ -15,10 +15,10 @@ local select = async.wrap(function(items, opts, callback)
   return vim.ui.select(items, opts, callback)
 end, 3)
 
----@param input string
+---@param path string
 ---@return string
-local function normalize_path(input)
-  return vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(input), ":p"))
+local function normalize_path(path)
+  return vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ":p"))
 end
 
 ---@param path string
@@ -104,15 +104,15 @@ local function ensure_dir_exists(dir)
   return true
 end
 
----@param input string?
+---@param path string?
 ---@return string?
-local function prepare_org_dir(input)
-  if input == nil or input == "" then
+local function prepare_org_dir(path)
+  if path == nil or path == "" then
     vim.notify("Org notes path is required", vim.log.levels.ERROR)
     return nil
   end
 
-  local dir = normalize_path(input)
+  local dir = normalize_path(path)
   if not ensure_dir_exists(dir) then
     return nil
   end
@@ -124,8 +124,8 @@ end
 ---@param initial string
 ---@return string?
 local function prompt_new_org_dir(initial)
-  local input = input({ prompt = "Org notes path: ", default = initial })
-  return prepare_org_dir(input)
+  local path = input({ prompt = "Org notes path: ", default = initial })
+  return prepare_org_dir(path)
 end
 
 ---@return string?
