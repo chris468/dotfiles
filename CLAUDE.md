@@ -187,6 +187,7 @@ Based on [LazyVim](https://lazyvim.org). Structure:
 ### Key custom utilities
 
 - `util.chezmoi` — apply/update chezmoi from within neovim (keymaps: `<leader>z*`)
+- `util.obsidian` — vault detection (`find_obsidian_vault`), note slug generation, workspace-aware command wrapper
 - `util.ui.path_selector` — MRU path picker backed by snacks explorer; persists history to `stdpath("state")/path_selector_history.json`
 - `util.ui.menu` — generic UI menu helper
 - `util.debounce` — debounce utility
@@ -194,6 +195,10 @@ Based on [LazyVim](https://lazyvim.org). Structure:
 ### Picker
 
 snacks.nvim is the picker (not telescope). Custom `toggle_cwd` action cycles root → cwd → global. `<C-\>c` toggles picker scope. Custom `plugin` source browses lazy.nvim plugins.
+
+### Obsidian integration (`lua/plugins/obsidian.lua`)
+
+`obsidian.nvim` is lazy-loaded only when a markdown file inside a vault (directory with `.obsidian/`) is opened. Workspace is detected dynamically via `util.obsidian.find_obsidian_vault`. If no vault is detected, `util.ui.path_selector` prompts the user to pick or enter one (MRU). All obsidian keymaps live under `<leader>N`.
 
 ### AI providers (`lua/plugins/extras/ai.lua` + `lua/plugins/ai.lua`)
 
