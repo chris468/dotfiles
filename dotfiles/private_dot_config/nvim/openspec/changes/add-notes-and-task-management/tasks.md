@@ -31,3 +31,11 @@
 
 - [ ] 4.1 Document new plugin dependencies and prerequisites (including Taskwarrior CLI) in the relevant README/docs location.
 - [ ] 4.2 Document `<leader>N` keymaps and intended note/task workflows for daily usage.
+
+## 5. Open Question Resolution
+
+- [ ] 5.1 Decide `<leader>Nku` behavior (action picker vs single-toggle update) and reflect in spec/design.
+- [ ] 5.2 Decide whether all `<leader>Nk*` actions require vault resolution or only note-linked task actions.
+- [ ] 5.3 Finalize vault/MRU persistence details (storage location, max length, pruning policy, update triggers).
+- [ ] 5.4 Define failure-mode UX/messages for missing Taskwarrior, invalid vault paths, canceled prompts, and empty task results.
+- [ ] 5.5 Define and document boundaries between Taskwarrior personal tasks and Overseer run/build tasks.

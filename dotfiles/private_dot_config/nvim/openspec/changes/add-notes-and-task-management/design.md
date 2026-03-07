@@ -28,7 +28,10 @@ This Neovim configuration uses LazyVim and currently does not provide an integra
 - Alternative considered: relying only on Telescope/file search and shell commands. Rejected because it increases manual steps and reduces discoverability.
 
 2. Adopt `<leader>N` as a top-level namespace with subgroup-style mappings.
-- Decision: reserve `<leader>N` for note/task operations and define mnemonic second keys (for example `n` for new note, `f` for find note, `t` for task list, `a` for add task).
+- Decision: reserve `<leader>N` for note/task operations, keep notes on direct second keys, and use `k` as the task subgroup key (`tasK`).
+- Agreed mapping set:
+  - Notes: `<leader>Nn` (new), `<leader>Nf` (find), `<leader>Nt` (today), `<leader>Ny` (yesterday), `<leader>Nm` (tomorrow), `<leader>Nr` (recent), `<leader>Nv` (vault picker).
+  - Tasks: `<leader>Nk` (task list/hub), `<leader>Nka` (add), `<leader>Nkt` (today), `<leader>Nku` (update), `<leader>Nkd` (done), `<leader>Nkp` (pending), `<leader>Nkr` (refresh), `<leader>Nkv` (view/filter toggle).
 - Rationale: keeps new commands grouped and easy to memorize while minimizing interference with existing leader mappings.
 - Alternative considered: split across unrelated prefixes. Rejected due to poor discoverability and higher conflict probability.
 
@@ -61,6 +64,23 @@ This Neovim configuration uses LazyVim and currently does not provide an integra
 - Decision: when vault is unresolved, present recent vault entries first and include an explicit option to enter a new path.
 - Rationale: combines fast reuse with flexibility for first-time or uncommon vaults.
 - Alternative considered: always opening file-picker/manual entry directly. Rejected because it is slower for repeat usage.
+
+## Open Questions
+
+1. What exact UX should `<leader>Nku` implement for task updates?
+- Open question: should it show an action picker (done/start/annotate/etc.) or apply a single default state toggle?
+
+2. Should all `<leader>Nk*` task actions depend on vault resolution?
+- Open question: require vault selection for every task action vs only for note-linked task workflows.
+
+3. How should vault and MRU state be persisted?
+- Open question: finalize persistence location, max MRU length, stale-entry pruning policy, and write/update triggers.
+
+4. What are the expected failure-mode behaviors and messages?
+- Open question: define user-facing behavior for missing `taskwarrior` CLI, invalid vault path, canceled vault prompt, and empty task results.
+
+5. How should personal Taskwarrior workflows stay distinct from Overseer build/run tasks?
+- Open question: document and enforce conceptual and keymap separation to avoid ambiguity between task systems.
 
 ## Risks / Trade-offs
 

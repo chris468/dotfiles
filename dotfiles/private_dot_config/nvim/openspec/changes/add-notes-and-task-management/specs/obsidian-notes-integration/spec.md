@@ -29,6 +29,20 @@ The configuration SHALL expose note creation and note search commands that opera
 - **WHEN** the user triggers the mapped find-note action under `<leader>N`
 - **THEN** the user is presented with searchable note results from the configured vault and can open a selection
 
+### Requirement: Notes mappings SHALL follow the agreed `<leader>N` binding set
+The configuration SHALL expose the following notes mappings:
+- `<leader>Nn` for new note
+- `<leader>Nf` for find note
+- `<leader>Nt` for today daily note
+- `<leader>Ny` for yesterday daily note
+- `<leader>Nm` for tomorrow daily note
+- `<leader>Nr` for recent notes
+- `<leader>Nv` for vault picker/switch
+
+#### Scenario: User invokes today note mapping
+- **WHEN** the user triggers `<leader>Nt`
+- **THEN** Neovim opens or creates the daily note for the current date in the resolved vault
+
 ### Requirement: Notes keymaps SHALL avoid conflicts with existing mappings
 All notes-related keymaps under `<leader>N` SHALL be checked against existing configured mappings before assignment, and conflicting bindings SHALL be replaced with non-conflicting alternatives.
 

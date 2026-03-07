@@ -23,11 +23,26 @@ The configuration SHALL provide mapped actions for listing tasks, adding a task,
 - **THEN** the corresponding Taskwarrior task state is updated
 
 ### Requirement: Task mappings SHALL coexist with notes mappings under one namespace
-Task mappings SHALL share the `<leader>N` namespace with notes mappings using unique non-conflicting secondary keys.
+Task mappings SHALL share the `<leader>N` namespace with notes mappings and SHALL use the `<leader>Nk` subgroup.
 
 #### Scenario: Task mapping collides with existing namespace binding
 - **WHEN** a chosen task mapping overlaps an existing `<leader>N` mapping
 - **THEN** implementation assigns an alternate non-conflicting mapping while preserving access to all required task actions
+
+### Requirement: Task mappings SHALL follow the agreed `<leader>Nk` binding set
+The configuration SHALL expose the following task mappings:
+- `<leader>Nk` for task list/hub
+- `<leader>Nka` for add task
+- `<leader>Nkt` for today task list
+- `<leader>Nku` for task update
+- `<leader>Nkd` for mark done
+- `<leader>Nkp` for pending tasks
+- `<leader>Nkr` for refresh/reload task view
+- `<leader>Nkv` for task view/filter toggle
+
+#### Scenario: User invokes today task mapping
+- **WHEN** the user triggers `<leader>Nkt`
+- **THEN** Neovim displays task items scoped to today in the Taskwarrior integration
 
 ### Requirement: Task entrypoints SHALL request vault selection when vault is unset
 Task management actions that rely on note-task workflow context SHALL prompt for a vault path when no vault has been configured or auto-detected.
