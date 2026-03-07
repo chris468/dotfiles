@@ -1,18 +1,32 @@
 local M = {}
 
+local vault_path_selector_opts = {
+  history_key = "obsidian",
+  select_prompt = "Select Obsidian Vault",
+  input_prompt = "Obsidian Vault",
+  new_item_label = "New Vault",
+  enable_path_picker = true,
+  allow_custom_path = true,
+}
+
 ---@param path string
 ---@return string|false
 function M.find_obsidian_vault(path)
+  local path_selector = require("util.ui.path_selector")
   local start_path = path
   if vim.fn.isdirectory(start_path) == 0 then
     start_path = vim.fs.dirname(start_path) or start_path
   end
 
   local obsidian_parents = vim.fs.find(".obsidian", { upward = true, path = start_path })
-  if obsidian_parents and obsidian_parents[1] then
-    return vim.fs.dirname(obsidian_parents[1]) or false
+  if not obsidian_parents or not obsidian_parents[1] then
+    return false
   end
-  return false
+  local vault = vim.fs.dirname(obsidian_parents[1])
+  if not vault then
+    return false
+  end
+  path_selector.record_history(vault, vault_path_selector_opts)
 end
 
 ---@param title string|?
@@ -52,6 +66,28 @@ function M.resolve_note_id(title, dir)
   end
 
   return candidate
+end
+
+---@param cmd string?
+function M.obsidian_command(cmd)
+  local obsidian = require("obsidian")
+  if not Obsidian.workspace or Obsidian.workspace.name == "fallback" then
+    local path_selector = require("util.ui.path_selector")
+    local path = path_selector.select_path(vault_path_selector_opts)
+
+    local ws = path and obsidian.Workspace.new({
+      path = path,
+      name = vim.fs.basename(path),
+    })
+    if not ws then
+      return
+    end
+    obsidian.Workspace.set(ws)
+  end
+
+  if cmd then
+    vim.cmd(cmd)
+  end
 end
 
 return M
