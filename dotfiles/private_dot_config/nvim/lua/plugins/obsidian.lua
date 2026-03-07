@@ -1,3 +1,13 @@
+local function obsidian_command(cmd)
+  return function()
+    local async = require("plenary.async")
+    local obsidian_util = require("util.obsidian")
+    async.void(function()
+      obsidian_util.obsidian_command(cmd)
+    end)()
+  end
+end
+
 ---@module "lazy"
 ---@type LazySpec[]
 return {
@@ -7,14 +17,14 @@ return {
     version = "*",
     cmd = { "Obsidian" },
     keys = {
-      { "<leader>Nn", "<cmd>Obsidian new<CR>", desc = "Obsidian New" },
-      { "<leader>Nf", "<cmd>Obsidian quick_switch<CR>", desc = "Obsidian Quick Switch" },
-      { "<leader>Ns", "<cmd>Obsidian search<CR>", desc = "Obsidian Search" },
-      { "<leader>Ng", "<cmd>Obsidian tags<CR>", desc = "Obsidian Tags" },
-      { "<leader>Nt", "<cmd>Obsidian today<CR>", desc = "Obsidian Today" },
-      { "<leader>Ny", "<cmd>Obsidian yesterday<CR>", desc = "Obsidian Yesterday" },
-      { "<leader>Nm", "<cmd>Obsidian tomorrow<CR>", desc = "Obsidian Tomorrow" },
-      { "<leader>Nw", "<cmd>Obsidian workspace<CR>", desc = "Obsidian Workspace" },
+      { "<leader>Nn", obsidian_command("Obsidian new"), desc = "Obsidian New" },
+      { "<leader>Nf", obsidian_command("Obsidian quick_switch"), desc = "Obsidian Quick Switch" },
+      { "<leader>Ns", obsidian_command("Obsidian search"), desc = "Obsidian Search" },
+      { "<leader>Ng", obsidian_command("Obsidian tags"), desc = "Obsidian Tags" },
+      { "<leader>Nt", obsidian_command("Obsidian today"), desc = "Obsidian Today" },
+      { "<leader>Ny", obsidian_command("Obsidian yesterday"), desc = "Obsidian Yesterday" },
+      { "<leader>Nm", obsidian_command("Obsidian tomorrow"), desc = "Obsidian Tomorrow" },
+      { "<leader>Nw", obsidian_command("Obsidian workspace"), desc = "Obsidian Workspace" },
     },
     dependencies = {
       "blink.cmp",
@@ -74,11 +84,19 @@ return {
       },
       workspaces = {
         {
-          name = "current",
+          -- name = "current",
           path = function()
             local obsidian = require("util.obsidian")
 
-            return obsidian.find_obsidian_vault(vim.api.nvim_buf_get_name(0)) or vim.fn.getcwd()
+            return obsidian.find_obsidian_vault(vim.api.nvim_buf_get_name(0)) or nil
+          end,
+        },
+        {
+          name = "fallback",
+          path = function()
+            local p = vim.fn.stdpath("state") .. "/fallback-notes"
+            vim.fn.mkdir(p, "p")
+            return p
           end,
         },
       },
