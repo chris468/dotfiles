@@ -1,0 +1,8 @@
+keybinding:
+  universal:
+    executeShellCommand: <disabled>
+
+git:
+  autoFetch: false
+  autoRefresh: false
+  autoForwardBranches: none

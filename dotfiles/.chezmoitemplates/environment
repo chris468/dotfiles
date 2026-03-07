@@ -45,3 +45,5 @@
   value:
     - {{ joinPath (env "PROGRAMFILES(X86)") "GnuWin32" "bin" }}
 {{- end }}
+- name: LG_CONFIG_FILE
+  value: {{ joinPath .chezmoi.homeDir .path.configHome "lazygit" "config.yml" }},{{ joinPath .chezmoi.homeDir .path.tokyonight "extras" "lazygit" "tokyonight_night.yml" }}
