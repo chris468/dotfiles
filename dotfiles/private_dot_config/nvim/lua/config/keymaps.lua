@@ -136,6 +136,8 @@ end
 ---@module 'lazyvim'
 LazyVim.on_load("which-key.nvim", function()
   require("which-key").add({
+    { "<leader>N", group = "Notes/Tasks" },
+    { "<leader>Nk", group = "Tasks" },
     { "<leader>gs", group = "Snacks" },
     { "<leader>l", group = "Lua" },
     { "<leader>p", group = "Packages" },

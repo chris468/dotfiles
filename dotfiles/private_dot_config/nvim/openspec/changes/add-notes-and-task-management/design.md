@@ -65,22 +65,31 @@ This Neovim configuration uses LazyVim and currently does not provide an integra
 - Rationale: combines fast reuse with flexibility for first-time or uncommon vaults.
 - Alternative considered: always opening file-picker/manual entry directly. Rejected because it is slower for repeat usage.
 
-## Open Questions
+## Resolved Decisions
 
-1. What exact UX should `<leader>Nku` implement for task updates?
-- Open question: should it show an action picker (done/start/annotate/etc.) or apply a single default state toggle?
+1. `<leader>Nku` uses an action picker.
+- Behavior: shows update choices (`done`, `start`, `stop`, `annotate`) for a selected pending task.
+- Rationale: supports common update actions without forcing a single state-toggle workflow.
 
-2. Should all `<leader>Nk*` task actions depend on vault resolution?
-- Open question: require vault selection for every task action vs only for note-linked task workflows.
+2. All `<leader>Nk*` actions require vault resolution.
+- Behavior: each task action resolves a vault before continuing (detected/current/prompted).
+- Rationale: keeps note/task workflows consistent and ensures first-run behavior is predictable.
 
-3. How should vault and MRU state be persisted?
-- Open question: finalize persistence location, max MRU length, stale-entry pruning policy, and write/update triggers.
+3. Vault and MRU persistence is file-based in Neovim state.
+- Storage: `stdpath("state")/chris468-vault-state.json`.
+- Policy: deduplicated MRU list, max length 10, move-used-to-front, prune missing directories on load/update.
+- Triggers: update on vault auto-detection, explicit selection, and manual path entry.
 
-4. What are the expected failure-mode behaviors and messages?
-- Open question: define user-facing behavior for missing `taskwarrior` CLI, invalid vault path, canceled vault prompt, and empty task results.
+4. Failure-mode UX is explicit and non-destructive.
+- Missing `task` CLI: task actions abort and show an error that Taskwarrior is required.
+- Invalid vault path: action aborts with an error for non-existent path or missing `.obsidian`.
+- Canceled vault prompt: action aborts with a warning and no side effects.
+- Empty task results: action reports informational empty-state messages instead of errors.
 
-5. How should personal Taskwarrior workflows stay distinct from Overseer build/run tasks?
-- Open question: document and enforce conceptual and keymap separation to avoid ambiguity between task systems.
+5. Taskwarrior and Overseer workflows remain separate.
+- Namespace: `<leader>Nk*` is reserved for personal Taskwarrior actions.
+- Existing `<leader>o*` Overseer mappings remain run/build oriented.
+- Documentation clarifies scope to avoid overlap between personal tasks and build tasks.
 
 ## Risks / Trade-offs
 

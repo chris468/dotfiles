@@ -78,3 +78,25 @@ The vault history SHALL be updated whenever a vault path is resolved by auto-det
 #### Scenario: Vault is selected or entered by user
 - **WHEN** a user selects a recent vault or enters a new vault path in the prompt
 - **THEN** the vault path is stored/updated in history
+
+### Requirement: Vault state SHALL use bounded persisted MRU storage
+The configuration SHALL persist current vault and MRU history to a local state file with bounded length and stale-path pruning.
+
+#### Scenario: Vault history exceeds maximum length
+- **WHEN** a newly resolved vault would grow history beyond the configured cap
+- **THEN** the oldest entry is dropped and the MRU list remains bounded
+
+#### Scenario: Stale vault paths exist in history
+- **WHEN** vault history is loaded and contains missing directories
+- **THEN** stale entries are pruned before presenting recent choices
+
+### Requirement: Vault prompt SHALL provide explicit failure and cancel feedback
+Vault resolution SHALL show explicit messages for invalid paths and canceled prompts, and SHALL not run note/task actions when unresolved.
+
+#### Scenario: User enters an invalid vault path
+- **WHEN** the user enters a path that does not exist or lacks `.obsidian`
+- **THEN** Neovim shows an error and the requested action is aborted
+
+#### Scenario: User cancels vault selection
+- **WHEN** the user cancels selection or path input
+- **THEN** Neovim shows a warning and the requested action is aborted

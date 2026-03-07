@@ -45,7 +45,7 @@ The configuration SHALL expose the following task mappings:
 - **THEN** Neovim displays task items scoped to today in the Taskwarrior integration
 
 ### Requirement: Task entrypoints SHALL request vault selection when vault is unset
-Task management actions that rely on note-task workflow context SHALL prompt for a vault path when no vault has been configured or auto-detected.
+All task management actions under `<leader>Nk*` SHALL prompt for a vault path when no vault has been configured or auto-detected.
 
 #### Scenario: Task action invoked before vault configuration
 - **WHEN** the user triggers a task-management action and no vault path is configured or discoverable
@@ -54,3 +54,28 @@ Task management actions that rely on note-task workflow context SHALL prompt for
 #### Scenario: Task action uses recent vault choice
 - **WHEN** a task-management action triggers vault prompt and the user selects a recent vault entry
 - **THEN** the task-management action continues using that selected vault path
+
+### Requirement: Task update mapping SHALL provide an explicit action picker
+The `<leader>Nku` mapping SHALL present an action picker for selected pending tasks that includes at least `done`, `start`, `stop`, and `annotate`.
+
+#### Scenario: User updates a task with picker action
+- **WHEN** the user triggers `<leader>Nku`, selects a task, and chooses an action from the picker
+- **THEN** the selected Taskwarrior action is executed for that task
+
+### Requirement: Task actions SHALL present clear failure and empty-state messages
+Task actions SHALL avoid silent failures by showing explicit messages for missing CLI dependencies, canceled prompts, invalid vault paths, and empty results.
+
+#### Scenario: Taskwarrior CLI is missing
+- **WHEN** a task mapping is invoked and `task` is not available in `PATH`
+- **THEN** Neovim shows an error describing the missing dependency and no task command runs
+
+#### Scenario: No pending tasks are available for selection
+- **WHEN** a task update or completion action is invoked and no pending tasks are available
+- **THEN** Neovim shows an informational message and does not fail
+
+### Requirement: Taskwarrior mappings SHALL remain distinct from Overseer mappings
+Taskwarrior mappings under `<leader>Nk*` SHALL remain conceptually and operationally separate from Overseer run/build mappings under `<leader>o*`.
+
+#### Scenario: User accesses build tasks
+- **WHEN** the user invokes existing Overseer mappings
+- **THEN** Overseer behavior remains unchanged and separate from Taskwarrior personal task actions
