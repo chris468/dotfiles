@@ -12,7 +12,6 @@ local vault_path_selector_opts = {
 ---@param path string
 ---@return string|false
 function M.find_obsidian_vault(path)
-  local path_selector = require("util.ui.path_selector")
   local start_path = path
   if vim.fn.isdirectory(start_path) == 0 then
     start_path = vim.fs.dirname(start_path) or start_path
@@ -26,7 +25,15 @@ function M.find_obsidian_vault(path)
   if not vault then
     return false
   end
-  path_selector.record_history(vault, vault_path_selector_opts)
+  return vault
+end
+
+function M.on_workspace_set(workspace)
+  local path_selector = require("util.ui.path_selector")
+  if not workspace or workspace.name == "fallback" then
+    return
+  end
+  path_selector.record_history(workspace.path, vault_path_selector_opts)
 end
 
 ---@param title string|?

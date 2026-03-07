@@ -41,6 +41,10 @@ return {
         return obsidian.resolve_note_id(title, path)
       end,
       callbacks = {
+        post_set_workspace = function(workspace)
+          local util_obsidian = require("util.obsidian")
+          util_obsidian.on_workspace_set(workspace)
+        end,
         enter_note = function(_)
           local bufnr = vim.api.nvim_get_current_buf()
 

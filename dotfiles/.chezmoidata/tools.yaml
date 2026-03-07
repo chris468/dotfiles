@@ -208,6 +208,19 @@ tools:
           os: windows
         name: MikeFarah.yq
 
+    - name: taskwarrior-tui
+      platforms:
+        matches:
+        - match:
+            os: linux
+        - match:
+            os: darwin
+      overrides:
+      - match:
+          os: linux
+        manager: nix
+        name: taskwarrior3
+
     - name: zoxide
       overrides:
       - match:

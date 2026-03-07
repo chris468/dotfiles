@@ -41,3 +41,21 @@ vim.api.nvim_create_autocmd("FileType", {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+  group = group,
+  pattern = "*.md",
+  callback = function(args)
+    local path = vim.api.nvim_buf_get_name(args.buf)
+    if path == "" then
+      return
+    end
+    local vault = require("util.obsidian").find_obsidian_vault(path)
+    if not vault then
+      return
+    end
+    local taskdata = vault .. "/.task"
+    local taskrc = taskdata .. "/taskrc"
+    vim.env.TASKDATA = taskdata
+  end,
+})

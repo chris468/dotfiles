@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# tw - taskwarrior wrapper: auto-detects the obsidian vault for per-vault TASKDATA.
+# Uses full path to taskwarrior's `task` binary to avoid conflict with go-task.
+{{ if eq .chezmoi.os "darwin" -}}
+_task="{{ output "brew" "--prefix" | trim }}/bin/task"
+{{ else -}}
+_task="${HOME}/.nix-profile/bin/task"
+{{ end -}}
+
+dir="${PWD}"
+vault=""
+
+while [[ "${dir}" != "/" ]]; do
+  if [[ -d "${dir}/.obsidian" ]]; then
+    vault="${dir}"
+    break
+  fi
+  dir="$(dirname "${dir}")"
+done
+
+if [[ -n "${vault}" ]]; then
+  exec env TASKDATA="${vault}/.task" "${_task}" "$@"
+else
+  exec "${_task}" "$@"
+fi
