@@ -1,1 +1,8 @@
-vim.g.chris468_ai_providers = {{ if .config.work }}{ "copilot", "copilot-chat" }{{ else }}"codeium"{{ end }}
+vim.g.chris468_ai_providers = { {{- if .config.work }}
+  "copilot",
+  "copilot-chat"
+{{- else }}
+  "codeium",
+  "claudecode"
+{{- end }}
+}

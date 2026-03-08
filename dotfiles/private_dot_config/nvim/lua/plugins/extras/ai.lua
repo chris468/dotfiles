@@ -6,7 +6,7 @@ end, type(vim.g.chris468_ai_providers) == "table" and vim.g.chris468_ai_provider
 
 if #ai_extras > 0 then
   table.insert(ai_extras, {
-    { import = "lazyvim.plugins.extras.ai.sidekick" },
+    -- { import = "lazyvim.plugins.extras.ai.sidekick" },
   })
 end
 
