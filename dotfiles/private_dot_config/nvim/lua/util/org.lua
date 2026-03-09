@@ -28,6 +28,20 @@ local function configure_org_path()
   local ok, err = pcall(require("orgmode").setup, {
     org_agenda_files = { session_org_dir .. "/**/*.org" },
     org_default_notes_file = session_org_dir .. "/inbox.org",
+    org_capture_templates = {
+      j = {
+        description = "Journal",
+        target = session_org_dir .. "/journal/%<%Y>/%<%m>.org",
+        datetree = {
+          tree_type = "day",
+        },
+        template = "- %U %?",
+      },
+      t = {
+        description = "Task",
+        template = "* TODO %?\n %u\n SCHEDULED: %^{Start}t\n DEADLINE: %^{Deadline}t",
+      },
+    },
   })
   if not ok then
     vim.notify(("Failed to configure orgmode: %s"):format(err), vim.log.levels.ERROR)
