@@ -1,166 +1,21 @@
 local M = {}
 local menu = require("util.ui.menu")
 local async = require("plenary.async")
+local path_selector = require("util.ui.path_selector")
 
 local session_org_dir
 local configured_org_dir
-local org_dir_history_file = vim.fn.stdpath("state") .. "/org_dir_history.json"
-local org_dir_history_limit = 20
 local in_flight
-
-local input = async.wrap(function(opts, callback)
-  return vim.ui.input(opts, callback)
-end, 2)
-local select = async.wrap(function(items, opts, callback)
-  return vim.ui.select(items, opts, callback)
-end, 3)
-
----@param path string
----@return string
-local function normalize_path(path)
-  return vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ":p"))
-end
-
----@param path string
----@return boolean
-local function path_exists(path)
-  local stat = vim.uv.fs_stat(path)
-  return stat ~= nil and stat.type == "directory"
-end
-
----@return string[]
-local function load_org_dir_history()
-  local stat = vim.uv.fs_stat(org_dir_history_file)
-  if not stat or stat.type ~= "file" then
-    return {}
-  end
-
-  local ok_read, lines = pcall(vim.fn.readfile, org_dir_history_file)
-  if not ok_read then
-    return {}
-  end
-  local raw = table.concat(lines, "\n")
-
-  local ok_decode, decoded = pcall(vim.json.decode, raw)
-  if not ok_decode or type(decoded) ~= "table" then
-    return {}
-  end
-
-  local history = {}
-  for _, item in ipairs(decoded) do
-    if type(item) == "string" and item ~= "" then
-      table.insert(history, item)
-    end
-  end
-  return history
-end
-
----@param history string[]
-local function save_org_dir_history(history)
-  local parent = vim.fn.fnamemodify(org_dir_history_file, ":h")
-  vim.fn.mkdir(parent, "p")
-  local ok, encoded = pcall(vim.json.encode, history)
-  if not ok or type(encoded) ~= "string" then
-    return
-  end
-  pcall(vim.fn.writefile, { encoded }, org_dir_history_file)
-end
-
----@param dir string
-local function record_org_dir_history(dir)
-  local history = load_org_dir_history()
-  local deduped = { dir }
-  for _, item in ipairs(history) do
-    if item ~= dir then
-      table.insert(deduped, item)
-    end
-    if #deduped >= org_dir_history_limit then
-      break
-    end
-  end
-  save_org_dir_history(deduped)
-end
-
----@param dir string
----@return boolean
-local function ensure_dir_exists(dir)
-  if path_exists(dir) then
-    return true
-  end
-
-  local choice = select({ "Create directory", "Cancel" }, {
-    prompt = ("Org notes path does not exist: %s"):format(dir),
-  })
-  if choice ~= "Create directory" then
-    return false
-  end
-
-  local ok = vim.fn.mkdir(dir, "p")
-  if ok ~= 1 and not path_exists(dir) then
-    vim.notify(("Failed to create Org notes path: %s"):format(dir), vim.log.levels.ERROR)
-    return false
-  end
-
-  return true
-end
-
----@param path string?
----@return string?
-local function prepare_org_dir(path)
-  if path == nil or path == "" then
-    vim.notify("Org notes path is required", vim.log.levels.ERROR)
-    return nil
-  end
-
-  local dir = normalize_path(path)
-  if not ensure_dir_exists(dir) then
-    return nil
-  end
-
-  record_org_dir_history(dir)
-  return dir
-end
-
----@param initial string
----@return string?
-local function prompt_new_org_dir(initial)
-  local path = input({ prompt = "Org notes path: ", default = initial })
-  return prepare_org_dir(path)
-end
-
----@return string?
-local function prompt_org_dir()
-  local history = load_org_dir_history()
-  if #history == 0 then
-    return prompt_new_org_dir(vim.fn.expand("~"))
-  end
-
-  local items = vim.tbl_map(function(dir)
-    return { kind = "history", value = dir }
-  end, history)
-  table.insert(items, { kind = "new", value = "" })
-
-  local choice = select(items, {
-    prompt = "Select Org notes path",
-    format_item = function(item)
-      if item.kind == "new" then
-        return "Enter new path..."
-      end
-      return item.value
-    end,
-  })
-  if not choice then
-    return nil
-  end
-  if choice.kind == "history" then
-    return prepare_org_dir(choice.value)
-  end
-  return prompt_new_org_dir(history[1])
-end
 
 ---@return boolean
 local function configure_org_path()
-  local dir = prompt_org_dir()
+  local dir = path_selector.select_path({
+    history_key = "org",
+    select_prompt = "Select Org notes path",
+    input_prompt = "Org notes path: ",
+    new_item_label = "Enter new path...",
+    create_missing = true,
+  })
   if not dir then
     return false
   end
