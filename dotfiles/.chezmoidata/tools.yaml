@@ -34,6 +34,12 @@ tools:
           os: windows
         name: twpayne.chezmoi
 
+    - name: direnv
+      overrides:
+        - match:
+            os: windows
+          name: direnv.direnv
+
     - name: eza
       overrides:
       - match:
@@ -245,6 +251,14 @@ tools:
             family: debian
         - match:
             os: darwin
+        - match:
+            os: windows
+
+    - name: nix-direnv
+      manager: nix
+      platforms:
+        exclude: true
+        matches:
         - match:
             os: windows
 
