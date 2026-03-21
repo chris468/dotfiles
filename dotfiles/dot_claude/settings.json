@@ -1,0 +1,20 @@
+{
+  "spinnerVerbs": {
+    "mode": "replace",
+    "verbs": ["Thinking"]
+  },
+  "permissions": {
+    "allow": ["Bash(find *)", "Bash(ls *)", "Read(//nix/**)"],
+    "deny": [
+      "Bash(find * -exec *)",
+      "Bash(find * -delete *)",
+      "Read(//etc/passwd)",
+      "Read(//etc/shadow)",
+      "Read(//**/.env)",
+      "Read(//**/.env.*)",
+      "Read(//**/secrets/**)",
+      "Read(//**/.secrets/**)",
+      "Read(//**/priv.*)"
+    ]
+  }
+}
