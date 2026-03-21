@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+if [[ "$#" -lt 2 ]]; then
+  echo "Usage: $0 <vm_name> <command> [args...]" >&2
+  exit 1
+fi
+
+vm_name="$1"
+command="$2"
+shift 2
+
+args=
+while [ "$#" -gt 0 ]; do
+  args="$args${args:+,}\"$1\""
+  shift
+done
+
+start_json="{\"execute\":\"guest-exec\",\"arguments\":{\"path\":\"$command\",\"arg\":[$args],\"capture-output\":true}}"
+start_result="$(virsh qemu-agent-command "$vm_name" "$start_json")"
+pid=$(jq -r '.return.pid' <<<"$start_result")
+[[ -n "$pid" ]] || (
+  echo "$start_result" 2>&1
+  exit 1
+)
+
+status_json="{\"execute\":\"guest-exec-status\",\"arguments\":{\"pid\":$pid}}"
+status_result="$(virsh qemu-agent-command "$vm_name" "$status_json")"
+# jq <<<"$status_result"
+# jq -r '.return["out-data"]' <<<"$status_result" | base64 -d
+
+jq -r '.return | {stdout: if has("out-data") then .["out-data"] | @base64d else "" end, stderr: if has("err-data") then .["err-data"] | @base64d else "" end} | keys[] as $k | "\($k):\n\(.[$k])\n\n"' <<<"$status_result"
