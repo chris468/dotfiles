@@ -21,6 +21,93 @@ local snacks_explorer_keys = {
   ["<C-O>"] = "open_in_oil",
 }
 
+---@param opts? { hide_tracked_hidden?: boolean, hide_ignored?: boolean}
+local function is_hidden_file_factory(opts)
+  vim.notify(vim.inspect({ orig = opts }))
+  opts = vim.tbl_extend("keep", opts or {}, {
+    hide_tracked_hidden = false,
+    hide_ignored = true,
+  })
+  vim.notify(vim.inspect({ updated = opts }))
+
+  -- helper function to parse output
+  local function parse_output(proc)
+    local result = proc:wait()
+    local ret = {}
+    if result.code == 0 then
+      for line in vim.gsplit(result.stdout, "\n", { plain = true, trimempty = true }) do
+        -- Remove trailing slash
+        line = line:gsub("/$", "")
+        ret[line] = true
+      end
+    end
+    return ret
+  end
+
+  -- build git status cache
+  local function new_git_status()
+    return setmetatable({}, {
+      __index = function(self, key)
+        local ignore_proc = vim.system(
+          { "git", "ls-files", "--ignored", "--exclude-standard", "--others", "--directory" },
+          {
+            cwd = key,
+            text = true,
+          }
+        )
+        local tracked_proc = vim.system({ "git", "ls-tree", "HEAD", "--name-only" }, {
+          cwd = key,
+          text = true,
+        })
+        local ret = {
+          ignored = parse_output(ignore_proc),
+          tracked = parse_output(tracked_proc),
+        }
+
+        rawset(self, key, ret)
+        return ret
+      end,
+    })
+  end
+  local git_status = new_git_status()
+
+  local function is_hidden_file(name, bufnr)
+    local dir = require("oil").get_current_dir(bufnr)
+    local is_dotfile = vim.startswith(name, ".") and name ~= ".."
+    -- if no local directory (e.g. for ssh connections), just hide dotfiles
+    if not dir then
+      return is_dotfile
+    end
+    -- dotfiles are considered hidden unless tracked
+    if is_dotfile then
+      return opts.hide_tracked_hidden or not git_status[dir].tracked[name]
+    else
+      -- Check if file is gitignored
+      return opts.hide_ignored and git_status[dir].ignored[name]
+    end
+  end
+
+  return is_hidden_file
+end
+
+---@param bufnr integer
+local function update_oil_hidden_files(bufnr)
+  require("oil.view").set_is_hidden_file(is_hidden_file_factory({
+    hide_tracked_hidden = vim.b[bufnr].chris468_oil_tracked_hidden,
+    hide_ignored = vim.b[bufnr].chris468_oil_hide_ignored,
+  }))
+end
+
+LazyVim.on_load("oil.nvim", function()
+  -- Clear git status cache on refresh
+  local refresh = require("oil.actions").refresh
+  local orig_refresh = refresh.callback
+  refresh.callback = function(...)
+    git_status = new_git_status()
+    orig_refresh(...)
+  end
+end)
+
 return {
   {
     -- TODO: snacks-rename integration
@@ -68,6 +155,25 @@ return {
         ["<C-h>"] = false,
         ["<C-x>"] = { "actions.select", opts = { horizontal = true } },
         q = "actions.close",
+        ["g,"] = {
+          function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            vim.b[bufnr].chris468_oil_tracked_hidden = (vim.b[bufnr].chris468_oil_tracked_hidden == false)
+            update_oil_hidden_files(bufnr)
+          end,
+          desc = "Toggle tracked hidden files and directories",
+        },
+        ["gi"] = {
+          function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            vim.b[bufnr].chris468_oil_hide_ignored = (vim.b[bufnr].chris468_oil_hide_ignored == false)
+            update_oil_hidden_files(bufnr)
+          end,
+          desc = "Toggle gitignored",
+        },
+      },
+      view_options = {
+        is_hidden_file = is_hidden_file_factory(),
       },
     },
   },
