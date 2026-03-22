@@ -23,12 +23,10 @@ local snacks_explorer_keys = {
 
 ---@param opts? { hide_tracked_hidden?: boolean, hide_ignored?: boolean}
 local function is_hidden_file_factory(opts)
-  vim.notify(vim.inspect({ orig = opts }))
   opts = vim.tbl_extend("keep", opts or {}, {
     hide_tracked_hidden = false,
     hide_ignored = true,
   })
-  vim.notify(vim.inspect({ updated = opts }))
 
   -- helper function to parse output
   local function parse_output(proc)
