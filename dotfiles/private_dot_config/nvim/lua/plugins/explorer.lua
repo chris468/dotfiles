@@ -106,6 +106,21 @@ LazyVim.on_load("oil.nvim", function()
   end
 end)
 
+---@param details? boolean
+local function toggle_details_factory(details)
+  local details = details or false
+  function callback()
+    detail = not detail
+    if detail then
+      require("oil").set_columns({ "icon", "permissions", "size", "mtime" })
+    else
+      require("oil").set_columns({ "icon" })
+    end
+  end
+
+  return callback
+end
+
 return {
   {
     -- TODO: snacks-rename integration
@@ -168,6 +183,10 @@ return {
             update_oil_hidden_files(bufnr)
           end,
           desc = "Toggle gitignored",
+        },
+        ["gd"] = {
+          toggle_details_factory(),
+          desc = "Toggle details",
         },
       },
       view_options = {
