@@ -41,6 +41,13 @@ return {
               colwidth = 1,
             },
           },
+          {
+            sign = {
+              namespace = { "oil-git-status", "Oil" },
+              colwidth = 5,
+              maxwidth = 2,
+            },
+          },
         },
       })
     end,

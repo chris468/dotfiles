@@ -106,6 +106,19 @@ LazyVim.on_load("oil.nvim", function()
   end
 end)
 
+local git_icons = { -- customize the symbols that appear in the git status columns
+  ["!"] = "", -- ignored
+  ["?"] = "", -- untracked
+  ["A"] = "", -- added
+  ["C"] = "", -- copied(?)
+  ["D"] = "", -- delete
+  ["M"] = "", -- modified
+  ["R"] = "", -- renamed
+  ["T"] = "", -- file type
+  ["U"] = "󰚰", -- updated but not merged(?)
+  [" "] = " ",
+}
+
 return {
   {
     -- TODO: snacks-rename integration
@@ -147,6 +160,12 @@ return {
       float = {
         border = "rounded",
       },
+      columns = {
+        "icon",
+        "permissions",
+        "size",
+        "mtime",
+      },
       keymaps = {
         ["<C-s>"] = false,
         ["<C-v>"] = { "actions.select", opts = { vertical = true } },
@@ -172,6 +191,17 @@ return {
       },
       view_options = {
         is_hidden_file = is_hidden_file_factory(),
+      },
+    },
+  },
+  {
+    "refractalize/oil-git-status.nvim",
+    dependencies = { "oil.nvim" },
+    ft = "oil",
+    opts = {
+      symbols = {
+        index = git_icons,
+        working_tree = git_icons,
       },
     },
   },
