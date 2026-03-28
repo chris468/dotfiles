@@ -1,0 +1,12 @@
+{{- $existing := dict -}}
+{{- $targetFile := joinPath .chezmoi.homeDir ".claude.json.test" -}}
+{{- $content := "" -}}
+{{- if stat $targetFile -}}
+{{-   $content = output "cat" $targetFile -}}
+{{-   $existing = $content | fromJson -}}
+{{- end -}}
+{{- if eq (index $existing "editorMode") "vim" -}}
+{{- $content -}}
+{{- else -}}
+{{- set $existing "editorMode" "vim" | toPrettyJson }}
+{{- end -}}
