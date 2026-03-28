@@ -14,6 +14,7 @@
     {
       "context": "Chat",
       "bindings": {
+        "escape": null,
         "ctrl+f": "chat:killAgents",
         "shift+tab": "chat:cycleMode",
         "meta+p": "chat:modelPicker",
