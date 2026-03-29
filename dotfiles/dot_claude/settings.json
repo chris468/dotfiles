@@ -1,20 +1,21 @@
 {
-  "spinnerVerbs": {
-    "mode": "replace",
-    "verbs": ["Thinking"]
-  },
   "permissions": {
-    "allow": ["Bash(find *)", "Bash(ls *)", "Read(//nix/**)"],
+    "allow": ["Read(//nix/**)", "Bash(grep:*)", "Bash(ls:*)"],
     "deny": [
-      "Bash(find * -exec *)",
-      "Bash(find * -delete *)",
       "Read(//etc/passwd)",
       "Read(//etc/shadow)",
       "Read(//**/.env)",
       "Read(//**/.env.*)",
       "Read(//**/secrets/**)",
       "Read(//**/.secrets/**)",
-      "Read(//**/priv.*)"
-    ]
+      "Read(//**/priv.*)",
+      "Bash(cd:*)",
+      "Bash(git* -C:*)"
+    ],
+    "defaultMode": "default"
+  },
+  "spinnerVerbs": {
+    "mode": "replace",
+    "verbs": ["Thinking"]
   }
 }
