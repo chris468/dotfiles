@@ -26,7 +26,7 @@ local function get_capabilities(picker)
 
   if vim.tbl_contains(result, true) then
     local root = LazyVim.root({ buf = picker.input.filter.current_buf, normalize = true })
-    local cwd = vim.fs.normalize((vim.uv or vim.loop).cwd() or ".")
+    local cwd = vim.fs.normalize(vim.uv.cwd() or ".")
     return result, root, cwd
   end
 

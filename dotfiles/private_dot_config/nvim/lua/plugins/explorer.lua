@@ -139,7 +139,7 @@ return {
       {
         "<leader>fO",
         function()
-          local cwd = vim.fs.normalize((vim.uv or vim.loop).cwd() or ".")
+          local cwd = vim.fs.normalize(vim.uv.cwd() or ".")
           require("oil").toggle_float(cwd)
         end,
         desc = "Oil explorer (cwd) ",
