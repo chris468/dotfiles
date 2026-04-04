@@ -112,7 +112,10 @@ local function attach(bufnr)
     end,
   }, true)
 
-  ensure_injected_parsers(parser, bufnr, 0)(nil, parser:parse()[1])
+  local fn = ensure_injected_parsers(parser, bufnr, true)
+  if fn then
+    fn(nil, parser:parse()[1])
+  end
 end
 
 local group = vim.api.nvim_create_augroup("chris468.autocmds.treesitter", { clear = true })
