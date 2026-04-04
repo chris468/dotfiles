@@ -36,7 +36,11 @@ function M.debounce(timeout, immediate, callback, bufnr, ...)
   else
     local args = { ... }
     timer:start(timeout, 0, function()
-      vim.schedule_wrap(callback)(bufnr, unpack(args))
+      vim.schedule(function()
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          callback(bufnr, unpack(args))
+        end
+      end)
     end)
   end
 end
