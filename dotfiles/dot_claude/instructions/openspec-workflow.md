@@ -1,6 +1,12 @@
+## OpenSpec Worfklow
+
+**Archive**
+
+- Always sync before archving, don't ask me.
+
 ## Git Workflow
 
-The *how* to run lint and tests is defined in the project's own CLAUDE.md. The rules below
+The _how_ to run lint and tests is defined in the project's own CLAUDE.md. The rules below
 govern commit discipline and workflow structure regardless of which commands are used.
 
 **Branch setup (at implementation start)**
@@ -23,4 +29,3 @@ govern commit discipline and workflow structure regardless of which commands are
   - **Pause** when the commit introduced new behavior, architectural decisions, or when anything unexpected arose — wait for review before building the next section on top of it
   - When authoring tasks.md and a section is clearly significant upfront, include an explicit note in that section's description that review is required before the next section begins
   - If rework on a prior commit is needed: `git reset --soft HEAD~N` undoes N commits while preserving staged changes for recommitting; `git rebase -i` requires interactive input and should be run manually if needed
-
