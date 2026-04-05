@@ -2,7 +2,8 @@
 
 local group = vim.api.nvim_create_augroup("chris468.autocmds.lang", { clear = true })
 
-do --- disable formatting by default for yaml
+do --- language-specific customization
+  -- disable formatting by default for yaml
   vim.api.nvim_create_autocmd("FileType", {
     callback = function(a)
       if vim.b[a.buf].autoformat == nil then
@@ -12,6 +13,37 @@ do --- disable formatting by default for yaml
     group = group,
     pattern = "yaml",
   })
+
+  -- disable virtual_text and underline diagnostics for markdown
+  LazyVim.on_load("nvim-lspconfig", function()
+    local function enable(_, bufnr)
+      return vim.bo[bufnr].filetype ~= "markdown"
+    end
+
+    local config = vim.diagnostic.config() or {}
+
+    local function wrap(key)
+      local original = config[key]
+      if not original then
+        return original
+      end
+
+      return function(namespace, bufnr)
+        if not enable(namespace, bufnr) then
+          return false
+        end
+        if type(original) == "function" then
+          return original(namespace, bufnr)
+        end
+        return original
+      end
+    end
+
+    vim.diagnostic.config({
+      virtual_text = wrap("virtual_text"),
+      underline = wrap("underline"),
+    })
+  end)
 end
 
 do -- automatically select last venv

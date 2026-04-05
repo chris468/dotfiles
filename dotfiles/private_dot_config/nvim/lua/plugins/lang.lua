@@ -85,5 +85,13 @@ return {
       opts.highlights = { enabled = false }
     end,
   },
+  {
+    "nvim-lspconfig",
+    opts = function(_, opts)
+      if type(opts.diagnostics.virtual_text) == "table" then
+        opts.diagnostics.virtual_text.prefix = "icons"
+      end
+    end,
+  },
   { import = "plugins.lang" },
 }
