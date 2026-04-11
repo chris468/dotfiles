@@ -14,6 +14,18 @@
     ],
     "defaultMode": "default"
   },
+  "sandbox": {
+    "filesystem": {
+      "denyRead": [
+        "/etc/passwd",
+        "/etc/shadow",
+        "~/.secrets",
+        "~/.config",
+        "~.ssh/"
+      ],
+      "denyWrite": ["~/.secrets", "~/.config", "~.ssh/"]
+    }
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
