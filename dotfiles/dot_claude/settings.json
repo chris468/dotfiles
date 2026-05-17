@@ -33,7 +33,7 @@
         "/etc/shadow",
         "~/.secrets",
         "~/.config",
-        "~.ssh/"
+        "~/.ssh/"
       ],
       "denyWrite": ["~/.secrets", "~/.config", "~.ssh/"]
     }
