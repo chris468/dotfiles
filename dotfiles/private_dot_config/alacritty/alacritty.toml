@@ -21,3 +21,8 @@ mods = "Alt"
 action = "ToggleFullScreen"
 key = "Return"
 mods = "Alt"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
