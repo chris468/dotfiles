@@ -1,8 +1,12 @@
 {
   "permissions": {
-    "allow": ["Read(//nix/**)", "Bash(grep:*)", "Bash(ls:*)"],
+    "allow": [
+      "Read(//nix/**)",
+      "Read(~/.claude/instructions/**)",
+      "Bash(grep:*)",
+      "Bash(ls:*)"
+    ],
     "deny": [
-      "Read(//etc/passwd)",
       "Read(//etc/shadow)",
       "Read(//**/.env)",
       "Read(//**/.env.*)",
@@ -26,24 +30,32 @@
     ],
     "defaultMode": "default"
   },
-  "sandbox": {
-    "filesystem": {
-      "denyRead": [
-        "/etc/passwd",
-        "/etc/shadow",
-        "~/.secrets",
-        "~/.config",
-        "~/.ssh/"
-      ],
-      "denyWrite": ["~/.secrets", "~/.config", "~.ssh/"]
-    }
-  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": true
+  },
+  "sandbox": {
+    "filesystem": {
+      "denyWrite": [
+        "~/.secrets",
+        "~/.config",
+        "~.ssh/"
+      ],
+      "denyRead": [
+        "/etc/shadow",
+        "~/.secrets",
+        "~/.config",
+        "~/.ssh/"
+      ]
+    }
+  },
   "spinnerVerbs": {
     "mode": "replace",
-    "verbs": ["Thinking"]
+    "verbs": [
+      "Thinking"
+    ]
   }
 }
