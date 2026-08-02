@@ -21,4 +21,11 @@ function M.setup(opts)
 	end
 end
 
-return M
+local _m = {
+	__index = function(_, key)
+		return M.opts[key]
+	end,
+}
+
+---@type chris468-notes.Config
+return setmetatable(M, _m)

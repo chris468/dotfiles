@@ -3,8 +3,22 @@ local M = {}
 
 local group = vim.api.nvim_create_augroup("chris468-notes", { clear = true })
 
+function M.sync_notes()
+	vim.notify("Syncing notes...", vim.log.levels.INFO, { title = "chris468-notes" })
+	local ok, err = pcall(vim.system, { config.sync_command }, function(out)
+		if out.code == 0 then
+			vim.notify("Finished syncing notes.", vim.log.levels.INFO, { title = "chris468-notes" })
+		else
+			vim.notify("Failed to sync notes.", vim.log.levels.ERROR, { title = "chris468-notes" })
+		end
+	end)
+	if not ok then
+		vim.notify("Failed to sync notes: " .. err, vim.log.levels.ERROR, { title = "chris468-notes" })
+	end
+end
+
 local function sync_notes_on_first_enter()
-	if not config.opts.sync_command then
+	if not config.sync_command then
 		return
 	end
 
@@ -12,20 +26,10 @@ local function sync_notes_on_first_enter()
 		group = group,
 		callback = function()
 			if
-				vim.startswith(vim.fn.getcwd(), config.opts.path)
-				or vim.startswith(vim.api.nvim_buf_get_name(0), config.opts.path)
+				vim.startswith(vim.fn.getcwd(), config.path)
+				or vim.startswith(vim.api.nvim_buf_get_name(0), config.path)
 			then
-				vim.notify("Syncing notes...", vim.log.levels.INFO, { title = "chris468-notes" })
-				local ok, err = pcall(vim.system, { config.opts.sync_command }, function(out)
-					if out.code == 0 then
-						vim.notify("Finished syncing notes.", vim.log.levels.INFO, { title = "chris468-notes" })
-					else
-						vim.notify("Failed to sync notes.", vim.log.levels.ERROR, { title = "chris468-notes" })
-					end
-				end)
-				if not ok then
-					vim.notify("Failed to sync notes: " .. err, vim.log.levels.ERROR, { title = "chris468-notes" })
-				end
+				M.sync_notes()
 				return true
 			end
 		end,
