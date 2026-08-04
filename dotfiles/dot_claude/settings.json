@@ -19,14 +19,7 @@
       "Edit(//**/.env.*)",
       "Edit(//**/secrets/**)",
       "Edit(//**/.secrets/**)",
-      "Edit(//**/*.priv.*)",
-      "Write(//etc/passwd)",
-      "Write(//etc/shadow)",
-      "Write(//**/.env)",
-      "Write(//**/.env.*)",
-      "Write(//**/secrets/**)",
-      "Write(//**/.secrets/**)",
-      "Write(//**/*.priv.*)"
+      "Edit(//**/*.priv.*)"
     ],
     "defaultMode": "default"
   },
@@ -39,23 +32,14 @@
   },
   "sandbox": {
     "filesystem": {
-      "denyWrite": [
-        "~/.secrets",
-        "~/.config",
-        "~.ssh/"
-      ],
-      "denyRead": [
-        "/etc/shadow",
-        "~/.secrets",
-        "~/.config",
-        "~/.ssh/"
-      ]
+      "denyWrite": ["~/.secrets", "~/.config", "~.ssh/"],
+      "denyRead": ["/etc/shadow", "~/.secrets", "~/.config", "~/.ssh/"]
     }
   },
   "spinnerVerbs": {
     "mode": "replace",
-    "verbs": [
-      "Thinking"
-    ]
-  }
+    "verbs": ["Thinking"]
+  },
+  "tui": "fullscreen",
+  "model": "opus"
 }
