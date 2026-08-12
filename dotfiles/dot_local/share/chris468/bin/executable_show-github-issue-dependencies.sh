@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Render GitHub issues that participate in a blocked_by/blocking relationship
-# as an ASCII dependency tree, rooted at issues that have no blockers of
-# their own. Issues with no dependency relationship at all are omitted.
+# Render GitHub issues as an ASCII dependency tree, rooted at issues that
+# have no open blockers of their own -- including issues with no
+# dependency relationship at all, which are shown as standalone roots.
 # Open issues with an open linked PR are shown as in-work.
 # Closed issues are hidden by default; pass --all to include them.
 set -euo pipefail
@@ -13,8 +13,10 @@ Usage: show-github-issue-dependencies.sh [--root NUMBER] [--all] [--no-color]
 Fetches every issue's blocked_by relationships via GitHub's issue
 dependencies API and prints the resulting DAG as an indented tree, in the
 order work can be done: roots are issues with no open blockers (workable
-now), and each issue's children are the issues it blocks (workable once
-it's done). Read top-to-bottom, depth-first, to get a valid work order.
+now) -- including issues with no dependency relationship at all, which
+appear as standalone roots -- and each issue's children are the issues it
+blocks (workable once it's done). Read top-to-bottom, depth-first, to get
+a valid work order.
 
 An issue blocked by more than one thing appears once in full under its
 first parent (numeric root order, then child order) and as a stub
@@ -240,12 +242,10 @@ if [[ -n "$ROOT_FILTER" ]]; then
 else
   while read -r r; do
     roots+=("$r")
-  done < <(jq -r '
-        (.blocked_by | keys) as $participating
+  done < <(jq -r --argjson show_all "$([[ "$SHOW_ALL" == 1 ]] && echo true || echo false)" '
+        (.nodes | to_entries | map(select($show_all or .value.state != "closed")) | map(.key)) as $all
         | (.blocked_by | with_entries(select(.value | length > 0)) | keys) as $blocked
-        | (.blocking | keys) as $blockers
-        | (($participating + $blockers) | unique) as $participants
-        | ($participants - $blocked) | map(tonumber) | sort | .[]
+        | ($all - $blocked) | map(tonumber) | sort | .[]
     ' "$DB")
 fi
 
@@ -268,5 +268,5 @@ if [[ -z "$ROOT_FILTER" ]]; then
         | (($blocked + $blockers) | unique) | length
     ' "$DB")
   echo
-  echo "$PARTICIPANTS of $TOTAL issues participate in a dependency relationship." >&2
+  echo "$PARTICIPANTS of $TOTAL issues have a blocked_by/blocking relationship; the rest appear above as standalone roots." >&2
 fi
