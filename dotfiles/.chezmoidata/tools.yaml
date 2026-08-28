@@ -355,7 +355,7 @@ tools:
         manager: nix
       - match:
           family: redhat
-        name: kubernetes1.30-client
+        name: kubernetes-client
       - match:
           family: suse
         name: kubernetes-client

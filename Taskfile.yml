@@ -17,10 +17,15 @@ tasks:
     cmds:
       - DISTRO="ubuntu" DISTRO_VERSION="2404" IMAGE="images:ubuntu/24.04/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
-  test:incus:fedora:
-    desc: Run install-tools test in Fedora Incus VM
+  test:incus:fedora:43:
+    desc: Run install-tools test in Fedora 43 Incus VM
     cmds:
       - DISTRO="fedora" DISTRO_VERSION="43" IMAGE="images:fedora/43/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
+
+  test:incus:fedora:44:
+    desc: Run install-tools test in Fedora 44 Incus VM
+    cmds:
+      - DISTRO="fedora" DISTRO_VERSION="44" IMAGE="images:fedora/44/cloud" INSTALL_TOOLS_ARGS="--nix-daemon --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/incus-install-tools-test.sh"
 
   test:incus:arch:
     desc: Run install-tools test in Arch Incus VM
@@ -37,7 +42,8 @@ tasks:
     cmds:
       - task test:incus:debian
       - task test:incus:ubuntu
-      - task test:incus:fedora
+      - task test:incus:fedora:43
+      - task test:incus:fedora:44
       - task test:incus:arch
       - task test:incus:tumbleweed
 
@@ -59,14 +65,23 @@ tasks:
           DISTRO: ubuntu
           DISTRO_VERSION: "24_04"
 
-  test:incus:reset:fedora:
-    desc: Delete cached Fedora Incus VM used by install-tools tests
+  test:incus:reset:fedora:43:
+    desc: Delete cached Fedora 43 Incus VM used by install-tools tests
     cmds:
       - task: _test:incus:reset
         vars:
           IMAGE: images:fedora/43/cloud
           DISTRO: fedora
           DISTRO_VERSION: "43"
+
+  test:incus:reset:fedora:44:
+    desc: Delete cached Fedora 44 Incus VM used by install-tools tests
+    cmds:
+      - task: _test:incus:reset
+        vars:
+          IMAGE: images:fedora/44/cloud
+          DISTRO: fedora
+          DISTRO_VERSION: "44"
 
   test:incus:reset:arch:
     desc: Delete cached Arch Incus VM used by install-tools tests
@@ -91,7 +106,8 @@ tasks:
     cmds:
       - task: test:incus:reset:debian
       - task: test:incus:reset:ubuntu
-      - task: test:incus:reset:fedora
+      - task: test:incus:reset:fedora:43
+      - task: test:incus:reset:fedora:44
       - task: test:incus:reset:arch
       - task: test:incus:reset:tumbleweed
 
@@ -105,10 +121,15 @@ tasks:
     cmds:
       - DISTRO="ubuntu" DISTRO_VERSION="2404" IMAGE="ubuntu:24.04" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
 
-  test:docker:fedora:
-    desc: Run install-tools test in Fedora Docker container
+  test:docker:fedora:43:
+    desc: Run install-tools test in Fedora 43 Docker container
     cmds:
       - DISTRO="fedora" DISTRO_VERSION="43" IMAGE="fedora:43" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
+
+  test:docker:fedora:44:
+    desc: Run install-tools test in Fedora 44 Docker container
+    cmds:
+      - DISTRO="fedora" DISTRO_VERSION="44" IMAGE="fedora:44" INSTALL_TOOLS_ARGS="--nix-daemon-direct --no-sudo-password-prompt" TEST_ROOT="{{.TEST_ROOT}}" TEST_VERBOSE="{{if .CLI_VERBOSE}}1{{else}}0{{end}}" "{{.TESTS_DIR}}/docker-install-tools-test.sh"
 
   test:docker:arch:
     desc: Run install-tools test in Arch Docker container
@@ -125,7 +146,8 @@ tasks:
     cmds:
       - task test:docker:debian
       - task test:docker:ubuntu
-      - task test:docker:fedora
+      - task test:docker:fedora:43
+      - task test:docker:fedora:44
       - task test:docker:arch
       - task test:docker:tumbleweed
 
