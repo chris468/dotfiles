@@ -96,7 +96,12 @@ gh api --paginate -H "Accept: application/vnd.github+json" \
           })
       ' >"$TMPDIR/issues.json"
 
-TOTAL=$(jq 'length' "$TMPDIR/issues.json")
+declare TOTAL
+if [[ $SHOW_ALL == 1 ]]; then
+  TOTAL=$(jq 'length' "$TMPDIR/issues.json")
+else
+  TOTAL=$(jq 'map(select(.state != "closed")) | length' "$TMPDIR/issues.json")
+fi
 
 : >"$TMPDIR/blocked_by.jsonl"
 while read -r n; do
@@ -106,7 +111,7 @@ while read -r n; do
     "/repos/$REPO/issues/$n/dependencies/blocked_by" |
     jq -c --arg n "$n" '{number: ($n | tonumber), blockers: [.[].number]}' \
       >>"$TMPDIR/blocked_by.jsonl"
-done < <(jq -r '.[] | select(.blocked_by > 0) | .number' "$TMPDIR/issues.json")
+done < <(jq -r '.[] | select(.blocked_by > 0 and .state != "closed") | .number' "$TMPDIR/issues.json")
 
 OWNER="${REPO%%/*}"
 NAME="${REPO#*/}"
@@ -268,5 +273,11 @@ if [[ -z "$ROOT_FILTER" ]]; then
         | (($blocked + $blockers) | unique) | length
     ' "$DB")
   echo
-  echo "$PARTICIPANTS of $TOTAL issues have a blocked_by/blocking relationship; the rest appear above as standalone roots." >&2
+  declare KIND
+  if [[ "$SHOW_ALL" == 1 ]]; then
+    KIND=""
+  else
+    KIND=" open"
+  fi
+  echo "$PARTICIPANTS of $TOTAL$KIND issues have a blocked_by/blocking relationship; the rest appear above as standalone roots." >&2
 fi
