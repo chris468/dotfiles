@@ -1,4 +1,8 @@
 {{- $config := includeTemplate "config" . | fromJson -}}
+{{- if eq $config.theme "tokyonight-night" }}
+[include]
+  path = {{ joinPath .chezmoi.homeDir .path.tokyonight "extras" "delta" "tokyonight_night.gitconfig" }} 
+{{- end }}
 [alias]
 	pushnew = push origin HEAD --set-upstream
 	pushf = push --force-with-lease
@@ -30,11 +34,11 @@
     navigate = true
     light = false
     line-numbers = true
-    minus-style = "#BF616A dim normal"
-    plus-style = "syntax bold normal"
-    plus-emph-style = "normal bold #8FBCBB"
-    zero-style = "#3B4252 normal"
-    syntax-theme = Nord
-    line-numbers-minus-style = "#BF616A normal"
-    line-numbers-plus-style = "#A3BE8C normal"
-    line-numbers-zero-style = "#3B4252 normal"
+{{- $syntaxTheme := $config.theme | index (
+    dict
+      "nord" "Nord"
+      "catppuccin-mocha" "Catppuccin Mocha")
+}}
+{{- if $syntaxTheme }}
+    syntax-theme = {{ $syntaxTheme }}
+{{- end }}
