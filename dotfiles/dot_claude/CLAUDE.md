@@ -6,3 +6,7 @@ Common replacements:
 - `curl ... | python3 -m json.tool` → `curl ... | jq .`
 - `curl ... | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['key'])"` → `curl ... | jq -r '.key'`
 - `cat file.json | python3 -c "import json,sys; ..."` → `jq -r '.field' file.json`
+
+## Shell
+
+The Bash tool runs zsh. Unquoted `$var` doesn't word-split, so `for f in $files` loops once over the whole string. Globs don't expand in assignments, so `T=dir/*.tar.gz` stays literal. Loop over `${(f)var}`, or wrap loops written in bash style in `bash -c '…'`.
