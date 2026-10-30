@@ -370,6 +370,7 @@ tools:
       - match:
           distro: ubuntu
         manager: nix
+        name: awscli2
       - match:
           family: redhat
         name: awscli2
