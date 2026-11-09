@@ -311,6 +311,14 @@ tools:
         - match:
             os: windows
 
+    - name: sesh
+      manager: nix
+      platforms:
+        exclude: true
+        matches:
+        - match:
+            os: windows
+
   container:
     packages:
     - name: lazydocker
