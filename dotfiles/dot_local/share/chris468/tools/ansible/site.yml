@@ -489,7 +489,7 @@
 
     - name: Install Nerd Fonts via oh-my-posh
       block: 
-        - ansible.builtin.shell: "oh-my-posh font install --headless {{ item }}"
+        - ansible.builtin.shell: "oh-my-posh font install {{ item }}"
           loop: "{{ nerdfonts_list }}"
       when:
         - nerdfonts_list | length > 0
