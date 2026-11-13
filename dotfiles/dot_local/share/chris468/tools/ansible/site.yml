@@ -266,22 +266,24 @@
         - nix_install_mode_normalized == 'single'
 
     - name: Enable nix-command and flakes (daemon)
-      ansible.builtin.copy:
-        dest: /etc/nix/nix.conf
-        content: |
+      ansible.builtin.lineinfile:
+        create: true
+        line: |
           experimental-features = nix-command flakes
         mode: "0644"
+        path: /etc/nix/nix.conf
       become: true
       when:
         - use_nix | bool
         - nix_install_mode_normalized == 'daemon'
 
     - name: Enable nix-command and flakes (single)
-      ansible.builtin.copy:
-        dest: "{{ ansible_facts['user_dir'] }}/.config/nix/nix.conf"
-        content: |
+      ansible.builtin.lineinfile:
+        create: true
+        line: |
           experimental-features = nix-command flakes
         mode: "0644"
+        path: "{{ ansible_facts['user_dir'] }}/.config/nix/nix.conf"
       when:
         - use_nix | bool
         - nix_install_mode_normalized == 'single'
