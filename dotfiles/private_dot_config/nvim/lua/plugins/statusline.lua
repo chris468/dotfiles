@@ -2,36 +2,6 @@ local function refresh_lualine()
   require("lualine").refresh()
 end
 
-local function codeium_status()
-  local vt = require("lazy-require").require_on_index("codeium.virtual_text")
-
-  LazyVim.on_load("codeium.nvim", function()
-    return vt.set_statusbar_refresh(refresh_lualine)
-  end)
-
-  local icon_component = LazyVim.lualine.status(LazyVim.config.icons.kinds.Codeium, function()
-    if not LazyVim.is_loaded("codeium.nvim") then
-      return
-    end
-    return vt.status().state == "waiting" and "pending" or "ok"
-  end)
-
-  local component = {
-    function()
-      local icon = icon_component[1]():gsub(" *$", "")
-      if vt.status().state == "completions" then
-        return icon .. " " .. vt.status_string()
-      else
-        return icon
-      end
-    end,
-    cond = icon_component.cond,
-    color = icon_component.color,
-  }
-
-  return component
-end
-
 ---@param section {[string]: table}
 ---@param text string|fun()
 ---@return number|false, table?
@@ -53,11 +23,6 @@ return {
     },
     optional = true,
     opts = function(_, opts)
-      do -- codeium status that works with virtual_text
-        local ai_status_pos = 2 -- same as in codeium extension
-        table.insert(opts.sections.lualine_x, ai_status_pos, codeium_status())
-      end
-
       do -- reoove extra space from root path
         local root_path_pos = 1
         local root_path_component = opts.sections.lualine_c[root_path_pos]
